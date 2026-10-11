@@ -8,25 +8,37 @@ import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-hosts',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState],
+  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'hosts.title' | t" [subtitle]="'hosts.subtitle' | t">
-      <button class="btn" (click)="load()">{{ 'state.refresh' | t }}</button>
+      <button class="btn" (click)="load()">
+        <ui-icon name="refresh" [size]="15" />
+        {{ 'state.refresh' | t }}
+      </button>
     </ui-page-header>
 
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
     }
 
+    @if (loading()) {
+      <section class="grid">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="skeleton skeleton--block"></div>
+        }
+      </section>
+    }
+
     <section class="grid">
       @for (h of hosts(); track h.host) {
-        <article class="card" [attr.data-off]="!h.detected || null">
+        <article class="card" data-lift [attr.data-off]="!h.detected || null">
           <header class="card__head">
-            <h2>{{ h.host }}</h2>
+            <h2><ui-icon name="hosts" [size]="16" />{{ h.host }}</h2>
             <ui-state-badge [state]="h.supported ? 'supported' : 'unsupported'" />
           </header>
           <dl class="kv">
@@ -60,14 +72,16 @@ import { ErrorState } from '../../shared/error-state';
           @if (launchHint(); as hint) {
             @if (hint.host === h.host) {
               <div class="hint">
-                <p class="muted">{{ 'hosts.launch.copyHint' | t }}</p>
+                <p class="hint__title">
+                  <ui-icon name="terminal" [size]="13" />{{ 'hosts.launch.copyHint' | t }}
+                </p>
                 <code>{{ hint.command }}</code>
               </div>
             }
           }
         </article>
       } @empty {
-        @if (!error()) {
+        @if (!error() && !loading()) {
           <ui-empty [title]="'empty.noData' | t" [hint]="'empty.noData.hint' | t" />
         }
       }
@@ -78,12 +92,6 @@ import { ErrorState } from '../../shared/error-state';
       display: grid;
       gap: var(--space-4);
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
     }
     .card[data-off] {
       opacity: 0.55;
@@ -96,6 +104,15 @@ import { ErrorState } from '../../shared/error-state';
     .card h2 {
       margin: 0;
       text-transform: capitalize;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+    .card h2 ui-icon {
+      color: var(--accent);
     }
     .kv {
       display: grid;
@@ -122,12 +139,25 @@ import { ErrorState } from '../../shared/error-state';
     .hint {
       margin-top: var(--space-3);
       padding: var(--space-3);
-      border: 1px dashed var(--border);
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
       border-radius: var(--radius-md);
+      background: var(--accent-bg);
+      display: grid;
+      gap: 4px;
+    }
+    .hint__title {
+      margin: 0;
+      font-size: var(--font-xs);
+      font-weight: 600;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .hint code {
       font-family: var(--font-mono);
       font-size: var(--font-sm);
+      word-break: break-all;
     }
   `,
 })
@@ -136,6 +166,7 @@ export class HostsPage {
   readonly hosts = signal<HostDetection[]>([]);
   readonly launchHint = signal<{ host: string; command: string } | null>(null);
   readonly error = signal<ApiError | null>(null);
+  readonly loading = signal(true);
 
   constructor() {
     void this.load();
@@ -143,10 +174,13 @@ export class HostsPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.hosts.set(await firstValueFrom(this.api.hosts()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

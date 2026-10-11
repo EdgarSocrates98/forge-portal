@@ -28,9 +28,11 @@ import { TPipe } from '../core/i18n/i18n.pipe';
       display: grid;
       gap: 8px;
       padding: var(--space-6);
-      border: 1px solid var(--error);
+      border: 1px solid color-mix(in srgb, var(--error) 55%, transparent);
+      border-left-width: 3px;
       border-radius: var(--radius-lg);
       background: var(--error-bg);
+      box-shadow: var(--elev-card);
     }
     .err__title {
       font-weight: 700;

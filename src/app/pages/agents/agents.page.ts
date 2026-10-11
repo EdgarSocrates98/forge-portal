@@ -9,11 +9,12 @@ import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-agents',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState],
+  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'agents.title' | t" [subtitle]="'agents.subtitle' | t" />
 
@@ -21,20 +22,31 @@ import { ErrorState } from '../../shared/error-state';
       <ui-error [error]="e" (retry)="load()" />
     }
 
+    @if (loading()) {
+      <section class="grid">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton skeleton--block"></div>
+        }
+      </section>
+    }
+
     @if (agents().length) {
-      <input
-        class="input search"
-        type="search"
-        [placeholder]="'agents.search' | t"
-        [ngModel]="query()"
-        (ngModelChange)="query.set($event)"
-        aria-label="search agents"
-      />
+      <div class="search-field">
+        <ui-icon name="search" [size]="15" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="'agents.search' | t"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          [attr.aria-label]="'agents.search' | t"
+        />
+      </div>
       <section class="grid">
         @for (a of filtered(); track a.id) {
-          <article class="card">
+          <article class="card" data-lift>
             <header class="head">
-              <h2>{{ a.id }}</h2>
+              <h2><ui-icon name="agents" [size]="15" />{{ a.id }}</h2>
               <ui-state-badge
                 [state]="a.state === 'available' ? 'supported' : 'unverified'"
                 [labelOverride]="a.state"
@@ -59,28 +71,20 @@ import { ErrorState } from '../../shared/error-state';
             }
           </article>
         } @empty {
-          <ui-empty [title]="'agents.empty' | t" />
+          @if (!loading()) {
+            <ui-empty [title]="'agents.empty' | t" />
+          }
         }
       </section>
-    } @else if (!error()) {
+    } @else if (!error() && !loading()) {
       <ui-empty [title]="'agents.none' | t" />
     }
   `,
   styles: `
-    .search {
-      max-width: 360px;
-      margin-bottom: var(--space-4);
-    }
     .grid {
       display: grid;
       gap: var(--space-4);
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
     }
     .head {
       display: flex;
@@ -91,6 +95,14 @@ import { ErrorState } from '../../shared/error-state';
     h2 {
       margin: 0;
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    h2 ui-icon {
+      color: var(--accent);
     }
     .role {
       color: var(--accent);
@@ -116,6 +128,7 @@ export class AgentsPage {
   readonly agents = signal<AgentDescriptor[]>([]);
   readonly error = signal<ApiError | null>(null);
   readonly query = signal('');
+  readonly loading = signal(true);
 
   readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
@@ -135,10 +148,13 @@ export class AgentsPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.agents.set(await firstValueFrom(this.api.agents()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 }

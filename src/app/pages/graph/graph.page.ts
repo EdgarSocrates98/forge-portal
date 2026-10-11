@@ -7,18 +7,26 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-graph',
   standalone: true,
-  imports: [TPipe, PageHeader, EmptyState, ErrorState],
+  imports: [TPipe, PageHeader, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'graph.title' | t" [subtitle]="'graph.subtitle' | t">
-      <button class="btn" (click)="load()">{{ 'state.refresh' | t }}</button>
+      <button class="btn" (click)="load()">
+        <ui-icon name="refresh" [size]="15" />
+        {{ 'state.refresh' | t }}
+      </button>
     </ui-page-header>
 
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
+    }
+
+    @if (loading()) {
+      <div class="skeleton skeleton--block"></div>
     }
 
     @if (bundle(); as b) {
@@ -27,12 +35,13 @@ import { ErrorState } from '../../shared/error-state';
           @if (b.studio_url) {
             <a class="btn btn--primary" [href]="b.studio_url" target="_blank" rel="noopener">
               {{ 'graph.open' | t }}
+              <ui-icon name="external" [size]="14" />
             </a>
           }
           <ul class="views">
             @for (v of b.views; track $index) {
               <li>
-                <strong>{{ viewName(v) }}</strong>
+                <strong><ui-icon name="graph" [size]="14" />{{ viewName(v) }}</strong>
                 <span class="muted">
                   {{ 'graph.nodes' | t: { count: viewNodes(v) } }} ·
                   {{ 'graph.edges' | t: { count: viewEdges(v) } }}
@@ -50,33 +59,39 @@ import { ErrorState } from '../../shared/error-state';
     }
   `,
   styles: `
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
-    }
     .views {
       list-style: none;
       padding: 0;
       margin: var(--space-4) 0 0;
       display: grid;
-      gap: var(--space-2);
     }
     .views li {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      transition: background var(--motion-fast);
+    }
+    .views li + li {
+      border-top: 1px solid var(--border);
+    }
+    .views li:hover {
+      background: var(--bg-hover);
+    }
+    .views strong {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-weight: 600;
+    }
+    .views strong ui-icon {
+      color: var(--accent);
     }
     .muted {
       color: var(--fg-muted);
-    }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
-      text-decoration: none;
-      display: inline-block;
+      font-size: var(--font-sm);
     }
   `,
 })
@@ -84,6 +99,7 @@ export class GraphPage {
   private readonly api = inject(PortalApi);
   readonly bundle = signal<GraphBundle | null>(null);
   readonly error = signal<ApiError | null>(null);
+  readonly loading = signal(true);
 
   constructor() {
     void this.load();
@@ -91,10 +107,13 @@ export class GraphPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.bundle.set(await firstValueFrom(this.api.graphs()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

@@ -96,6 +96,10 @@ export const EN: Record<string, string> = {
   'dashboard.step.task': 'Run your first task',
   'dashboard.capabilities': 'Capabilities',
   'dashboard.none': 'No data yet — run a verification.',
+  'dashboard.stat.state': 'Install state',
+  'dashboard.stat.capabilities': 'Capabilities ready',
+  'dashboard.stat.checks': 'Checks passing',
+  'dashboard.stat.portal': 'Portal version',
 
   // installation
   'install.title': 'Installation',

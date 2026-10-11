@@ -8,26 +8,30 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-knowledge',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, EmptyState, ErrorState],
+  imports: [FormsModule, TPipe, PageHeader, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'knowledge.title' | t" [subtitle]="'knowledge.subtitle' | t" />
 
     <section class="card">
       <label class="lbl" for="q">{{ 'knowledge.search' | t }}</label>
       <div class="row">
-        <input
-          id="q"
-          class="input"
-          type="search"
-          [placeholder]="'knowledge.placeholder' | t"
-          [ngModel]="query()"
-          (ngModelChange)="query.set($event)"
-          (keydown.enter)="search()"
-        />
+        <div class="search-field q-field">
+          <ui-icon name="search" [size]="15" />
+          <input
+            id="q"
+            class="input"
+            type="search"
+            [placeholder]="'knowledge.placeholder' | t"
+            [ngModel]="query()"
+            (ngModelChange)="query.set($event)"
+            (keydown.enter)="search()"
+          />
+        </div>
         <button class="btn btn--primary" [disabled]="busy() || !query().trim()" (click)="search()">
           {{ 'knowledge.search' | t }}
         </button>
@@ -41,7 +45,7 @@ import { ErrorState } from '../../shared/error-state';
     @if (searched()) {
       <p class="muted">{{ 'knowledge.results' | t: { count: hits().length } }}</p>
       @for (h of hits(); track h.path) {
-        <article class="card hit">
+        <article class="card hit" data-lift>
           <h2>{{ h.title }}</h2>
           <p class="muted">{{ h.excerpt }}</p>
           <footer>
@@ -56,10 +60,6 @@ import { ErrorState } from '../../shared/error-state';
   `,
   styles: `
     .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
       margin-bottom: var(--space-4);
     }
     .lbl {
@@ -71,33 +71,37 @@ import { ErrorState } from '../../shared/error-state';
       display: flex;
       gap: var(--space-2);
     }
-    .row .input {
+    .q-field {
       flex: 1;
+      max-width: none;
+      margin-bottom: 0;
     }
     .hit h2 {
       margin: 0 0 6px;
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
     .hit footer {
       display: flex;
       justify-content: space-between;
+      gap: var(--space-2);
       margin-top: var(--space-3);
       font-size: var(--font-xs);
     }
     .hit code {
       color: var(--fg-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .cat {
       color: var(--accent);
       font-weight: 600;
+      flex-shrink: 0;
     }
     .muted {
       color: var(--fg-muted);
-    }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
     }
   `,
 })

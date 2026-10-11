@@ -95,6 +95,10 @@ export const PT_BR: Record<string, string> = {
   'dashboard.step.task': 'Executar a primeira tarefa',
   'dashboard.capabilities': 'Capacidades',
   'dashboard.none': 'Sem dados ainda — execute uma verificação.',
+  'dashboard.stat.state': 'Estado da instalação',
+  'dashboard.stat.capabilities': 'Capabilities prontas',
+  'dashboard.stat.checks': 'Checks ok',
+  'dashboard.stat.portal': 'Versão do portal',
 
   // instalação
   'install.title': 'Instalação',

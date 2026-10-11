@@ -18,16 +18,25 @@ import { Component, input } from '@angular/core';
     .empty {
       display: grid;
       place-items: center;
-      gap: 6px;
+      gap: var(--space-2);
       padding: var(--space-8) var(--space-6);
       border: 1px dashed var(--border);
       border-radius: var(--radius-lg);
       color: var(--fg-muted);
       text-align: center;
+      background: color-mix(in srgb, var(--bg-hover) 45%, transparent);
     }
     .empty__glyph {
-      font-size: 28px;
-      opacity: 0.7;
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      margin-bottom: var(--space-1);
+      font-size: 22px;
+      color: var(--accent);
+      background: var(--accent-bg);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     }
     .empty__title {
       font-weight: 600;

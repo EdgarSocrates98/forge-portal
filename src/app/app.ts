@@ -4,6 +4,7 @@ import { PortalStore } from './core/portal/portal.store';
 import { I18nService } from './core/i18n/i18n.service';
 import { TPipe } from './core/i18n/i18n.pipe';
 import { ThemeStore } from './core/theme/theme.store';
+import { UiIcon } from './shared/icon';
 
 interface NavEntry {
   section: string;
@@ -14,27 +15,27 @@ const NAV: NavEntry[] = [
   {
     section: 'nav.section.operate',
     items: [
-      { route: '/dashboard', label: 'nav.dashboard', icon: '▤' },
-      { route: '/tasks', label: 'nav.tasks', icon: '▶', capability: 'tasks' },
-      { route: '/graph', label: 'nav.graph', icon: '◈', capability: 'graph' },
+      { route: '/dashboard', label: 'nav.dashboard', icon: 'dashboard' },
+      { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
+      { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
     ],
   },
   {
     section: 'nav.section.configure',
     items: [
-      { route: '/install', label: 'nav.install', icon: '⬇' },
-      { route: '/profiles', label: 'nav.profiles', icon: '◑' },
-      { route: '/hosts', label: 'nav.hosts', icon: '⎈' },
-      { route: '/mcp', label: 'nav.mcp', icon: '⇄' },
+      { route: '/install', label: 'nav.install', icon: 'install' },
+      { route: '/profiles', label: 'nav.profiles', icon: 'profiles' },
+      { route: '/hosts', label: 'nav.hosts', icon: 'hosts' },
+      { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
     ],
   },
   {
     section: 'nav.section.explore',
     items: [
-      { route: '/skills', label: 'nav.skills', icon: '✦' },
-      { route: '/agents', label: 'nav.agents', icon: '◉' },
-      { route: '/knowledge', label: 'nav.knowledge', icon: '?' },
-      { route: '/settings', label: 'nav.settings', icon: '⚙' },
+      { route: '/skills', label: 'nav.skills', icon: 'skills' },
+      { route: '/agents', label: 'nav.agents', icon: 'agents' },
+      { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
+      { route: '/settings', label: 'nav.settings', icon: 'settings' },
     ],
   },
 ];
@@ -42,7 +43,7 @@ const NAV: NavEntry[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TPipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TPipe, UiIcon],
   styleUrl: './app.css',
   template: `
     <div class="shell">
@@ -60,7 +61,7 @@ const NAV: NavEntry[] = [
             <p class="nav__section">{{ section.section | t }}</p>
             @for (item of section.items; track item.route) {
               <a class="nav__item" [routerLink]="item.route" routerLinkActive="nav__item--active">
-                <span class="nav__icon" aria-hidden="true">{{ item.icon }}</span>
+                <ui-icon class="nav__icon" [name]="item.icon" [size]="17" />
                 <span class="nav__label">{{ item.label | t }}</span>
               </a>
             }
@@ -72,7 +73,7 @@ const NAV: NavEntry[] = [
           (click)="collapsed.set(!collapsed())"
           [attr.aria-label]="(collapsed() ? 'nav.expand' : 'nav.collapse') | t"
         >
-          {{ collapsed() ? '»' : '«' }}
+          <ui-icon [name]="collapsed() ? 'chevron-right' : 'chevron-left'" [size]="14" />
         </button>
       </aside>
 
@@ -86,6 +87,7 @@ const NAV: NavEntry[] = [
               aria-hidden="true"
             ></span>
             <span class="topbar__workspace">
+              <ui-icon name="folder" [size]="14" />
               {{ store.workspace()?.name ?? ('dashboard.noWorkspace' | t) }}
             </span>
             @if (store.federated()) {
@@ -107,7 +109,7 @@ const NAV: NavEntry[] = [
               [attr.aria-label]="'settings.theme' | t"
               [title]="'settings.theme' | t"
             >
-              {{ schemeIcon() }}
+              <ui-icon [name]="schemeIcon()" [size]="15" />
             </button>
           </div>
         </header>
@@ -153,7 +155,7 @@ export class App {
 
   readonly schemeIcon = computed(() => {
     const scheme = this.theme.scheme();
-    return scheme === 'dark' ? '☾' : scheme === 'light' ? '☀' : '◐';
+    return scheme === 'dark' ? 'moon' : scheme === 'light' ? 'sun' : 'contrast';
   });
 
   constructor() {
