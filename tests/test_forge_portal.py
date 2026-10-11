@@ -359,3 +359,81 @@ class TestPlanToken:
     def test_garbage_fails(self):
         assert not fp.check_plan_token(b"x" * 32, "garbage", {"a": 1})
         assert not fp.check_plan_token(b"x" * 32, "", {"a": 1})
+
+
+# ---------------------------------------------------------------------------
+# forge-portal presence
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def isolated_forge_home(tmp_path, monkeypatch):
+    home = tmp_path / "forgehome"
+    home.mkdir()
+    monkeypatch.setenv("FORGE_HOME_OVERRIDE", str(home))
+    monkeypatch.delenv("FORGE_PORTAL_HOME", raising=False)
+    return home
+
+
+class TestForgePortalPresence:
+    def test_vendored_when_absent(self, isolated_forge_home):
+        p = fp.detect_forge_portal()
+        assert p["state"] == "vendored"
+        assert p["install_root"] is None
+        assert p["locations"] == []
+
+    def test_env_root(self, isolated_forge_home, tmp_path, monkeypatch):
+        root = tmp_path / "portal-root"
+        root.mkdir()
+        monkeypatch.setenv("FORGE_PORTAL_HOME", str(root))
+        p = fp.detect_forge_portal()
+        assert p["state"] == "installed"
+        assert p["install_root"] == str(root)
+
+    def test_registry_manifest(self, isolated_forge_home):
+        installs = isolated_forge_home / ".forge" / "installs" / "forge-portal"
+        installs.mkdir(parents=True)
+        manifests = isolated_forge_home / ".forge" / "installations"
+        manifests.mkdir(parents=True)
+        (manifests / "forge-portal.json").write_text(
+            json.dumps({"forge_id": "forge-portal", "install_root": str(installs)}),
+            encoding="utf-8",
+        )
+        p = fp.detect_forge_portal()
+        assert p["state"] == "installed"
+        assert p["install_root"] == str(installs)
+
+    def test_stale_install_root_is_honest(self, isolated_forge_home):
+        manifests = isolated_forge_home / ".forge" / "installations"
+        manifests.mkdir(parents=True)
+        (manifests / "forge-portal.json").write_text(
+            json.dumps(
+                {"forge_id": "forge-portal", "install_root": str(isolated_forge_home / "gone")}
+            ),
+            encoding="utf-8",
+        )
+        p = fp.detect_forge_portal()
+        assert p["state"] == "installed"
+        assert p["install_root"] is None
+
+    def test_default_install_root(self, isolated_forge_home):
+        root = isolated_forge_home / ".forge" / "installs" / "forge-portal"
+        root.mkdir(parents=True)
+        p = fp.detect_forge_portal()
+        assert p["state"] == "installed"
+        assert p["install_root"] == str(root)
+
+    def test_health_endpoint_carries_presence(self, server, isolated_forge_home):
+        status, env, _ = call(server, "GET", "/api/v1/health")
+        assert status == 200
+        assert env["data"]["forge_portal"]["state"] == "vendored"
+
+    def test_installation_status_carries_presence(self, server, isolated_forge_home):
+        status, env, _ = call(server, "GET", "/api/v1/installation/status")
+        assert status == 200
+        assert env["data"]["forge_portal"]["state"] == "vendored"
+
+    def test_bootstrap_health_carries_presence(self, server, isolated_forge_home):
+        status, env, _ = call(server, "GET", "/api/v1/bootstrap")
+        assert status == 200
+        assert env["data"]["health"]["forge_portal"]["state"] == "vendored"

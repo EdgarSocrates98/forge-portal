@@ -56,6 +56,17 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           </li>
         }
       </ol>
+      @if (store.health()?.forge_portal; as fp) {
+        <div class="portal-row" [attr.data-state]="fp.state">
+          <ui-icon name="gem" [size]="15" />
+          <span class="portal-row__body">
+            <strong>{{ 'install.portal.' + fp.state | t }}</strong>
+            <small class="mono">{{
+              fp.install_root || fp.manifest || ('install.portal.vendored.hint' | t)
+            }}</small>
+          </span>
+        </div>
+      }
     </section>
 
     <div class="config-grid">
