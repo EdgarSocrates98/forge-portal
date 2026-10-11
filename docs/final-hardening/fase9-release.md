@@ -44,7 +44,7 @@ intent → plano → confirmação → recibo passa por `tasks/plan` +
 
 ## 9.6 Real browser test
 
-`e2e/browser_e2e.py` — Chromium real × `PortalServer` real × bundle real:
+`e2e/test_browser_e2e.py` — Chromium real × `PortalServer` real × bundle real:
 10/10 — first paint, 9 rotas, pt/en, plan→apply, Ctrl+K, task plan card,
 mobile 390px, offline degradation, zero pageerror, guarda de stylesheet.
 
