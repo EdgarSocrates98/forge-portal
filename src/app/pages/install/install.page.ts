@@ -5,6 +5,7 @@ import { ApiError } from '../../core/api/api.error';
 import { HostDetection, InstallationReceipt } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
@@ -33,7 +34,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 
     <section class="card">
       <h2>{{ 'install.scope' | t }}</h2>
-      <div class="scopes" role="radiogroup">
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.scope' | t">
         @for (s of scopes; track s.id) {
           <label class="scope" [attr.data-active]="scope() === s.id || null">
             <input
@@ -53,7 +54,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 
       <h2>{{ 'install.hosts' | t }}</h2>
       <p class="muted">{{ 'install.hosts.hint' | t }}</p>
-      <div class="scopes" role="radiogroup">
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.hosts' | t">
         @for (h of hostChoices; track h.id) {
           <label class="scope" [attr.data-active]="host() === h.id || null">
             <input
@@ -64,7 +65,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
               (change)="host.set(h.id)"
             />
             <span>
-              <strong>{{ h.label }}</strong>
+              <strong>{{ h.labelKey ? (h.labelKey | t) : h.label }}</strong>
               <small>{{ hostState(h.id) }}</small>
             </span>
           </label>
@@ -72,7 +73,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
       </div>
 
       <h2>{{ 'install.profile' | t }}</h2>
-      <div class="scopes" role="radiogroup">
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.profile' | t">
         @for (p of profiles; track p.id) {
           <label class="scope" [attr.data-active]="profile() === p.id || null">
             <input
@@ -107,10 +108,18 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
         <button class="btn" [disabled]="busy()" (click)="repair()">
           {{ 'install.repair' | t }}
         </button>
-        <button class="btn btn--danger" [disabled]="busy()" (click)="uninstall()">
-          {{ 'install.uninstall' | t }}
+        <button
+          class="btn btn--danger"
+          [disabled]="busy()"
+          [attr.data-armed]="uninstallArmed() || null"
+          (click)="uninstall()"
+        >
+          {{ (uninstallArmed() ? 'install.uninstall.confirmBtn' : 'install.uninstall') | t }}
         </button>
       </div>
+      @if (uninstallArmed()) {
+        <p class="refusal" role="alert">{{ 'install.uninstall.confirm' | t }}</p>
+      }
     </section>
 
     @if (phase() === 'review' && planReceipt(); as r) {
@@ -250,9 +259,11 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 })
 export class InstallPage {
   private readonly api = inject(PortalApi);
+  private readonly i18n = inject(I18nService);
   readonly store = inject(PortalStore);
 
   readonly phase = signal<Phase>('idle');
+  readonly uninstallArmed = signal(false);
   readonly scope = signal<'project' | 'workspace' | 'user'>('project');
   readonly host = signal<string>('all');
   readonly profile = signal<'minimal' | 'recommended' | 'full'>('recommended');
@@ -264,8 +275,8 @@ export class InstallPage {
 
   readonly busy = () => ['planning', 'running'].includes(this.phase());
 
-  readonly hostChoices = [
-    { id: 'all', label: 'all' },
+  readonly hostChoices: { id: string; label?: string; labelKey?: string }[] = [
+    { id: 'all', labelKey: 'install.host.all' },
     { id: 'claude', label: 'Claude' },
     { id: 'devin', label: 'Devin' },
     { id: 'codex', label: 'Codex' },
@@ -288,7 +299,7 @@ export class InstallPage {
     if (id === 'all') return '—';
     const d = this.hostDetections().find((h) => h.host === id);
     if (!d) return '…';
-    return d.detected ? d.integration : 'not detected';
+    return d.detected ? d.integration : this.i18n.t('install.host.notDetected');
   }
 
   readonly scopes = [
@@ -359,6 +370,14 @@ export class InstallPage {
   }
 
   async uninstall(): Promise<void> {
+    // destructive — exige um segundo clique explícito (a própria ética
+    // plan→confirm→apply do portal, aplicada à UI)
+    if (!this.uninstallArmed()) {
+      this.uninstallArmed.set(true);
+      setTimeout(() => this.uninstallArmed.set(false), 8000);
+      return;
+    }
+    this.uninstallArmed.set(false);
     this.phase.set('running');
     try {
       const r = await firstValueFrom(this.api.installationUninstall());
@@ -376,6 +395,7 @@ export class InstallPage {
 
   reset(): void {
     this.phase.set('idle');
+    this.uninstallArmed.set(false);
     this.planReceipt.set(null);
     this.result.set(null);
     this.error.set(null);

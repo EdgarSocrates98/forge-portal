@@ -90,10 +90,12 @@ interface PendingPlan {
         <table class="table">
           <thead>
             <tr>
-              <th></th>
-              <th>verb</th>
-              <th>stage</th>
-              <th>exit</th>
+              <th>
+                <span class="sr-only">{{ 'table.task' | t }}</span>
+              </th>
+              <th>{{ 'table.verb' | t }}</th>
+              <th>{{ 'table.stage' | t }}</th>
+              <th>{{ 'table.exit' | t }}</th>
             </tr>
           </thead>
           <tbody>

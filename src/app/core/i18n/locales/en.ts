@@ -118,6 +118,9 @@ export const EN: Record<string, string> = {
   'install.uninstall': 'Uninstall',
   'install.uninstall.confirm':
     "This removes this Forge's managed files in this scope. Only files recorded in the ledger are removed.",
+  'install.uninstall.confirmBtn': 'Confirm uninstall',
+  'install.host.all': 'All hosts',
+  'install.host.notDetected': 'not detected',
   'install.verify': 'Verify',
   'install.receipt': 'Receipt',
   'install.running': 'Running…',
@@ -273,6 +276,14 @@ export const EN: Record<string, string> = {
   'notify.success': 'Done',
   'notify.error': 'Failed',
   'notify.dismiss': 'Dismiss',
+
+  // table headers
+  'table.id': 'ID',
+  'table.host': 'Host',
+  'table.task': 'Task',
+  'table.verb': 'Verb',
+  'table.stage': 'Stage',
+  'table.exit': 'Exit',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN
