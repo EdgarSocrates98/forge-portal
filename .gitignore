@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.angular/
+coverage/
+playwright-report/
+test-results/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.log
