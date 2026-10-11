@@ -335,11 +335,15 @@ def test_language_toggle(page, portal):
     if settings.count():
         settings.first.click()
         page.wait_for_timeout(300)
-    lang_btn = page.locator("text=/português|english|pt-br|en/i").first
-    if lang_btn.count():
-        lang_btn.click()
-        page.wait_for_timeout(300)
-        _shot(page, "02-language-toggle")
+    # language radios render as <label><input type=radio name=locale>…</label>;
+    # click the label — the input itself may be visually hidden
+    lang_opt = page.locator("label.opt:has(input[name='locale']):has-text('English')").first
+    assert lang_opt.count() > 0, "language radiogroup not found on /settings"
+    lang_opt.click()
+    page.wait_for_timeout(300)
+    assert page.locator("input[name='locale'][value='en']").is_checked(), \
+        "clicking the 'English' option did not switch locale"
+    _shot(page, "02-language-toggle")
 
 
 def test_install_flow_plan_apply(page, portal):
