@@ -61,16 +61,43 @@ Regressão coberta por `test_global_stylesheet_applies`: exige
 `getComputedStyle(.shell).display === "grid"` e ausência de
 `link[media=print]` — quebra se o mecanismo voltar.
 
+## 1.7 — Segurança: DNS rebinding (Host header)
+
+O servidor já recusava cross-origin POSTs e exigia sessão — mas **não
+validava o header `Host`**. Um browser em `attacker.example` resolvendo
+para 127.0.0.1 (rebinding clássico) alcançava a API. Guard adicionado:
+`_host_ok()` recusa qualquer Host não-loopback (127.0.0.1/localhost/::1,
+com parse de IPv6 `[::1]:port`) antes do routing — cobre GET, POST e
+assets. 4 testes adversariais novos (`PORTAL-HOST` 403).
+
+## 1.1/1.5 — Angular audit + progresso real
+
+- `strict: true` + `strictTemplates: true` ativados — build limpo, a
+  codebase já era strict-safe; o gate agora impede regressão.
+- `stageKind` cobre o ciclo real de estágios (completed/failed/refused/
+  cancelled/awaiting_approval/partial/running/planning/verifying) —
+  badges honestos, zero percentual inventado. SSE (`SseResult`) existe
+  no servidor para forjas que emitam eventos de execução.
+- Stack confirmado: Angular 22.2 / TS 6.0, signals, `inject()`, rotas
+  100% lazy (`loadComponent`), standalone, sem SSR, budgets <1MB.
+
+## 1.10 — CI do core
+
+`.github/workflows/ci.yml` — ruff, pytest, prettier check, ng build
+(strict), ng test, i18n gate, playwright chromium + E2E com upload de
+artifacts, vendor parity, e o `portal_e2e.py` cross-forge em push.
+
 ## Verificação
 
 - `python -m pytest e2e/browser_e2e.py` — **10/10** (antes do fix: teste
   novo falhava; depois: verde, screenshots provam shell estilizado).
-- `python -m pytest tests/` — 37/37.
-- `ng build` — limpo (budgets ok); `ng test` — 11/11.
+- `python -m pytest tests/` — **41/41** (inclui 4 adversariais de Host).
+- `ng build` — limpo, strict+strictTemplates; `ng test` — 11/11.
+- `ruff check` — limpo; `prettier --check` — limpo.
 - `check_i18n.py` — 283 pt-BR / 283 en.
 - `vendor.py --check` — byte-parity server + manifest nos 7 destinos
   após re-vendor (bundle corrigido + `_forge_portal.py` com `_reject`
-  propagados para todos os irmãos).
+  e `_host_ok` propagados para todos os irmãos).
 
 ## Notas para as próximas fases
 

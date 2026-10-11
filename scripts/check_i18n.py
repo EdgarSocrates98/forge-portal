@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "src" / "app"
-KEY_RE = re.compile(r"^\s*'([^']+)':", re.M)
+KEY_RE = re.compile(r"^\s*'([^']+)':", re.MULTILINE)
 USE_RE = re.compile(r"'([a-z][\w.-]*)'\s*\|\s*t\b")
 PROSE_RE = re.compile(r">([^<>{}\n]*[A-Za-zÀ-ÿ][^<>{}\n]*)<")
 # data vocabulary allowed untranslated (proper nouns, contract literals)
@@ -55,7 +55,7 @@ def main() -> int:
         text = f.read_text(encoding="utf-8")
         for m in USE_RE.finditer(text):
             used.setdefault(m.group(1), []).append(str(f.relative_to(ROOT)))
-        tpl = re.search(r"template:\s*`(.*?)`,\n", text, re.S)
+        tpl = re.search(r"template:\s*`(.*?)`,\n", text, re.DOTALL)
         if tpl:
             for hit in PROSE_RE.findall(tpl.group(1)):
                 txt = hit.strip()

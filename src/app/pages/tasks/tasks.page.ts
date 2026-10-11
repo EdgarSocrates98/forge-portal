@@ -21,16 +21,7 @@ interface PendingPlan {
 @Component({
   selector: 'page-tasks',
   standalone: true,
-  imports: [
-    FormsModule,
-    TPipe,
-    PageHeader,
-    StateBadge,
-    EmptyState,
-    ErrorState,
-    UiIcon,
-    UiForgeDoc,
-  ],
+  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiForgeDoc],
   template: `
     <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t" />
 
@@ -318,9 +309,11 @@ export class TasksPage {
   }
 
   stageKind(stage: string): string {
-    if (stage === 'completed') return 'supported';
-    if (['failed', 'refused'].includes(stage)) return 'error';
-    if (['running', 'planning', 'verifying'].includes(stage)) return 'info';
+    const s = (stage || '').toLowerCase();
+    if (s === 'completed') return 'supported';
+    if (['failed', 'refused', 'cancelled'].includes(s)) return 'error';
+    if (['awaiting_approval', 'partial'].includes(s)) return 'warn';
+    if (['running', 'planning', 'verifying'].includes(s)) return 'info';
     return 'muted';
   }
 }

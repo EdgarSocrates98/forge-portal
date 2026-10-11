@@ -184,6 +184,36 @@ class TestCsrfAndPayload:
         )
         assert status == 200
 
+    def test_get_foreign_host_403(self, server):
+        # DNS rebinding: browser at attacker.example → 127.0.0.1 sends
+        # Host: attacker.example — refuse before routing (API or assets).
+        status, env, _ = call(
+            server, "GET", "/api/v1/health",
+            headers={"Host": "attacker.example"},
+        )
+        assert status == 403
+        assert env["error"]["code"] == "PORTAL-HOST"
+
+    def test_post_foreign_host_403(self, server):
+        status, env, _ = call(
+            server, "POST", "/api/v1/installation/plan",
+            body=self._plan_body(), headers={"Host": "attacker.example:80"},
+        )
+        assert status == 403
+        assert env["error"]["code"] == "PORTAL-HOST"
+
+    def test_static_foreign_host_403(self, server):
+        status, env, _ = call(server, "GET", "/", headers={"Host": "evil.test"})
+        assert status == 403
+        assert env["error"]["code"] == "PORTAL-HOST"
+
+    def test_loopback_host_ok(self, server):
+        status, _, _ = call(
+            server, "GET", "/api/v1/health",
+            headers={"Host": "localhost:9999"},
+        )
+        assert status == 200
+
     def test_post_wrong_content_type_415(self, server):
         status, env, _ = call(
             server, "POST", "/api/v1/installation/plan",

@@ -79,7 +79,10 @@ export interface ForgeFile {
           <ul class="fdoc__checks">
             @for (c of d.checks; track c.id) {
               <li>
-                <ui-state-badge [state]="c.status ?? 'unverified'" [labelOverride]="c.status ?? null" />
+                <ui-state-badge
+                  [state]="c.status ?? 'unverified'"
+                  [labelOverride]="c.status ?? null"
+                />
                 <code class="cid">{{ c.id }}</code>
                 @if (c.detail) {
                   <span class="detail">{{ c.detail }}</span>
@@ -97,14 +100,15 @@ export interface ForgeFile {
             <h3>{{ 'fdoc.drift' | t }}</h3>
             <p class="fdoc__drift">
               <span class="ok">ok {{ drift.ok }}</span>
-              <span class="warn"
-                >{{ 'fdoc.modified' | t }} {{ drift.modified?.length ?? 0 }}</span
-              >
+              <span class="warn">{{ 'fdoc.modified' | t }} {{ drift.modified?.length ?? 0 }}</span>
               <span class="bad">{{ 'fdoc.missing' | t }} {{ drift.missing?.length ?? 0 }}</span>
             </p>
             @for (f of driftFiles(drift); track f.path) {
               <div class="fdoc__file">
-                <ui-state-badge [state]="f.status ?? 'modified'" [labelOverride]="f.status ?? null" />
+                <ui-state-badge
+                  [state]="f.status ?? 'modified'"
+                  [labelOverride]="f.status ?? null"
+                />
                 <code>{{ f.path }}</code>
               </div>
             }
@@ -129,7 +133,10 @@ export interface ForgeFile {
         @if (d.forge_portal; as portal) {
           <h3>{{ 'fdoc.portal' | t }}</h3>
           <p class="fdoc__portal">
-            <ui-state-badge [state]="portal.state ?? 'unverified'" [labelOverride]="portal.state ?? null" />
+            <ui-state-badge
+              [state]="portal.state ?? 'unverified'"
+              [labelOverride]="portal.state ?? null"
+            />
             @if (portal.install_root || portal.manifest) {
               <code>{{ portal.install_root ?? portal.manifest }}</code>
             } @else if (portal.state === 'vendored') {
@@ -159,7 +166,10 @@ export interface ForgeFile {
           }
           @for (r of ws.member_results ?? []; track r.member) {
             <div class="fdoc__file">
-              <ui-state-badge [state]="r.status ?? 'unverified'" [labelOverride]="r.status ?? null" />
+              <ui-state-badge
+                [state]="r.status ?? 'unverified'"
+                [labelOverride]="r.status ?? null"
+              />
               <code>{{ r.member }}</code>
             </div>
           }
@@ -174,7 +184,9 @@ export interface ForgeFile {
 
         @if (d.error && (d.error.kind || d.error.detail)) {
           <div class="fdoc__refusal">
-            <p><code>{{ d.error.kind }}</code></p>
+            <p>
+              <code>{{ d.error.kind }}</code>
+            </p>
             @if (d.error.detail) {
               <p>{{ d.error.detail }}</p>
             }
@@ -343,8 +355,7 @@ export class UiForgeDoc {
     const profile = d.context?.profile ?? d.profile;
     if (profile) out.push(['doc.profile', profile]);
     if (d.state_dir) out.push(['doc.state_dir', d.state_dir]);
-    if (d.ledger_entries !== undefined)
-      out.push(['doc.managed', `${d.ledger_entries}`]);
+    if (d.ledger_entries !== undefined) out.push(['doc.managed', `${d.ledger_entries}`]);
     return out;
   }
 

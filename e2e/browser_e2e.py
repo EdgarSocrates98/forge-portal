@@ -12,9 +12,7 @@ Run:  python -m pytest e2e/ -q        (requires playwright + chromium)
 
 from __future__ import annotations
 
-import json
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -22,15 +20,14 @@ import pytest
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "portal_core"))
 
-import forge_portal as fp  # noqa: E402
+import forge_portal as fp
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 BUNDLE = REPO / "dist" / "forge-portal-app" / "browser"
 
 playwright = pytest.importorskip("playwright.sync_api", reason="playwright not installed")
 
-from playwright.sync_api import sync_playwright  # noqa: E402
-
+from playwright.sync_api import sync_playwright
 
 # ---------------------------------------------------------------------------
 # real adapter — every default op backed by a real method, plus mutating
@@ -46,6 +43,7 @@ class E2EAdapter(fp.PortalAdapter):
     def __init__(self) -> None:
         self.assets_dir = BUNDLE if BUNDLE.is_dir() else None
         self.applied: list[dict] = []
+        self.task_log: list[dict] = []
         self.ops = fp.default_operations(self) + [
             fp.Operation("POST", "/installation/plan", self._plan, mutating=True),
             fp.Operation(
@@ -182,7 +180,7 @@ class E2EAdapter(fp.PortalAdapter):
         ]
 
     def tasks(self) -> list[dict]:
-        return list(self._task_log)
+        return list(self.task_log)
 
     def graph(self) -> dict:
         return {
@@ -194,7 +192,6 @@ class E2EAdapter(fp.PortalAdapter):
             "edges": [{"from": "a", "to": "b", "kind": "imports"}],
         }
 
-    _task_log: list[dict] = []
 
     def _plan(self, ctx: fp.RequestContext) -> dict:
         plan = {
@@ -252,7 +249,7 @@ class E2EAdapter(fp.PortalAdapter):
             "finished_at": "2026-10-11T00:00:01Z", "exit_code": 0,
             "receipt": self.installation_status(),
         }
-        self._task_log.append(record)
+        self.task_log.append(record)
         return {"status": "completed", "task": record,
                 "actions": [{"kind": "task", "path": "status", "status": "completed"}]}
 

@@ -405,8 +405,22 @@ class PortalHandler(BaseHTTPRequestHandler):
         host = urllib.parse.urlparse(origin).hostname or ""
         return host in ("127.0.0.1", "localhost", "::1")
 
+    def _host_ok(self) -> bool:
+        # DNS-rebinding guard: even with a valid session/origin, a browser
+        # pointed at attacker.example resolved to 127.0.0.1 must not reach
+        # the API or the assets — refuse any non-loopback Host early.
+        raw = (self.headers.get("Host") or "").strip().lower()
+        if raw.startswith("["):
+            host = raw[1:].split("]")[0]
+        else:
+            host = raw.split(":")[0]
+        return host in ("127.0.0.1", "localhost", "::1")
+
     # -- routing -----------------------------------------------------------
     def do_GET(self) -> None:
+        if not self._host_ok():
+            self._reject(403, self._envelope(self._cid(), error=_err("PORTAL-HOST", "host must be loopback")))
+            return
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
         if path.startswith(API_PREFIX + "/"):
@@ -415,6 +429,9 @@ class PortalHandler(BaseHTTPRequestHandler):
             self._static(path, parsed)
 
     def do_POST(self) -> None:
+        if not self._host_ok():
+            self._reject(403, self._envelope(self._cid(), error=_err("PORTAL-HOST", "host must be loopback")))
+            return
         parsed = urllib.parse.urlparse(self.path)
         if not parsed.path.startswith(API_PREFIX + "/"):
             self._reject(404, self._envelope(self._cid(), error=_err("PORTAL-NOT-FOUND", "not found")))
