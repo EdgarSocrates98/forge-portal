@@ -48,7 +48,7 @@ interface PendingPlan {
     </section>
 
     @if (pending(); as p) {
-      <section class="card">
+      <section class="card" data-lift>
         <h2>{{ 'tasks.plan' | t }}</h2>
         <p class="muted">{{ 'tasks.plan.review' | t }}</p>
         <pre class="plan">{{ planText(p.plan) }}</pre>
@@ -66,12 +66,12 @@ interface PendingPlan {
     }
 
     @if (receipt(); as r) {
-      <section class="card">
+      <section class="card" data-lift>
         <h2>{{ 'tasks.result' | t }}</h2>
-        <p>
-          <strong>{{ r.status }}</strong>
+        <p class="receipt__status">
+          <ui-state-badge [state]="r.status" />
           @if (r.detail) {
-            — {{ r.detail }}
+            <span>{{ r.detail }}</span>
           }
         </p>
         @if (r.refusal) {
@@ -121,7 +121,7 @@ interface PendingPlan {
         </table>
       } @else {
         @if (!loading()) {
-          <ui-empty [title]="'tasks.empty' | t" />
+          <ui-empty icon="tasks" [title]="'tasks.empty' | t" />
         }
       }
     </section>
@@ -168,6 +168,11 @@ interface PendingPlan {
     }
     .refusal {
       color: var(--warn);
+    }
+    .receipt__status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
     }
   `,
 })

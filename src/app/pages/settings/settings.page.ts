@@ -4,11 +4,12 @@ import { I18nService, LocalePreference } from '../../core/i18n/i18n.service';
 import { ThemeStore, Scheme } from '../../core/theme/theme.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-settings',
   standalone: true,
-  imports: [TPipe, PageHeader],
+  imports: [TPipe, PageHeader, UiIcon],
   template: `
     <ui-page-header [title]="'settings.title' | t" [subtitle]="'settings.subtitle' | t" />
 
@@ -42,6 +43,7 @@ import { PageHeader } from '../../shared/page-header';
               [checked]="theme.scheme() === opt.id"
               (change)="setScheme(opt.id)"
             />
+            <ui-icon [name]="schemeIcon(opt.id)" [size]="15" />
             <span>{{ opt.label | t }}</span>
           </label>
         }
@@ -124,6 +126,12 @@ import { PageHeader } from '../../shared/page-header';
     .opt input[type='radio'] {
       accent-color: var(--accent);
     }
+    .opt ui-icon {
+      color: var(--fg-muted);
+    }
+    .opt[data-active] ui-icon {
+      color: var(--accent);
+    }
     .kv {
       display: grid;
       margin: 0;
@@ -170,5 +178,9 @@ export class SettingsPage {
 
   setScheme(scheme: Scheme): void {
     this.theme.setScheme(scheme);
+  }
+
+  schemeIcon(id: Scheme): string {
+    return id === 'dark' ? 'moon' : id === 'light' ? 'sun' : 'contrast';
   }
 }

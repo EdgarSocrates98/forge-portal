@@ -72,12 +72,12 @@ import { UiIcon } from '../../shared/icon';
           </article>
         } @empty {
           @if (!loading()) {
-            <ui-empty [title]="'agents.empty' | t" />
+            <ui-empty icon="agents" [title]="'agents.empty' | t" />
           }
         }
       </section>
     } @else if (!error() && !loading()) {
-      <ui-empty [title]="'agents.none' | t" />
+      <ui-empty icon="agents" [title]="'agents.none' | t" />
     }
   `,
   styles: `

@@ -5,6 +5,7 @@ import { I18nService } from './core/i18n/i18n.service';
 import { TPipe } from './core/i18n/i18n.pipe';
 import { ThemeStore } from './core/theme/theme.store';
 import { UiIcon } from './shared/icon';
+import { CommandPalette } from './shared/command-palette';
 
 interface NavEntry {
   section: string;
@@ -43,13 +44,14 @@ const NAV: NavEntry[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TPipe, UiIcon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TPipe, UiIcon, CommandPalette],
   styleUrl: './app.css',
   template: `
+    <a class="skip-link" href="#content">{{ 'nav.skip' | t }}</a>
     <div class="shell">
       <aside class="shell__side" [attr.data-collapsed]="collapsed() || null">
         <a class="brand" routerLink="/dashboard">
-          <span class="brand__mark" aria-hidden="true">◆</span>
+          <span class="brand__mark" aria-hidden="true"><ui-icon name="gem" [size]="18" /></span>
           <span class="brand__text">
             <strong>{{ store.forgeName() }}</strong>
             <small>{{ 'app.tagline' | t }}</small>
@@ -96,6 +98,15 @@ const NAV: NavEntry[] = [
           </div>
           <div class="topbar__actions">
             <button
+              class="icon-btn icon-btn--search"
+              (click)="palette.toggle()"
+              [attr.aria-label]="'command.open' | t"
+              [title]="'command.open' | t"
+            >
+              <ui-icon name="search" [size]="15" />
+              <kbd class="icon-btn__kbd" aria-hidden="true">Ctrl K</kbd>
+            </button>
+            <button
               class="icon-btn"
               (click)="toggleLocale()"
               [attr.aria-label]="'settings.language' | t"
@@ -114,7 +125,7 @@ const NAV: NavEntry[] = [
           </div>
         </header>
 
-        <main class="content" id="content">
+        <main class="content" id="content" tabindex="-1">
           @if (store.status() === 'offline') {
             <div class="offline-banner" role="alert">
               <p>{{ 'error.unreachable' | t }}</p>
@@ -127,6 +138,7 @@ const NAV: NavEntry[] = [
         </main>
       </div>
     </div>
+    <ui-command-palette #palette />
   `,
 })
 export class App {

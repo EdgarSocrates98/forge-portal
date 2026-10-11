@@ -29,105 +29,160 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
       </button>
     </ui-page-header>
 
-    <section class="card">
-      <h2>{{ 'install.status' | t }}</h2>
-      @if (store.health(); as h) {
-        <ui-state-badge [state]="h.state" />
-      }
+    <section class="card status">
+      <div class="status__row">
+        <h2>{{ 'install.status' | t }}</h2>
+        @if (store.health(); as h) {
+          <ui-state-badge [state]="h.state" />
+        }
+      </div>
+      <ol class="stepper" [attr.aria-label]="'install.title' | t">
+        @for (s of stepKeys; track s; let i = $index) {
+          <li
+            class="stepper__step"
+            [attr.data-state]="stepState(i)"
+            [attr.aria-current]="i === stepIndex() ? 'step' : null"
+          >
+            <span class="stepper__dot" aria-hidden="true">
+              @if (stepState(i) === 'done') {
+                <ui-icon name="check" [size]="13" />
+              } @else if (stepState(i) === 'warn') {
+                <ui-icon name="alert" [size]="13" />
+              } @else {
+                {{ i + 1 }}
+              }
+            </span>
+            <span class="stepper__label">{{ s | t }}</span>
+          </li>
+        }
+      </ol>
     </section>
 
-    <section class="card">
-      <h2>{{ 'install.scope' | t }}</h2>
-      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.scope' | t">
-        @for (s of scopes; track s.id) {
-          <label class="scope" [attr.data-active]="scope() === s.id || null">
-            <input
-              type="radio"
-              name="scope"
-              [value]="s.id"
-              [checked]="scope() === s.id"
-              (change)="scope.set(s.id)"
-            />
-            <span>
-              <strong>{{ s.label | t }}</strong>
-              <small>{{ s.hint | t }}</small>
-            </span>
-          </label>
-        }
-      </div>
+    <div class="config-grid">
+      <section class="card">
+        <h2>{{ 'install.scope' | t }}</h2>
+        <div class="scopes" role="radiogroup" [attr.aria-label]="'install.scope' | t">
+          @for (s of scopes; track s.id) {
+            <label class="scope" [attr.data-active]="scope() === s.id || null">
+              <input
+                type="radio"
+                name="scope"
+                [value]="s.id"
+                [checked]="scope() === s.id"
+                (change)="scope.set(s.id)"
+              />
+              <span>
+                <strong>{{ s.label | t }}</strong>
+                <small>{{ s.hint | t }}</small>
+              </span>
+            </label>
+          }
+        </div>
 
-      <h2>{{ 'install.hosts' | t }}</h2>
-      <p class="muted">{{ 'install.hosts.hint' | t }}</p>
-      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.hosts' | t">
-        @for (h of hostChoices; track h.id) {
-          <label class="scope" [attr.data-active]="host() === h.id || null">
-            <input
-              type="radio"
-              name="host"
-              [value]="h.id"
-              [checked]="host() === h.id"
-              (change)="host.set(h.id)"
-            />
-            <span>
-              <strong>{{ h.labelKey ? (h.labelKey | t) : h.label }}</strong>
-              <small>{{ hostState(h.id) }}</small>
-            </span>
-          </label>
-        }
-      </div>
+        <h2>{{ 'install.hosts' | t }}</h2>
+        <p class="muted">{{ 'install.hosts.hint' | t }}</p>
+        <div class="scopes" role="radiogroup" [attr.aria-label]="'install.hosts' | t">
+          @for (h of hostChoices; track h.id) {
+            <label class="scope" [attr.data-active]="host() === h.id || null">
+              <input
+                type="radio"
+                name="host"
+                [value]="h.id"
+                [checked]="host() === h.id"
+                (change)="host.set(h.id)"
+              />
+              <span>
+                <strong>{{ h.labelKey ? (h.labelKey | t) : h.label }}</strong>
+                <small>{{ hostState(h.id) }}</small>
+              </span>
+            </label>
+          }
+        </div>
 
-      <h2>{{ 'install.profile' | t }}</h2>
-      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.profile' | t">
-        @for (p of profiles; track p.id) {
-          <label class="scope" [attr.data-active]="profile() === p.id || null">
-            <input
-              type="radio"
-              name="profile"
-              [value]="p.id"
-              [checked]="profile() === p.id"
-              (change)="profile.set(p.id)"
-            />
-            <span>
-              <strong>{{ p.label | t }}</strong>
-              <small>{{ p.hint | t }}</small>
-            </span>
-          </label>
-        }
-      </div>
+        <h2>{{ 'install.profile' | t }}</h2>
+        <div class="scopes" role="radiogroup" [attr.aria-label]="'install.profile' | t">
+          @for (p of profiles; track p.id) {
+            <label class="scope" [attr.data-active]="profile() === p.id || null">
+              <input
+                type="radio"
+                name="profile"
+                [value]="p.id"
+                [checked]="profile() === p.id"
+                (change)="profile.set(p.id)"
+              />
+              <span>
+                <strong>{{ p.label | t }}</strong>
+                <small>{{ p.hint | t }}</small>
+              </span>
+            </label>
+          }
+        </div>
 
-      <h2>{{ 'install.components' | t }}</h2>
-      <div class="comps">
-        @for (c of components; track c.id) {
-          <label class="comp">
-            <input type="checkbox" [checked]="selected().has(c.id)" (change)="toggle(c.id)" />
-            <span>{{ c.id }}</span>
-          </label>
-        }
-      </div>
+        <h2>{{ 'install.components' | t }}</h2>
+        <div class="comps">
+          @for (c of components; track c.id) {
+            <label class="comp" [attr.data-active]="selected().has(c.id) || null">
+              <input type="checkbox" [checked]="selected().has(c.id)" (change)="toggle(c.id)" />
+              <span>{{ c.id }}</span>
+            </label>
+          }
+        </div>
+      </section>
 
-      <div class="row">
-        <button class="btn btn--primary" [disabled]="busy()" (click)="plan()">
-          <ui-icon name="install" [size]="15" />
-          {{ 'install.plan' | t }}
-        </button>
-        <button class="btn" [disabled]="busy()" (click)="repair()">
-          <ui-icon name="refresh" [size]="15" />
-          {{ 'install.repair' | t }}
-        </button>
-        <button
-          class="btn btn--danger"
-          [disabled]="busy()"
-          [attr.data-armed]="uninstallArmed() || null"
-          (click)="uninstall()"
-        >
-          <ui-icon name="alert" [size]="15" />
-          {{ (uninstallArmed() ? 'install.uninstall.confirmBtn' : 'install.uninstall') | t }}
-        </button>
-      </div>
-      @if (uninstallArmed()) {
-        <p class="refusal" role="alert">{{ 'install.uninstall.confirm' | t }}</p>
-      }
-    </section>
+      <aside class="card summary">
+        <h2>{{ 'install.summary' | t }}</h2>
+        <dl class="summary__kv">
+          <div>
+            <dt>{{ 'install.summary.scope' | t }}</dt>
+            <dd>{{ scopeLabel() | t }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'install.summary.host' | t }}</dt>
+            <dd>{{ hostLabel() }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'install.summary.profile' | t }}</dt>
+            <dd>{{ profileLabel() | t }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'install.summary.components' | t }}</dt>
+            <dd>
+              @if (selected().size) {
+                <span class="summary__comps">
+                  @for (c of selected(); track c) {
+                    <code class="summary__chip">{{ c }}</code>
+                  }
+                </span>
+              } @else {
+                <span class="muted">{{ 'install.summary.empty' | t }}</span>
+              }
+            </dd>
+          </div>
+        </dl>
+        <div class="row">
+          <button class="btn btn--primary" [disabled]="busy() || !selected().size" (click)="plan()">
+            <ui-icon name="install" [size]="15" />
+            {{ 'install.plan' | t }}
+          </button>
+          <button class="btn" [disabled]="busy()" (click)="repair()">
+            <ui-icon name="refresh" [size]="15" />
+            {{ 'install.repair' | t }}
+          </button>
+          <button
+            class="btn btn--danger"
+            [disabled]="busy()"
+            [attr.data-armed]="uninstallArmed() || null"
+            (click)="uninstall()"
+          >
+            <ui-icon name="alert" [size]="15" />
+            {{ (uninstallArmed() ? 'install.uninstall.confirmBtn' : 'install.uninstall') | t }}
+          </button>
+        </div>
+        @if (uninstallArmed()) {
+          <p class="refusal" role="alert">{{ 'install.uninstall.confirm' | t }}</p>
+        }
+      </aside>
+    </div>
 
     @if (phase() === 'review' && planReceipt(); as r) {
       <section class="card plan" data-lift>
@@ -155,19 +210,19 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
     }
 
     @if (phase() === 'running') {
-      <section class="card running">
-        <div class="skeleton skeleton--line"></div>
+      <section class="card running" role="status">
+        <div class="running__spinner" aria-hidden="true"></div>
         <p class="muted">{{ 'install.running' | t }}</p>
       </section>
     }
 
     @if ((phase() === 'done' || phase() === 'refused') && result(); as r) {
-      <section class="card" data-lift>
+      <section class="card receipt" data-lift>
         <h2>{{ 'install.receipt' | t }}</h2>
-        <p>
-          <strong>{{ r.status }}</strong>
+        <p class="receipt__status">
+          <ui-state-badge [state]="r.status" />
           @if (r.detail) {
-            — {{ r.detail }}
+            <span>{{ r.detail }}</span>
           }
         </p>
         @if (r.refusal) {
@@ -206,6 +261,110 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
     }
     .card h2:first-child {
       margin-top: 0;
+    }
+    .status__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .status__row h2 {
+      margin: 0;
+    }
+    .config-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .summary {
+      position: sticky;
+      top: calc(var(--topbar-h) + var(--space-4));
+    }
+    .summary__kv {
+      display: grid;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-4);
+    }
+    .summary__kv > div {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--border);
+      font-size: var(--font-sm);
+    }
+    .summary__kv > div:last-child {
+      border-bottom: 0;
+      flex-direction: column;
+    }
+    .summary__kv dt {
+      color: var(--fg-muted);
+    }
+    .summary__kv dd {
+      margin: 0;
+      font-weight: 600;
+      text-align: right;
+    }
+    .summary__kv > div:last-child dd {
+      text-align: left;
+      margin-top: var(--space-1);
+    }
+    .summary__comps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    .summary__chip {
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-sm);
+      background: var(--accent-bg);
+      color: var(--accent-strong);
+      font-family: var(--font-mono);
+      font-size: var(--font-xs);
+      font-weight: 600;
+    }
+    .running {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .running p {
+      margin: 0;
+    }
+    .running__spinner {
+      width: 18px;
+      height: 18px;
+      flex: none;
+      border-radius: 50%;
+      border: 2px solid var(--accent-bg);
+      border-top-color: var(--accent);
+      animation: fg-spin 0.8s linear infinite;
+    }
+    @keyframes fg-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .running__spinner {
+        animation: none;
+        border-top-color: var(--border-strong);
+      }
+    }
+    .receipt__status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    @media (max-width: 880px) {
+      .config-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary {
+        position: static;
+      }
     }
     .scopes {
       display: grid;
@@ -276,6 +435,11 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
     .comp input[type='checkbox'] {
       accent-color: var(--accent);
     }
+    .comp[data-active] {
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      background: var(--accent-bg);
+      font-weight: 600;
+    }
     .row {
       display: flex;
       flex-wrap: wrap;
@@ -319,6 +483,52 @@ export class InstallPage {
   readonly error = signal<ApiError | null>(null);
 
   readonly busy = () => ['planning', 'running'].includes(this.phase());
+
+  readonly stepKeys = [
+    'install.step.configure',
+    'install.step.plan',
+    'install.step.review',
+    'install.step.done',
+  ];
+
+  stepIndex(): number {
+    switch (this.phase()) {
+      case 'planning':
+        return 1;
+      case 'review':
+        return 2;
+      case 'running':
+        return 3;
+      case 'done':
+      case 'refused':
+      case 'error':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
+  stepState(i: number): 'done' | 'active' | 'warn' | 'todo' {
+    const idx = this.stepIndex();
+    if (i < idx || idx === 4) {
+      if (idx === 4 && i === 3 && this.phase() !== 'done') return 'warn';
+      return 'done';
+    }
+    return i === idx ? 'active' : 'todo';
+  }
+
+  scopeLabel(): string {
+    return this.scopes.find((s) => s.id === this.scope())?.label ?? this.scope();
+  }
+
+  hostLabel(): string {
+    const c = this.hostChoices.find((h) => h.id === this.host());
+    return c?.labelKey ? this.i18n.t(c.labelKey) : (c?.label ?? this.host());
+  }
+
+  profileLabel(): string {
+    return this.profiles.find((p) => p.id === this.profile())?.label ?? this.profile();
+  }
 
   readonly hostChoices: { id: string; label?: string; labelKey?: string }[] = [
     { id: 'all', labelKey: 'install.host.all' },

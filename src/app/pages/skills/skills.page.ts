@@ -62,7 +62,7 @@ import { UiIcon } from '../../shared/icon';
             } @empty {
               @if (!loading()) {
                 <tr>
-                  <td colspan="4"><ui-empty [title]="'skills.empty' | t" /></td>
+                  <td colspan="4"><ui-empty icon="skills" [title]="'skills.empty' | t" /></td>
                 </tr>
               }
             }
@@ -70,7 +70,7 @@ import { UiIcon } from '../../shared/icon';
         </table>
       </div>
     } @else if (!error() && !loading()) {
-      <ui-empty [title]="'skills.none' | t" />
+      <ui-empty icon="skills" [title]="'skills.none' | t" />
     }
   `,
   styles: `
