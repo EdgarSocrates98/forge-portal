@@ -23,6 +23,7 @@ PROSE_RE = re.compile(r">([^<>{}\n]*[A-Za-zÀ-ÿ][^<>{}\n]*)<")
 # data vocabulary allowed untranslated (proper nouns, contract literals)
 PROSE_ALLOW = {
     "—", "…", "all", "PT", "EN", "◆", "»", "«", "?", "portal",
+    "Ctrl K",  # keyboard chord literal, not prose
 }
 
 BADGE_CONTRACT_STATES = [

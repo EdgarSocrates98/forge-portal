@@ -39,11 +39,11 @@ import { UiIcon } from '../../shared/icon';
     }
 
     @if (receipt(); as r) {
-      <section class="card">
-        <p>
-          <strong>{{ r.status }}</strong>
+      <section class="card" data-lift>
+        <p class="receipt__status">
+          <ui-state-badge [state]="r.status" />
           @if (r.detail) {
-            — {{ r.detail }}
+            <span>{{ r.detail }}</span>
           }
         </p>
         @if (r.refusal) {
@@ -144,6 +144,12 @@ import { UiIcon } from '../../shared/icon';
     }
     .refusal {
       color: var(--warn);
+    }
+    .receipt__status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin: 0;
     }
     details {
       margin-top: var(--space-3);

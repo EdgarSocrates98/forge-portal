@@ -15,8 +15,13 @@
   --fg-radius-lg: 0.875rem;
   --fg-radius-pill: 999px;
   --fg-motion-fast: 120ms;
+  --fg-motion-press: 140ms;
   --fg-motion-med: 220ms;
   --fg-motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* design-engineering easings: strong out for enters/presses,
+     in-out only for on-screen movement */
+  --fg-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --fg-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --fg-elev-1: 0 1px 2px rgb(0 0 0 / 0.12);
   --fg-elev-2: 0 4px 16px rgb(0 0 0 / 0.16);
   --fg-elev-3: 0 12px 40px rgb(0 0 0 / 0.24);
@@ -247,6 +252,9 @@ button {
   transition:
     box-shadow var(--fg-motion-med) var(--fg-motion-ease),
     border-color var(--fg-motion-fast) var(--fg-motion-ease);
+}
+.fg-card[data-lift] {
+  transition-duration: var(--fg-motion-fast), var(--fg-motion-fast);
 }
 .fg-card[data-lift]:hover {
   box-shadow: var(--fg-elev-2);
@@ -528,6 +536,9 @@ button {
   --topbar-h: var(--fg-topbar-h);
   --motion: var(--fg-motion-med) var(--fg-motion-ease);
   --motion-fast: var(--fg-motion-fast) var(--fg-motion-ease);
+  --ease-out: var(--fg-ease-out);
+  --ease-in-out: var(--fg-ease-in-out);
+  --press: var(--fg-motion-press) var(--fg-ease-out);
 
   --elev-card: var(--fg-elev-1);
   --elev-hover: var(--fg-elev-2);
@@ -565,8 +576,9 @@ button {
   border-color: var(--border-strong);
 }
 .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
   box-shadow: none;
+  transition-duration: var(--fg-motion-press);
 }
 .btn:disabled {
   opacity: 0.55;
@@ -607,10 +619,13 @@ a.btn:hover {
     border-color var(--motion-fast),
     transform var(--motion);
 }
+.card[data-lift] {
+  transition-duration: var(--fg-motion-fast), var(--fg-motion-fast), var(--fg-motion-fast);
+}
 .card[data-lift]:hover {
   box-shadow: var(--elev-hover);
   border-color: var(--border-strong);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .input,
@@ -680,7 +695,7 @@ a.btn:hover {
     var(--bg-hover) 60%
   );
   background-size: 200% 100%;
-  animation: fg-shimmer 1.4s ease-in-out infinite;
+  animation: fg-shimmer 1.4s linear infinite;
 }
 .skeleton--line {
   height: 0.875rem;
@@ -740,10 +755,13 @@ a.btn:hover {
   width: 3px;
   background: var(--stat-rail, var(--accent));
 }
+.stat {
+  transition-duration: var(--fg-motion-fast), var(--fg-motion-fast), var(--fg-motion-fast);
+}
 .stat:hover {
   box-shadow: var(--elev-hover);
   border-color: var(--border-strong);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 .stat__value {
   font-size: 1.5rem;
@@ -807,6 +825,211 @@ page-settings {
   page-settings {
     animation: none;
   }
+}
+
+/* small pop for state confirmations (done marks, armed buttons) */
+@keyframes fg-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.fg-pop {
+  animation: fg-pop var(--fg-motion-med) var(--fg-ease-out) both;
+}
+
+/* one-time staggered reveal for stat/card rows — first paint only */
+.stagger > * {
+  animation: fg-page-in var(--fg-motion-med) var(--fg-ease-out) both;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+.stagger > *:nth-child(n + 5) {
+  animation-delay: 160ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stagger > *,
+  .fg-pop {
+    animation: none;
+  }
+}
+
+/* stepper — horizontal phase indicator for multi-step flows */
+.stepper {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+.stepper__step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  color: var(--fg-muted);
+  font-size: var(--font-sm);
+}
+.stepper__step:not(:last-child)::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  margin: 0 var(--space-3);
+  border-radius: 1px;
+  background: var(--border);
+  transition: background var(--motion-med) var(--ease-out);
+}
+.stepper__dot {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  font-size: var(--font-xs);
+  font-weight: 650;
+  transition:
+    background var(--motion-med) var(--ease-out),
+    border-color var(--motion-med) var(--ease-out),
+    color var(--motion-fast);
+}
+.stepper__step[data-state='done'] {
+  color: var(--fg);
+}
+.stepper__step[data-state='done'] .stepper__dot {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+  animation: fg-pop var(--fg-motion-med) var(--fg-ease-out) both;
+}
+.stepper__step[data-state='done']::after {
+  background: var(--ok);
+}
+.stepper__step[data-state='active'] {
+  color: var(--fg);
+  font-weight: 600;
+}
+.stepper__step[data-state='active'] .stepper__dot {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.stepper__step[data-state='warn'] .stepper__dot {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stepper__step[data-state='done'] .stepper__dot {
+    animation: none;
+  }
+}
+@media (max-width: 560px) {
+  .stepper {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .stepper__step {
+    flex: none;
+  }
+  .stepper__step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* capability chip — icon + name + state dot */
+.cap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 7px var(--space-3) 7px var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-hover);
+  font-size: var(--font-sm);
+  font-weight: 550;
+  color: var(--fg);
+}
+.cap ui-icon {
+  color: var(--fg-muted);
+}
+.cap__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fg-muted);
+}
+.cap[data-state='supported'] {
+  border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+  background: var(--ok-bg);
+}
+.cap[data-state='supported'] ui-icon {
+  color: var(--ok);
+}
+.cap[data-state='supported'] .cap__dot {
+  background: var(--ok);
+}
+.cap[data-state='unverified'] {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  background: var(--warn-bg);
+}
+.cap[data-state='unverified'] ui-icon {
+  color: var(--warn);
+}
+.cap[data-state='unverified'] .cap__dot {
+  background: var(--warn);
+}
+.cap[data-state='unsupported'],
+.cap[data-state='not_applicable'] {
+  opacity: 0.6;
+}
+
+/* skip-to-content — visible only on keyboard focus */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--elev-pop);
+  transform: translateY(-200%);
+  transition: transform var(--motion-fast);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* disclosure polish — details/summary */
+details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--fg-muted);
+  border-radius: var(--radius-sm);
+  transition: color var(--motion-fast);
+}
+details > summary:hover {
+  color: var(--fg);
+}
+details > summary::marker {
+  color: var(--accent);
 }
 
 /* ============================ shell chrome ============================ */
@@ -915,7 +1138,10 @@ page-settings {
   text-decoration: none;
   font-size: var(--font-sm);
   font-weight: 500;
-  transition: all var(--motion-fast);
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast),
+    transform var(--motion-fast);
 }
 .nav__item::before {
   content: '';
@@ -956,7 +1182,11 @@ page-settings {
   background: transparent;
   color: var(--fg-muted);
   cursor: pointer;
-  transition: all var(--motion-fast);
+  transition:
+    color var(--motion-fast),
+    background var(--motion-fast),
+    border-color var(--motion-fast),
+    transform var(--motion-fast);
 }
 .nav__collapse {
   margin: var(--space-2);
@@ -977,6 +1207,25 @@ page-settings {
 }
 .icon-btn:active {
   transform: scale(0.96);
+}
+.icon-btn--search {
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+}
+.icon-btn__kbd {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 640px) {
+  .icon-btn__kbd {
+    display: none;
+  }
 }
 
 .shell__main {

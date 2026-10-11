@@ -33,6 +33,7 @@ import { UiIcon } from '../../shared/icon';
           />
         </div>
         <button class="btn btn--primary" [disabled]="busy() || !query().trim()" (click)="search()">
+          <ui-icon name="search" [size]="14" />
           {{ 'knowledge.search' | t }}
         </button>
       </div>
@@ -54,7 +55,7 @@ import { UiIcon } from '../../shared/icon';
           </footer>
         </article>
       } @empty {
-        <ui-empty [title]="'knowledge.empty' | t" />
+        <ui-empty icon="knowledge" [title]="'knowledge.empty' | t" />
       }
     }
   `,
@@ -99,6 +100,10 @@ import { UiIcon } from '../../shared/icon';
       color: var(--accent);
       font-weight: 600;
       flex-shrink: 0;
+      background: var(--accent-bg);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      border-radius: var(--radius-pill);
+      padding: 1px var(--space-2);
     }
     .muted {
       color: var(--fg-muted);

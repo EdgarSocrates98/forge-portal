@@ -65,16 +65,32 @@ import { UiIcon } from '../../shared/icon';
             <p class="muted">{{ h.detail }}</p>
           }
           <div class="row">
-            <button class="btn" [disabled]="!h.detected" (click)="launch(h)">
+            <button
+              class="btn"
+              [class.btn--primary]="h.detected"
+              [disabled]="!h.detected"
+              (click)="launch(h)"
+            >
+              <ui-icon name="external" [size]="14" />
               {{ 'hosts.launch' | t }}
             </button>
           </div>
           @if (launchHint(); as hint) {
             @if (hint.host === h.host) {
-              <div class="hint">
-                <p class="hint__title">
-                  <ui-icon name="terminal" [size]="13" />{{ 'hosts.launch.copyHint' | t }}
-                </p>
+              <div class="hint" role="note">
+                <div class="hint__head">
+                  <p class="hint__title">
+                    <ui-icon name="terminal" [size]="13" />{{ 'hosts.launch.copyHint' | t }}
+                  </p>
+                  <button
+                    class="btn btn--mini"
+                    (click)="copyCommand(hint.command)"
+                    [attr.aria-label]="'state.copy' | t"
+                  >
+                    <ui-icon [name]="copied() ? 'check' : 'copy'" [size]="13" />
+                    {{ (copied() ? 'state.copied' : 'state.copy') | t }}
+                  </button>
+                </div>
                 <code>{{ hint.command }}</code>
               </div>
             }
@@ -95,6 +111,7 @@ import { UiIcon } from '../../shared/icon';
     }
     .card[data-off] {
       opacity: 0.55;
+      filter: grayscale(0.6);
     }
     .card__head {
       display: flex;
@@ -145,6 +162,12 @@ import { UiIcon } from '../../shared/icon';
       display: grid;
       gap: 4px;
     }
+    .hint__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
     .hint__title {
       margin: 0;
       font-size: var(--font-xs);
@@ -153,6 +176,11 @@ import { UiIcon } from '../../shared/icon';
       display: inline-flex;
       align-items: center;
       gap: 6px;
+    }
+    .btn--mini {
+      padding: 2px var(--space-2);
+      font-size: var(--font-xs);
+      gap: 4px;
     }
     .hint code {
       font-family: var(--font-mono);
@@ -165,6 +193,7 @@ export class HostsPage {
   private readonly api = inject(PortalApi);
   readonly hosts = signal<HostDetection[]>([]);
   readonly launchHint = signal<{ host: string; command: string } | null>(null);
+  readonly copied = signal(false);
   readonly error = signal<ApiError | null>(null);
   readonly loading = signal(true);
 
@@ -199,6 +228,16 @@ export class HostsPage {
       });
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    }
+  }
+
+  async copyCommand(cmd: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(cmd);
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 1600);
+    } catch {
+      /* clipboard indisponível — comando continua visível para copiar à mão */
     }
   }
 }

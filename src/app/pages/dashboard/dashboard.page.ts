@@ -50,9 +50,15 @@ import { UiIcon } from '../../shared/icon';
         </button>
       </section>
 
-      <section class="stats">
+      <section class="stats stagger">
         <div class="stat" [style.--stat-rail]="'var(--accent)'">
-          <span class="stat__value">{{ health()?.state ?? '—' }}</span>
+          <span class="stat__value">
+            @if (health(); as h) {
+              <ui-state-badge [state]="h.state" />
+            } @else {
+              —
+            }
+          </span>
           <span class="stat__label">{{ 'dashboard.stat.state' | t }}</span>
         </div>
         <div class="stat" [style.--stat-rail]="'var(--ok)'">
@@ -125,11 +131,15 @@ import { UiIcon } from '../../shared/icon';
         @if (store.capabilities().length) {
           <div class="caps">
             @for (cap of store.capabilities(); track cap.id) {
-              <ui-state-badge [state]="cap.state" [labelOverride]="cap.id" />
+              <span class="cap" [attr.data-state]="cap.state" [title]="cap.state">
+                <ui-icon [name]="capIcon(cap.id)" [size]="15" />
+                <span class="cap__id">{{ cap.id }}</span>
+                <i class="cap__dot" aria-hidden="true"></i>
+              </span>
             }
           </div>
         } @else {
-          <ui-empty [title]="'dashboard.none' | t" />
+          <ui-empty icon="dashboard" [title]="'dashboard.none' | t" />
         }
       </section>
     }
@@ -327,6 +337,12 @@ import { UiIcon } from '../../shared/icon';
     .steps li[data-done] .steps__mark {
       color: var(--ok);
       background: var(--ok-bg);
+      animation: fg-pop var(--fg-motion-med) var(--fg-ease-out) both;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .steps li[data-done] .steps__mark {
+        animation: none;
+      }
     }
     .steps a {
       color: var(--fg);
@@ -357,6 +373,25 @@ export class DashboardPage {
   readonly checksOk = computed(
     () => (this.store.health()?.checks ?? []).filter((c) => c.state === 'PASS').length,
   );
+
+  private readonly capIcons: Record<string, string> = {
+    tasks: 'tasks',
+    graph: 'graph',
+    mcp: 'mcp',
+    skills: 'skills',
+    agents: 'agents',
+    knowledge: 'knowledge',
+    hosts: 'hosts',
+    install: 'install',
+    profiles: 'profiles',
+    scan: 'search',
+    analyze: 'search',
+    docs: 'knowledge',
+  };
+
+  capIcon(id: string): string {
+    return this.capIcons[id] ?? 'check';
+  }
 
   readonly steps = computed(() => {
     const state = this.store.health()?.state ?? 'NOT_INSTALLED';

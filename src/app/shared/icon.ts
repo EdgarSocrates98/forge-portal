@@ -49,6 +49,9 @@ const PATHS: Record<string, string> = {
     '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M13 15h4"/>',
   'shield-check':
     '<path d="M12 2.5 20 6v6c0 5-3.4 8.4-8 9.5C7.4 20.4 4 17 4 12V6l8-3.5Z"/><path d="m8.8 11.7 2.2 2.2 4.2-4.4"/>',
+  gem: '<path d="M6 3h12l4 6-10 13L2 9 6 3Z"/><path d="m11 3-3 6 4 13 4-13-3-6"/><path d="M2 9h20"/>',
+  inbox:
+    '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
 };
 
 @Component({

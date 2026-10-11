@@ -52,6 +52,7 @@ import { UiIcon } from '../../shared/icon';
         </section>
       } @else {
         <ui-empty
+          icon="graph"
           [title]="'graph.unavailable' | t"
           [hint]="b.availability.unlock ?? ('graph.buildHint' | t)"
         />
