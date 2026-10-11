@@ -10,6 +10,7 @@ import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
+import { ForgeDoc, UiForgeDoc } from '../../shared/forge-doc';
 
 interface PendingPlan {
   plan_token: string;
@@ -20,7 +21,7 @@ interface PendingPlan {
 @Component({
   selector: 'page-tasks',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
+  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiForgeDoc],
   template: `
     <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t" />
 
@@ -51,13 +52,44 @@ interface PendingPlan {
       <section class="card" data-lift>
         <h2>{{ 'tasks.plan' | t }}</h2>
         <p class="muted">{{ 'tasks.plan.review' | t }}</p>
-        <pre class="plan">{{ planText(p.plan) }}</pre>
+
+        <dl class="plan-card">
+          <div class="kv">
+            <dt>{{ 'tasks.plan.task' | t }}</dt>
+            <dd>{{ planField(p.plan, 'label') || planField(p.plan, 'verb') }}</dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'tasks.plan.verb' | t }}</dt>
+            <dd>
+              <code>{{ planField(p.plan, 'verb') }}</code>
+            </dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'tasks.plan.intent' | t }}</dt>
+            <dd>{{ planField(p.plan, 'intent') }}</dd>
+          </div>
+          @for (arg of planArgs(p.plan); track arg[0]) {
+            <div class="kv">
+              <dt>
+                <code>{{ arg[0] }}</code>
+              </dt>
+              <dd>{{ arg[1] }}</dd>
+            </div>
+          }
+        </dl>
+
+        <details class="raw">
+          <summary>{{ 'fdoc.raw' | t }}</summary>
+          <pre>{{ planText(p.plan) }}</pre>
+        </details>
+
         <div class="row">
           <button
             class="btn btn--primary"
             [disabled]="busy()"
             (click)="execute(p.plan, p.plan_token)"
           >
+            <ui-icon name="tasks" [size]="14" />
             {{ 'tasks.execute' | t }}
           </button>
           <button class="btn" (click)="pending.set(null)">{{ 'state.cancel' | t }}</button>
@@ -70,17 +102,23 @@ interface PendingPlan {
         <h2>{{ 'tasks.result' | t }}</h2>
         <p class="receipt__status">
           <ui-state-badge [state]="r.status" />
+          @if (r.task?.exit_code !== null && r.task?.exit_code !== undefined) {
+            <span class="muted">exit {{ r.task!.exit_code }}</span>
+          }
           @if (r.detail) {
             <span>{{ r.detail }}</span>
           }
         </p>
-        @if (r.refusal) {
+        @if (r.refusal || r.task?.refusal) {
           <p class="refusal">
-            <code>{{ r.refusal }}</code>
+            <code>{{ r.refusal ?? r.task!.refusal }}</code>
             @if (r.unlock) {
               — {{ r.unlock }}
             }
           </p>
+        }
+        @if (receiptDoc(r); as d) {
+          <ui-forge-doc [doc]="d" />
         }
       </section>
     }
@@ -150,13 +188,33 @@ interface PendingPlan {
       max-width: none;
       margin-bottom: 0;
     }
-    .plan {
+    .plan-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-2) var(--space-4);
+      margin: var(--space-3) 0;
+    }
+    .kv dt {
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .kv dd {
+      margin: 0;
+      font-weight: 550;
+      word-break: break-all;
+    }
+    .raw {
+      margin: var(--space-2) 0;
+    }
+    .raw pre {
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: var(--space-3);
       overflow-x: auto;
-      font-size: var(--font-sm);
+      font-size: var(--font-xs);
     }
     .row {
       display: flex;
@@ -230,10 +288,32 @@ export class TasksPage {
     return JSON.stringify(plan, null, 2);
   }
 
+  planField(plan: Record<string, unknown>, key: string): string {
+    const v = plan[key];
+    return v === undefined || v === null ? '' : String(v);
+  }
+
+  planArgs(plan: Record<string, unknown>): Array<[string, string]> {
+    const args = plan['args'];
+    if (!args || typeof args !== 'object') return [];
+    return Object.entries(args as Record<string, unknown>).map(([k, v]) => [
+      k,
+      typeof v === 'object' ? JSON.stringify(v) : String(v),
+    ]);
+  }
+
+  /** The inner forge/* doc of a task receipt — rendered by ui-forge-doc. */
+  receiptDoc(r: InstallationReceipt): ForgeDoc | null {
+    const inner = r.task?.receipt;
+    return inner && typeof inner === 'object' ? (inner as ForgeDoc) : null;
+  }
+
   stageKind(stage: string): string {
-    if (stage === 'completed') return 'supported';
-    if (['failed', 'refused'].includes(stage)) return 'error';
-    if (['running', 'planning', 'verifying'].includes(stage)) return 'info';
+    const s = (stage || '').toLowerCase();
+    if (s === 'completed') return 'supported';
+    if (['failed', 'refused', 'cancelled'].includes(s)) return 'error';
+    if (['awaiting_approval', 'partial'].includes(s)) return 'warn';
+    if (['running', 'planning', 'verifying'].includes(s)) return 'info';
     return 'muted';
   }
 }

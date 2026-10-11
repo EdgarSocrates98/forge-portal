@@ -106,6 +106,8 @@ export interface InstallationReceipt {
   refusal?: string;
   detail?: string;
   unlock?: string;
+  task?: TaskExecution;
+  checks?: { id?: string; status?: string; detail?: string; repairable?: boolean }[];
 }
 
 export interface ProfileDescriptor {

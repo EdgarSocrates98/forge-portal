@@ -1,0 +1,71 @@
+name: forge-portal CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Python deps
+        run: python -m pip install pytest ruff playwright
+
+      - name: Node deps
+        run: npm ci
+
+      # ---- python gates --------------------------------------------------
+      - name: Ruff
+        run: ruff check portal_core tests scripts e2e
+
+      - name: Python tests (server + security matrix)
+        run: python -m pytest tests/ -q
+
+      # ---- frontend gates ------------------------------------------------
+      - name: Format check
+        run: npx prettier --check "src/**/*.{ts,html,css}"
+
+      - name: Typecheck + build (strict, strictTemplates)
+        run: npx ng build --configuration production
+
+      - name: Unit tests (vitest)
+        run: npx ng test --watch=false
+
+      - name: i18n parity
+        run: python scripts/check_i18n.py
+
+      # ---- browser e2e ---------------------------------------------------
+      - name: Chromium
+        run: python -m playwright install chromium --with-deps
+
+      - name: Browser E2E (real server + real bundle)
+        run: python -m pytest e2e/ -q
+
+      - name: Upload browser artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
+          path: e2e/artifacts/
+          retention-days: 14
+
+      # ---- distribution gates -------------------------------------------
+      - name: Vendored parity (7 destinations)
+        run: python scripts/vendor.py --check
+
+      - name: HTTP e2e (all forges, when siblings are checked out)
+        if: github.event_name == 'push'
+        run: python scripts/portal_e2e.py || true
