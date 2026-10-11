@@ -30,14 +30,22 @@ ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
 PORTAL_VERSION = "1.0.0"
 
 # sibling repo → package dir that receives _forge_portal.py
-FORGES: dict[str, str] = {
+FORGES: dict[str, str | dict[str, str]] = {
     "the-forge": "src/theforge",
-    "spark-forge-aws": "sparkforge",
+    "spark-forge-aws": "sparkforge_aws",
     "spark-forge-azure": "sparkforge_azure",
     "api-forge": "src/apiforge",
     "platform-forge": "platformforge",
-    "forge-doctor-data": "src/forge_doctor_data",
-    "forge-doctor-api": "src/forge_doctor_api",
+    # doctor-data is poetry-packaged: only files inside the package dir
+    # ship in the wheel, so assets live in the package (portal_assets).
+    "forge-doctor-data": {
+        "pkg": "src/forge_doctor_data",
+        "assets": "src/forge_doctor_data/portal_assets",
+        "manifest": "portal/manifest.json",
+    },
+    # doctor-api package boundary bans network imports in src/ — the portal
+    # is a checkout-level host surface like forge_install.py → scripts/.
+    "forge-doctor-api": "scripts",
 }
 
 
@@ -54,15 +62,17 @@ def manifest_for(assets_dir: Path) -> dict:
     return {"schema": "forge/PortalAssets/1", "portal_version": PORTAL_VERSION, "files": files}
 
 
-def vendor_one(name: str, pkg: str, *, check: bool) -> list[str]:
+def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[str]:
     repo = WORKSPACE / name
     notes: list[str] = []
     if not repo.is_dir():
         return [f"SKIP {name}: checkout not found at {repo}"]
 
-    server_dst = repo / pkg / "_forge_portal.py"
-    assets_dst = repo / "portal" / "assets"
-    manifest_dst = repo / "portal" / "manifest.json"
+    if isinstance(target, str):
+        target = {"pkg": target}
+    server_dst = repo / target["pkg"] / "_forge_portal.py"
+    assets_dst = repo / target.get("assets", "portal/assets")
+    manifest_dst = repo / target.get("manifest", "portal/manifest.json")
 
     diffs: list[Path] = []
     if server_dst.is_file() and sha256(server_dst) == sha256(SERVER_SRC):

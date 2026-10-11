@@ -2,9 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { InstallationReceipt } from '../../core/api/api.models';
+import { HostDetection, InstallationReceipt } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
@@ -33,7 +34,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 
     <section class="card">
       <h2>{{ 'install.scope' | t }}</h2>
-      <div class="scopes" role="radiogroup">
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.scope' | t">
         @for (s of scopes; track s.id) {
           <label class="scope" [attr.data-active]="scope() === s.id || null">
             <input
@@ -46,6 +47,45 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
             <span>
               <strong>{{ s.label | t }}</strong>
               <small>{{ s.hint | t }}</small>
+            </span>
+          </label>
+        }
+      </div>
+
+      <h2>{{ 'install.hosts' | t }}</h2>
+      <p class="muted">{{ 'install.hosts.hint' | t }}</p>
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.hosts' | t">
+        @for (h of hostChoices; track h.id) {
+          <label class="scope" [attr.data-active]="host() === h.id || null">
+            <input
+              type="radio"
+              name="host"
+              [value]="h.id"
+              [checked]="host() === h.id"
+              (change)="host.set(h.id)"
+            />
+            <span>
+              <strong>{{ h.labelKey ? (h.labelKey | t) : h.label }}</strong>
+              <small>{{ hostState(h.id) }}</small>
+            </span>
+          </label>
+        }
+      </div>
+
+      <h2>{{ 'install.profile' | t }}</h2>
+      <div class="scopes" role="radiogroup" [attr.aria-label]="'install.profile' | t">
+        @for (p of profiles; track p.id) {
+          <label class="scope" [attr.data-active]="profile() === p.id || null">
+            <input
+              type="radio"
+              name="profile"
+              [value]="p.id"
+              [checked]="profile() === p.id"
+              (change)="profile.set(p.id)"
+            />
+            <span>
+              <strong>{{ p.label | t }}</strong>
+              <small>{{ p.hint | t }}</small>
             </span>
           </label>
         }
@@ -68,10 +108,18 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
         <button class="btn" [disabled]="busy()" (click)="repair()">
           {{ 'install.repair' | t }}
         </button>
-        <button class="btn btn--danger" [disabled]="busy()" (click)="uninstall()">
-          {{ 'install.uninstall' | t }}
+        <button
+          class="btn btn--danger"
+          [disabled]="busy()"
+          [attr.data-armed]="uninstallArmed() || null"
+          (click)="uninstall()"
+        >
+          {{ (uninstallArmed() ? 'install.uninstall.confirmBtn' : 'install.uninstall') | t }}
         </button>
       </div>
+      @if (uninstallArmed()) {
+        <p class="refusal" role="alert">{{ 'install.uninstall.confirm' | t }}</p>
+      }
     </section>
 
     @if (phase() === 'review' && planReceipt(); as r) {
@@ -90,7 +138,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           </ul>
         }
         <div class="row">
-          <button class="btn btn--primary" (click)="apply(r.plan_token!)">
+          <button class="btn btn--primary" (click)="apply(r.plan ?? {}, r.plan_token!)">
             {{ 'install.apply' | t }}
           </button>
           <button class="btn" (click)="reset()">{{ 'state.cancel' | t }}</button>
@@ -211,16 +259,48 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 })
 export class InstallPage {
   private readonly api = inject(PortalApi);
+  private readonly i18n = inject(I18nService);
   readonly store = inject(PortalStore);
 
   readonly phase = signal<Phase>('idle');
+  readonly uninstallArmed = signal(false);
   readonly scope = signal<'project' | 'workspace' | 'user'>('project');
+  readonly host = signal<string>('all');
+  readonly profile = signal<'minimal' | 'recommended' | 'full'>('recommended');
+  readonly hostDetections = signal<HostDetection[]>([]);
   readonly selected = signal<Set<string>>(new Set(['skills', 'agents', 'mcp']));
   readonly planReceipt = signal<InstallationReceipt | null>(null);
   readonly result = signal<InstallationReceipt | null>(null);
   readonly error = signal<ApiError | null>(null);
 
   readonly busy = () => ['planning', 'running'].includes(this.phase());
+
+  readonly hostChoices: { id: string; label?: string; labelKey?: string }[] = [
+    { id: 'all', labelKey: 'install.host.all' },
+    { id: 'claude', label: 'Claude' },
+    { id: 'devin', label: 'Devin' },
+    { id: 'codex', label: 'Codex' },
+    { id: 'copilot', label: 'Copilot' },
+  ];
+
+  readonly profiles = [
+    { id: 'minimal' as const, label: 'profiles.economy', hint: 'profiles.economy.desc' },
+    { id: 'recommended' as const, label: 'profiles.balanced', hint: 'profiles.balanced.desc' },
+    { id: 'full' as const, label: 'profiles.full', hint: 'profiles.full.desc' },
+  ];
+
+  constructor() {
+    firstValueFrom(this.api.hosts())
+      .then((hs) => this.hostDetections.set(hs))
+      .catch(() => this.hostDetections.set([]));
+  }
+
+  hostState(id: string): string {
+    if (id === 'all') return '—';
+    const d = this.hostDetections().find((h) => h.host === id);
+    if (!d) return '…';
+    return d.detected ? d.integration : this.i18n.t('install.host.notDetected');
+  }
 
   readonly scopes = [
     { id: 'project' as const, label: 'install.scope.project', hint: 'install.scope.project.hint' },
@@ -248,6 +328,8 @@ export class InstallPage {
       const r = await firstValueFrom(
         this.api.installationPlan({
           scope: this.scope(),
+          host: this.host(),
+          profile: this.profile(),
           components: Object.fromEntries([...this.selected()].map((c) => [c, true])),
         }),
       );
@@ -263,10 +345,10 @@ export class InstallPage {
     }
   }
 
-  async apply(planToken: string): Promise<void> {
+  async apply(plan: Record<string, unknown>, planToken: string): Promise<void> {
     this.phase.set('running');
     try {
-      const r = await firstValueFrom(this.api.installationApply(planToken));
+      const r = await firstValueFrom(this.api.installationApply(plan, planToken));
       this.result.set(r);
       this.phase.set(r.refusal ? 'refused' : 'done');
       await this.store.refreshHealth();
@@ -288,6 +370,14 @@ export class InstallPage {
   }
 
   async uninstall(): Promise<void> {
+    // destructive — exige um segundo clique explícito (a própria ética
+    // plan→confirm→apply do portal, aplicada à UI)
+    if (!this.uninstallArmed()) {
+      this.uninstallArmed.set(true);
+      setTimeout(() => this.uninstallArmed.set(false), 8000);
+      return;
+    }
+    this.uninstallArmed.set(false);
     this.phase.set('running');
     try {
       const r = await firstValueFrom(this.api.installationUninstall());
@@ -305,6 +395,7 @@ export class InstallPage {
 
   reset(): void {
     this.phase.set('idle');
+    this.uninstallArmed.set(false);
     this.planReceipt.set(null);
     this.result.set(null);
     this.error.set(null);

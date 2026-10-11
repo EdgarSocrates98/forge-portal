@@ -33,7 +33,7 @@ import { ErrorState } from '../../shared/error-state';
       <table class="table">
         <thead>
           <tr>
-            <th>id</th>
+            <th>{{ 'table.id' | t }}</th>
             <th>{{ 'skills.domain' | t }}</th>
             <th>{{ 'skills.state' | t }}</th>
             <th>{{ 'skills.hosts' | t }}</th>

@@ -42,7 +42,7 @@ import { ErrorState } from '../../shared/error-state';
       @for (p of profiles(); track p.id) {
         <article class="card" [attr.data-current]="p.current || null">
           <h2>{{ p.id }}</h2>
-          <p class="muted">{{ description(p) }}</p>
+          <p class="muted">{{ description(p) | t }}</p>
           <ul class="comps">
             @for (c of componentList(p); track c.id) {
               <li [attr.data-on]="c.on || null">{{ c.id }}</li>

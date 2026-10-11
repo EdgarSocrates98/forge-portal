@@ -54,7 +54,7 @@ import { ErrorState } from '../../shared/error-state';
           <dl class="kv">
             @if (s.host) {
               <div>
-                <dt>host</dt>
+                <dt>{{ 'table.host' | t }}</dt>
                 <dd>{{ s.host }}</dd>
               </div>
             }

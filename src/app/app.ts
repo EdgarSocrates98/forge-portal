@@ -97,7 +97,7 @@ const NAV: NavEntry[] = [
               class="icon-btn"
               (click)="toggleLocale()"
               [attr.aria-label]="'settings.language' | t"
-              title="language"
+              [title]="'settings.language' | t"
             >
               {{ i18n.locale() === 'pt-BR' ? 'PT' : 'EN' }}
             </button>
@@ -105,7 +105,7 @@ const NAV: NavEntry[] = [
               class="icon-btn"
               (click)="cycleScheme()"
               [attr.aria-label]="'settings.theme' | t"
-              title="theme"
+              [title]="'settings.theme' | t"
             >
               {{ schemeIcon() }}
             </button>

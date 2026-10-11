@@ -118,6 +118,9 @@ export const PT_BR: Record<string, string> = {
   'install.uninstall': 'Desinstalar',
   'install.uninstall.confirm':
     'Isso remove os arquivos gerenciados desta Forja neste escopo. Somente arquivos registrados no ledger são removidos.',
+  'install.uninstall.confirmBtn': 'Confirmar desinstalação',
+  'install.host.all': 'Todos os hosts',
+  'install.host.notDetected': 'não detectado',
   'install.verify': 'Verificar',
   'install.receipt': 'Recibo',
   'install.running': 'Executando…',
@@ -125,6 +128,7 @@ export const PT_BR: Record<string, string> = {
   'install.refused': 'Recusado',
   'install.hosts': 'Hosts de IA',
   'install.hosts.hint': 'Escolha para quais hosts integrar skills, agents e MCP.',
+  'install.profile': 'Perfil de instalação',
 
   // perfis
   'profiles.title': 'Perfis',
@@ -272,4 +276,12 @@ export const PT_BR: Record<string, string> = {
   'notify.success': 'Concluído',
   'notify.error': 'Falhou',
   'notify.dismiss': 'Dispensar',
+
+  // cabeçalhos de tabela
+  'table.id': 'ID',
+  'table.host': 'Host',
+  'table.task': 'Tarefa',
+  'table.verb': 'Verbo',
+  'table.stage': 'Estágio',
+  'table.exit': 'Saída',
 };
