@@ -14,7 +14,7 @@ import { PageHeader } from '../../shared/page-header';
 
     <section class="card">
       <h2>{{ 'settings.language' | t }}</h2>
-      <div class="opts" role="radiogroup">
+      <div class="opts" role="radiogroup" [attr.aria-label]="'settings.language' | t">
         @for (opt of localeOpts; track opt.id) {
           <label class="opt" [attr.data-active]="i18n.preference() === opt.id || null">
             <input
@@ -32,7 +32,7 @@ import { PageHeader } from '../../shared/page-header';
 
     <section class="card">
       <h2>{{ 'settings.theme' | t }}</h2>
-      <div class="opts" role="radiogroup">
+      <div class="opts" role="radiogroup" [attr.aria-label]="'settings.theme' | t">
         @for (opt of schemeOpts; track opt.id) {
           <label class="opt" [attr.data-active]="theme.scheme() === opt.id || null">
             <input
@@ -80,16 +80,14 @@ import { PageHeader } from '../../shared/page-header';
   `,
   styles: `
     .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
       margin-bottom: var(--space-4);
       max-width: 640px;
     }
     h2 {
       margin: 0 0 var(--space-3);
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
     .opts {
       display: flex;
@@ -104,19 +102,40 @@ import { PageHeader } from '../../shared/page-header';
       border-radius: var(--radius-md);
       padding: 8px var(--space-3);
       cursor: pointer;
+      transition:
+        border-color var(--motion-fast),
+        background var(--motion-fast),
+        box-shadow var(--motion-fast);
+    }
+    .opt:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+    }
+    .opt:focus-within {
+      border-color: var(--fg-focus);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
     }
     .opt[data-active] {
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
       background: var(--accent-bg);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+      font-weight: 550;
+    }
+    .opt input[type='radio'] {
+      accent-color: var(--accent);
     }
     .kv {
       display: grid;
-      gap: 6px;
       margin: 0;
     }
     .kv div {
       display: flex;
       gap: var(--space-2);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .kv div:last-child {
+      border-bottom: none;
     }
     .kv dt {
       color: var(--fg-muted);
@@ -124,6 +143,7 @@ import { PageHeader } from '../../shared/page-header';
     }
     .kv dd {
       margin: 0;
+      font-weight: 500;
     }
   `,
 })

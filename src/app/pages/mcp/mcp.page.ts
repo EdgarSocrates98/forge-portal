@@ -8,21 +8,34 @@ import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-mcp',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState],
+  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'mcp.title' | t" [subtitle]="'mcp.subtitle' | t">
       <button class="btn btn--primary" [disabled]="busy()" (click)="verify()">
+        <ui-icon name="shield-check" [size]="15" />
         {{ 'mcp.verify' | t }}
       </button>
-      <button class="btn" (click)="load()">{{ 'state.refresh' | t }}</button>
+      <button class="btn" (click)="load()">
+        <ui-icon name="refresh" [size]="15" />
+        {{ 'state.refresh' | t }}
+      </button>
     </ui-page-header>
 
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
+    }
+
+    @if (loading()) {
+      <section class="grid">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton skeleton--block"></div>
+        }
+      </section>
     }
 
     @if (receipt(); as r) {
@@ -46,9 +59,9 @@ import { ErrorState } from '../../shared/error-state';
 
     <section class="grid">
       @for (s of servers(); track s.id) {
-        <article class="card">
+        <article class="card" data-lift>
           <header class="head">
-            <h2>{{ s.id }}</h2>
+            <h2><ui-icon name="mcp" [size]="15" />{{ s.id }}</h2>
             <ui-state-badge [state]="s.state" />
           </header>
           <dl class="kv">
@@ -82,7 +95,7 @@ import { ErrorState } from '../../shared/error-state';
           }
         </article>
       } @empty {
-        @if (!error()) {
+        @if (!error() && !loading()) {
           <ui-empty [title]="'empty.noData' | t" [hint]="'empty.noData.hint' | t" />
         }
       }
@@ -94,12 +107,6 @@ import { ErrorState } from '../../shared/error-state';
       gap: var(--space-4);
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
-    }
     .head {
       display: flex;
       justify-content: space-between;
@@ -108,6 +115,14 @@ import { ErrorState } from '../../shared/error-state';
     h2 {
       margin: 0;
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    h2 ui-icon {
+      color: var(--accent);
     }
     .kv {
       display: grid;
@@ -130,11 +145,6 @@ import { ErrorState } from '../../shared/error-state';
     .refusal {
       color: var(--warn);
     }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
-    }
     details {
       margin-top: var(--space-3);
       font-size: var(--font-sm);
@@ -147,6 +157,7 @@ export class McpPage {
   readonly receipt = signal<InstallationReceipt | null>(null);
   readonly error = signal<ApiError | null>(null);
   readonly busy = signal(false);
+  readonly loading = signal(true);
 
   constructor() {
     void this.load();
@@ -154,10 +165,13 @@ export class McpPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.servers.set(await firstValueFrom(this.api.mcpServers()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

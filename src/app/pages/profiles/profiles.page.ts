@@ -19,6 +19,14 @@ import { ErrorState } from '../../shared/error-state';
       <ui-error [error]="e" (retry)="load()" />
     }
 
+    @if (loading()) {
+      <section class="grid">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton skeleton--block"></div>
+        }
+      </section>
+    }
+
     @if (receipt(); as r) {
       <section class="card receipt">
         <p>
@@ -40,7 +48,7 @@ import { ErrorState } from '../../shared/error-state';
 
     <section class="grid">
       @for (p of profiles(); track p.id) {
-        <article class="card" [attr.data-current]="p.current || null">
+        <article class="card" data-lift [attr.data-current]="p.current || null">
           <h2>{{ p.id }}</h2>
           <p class="muted">{{ description(p) | t }}</p>
           <ul class="comps">
@@ -57,7 +65,7 @@ import { ErrorState } from '../../shared/error-state';
           }
         </article>
       } @empty {
-        @if (!error()) {
+        @if (!error() && !loading()) {
           <ui-empty [title]="'empty.noData' | t" [hint]="'empty.noData.hint' | t" />
         }
       }
@@ -69,18 +77,22 @@ import { ErrorState } from '../../shared/error-state';
       gap: var(--space-4);
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
-    }
     .card[data-current] {
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      background: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--accent) 7%, var(--bg-elevated)) 0%,
+        var(--bg-elevated) 55%
+      );
+      box-shadow:
+        var(--elev-card),
+        0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
     }
     .card h2 {
       margin: 0 0 6px;
       text-transform: capitalize;
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
     .muted {
       color: var(--fg-muted);
@@ -116,11 +128,6 @@ import { ErrorState } from '../../shared/error-state';
     .refusal {
       color: var(--warn);
     }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
-    }
   `,
 })
 export class ProfilesPage {
@@ -129,6 +136,7 @@ export class ProfilesPage {
   readonly receipt = signal<InstallationReceipt | null>(null);
   readonly error = signal<ApiError | null>(null);
   readonly busy = signal(false);
+  readonly loading = signal(true);
 
   constructor() {
     void this.load();
@@ -136,10 +144,13 @@ export class ProfilesPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.profiles.set(await firstValueFrom(this.api.profiles()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

@@ -9,6 +9,7 @@ import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 interface PendingPlan {
   plan_token: string;
@@ -19,24 +20,28 @@ interface PendingPlan {
 @Component({
   selector: 'page-tasks',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState],
+  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t" />
 
     <section class="card">
       <label class="lbl" for="intent">{{ 'tasks.intent.label' | t }}</label>
       <div class="intent-row">
-        <input
-          id="intent"
-          class="input"
-          type="text"
-          [placeholder]="'tasks.intent.placeholder' | t"
-          [ngModel]="intent()"
-          (ngModelChange)="intent.set($event)"
-          (keydown.enter)="plan()"
-          [disabled]="busy()"
-        />
+        <div class="search-field intent-field">
+          <ui-icon name="terminal" [size]="15" />
+          <input
+            id="intent"
+            class="input"
+            type="text"
+            [placeholder]="'tasks.intent.placeholder' | t"
+            [ngModel]="intent()"
+            (ngModelChange)="intent.set($event)"
+            (keydown.enter)="plan()"
+            [disabled]="busy()"
+          />
+        </div>
         <button class="btn btn--primary" [disabled]="busy() || !intent().trim()" (click)="plan()">
+          <ui-icon name="tasks" [size]="14" />
           {{ 'tasks.intent.run' | t }}
         </button>
       </div>
@@ -86,6 +91,9 @@ interface PendingPlan {
 
     <section class="card">
       <h2>{{ 'tasks.recent' | t }}</h2>
+      @if (loading()) {
+        <div class="skeleton skeleton--block"></div>
+      }
       @if (tasks().length) {
         <table class="table">
           <thead>
@@ -112,21 +120,21 @@ interface PendingPlan {
           </tbody>
         </table>
       } @else {
-        <ui-empty [title]="'tasks.empty' | t" />
+        @if (!loading()) {
+          <ui-empty [title]="'tasks.empty' | t" />
+        }
       }
     </section>
   `,
   styles: `
     .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
       margin-bottom: var(--space-4);
     }
     h2 {
       margin: 0 0 var(--space-3);
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
     .lbl {
       display: block;
@@ -137,8 +145,10 @@ interface PendingPlan {
       display: flex;
       gap: var(--space-2);
     }
-    .intent-row .input {
+    .intent-field {
       flex: 1;
+      max-width: none;
+      margin-bottom: 0;
     }
     .plan {
       background: var(--bg);
@@ -159,11 +169,6 @@ interface PendingPlan {
     .refusal {
       color: var(--warn);
     }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
-    }
   `,
 })
 export class TasksPage {
@@ -174,6 +179,7 @@ export class TasksPage {
   readonly tasks = signal<TaskExecution[]>([]);
   readonly error = signal<ApiError | null>(null);
   readonly busy = signal(false);
+  readonly loading = signal(true);
 
   constructor() {
     void this.load();
@@ -184,6 +190,8 @@ export class TasksPage {
       this.tasks.set(await firstValueFrom(this.api.tasks()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

@@ -9,6 +9,7 @@ import { I18nService } from '../../core/i18n/i18n.service';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | 'error';
 
@@ -19,10 +20,13 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 @Component({
   selector: 'page-install',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, ErrorState],
+  imports: [TPipe, PageHeader, StateBadge, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'install.title' | t" [subtitle]="'install.subtitle' | t">
-      <button class="btn" (click)="reload()">{{ 'state.refresh' | t }}</button>
+      <button class="btn" (click)="reload()">
+        <ui-icon name="refresh" [size]="15" />
+        {{ 'state.refresh' | t }}
+      </button>
     </ui-page-header>
 
     <section class="card">
@@ -103,9 +107,11 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
 
       <div class="row">
         <button class="btn btn--primary" [disabled]="busy()" (click)="plan()">
+          <ui-icon name="install" [size]="15" />
           {{ 'install.plan' | t }}
         </button>
         <button class="btn" [disabled]="busy()" (click)="repair()">
+          <ui-icon name="refresh" [size]="15" />
           {{ 'install.repair' | t }}
         </button>
         <button
@@ -114,6 +120,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           [attr.data-armed]="uninstallArmed() || null"
           (click)="uninstall()"
         >
+          <ui-icon name="alert" [size]="15" />
           {{ (uninstallArmed() ? 'install.uninstall.confirmBtn' : 'install.uninstall') | t }}
         </button>
       </div>
@@ -123,7 +130,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
     </section>
 
     @if (phase() === 'review' && planReceipt(); as r) {
-      <section class="card plan">
+      <section class="card plan" data-lift>
         <h2>{{ 'install.plan.review' | t }}</h2>
         <p class="muted">
           {{ 'install.plan.changes' | t: { count: r.actions?.length ?? 0 } }}
@@ -139,6 +146,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
         }
         <div class="row">
           <button class="btn btn--primary" (click)="apply(r.plan ?? {}, r.plan_token!)">
+            <ui-icon name="check" [size]="15" />
             {{ 'install.apply' | t }}
           </button>
           <button class="btn" (click)="reset()">{{ 'state.cancel' | t }}</button>
@@ -147,11 +155,14 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
     }
 
     @if (phase() === 'running') {
-      <p class="muted">{{ 'install.running' | t }}</p>
+      <section class="card running">
+        <div class="skeleton skeleton--line"></div>
+        <p class="muted">{{ 'install.running' | t }}</p>
+      </section>
     }
 
     @if ((phase() === 'done' || phase() === 'refused') && result(); as r) {
-      <section class="card">
+      <section class="card" data-lift>
         <h2>{{ 'install.receipt' | t }}</h2>
         <p>
           <strong>{{ r.status }}</strong>
@@ -185,15 +196,13 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
   `,
   styles: `
     .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--bg-elevated);
-      padding: var(--space-5);
       margin-bottom: var(--space-4);
     }
     .card h2 {
       margin: var(--space-3) 0;
       font-size: var(--font-lg);
+      font-weight: 650;
+      letter-spacing: -0.01em;
     }
     .card h2:first-child {
       margin-top: 0;
@@ -211,28 +220,65 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
       border-radius: var(--radius-md);
       padding: var(--space-3);
       cursor: pointer;
+      transition:
+        border-color var(--motion-fast),
+        background var(--motion-fast),
+        box-shadow var(--motion-fast);
+    }
+    .scope:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+    }
+    .scope:focus-within {
+      border-color: var(--fg-focus);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
     }
     .scope[data-active] {
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
       background: var(--accent-bg);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
     }
     .scope small {
       display: block;
       color: var(--fg-muted);
     }
+    .scope input[type='radio'] {
+      accent-color: var(--accent);
+      margin-top: 2px;
+    }
     .comps {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--space-3);
+      gap: var(--space-2);
       margin-bottom: var(--space-4);
     }
     .comp {
       display: flex;
       gap: 6px;
       align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 4px var(--space-3);
+      font-size: var(--font-sm);
+      cursor: pointer;
+      transition:
+        border-color var(--motion-fast),
+        background var(--motion-fast);
+    }
+    .comp:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+    }
+    .comp:focus-within {
+      border-color: var(--fg-focus);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
+    }
+    .comp input[type='checkbox'] {
+      accent-color: var(--accent);
     }
     .row {
       display: flex;
+      flex-wrap: wrap;
       gap: var(--space-2);
       margin-top: var(--space-4);
     }
@@ -240,20 +286,19 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
       font-family: var(--font-mono);
       font-size: var(--font-sm);
     }
+    .actions li code {
+      color: var(--accent);
+    }
     .refusal {
       color: var(--warn);
     }
     .muted {
       color: var(--fg-muted);
     }
-    .btn--primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-fg);
-    }
-    .btn--danger {
+    .btn--danger[data-armed] {
+      background: var(--error);
       border-color: var(--error);
-      color: var(--error);
+      color: var(--accent-fg);
     }
   `,
 })

@@ -9,11 +9,12 @@ import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { UiIcon } from '../../shared/icon';
 
 @Component({
   selector: 'page-skills',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState],
+  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon],
   template: `
     <ui-page-header [title]="'skills.title' | t" [subtitle]="'skills.subtitle' | t" />
 
@@ -21,55 +22,69 @@ import { ErrorState } from '../../shared/error-state';
       <ui-error [error]="e" (retry)="load()" />
     }
 
+    @if (loading()) {
+      <div class="skeleton skeleton--block"></div>
+    }
+
     @if (skills().length) {
-      <input
-        class="input search"
-        type="search"
-        [placeholder]="'skills.search' | t"
-        [ngModel]="query()"
-        (ngModelChange)="query.set($event)"
-        aria-label="search skills"
-      />
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'table.id' | t }}</th>
-            <th>{{ 'skills.domain' | t }}</th>
-            <th>{{ 'skills.state' | t }}</th>
-            <th>{{ 'skills.hosts' | t }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (s of filtered(); track s.id) {
+      <div class="search-field">
+        <ui-icon name="search" [size]="15" />
+        <input
+          class="input"
+          type="search"
+          [placeholder]="'skills.search' | t"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          [attr.aria-label]="'skills.search' | t"
+        />
+      </div>
+      <div class="card card--table">
+        <table class="table">
+          <thead>
             <tr>
-              <td>
-                <strong>{{ s.id }}</strong>
-                <p class="muted">{{ s.description }}</p>
-              </td>
-              <td>{{ s.domain ?? '—' }}</td>
-              <td><ui-state-badge [state]="mapState(s.state)" [labelOverride]="s.state" /></td>
-              <td>{{ s.hosts.join(', ') || '—' }}</td>
+              <th>{{ 'table.id' | t }}</th>
+              <th>{{ 'skills.domain' | t }}</th>
+              <th>{{ 'skills.state' | t }}</th>
+              <th>{{ 'skills.hosts' | t }}</th>
             </tr>
-          } @empty {
-            <tr>
-              <td colspan="4"><ui-empty [title]="'skills.empty' | t" /></td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    } @else if (!error()) {
+          </thead>
+          <tbody>
+            @for (s of filtered(); track s.id) {
+              <tr>
+                <td>
+                  <strong>{{ s.id }}</strong>
+                  <p class="muted">{{ s.description }}</p>
+                </td>
+                <td>{{ s.domain ?? '—' }}</td>
+                <td><ui-state-badge [state]="mapState(s.state)" [labelOverride]="s.state" /></td>
+                <td>{{ s.hosts.join(', ') || '—' }}</td>
+              </tr>
+            } @empty {
+              @if (!loading()) {
+                <tr>
+                  <td colspan="4"><ui-empty [title]="'skills.empty' | t" /></td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (!error() && !loading()) {
       <ui-empty [title]="'skills.none' | t" />
     }
   `,
   styles: `
-    .search {
-      max-width: 360px;
-      margin-bottom: var(--space-4);
-    }
     .muted {
       color: var(--fg-muted);
       margin: 4px 0 0;
       font-size: var(--font-sm);
+    }
+    .card--table {
+      padding: var(--space-3);
+      overflow-x: auto;
+    }
+    .card--table .table {
+      min-width: 560px;
     }
   `,
 })
@@ -78,6 +93,7 @@ export class SkillsPage {
   readonly skills = signal<SkillDescriptor[]>([]);
   readonly error = signal<ApiError | null>(null);
   readonly query = signal('');
+  readonly loading = signal(true);
 
   readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
@@ -96,10 +112,13 @@ export class SkillsPage {
 
   async load(): Promise<void> {
     this.error.set(null);
+    this.loading.set(true);
     try {
       this.skills.set(await firstValueFrom(this.api.skills()));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.loading.set(false);
     }
   }
 

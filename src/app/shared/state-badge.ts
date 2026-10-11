@@ -24,6 +24,11 @@ const STATE_KIND: Record<string, BadgeKind> = {
   unverified: 'warn',
   unsupported: 'error',
   not_applicable: 'muted',
+  // doctor check states
+  PASS: 'ok',
+  FAIL: 'error',
+  UNVERIFIED: 'warn',
+  NOT_APPLICABLE: 'muted',
   // generic
   ok: 'ok',
   warn: 'warn',
@@ -65,19 +70,20 @@ const I18N_PREFIX: Record<string, string> = {
       padding: 2px 10px;
       border-radius: var(--radius-pill);
       font-size: var(--font-xs);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      border: 1px solid var(--badge-fg, var(--fg-muted));
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      border: 1px solid color-mix(in srgb, var(--badge-fg, var(--fg-muted)) 35%, transparent);
       color: var(--badge-fg, var(--fg-muted));
       background: var(--badge-bg, transparent);
       white-space: nowrap;
     }
     .badge::before {
       content: '';
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--badge-fg, var(--fg-muted));
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--badge-fg, var(--fg-muted)) 25%, transparent);
     }
     .badge[data-kind='ok'] {
       --badge-fg: var(--ok);
