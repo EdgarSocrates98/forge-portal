@@ -21,7 +21,7 @@ Agora:
 
 ## GAP-002 — Playwright E2E real (não mocks)
 
-`e2e/browser_e2e.py` — suite pytest + Chromium real:
+`e2e/test_browser_e2e.py` — suite pytest + Chromium real:
 
 - boota `PortalServer` (server de produção) em porta efêmera com
   `E2EAdapter` real — `default_operations` + `installation/plan` +
@@ -89,7 +89,7 @@ artifacts, vendor parity, e o `portal_e2e.py` cross-forge em push.
 
 ## Verificação
 
-- `python -m pytest e2e/browser_e2e.py` — **10/10** (antes do fix: teste
+- `python -m pytest e2e/test_browser_e2e.py` — **10/10** (antes do fix: teste
   novo falhava; depois: verde, screenshots provam shell estilizado).
 - `python -m pytest tests/` — **41/41** (inclui 4 adversariais de Host).
 - `ng build` — limpo, strict+strictTemplates; `ng test` — 11/11.
@@ -101,7 +101,7 @@ artifacts, vendor parity, e o `portal_e2e.py` cross-forge em push.
 
 ## Notas para as próximas fases
 
-- `E2EAdapter` em `e2e/browser_e2e.py` é o modelo de adapter completo
+- `E2EAdapter` em `e2e/test_browser_e2e.py` é o modelo de adapter completo
   (descriptor/navigation/capabilities/health/ops mutating) — reutilizar
   por forja nas fases 2–8, trocando forge_id/ops de domínio.
 - Toda forja vendored precisa re-baixar `portal/assets` — o bundle antigo

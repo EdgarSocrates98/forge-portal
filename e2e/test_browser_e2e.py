@@ -7,7 +7,7 @@ palette, viewports and offline error recovery. Screenshots land in
 ``e2e/artifacts/`` — evidence, not mock assertions.
 
 Run:  python -m pytest e2e/ -q        (requires playwright + chromium)
-      python e2e/browser_e2e.py       (same, standalone, with artifacts)
+      python e2e/test_browser_e2e.py       (same, standalone, with artifacts)
 """
 
 from __future__ import annotations
@@ -433,7 +433,7 @@ def page(pw):
 
 
 # ---------------------------------------------------------------------------
-# standalone run — python e2e/browser_e2e.py (same suite, artifacts only)
+# standalone run — python e2e/test_browser_e2e.py (same suite, artifacts only)
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
