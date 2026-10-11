@@ -137,10 +137,12 @@ export const EN: Record<string, string> = {
   'install.hosts': 'AI hosts',
   'install.hosts.hint': 'Choose which hosts to integrate skills, agents and MCP into.',
   'install.profile': 'Installation profile',
+  'install.executionProfile': 'Execution profile',
   'install.summary': 'Ready to install',
   'install.summary.scope': 'Scope',
   'install.summary.host': 'Host',
   'install.summary.profile': 'Profile',
+  'install.summary.executionProfile': 'Execution',
   'install.summary.components': 'Components',
   'install.summary.empty': 'Select at least one component to generate a plan.',
   'install.step.configure': 'Configure',
@@ -157,6 +159,8 @@ export const EN: Record<string, string> = {
   'profiles.economy.desc': 'Lowest context usage. Loads capabilities as needed.',
   'profiles.balanced': 'Balanced',
   'profiles.balanced.desc': 'Balance between availability, quality and economy.',
+  'profiles.deep': 'Deep',
+  'profiles.deep.desc': 'Maximum verification depth and execution evidence.',
   'profiles.full': 'Full',
   'profiles.full.desc':
     'All compatible components available, without loading everything into context.',
@@ -182,6 +186,18 @@ export const EN: Record<string, string> = {
   'hosts.docs': 'Official documentation',
   'hosts.notDetected': 'Not detected on this system',
   'hosts.restartRequired': 'Restart the host to apply the configuration',
+
+  // host lifecycle
+  'hostState.NOT_DETECTED': 'Not detected',
+  'hostState.DETECTED': 'Detected',
+  'hostState.INSTALLED': 'Installed',
+  'hostState.CONFIGURED': 'Configured',
+  'hostState.MCP_REGISTERED': 'MCP registered',
+  'hostState.HANDSHAKE_VERIFIED': 'Handshake verified',
+  'hostState.TOOLS_DISCOVERED': 'Tools discovered',
+  'hostState.EXECUTION_VERIFIED': 'Execution verified',
+  'hostState.FAILED': 'Failed',
+  'hostState.BLOCKED': 'Blocked',
 
   // mcp
   'mcp.title': 'MCP',

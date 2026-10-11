@@ -2,7 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { HostDetection, InstallationReceipt } from '../../core/api/api.models';
+import {
+  ComponentId,
+  ExecutionProfile,
+  HostDetection,
+  HostId,
+  InstallationReceipt,
+} from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { I18nService } from '../../core/i18n/i18n.service';
@@ -129,6 +135,25 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           }
         </div>
 
+        <h2>{{ 'install.executionProfile' | t }}</h2>
+        <div class="scopes" role="radiogroup" [attr.aria-label]="'install.executionProfile' | t">
+          @for (p of executionProfiles; track p.id) {
+            <label class="scope" [attr.data-active]="executionProfile() === p.id || null">
+              <input
+                type="radio"
+                name="execution-profile"
+                [value]="p.id"
+                [checked]="executionProfile() === p.id"
+                (change)="executionProfile.set(p.id)"
+              />
+              <span>
+                <strong>{{ p.label | t }}</strong>
+                <small>{{ p.hint | t }}</small>
+              </span>
+            </label>
+          }
+        </div>
+
         <h2>{{ 'install.components' | t }}</h2>
         <div class="comps">
           @for (c of components; track c.id) {
@@ -154,6 +179,10 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           <div>
             <dt>{{ 'install.summary.profile' | t }}</dt>
             <dd>{{ profileLabel() | t }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'install.summary.executionProfile' | t }}</dt>
+            <dd>{{ executionProfileLabel() | t }}</dd>
           </div>
           <div>
             <dt>{{ 'install.summary.components' | t }}</dt>
@@ -487,6 +516,7 @@ export class InstallPage {
   readonly scope = signal<'project' | 'workspace' | 'user'>('project');
   readonly host = signal<string>('all');
   readonly profile = signal<'minimal' | 'recommended' | 'full'>('recommended');
+  readonly executionProfile = signal<ExecutionProfile>('balanced');
   readonly hostDetections = signal<HostDetection[]>([]);
   readonly selected = signal<Set<string>>(new Set(['skills', 'agents', 'mcp']));
   readonly planReceipt = signal<InstallationReceipt | null>(null);
@@ -541,6 +571,13 @@ export class InstallPage {
     return this.profiles.find((p) => p.id === this.profile())?.label ?? this.profile();
   }
 
+  executionProfileLabel(): string {
+    return (
+      this.executionProfiles.find((p) => p.id === this.executionProfile())?.label ??
+      `profiles.${this.executionProfile()}`
+    );
+  }
+
   readonly hostChoices: { id: string; label?: string; labelKey?: string }[] = [
     { id: 'all', labelKey: 'install.host.all' },
     { id: 'claude', label: 'Claude' },
@@ -555,6 +592,12 @@ export class InstallPage {
     { id: 'full' as const, label: 'profiles.full', hint: 'profiles.full.desc' },
   ];
 
+  readonly executionProfiles = [
+    { id: 'economy' as const, label: 'profiles.economy', hint: 'profiles.economy.desc' },
+    { id: 'balanced' as const, label: 'profiles.balanced', hint: 'profiles.balanced.desc' },
+    { id: 'deep' as const, label: 'profiles.deep', hint: 'profiles.deep.desc' },
+  ];
+
   constructor() {
     firstValueFrom(this.api.hosts())
       .then((hs) => this.hostDetections.set(hs))
@@ -565,7 +608,9 @@ export class InstallPage {
     if (id === 'all') return '—';
     const d = this.hostDetections().find((h) => h.host === id);
     if (!d) return '…';
-    return d.detected ? d.integration : this.i18n.t('install.host.notDetected');
+    return d.detected
+      ? this.i18n.t(`hostState.${d.integration}`)
+      : this.i18n.t('hostState.NOT_DETECTED');
   }
 
   readonly scopes = [
@@ -578,7 +623,13 @@ export class InstallPage {
     { id: 'user' as const, label: 'install.scope.user', hint: 'install.scope.user.hint' },
   ];
 
-  readonly components = [{ id: 'skills' }, { id: 'agents' }, { id: 'mcp' }, { id: 'docs' }];
+  readonly components: { id: ComponentId }[] = [
+    { id: 'skills' },
+    { id: 'agents' },
+    { id: 'mcp' },
+    { id: 'tui' },
+    { id: 'graph-studio' },
+  ];
 
   toggle(id: string): void {
     const next = new Set(this.selected());
@@ -596,6 +647,12 @@ export class InstallPage {
           scope: this.scope(),
           host: this.host(),
           profile: this.profile(),
+          hosts:
+            this.host() === 'all'
+              ? (this.hostChoices.filter((h) => h.id !== 'all').map((h) => h.id) as HostId[])
+              : ([this.host()] as HostId[]),
+          component_profile: this.profile(),
+          execution_profile: this.executionProfile(),
           components: Object.fromEntries([...this.selected()].map((c) => [c, true])),
         }),
       );

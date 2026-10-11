@@ -15,6 +15,23 @@ export type ForgeId =
 
 export type Severity = 'info' | 'warning' | 'error';
 
+export type HostId = 'claude' | 'devin' | 'codex' | 'copilot';
+export type ComponentId = 'skills' | 'agents' | 'mcp' | 'tui' | 'graph-studio';
+export type ComponentProfile = 'minimal' | 'recommended' | 'full' | 'custom';
+export type ExecutionProfile = 'economy' | 'balanced' | 'deep';
+
+export type HostLifecycleState =
+  | 'NOT_DETECTED'
+  | 'DETECTED'
+  | 'INSTALLED'
+  | 'CONFIGURED'
+  | 'MCP_REGISTERED'
+  | 'HANDSHAKE_VERIFIED'
+  | 'TOOLS_DISCOVERED'
+  | 'EXECUTION_VERIFIED'
+  | 'FAILED'
+  | 'BLOCKED';
+
 export interface ApiErrorBody {
   code: string;
   message: string;
@@ -110,6 +127,14 @@ export interface InstallationReceipt {
   checks?: { id?: string; status?: string; detail?: string; repairable?: boolean }[];
 }
 
+export interface InstallSelection {
+  scope: 'project' | 'workspace' | 'user';
+  hosts: HostId[];
+  component_profile: ComponentProfile;
+  execution_profile: ExecutionProfile;
+  components: Partial<Record<ComponentId, boolean>>;
+}
+
 export interface ProfileDescriptor {
   id: string;
   label_key: string;
@@ -119,12 +144,12 @@ export interface ProfileDescriptor {
 }
 
 export interface HostDetection {
-  host: 'claude' | 'devin' | 'codex' | 'copilot';
+  host: HostId;
   detected: boolean;
   version: string | null;
   supported: boolean;
   logged_in: boolean | null;
-  integration: string;
+  integration: HostLifecycleState;
   launchable: boolean;
   detail?: string;
   command_hint?: string;
