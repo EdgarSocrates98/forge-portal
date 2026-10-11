@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { InstallationReceipt } from '../../core/api/api.models';
+import { HostDetection, InstallationReceipt } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -51,6 +51,45 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
         }
       </div>
 
+      <h2>{{ 'install.hosts' | t }}</h2>
+      <p class="muted">{{ 'install.hosts.hint' | t }}</p>
+      <div class="scopes" role="radiogroup">
+        @for (h of hostChoices; track h.id) {
+          <label class="scope" [attr.data-active]="host() === h.id || null">
+            <input
+              type="radio"
+              name="host"
+              [value]="h.id"
+              [checked]="host() === h.id"
+              (change)="host.set(h.id)"
+            />
+            <span>
+              <strong>{{ h.label }}</strong>
+              <small>{{ hostState(h.id) }}</small>
+            </span>
+          </label>
+        }
+      </div>
+
+      <h2>{{ 'install.profile' | t }}</h2>
+      <div class="scopes" role="radiogroup">
+        @for (p of profiles; track p.id) {
+          <label class="scope" [attr.data-active]="profile() === p.id || null">
+            <input
+              type="radio"
+              name="profile"
+              [value]="p.id"
+              [checked]="profile() === p.id"
+              (change)="profile.set(p.id)"
+            />
+            <span>
+              <strong>{{ p.label | t }}</strong>
+              <small>{{ p.hint | t }}</small>
+            </span>
+          </label>
+        }
+      </div>
+
       <h2>{{ 'install.components' | t }}</h2>
       <div class="comps">
         @for (c of components; track c.id) {
@@ -90,7 +129,7 @@ type Phase = 'idle' | 'planning' | 'review' | 'running' | 'done' | 'refused' | '
           </ul>
         }
         <div class="row">
-          <button class="btn btn--primary" (click)="apply(r.plan_token!)">
+          <button class="btn btn--primary" (click)="apply(r.plan ?? {}, r.plan_token!)">
             {{ 'install.apply' | t }}
           </button>
           <button class="btn" (click)="reset()">{{ 'state.cancel' | t }}</button>
@@ -215,12 +254,42 @@ export class InstallPage {
 
   readonly phase = signal<Phase>('idle');
   readonly scope = signal<'project' | 'workspace' | 'user'>('project');
+  readonly host = signal<string>('all');
+  readonly profile = signal<'minimal' | 'recommended' | 'full'>('recommended');
+  readonly hostDetections = signal<HostDetection[]>([]);
   readonly selected = signal<Set<string>>(new Set(['skills', 'agents', 'mcp']));
   readonly planReceipt = signal<InstallationReceipt | null>(null);
   readonly result = signal<InstallationReceipt | null>(null);
   readonly error = signal<ApiError | null>(null);
 
   readonly busy = () => ['planning', 'running'].includes(this.phase());
+
+  readonly hostChoices = [
+    { id: 'all', label: 'all' },
+    { id: 'claude', label: 'Claude' },
+    { id: 'devin', label: 'Devin' },
+    { id: 'codex', label: 'Codex' },
+    { id: 'copilot', label: 'Copilot' },
+  ];
+
+  readonly profiles = [
+    { id: 'minimal' as const, label: 'profiles.economy', hint: 'profiles.economy.desc' },
+    { id: 'recommended' as const, label: 'profiles.balanced', hint: 'profiles.balanced.desc' },
+    { id: 'full' as const, label: 'profiles.full', hint: 'profiles.full.desc' },
+  ];
+
+  constructor() {
+    firstValueFrom(this.api.hosts())
+      .then((hs) => this.hostDetections.set(hs))
+      .catch(() => this.hostDetections.set([]));
+  }
+
+  hostState(id: string): string {
+    if (id === 'all') return '—';
+    const d = this.hostDetections().find((h) => h.host === id);
+    if (!d) return '…';
+    return d.detected ? d.integration : 'not detected';
+  }
 
   readonly scopes = [
     { id: 'project' as const, label: 'install.scope.project', hint: 'install.scope.project.hint' },
@@ -248,6 +317,8 @@ export class InstallPage {
       const r = await firstValueFrom(
         this.api.installationPlan({
           scope: this.scope(),
+          host: this.host(),
+          profile: this.profile(),
           components: Object.fromEntries([...this.selected()].map((c) => [c, true])),
         }),
       );
@@ -263,10 +334,10 @@ export class InstallPage {
     }
   }
 
-  async apply(planToken: string): Promise<void> {
+  async apply(plan: Record<string, unknown>, planToken: string): Promise<void> {
     this.phase.set('running');
     try {
-      const r = await firstValueFrom(this.api.installationApply(planToken));
+      const r = await firstValueFrom(this.api.installationApply(plan, planToken));
       this.result.set(r);
       this.phase.set(r.refusal ? 'refused' : 'done');
       await this.store.refreshHealth();

@@ -48,7 +48,11 @@ interface PendingPlan {
         <p class="muted">{{ 'tasks.plan.review' | t }}</p>
         <pre class="plan">{{ planText(p.plan) }}</pre>
         <div class="row">
-          <button class="btn btn--primary" [disabled]="busy()" (click)="execute(p.plan_token)">
+          <button
+            class="btn btn--primary"
+            [disabled]="busy()"
+            (click)="execute(p.plan, p.plan_token)"
+          >
             {{ 'tasks.execute' | t }}
           </button>
           <button class="btn" (click)="pending.set(null)">{{ 'state.cancel' | t }}</button>
@@ -194,10 +198,10 @@ export class TasksPage {
     }
   }
 
-  async execute(planToken: string): Promise<void> {
+  async execute(plan: Record<string, unknown>, planToken: string): Promise<void> {
     this.busy.set(true);
     try {
-      this.receipt.set(await firstValueFrom(this.api.tasksExecute(planToken)));
+      this.receipt.set(await firstValueFrom(this.api.tasksExecute(plan, planToken)));
       this.pending.set(null);
       await this.load();
     } catch (e) {

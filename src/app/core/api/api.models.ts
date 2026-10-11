@@ -91,6 +91,7 @@ export interface PortalHealth {
 export interface InstallationReceipt {
   status: string;
   stage?: string;
+  plan?: Record<string, unknown>;
   plan_token?: string;
   actions?: { kind: string; path: string; status: string }[];
   refusal?: string;

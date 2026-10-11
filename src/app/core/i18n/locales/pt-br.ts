@@ -125,6 +125,7 @@ export const PT_BR: Record<string, string> = {
   'install.refused': 'Recusado',
   'install.hosts': 'Hosts de IA',
   'install.hosts.hint': 'Escolha para quais hosts integrar skills, agents e MCP.',
+  'install.profile': 'Perfil de instalação',
 
   // perfis
   'profiles.title': 'Perfis',

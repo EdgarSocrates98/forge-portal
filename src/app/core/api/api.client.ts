@@ -63,11 +63,17 @@ export class PortalApi {
   installationStatus() {
     return this.get<PortalHealth>('/installation/status');
   }
-  installationPlan(input: { scope?: string; components?: Record<string, boolean> }) {
+  installationPlan(input: {
+    scope?: string;
+    host?: string;
+    profile?: string;
+    components?: Record<string, boolean>;
+  }) {
     return this.post<InstallationReceipt>('/installation/plan', input);
   }
-  installationApply(planToken: string, confirm = 'apply') {
+  installationApply(plan: Record<string, unknown>, planToken: string, confirm = 'apply') {
     return this.post<InstallationReceipt>('/installation/apply', {
+      plan,
       plan_token: planToken,
       confirm,
     });
@@ -111,8 +117,9 @@ export class PortalApi {
   tasksPlan(input: { intent?: string; verb?: string; args?: Record<string, unknown> }) {
     return this.post<{ plan_token: string; plan: Record<string, unknown> }>('/tasks/plan', input);
   }
-  tasksExecute(planToken: string) {
+  tasksExecute(plan: Record<string, unknown>, planToken: string) {
     return this.post<InstallationReceipt>('/tasks/execute', {
+      plan,
       plan_token: planToken,
       confirm: 'execute',
     });

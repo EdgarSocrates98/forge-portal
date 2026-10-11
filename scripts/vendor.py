@@ -32,7 +32,7 @@ PORTAL_VERSION = "1.0.0"
 # sibling repo → package dir that receives _forge_portal.py
 FORGES: dict[str, str] = {
     "the-forge": "src/theforge",
-    "spark-forge-aws": "sparkforge",
+    "spark-forge-aws": "sparkforge_aws",
     "spark-forge-azure": "sparkforge_azure",
     "api-forge": "src/apiforge",
     "platform-forge": "platformforge",
