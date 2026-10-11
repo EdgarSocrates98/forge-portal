@@ -998,6 +998,33 @@ page-settings {
   opacity: 0.6;
 }
 
+/* portal-row — local forge-portal presence inside a status card */
+.portal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--fg-muted);
+}
+.portal-row[data-state='installed'] {
+  border-color: color-mix(in srgb, var(--ok) 45%, var(--border));
+  color: var(--fg);
+}
+.portal-row[data-state='installed'] ui-icon {
+  color: var(--ok);
+}
+.portal-row__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.portal-row__body small {
+  overflow-wrap: anywhere;
+}
+
 /* skip-to-content — visible only on keyboard focus */
 .skip-link {
   position: fixed;

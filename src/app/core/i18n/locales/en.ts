@@ -107,6 +107,9 @@ export const EN: Record<string, string> = {
   'install.subtitle':
     'Install, repair, verify or remove this Forge — the same service as the CLI, with the same receipts.',
   'install.status': 'Current state',
+  'install.portal.installed': 'Forge Portal installed',
+  'install.portal.vendored': 'Forge Portal not installed locally',
+  'install.portal.vendored.hint': 'vendored assets only — no local install found',
   'install.scope': 'Scope',
   'install.scope.project': 'Current project',
   'install.scope.project.hint': 'Writes only inside this directory — ideal for trying it out.',

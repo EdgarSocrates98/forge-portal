@@ -80,12 +80,21 @@ export interface PortalDescriptor {
   workspace?: { root: string | null; name: string | null };
 }
 
+export interface ForgePortalPresence {
+  state: 'installed' | 'vendored';
+  install_root: string | null;
+  manifest: string | null;
+  installed_at: string | null;
+  locations: { kind: string; path: string }[];
+}
+
 export interface PortalHealth {
   state: InstallState;
   checks: { id: string; state: string; detail?: string }[];
   workspace: string | null;
   profile: string | null;
   updated_at: string | null;
+  forge_portal?: ForgePortalPresence;
 }
 
 export interface InstallationReceipt {

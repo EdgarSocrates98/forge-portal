@@ -106,6 +106,9 @@ export const PT_BR: Record<string, string> = {
   'install.subtitle':
     'Instalar, reparar, verificar ou remover esta Forja — o mesmo serviço do CLI, com os mesmos recibos.',
   'install.status': 'Estado atual',
+  'install.portal.installed': 'Forge Portal instalado',
+  'install.portal.vendored': 'Forge Portal sem instalação local',
+  'install.portal.vendored.hint': 'apenas assets vendored — nenhuma instalação local encontrada',
   'install.scope': 'Escopo',
   'install.scope.project': 'Projeto atual',
   'install.scope.project.hint': 'Escreve apenas neste diretório — ideal para experimentar.',
