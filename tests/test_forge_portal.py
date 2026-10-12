@@ -160,6 +160,43 @@ class TestEnvelopeAndSession:
         call(server, "GET", "/api/v1/installation/status")
         assert server.adapter.install_count == 0
 
+    def test_account_environment_reports_ready_paths(self, server, tmp_path, monkeypatch):
+        install = tmp_path / "install"
+        venv = install / ".venv"
+        checkout = tmp_path / "checkout"
+        install.mkdir()
+        venv.mkdir()
+        checkout.mkdir()
+        python = venv / "python.exe"
+        cli = venv / "theforge.exe"
+        python.write_text("", encoding="utf-8")
+        cli.write_text("", encoding="utf-8")
+        values = {
+            "THE_FORGE_HOME": str(checkout),
+            "THE_FORGE_INSTALL_ROOT": str(install),
+            "THE_FORGE_VENV": str(venv),
+            "THE_FORGE_PYTHON": str(python),
+            "THE_FORGE_CLI": str(cli),
+        }
+        for name, value in values.items():
+            monkeypatch.setenv(name, value)
+
+        status, env, _ = call(server, "GET", "/api/v1/environment")
+
+        assert status == 200
+        assert env["data"]["schema"] == "forge/InstallEnvironment/v1"
+        assert env["data"]["state"] == "READY"
+        assert all(item["valid"] for item in env["data"]["variables"] if item["required"])
+
+    def test_account_environment_missing_is_honest(self, server, monkeypatch):
+        for suffix in ("HOME", "INSTALL_ROOT", "VENV", "PYTHON", "CLI", "LAUNCHER"):
+            monkeypatch.delenv(f"THE_FORGE_{suffix}", raising=False)
+
+        status, env, _ = call(server, "GET", "/api/v1/environment")
+
+        assert status == 200
+        assert env["data"]["state"] == "MISSING"
+
 
 # ---------------------------------------------------------------------------
 # CSRF / payload guards

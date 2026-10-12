@@ -33,6 +33,11 @@ const STATE_KIND: Record<string, BadgeKind> = {
   FAIL: 'error',
   UNVERIFIED: 'warn',
   NOT_APPLICABLE: 'muted',
+  READY: 'ok',
+  PARTIAL: 'warn',
+  MISSING: 'muted',
+  INVALID: 'error',
+  UNSET: 'muted',
   // generic
   ok: 'ok',
   warn: 'warn',
@@ -63,6 +68,11 @@ const I18N_PREFIX: Record<string, string> = {
   unverified: 'state.unverified',
   unsupported: 'state.unsupported',
   not_applicable: 'state.notApplicable',
+  READY: 'environmentState.',
+  PARTIAL: 'environmentState.',
+  MISSING: 'environmentState.',
+  INVALID: 'environmentState.',
+  UNSET: 'environmentState.',
 };
 
 /** Badge semântico — mapeia qualquer estado do contrato para tom+label i18n. */

@@ -2,7 +2,12 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PortalApi } from '../api/api.client';
 import { ApiError } from '../api/api.error';
-import { BootstrapPayload, PortalDescriptor, PortalHealth } from '../api/api.models';
+import {
+  AccountEnvironment,
+  BootstrapPayload,
+  PortalDescriptor,
+  PortalHealth,
+} from '../api/api.models';
 import { ThemeStore } from '../theme/theme.store';
 
 export type PortalStatus = 'booting' | 'ready' | 'degraded' | 'offline';
@@ -21,6 +26,7 @@ export class PortalStore {
   readonly status = signal<PortalStatus>('booting');
   readonly descriptor = signal<PortalDescriptor | null>(null);
   readonly health = signal<PortalHealth | null>(null);
+  readonly accountEnvironment = signal<AccountEnvironment | null>(null);
   readonly lastError = signal<ApiError | null>(null);
   readonly refreshedAt = signal<string | null>(null);
 
@@ -52,6 +58,7 @@ export class PortalStore {
     try {
       const health = await firstValueFrom(this.api.installationStatus());
       this.health.set(health);
+      this.accountEnvironment.set(health.account_environment ?? this.accountEnvironment());
       this.refreshedAt.set(new Date().toISOString());
       this.lastError.set(null);
     } catch (err) {
@@ -64,6 +71,9 @@ export class PortalStore {
   private applyBootstrap(payload: BootstrapPayload): void {
     this.descriptor.set(payload.descriptor);
     this.health.set(payload.health);
+    this.accountEnvironment.set(
+      payload.account_environment ?? payload.health.account_environment ?? null,
+    );
     this.lastError.set(null);
     this.refreshedAt.set(new Date().toISOString());
     this.theme.setForge(payload.descriptor.theme ?? payload.descriptor.forge_id);

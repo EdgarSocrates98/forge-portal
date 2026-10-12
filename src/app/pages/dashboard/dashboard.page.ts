@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PortalStore } from '../../core/portal/portal.store';
+import { AccountEnvironmentVariable } from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
@@ -123,6 +124,31 @@ import { UiIcon } from '../../shared/icon';
               </li>
             }
           </ol>
+        </article>
+
+        <article class="card card--environment" data-lift>
+          <div class="card__heading">
+            <h2>{{ 'dashboard.accountEnvironment' | t }}</h2>
+            @if (store.accountEnvironment(); as env) {
+              <ui-state-badge [state]="env.state" />
+            }
+          </div>
+          <p class="muted">{{ 'dashboard.accountEnvironmentHint' | t }}</p>
+          @if (store.accountEnvironment(); as env) {
+            <ul class="env-vars">
+              @for (variable of env.variables; track variable.name) {
+                <li>
+                  <div class="env-vars__topline">
+                    <code>{{ variable.name }}</code>
+                    <ui-state-badge [state]="variableState(variable)" />
+                  </div>
+                  <small class="env-vars__path">{{ variable.path ?? ('environmentState.UNSET' | t) }}</small>
+                </li>
+              }
+            </ul>
+          } @else {
+            <ui-empty [title]="'environmentState.MISSING' | t" [hint]="'dashboard.environmentMissing' | t" />
+          }
         </article>
       </section>
 
@@ -266,6 +292,15 @@ import { UiIcon } from '../../shared/icon';
       font-weight: 650;
       letter-spacing: -0.01em;
     }
+    .card__heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .card__heading h2 {
+      margin-bottom: 0;
+    }
     .kv {
       display: grid;
       gap: 6px;
@@ -360,6 +395,32 @@ import { UiIcon } from '../../shared/icon';
     .muted {
       color: var(--fg-muted);
     }
+    .env-vars {
+      display: grid;
+      gap: 8px;
+      list-style: none;
+      margin: var(--space-3) 0 0;
+      padding: 0;
+    }
+    .env-vars li {
+      min-width: 0;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+    }
+    .env-vars__topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .env-vars__path {
+      display: block;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+      color: var(--fg-muted);
+    }
   `,
 })
 export class DashboardPage {
@@ -391,6 +452,11 @@ export class DashboardPage {
 
   capIcon(id: string): string {
     return this.capIcons[id] ?? 'check';
+  }
+
+  variableState(variable: AccountEnvironmentVariable): string {
+    if (!variable.present) return 'UNSET';
+    return variable.valid ? 'READY' : 'INVALID';
   }
 
   readonly steps = computed(() => {
