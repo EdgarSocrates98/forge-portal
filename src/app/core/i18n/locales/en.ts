@@ -103,6 +103,15 @@ export const EN: Record<string, string> = {
   'dashboard.stat.capabilities': 'Capabilities ready',
   'dashboard.stat.checks': 'Checks passing',
   'dashboard.stat.portal': 'Portal version',
+  'dashboard.accountEnvironment': 'Account environment',
+  'dashboard.accountEnvironmentHint':
+    'Reusable install paths for this Forge, outside your workspace.',
+  'dashboard.environmentMissing': 'Run install.ps1 or install.sh to publish these paths.',
+  'environmentState.READY': 'Ready',
+  'environmentState.PARTIAL': 'Partial',
+  'environmentState.MISSING': 'Missing',
+  'environmentState.INVALID': 'Invalid',
+  'environmentState.UNSET': 'Not set',
 
   // installation
   'install.title': 'Installation',

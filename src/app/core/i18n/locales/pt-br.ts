@@ -102,6 +102,14 @@ export const PT_BR: Record<string, string> = {
   'dashboard.stat.capabilities': 'Capabilities prontas',
   'dashboard.stat.checks': 'Checks ok',
   'dashboard.stat.portal': 'Versão do portal',
+  'dashboard.accountEnvironment': 'Ambiente da conta',
+  'dashboard.accountEnvironmentHint': 'Caminhos reutilizáveis da Forja, fora do workspace.',
+  'dashboard.environmentMissing': 'Execute install.ps1 ou install.sh para publicar esses caminhos.',
+  'environmentState.READY': 'Pronto',
+  'environmentState.PARTIAL': 'Parcial',
+  'environmentState.MISSING': 'Ausente',
+  'environmentState.INVALID': 'Inválido',
+  'environmentState.UNSET': 'Não definido',
 
   // instalação
   'install.title': 'Instalação',

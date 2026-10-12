@@ -105,6 +105,27 @@ export interface ForgePortalPresence {
   locations: { kind: string; path: string }[];
 }
 
+export type AccountEnvironmentState = 'READY' | 'PARTIAL' | 'MISSING' | 'INVALID';
+
+export interface AccountEnvironmentVariable {
+  name: string;
+  required: boolean;
+  present: boolean;
+  valid: boolean | null;
+  kind: 'directory' | 'file';
+  path: string | null;
+}
+
+export interface AccountEnvironment {
+  schema: 'forge/InstallEnvironment/v1';
+  scope: 'user';
+  forge_id: ForgeId;
+  prefix: string;
+  state: AccountEnvironmentState;
+  variables: AccountEnvironmentVariable[];
+  windows_aliases: boolean;
+}
+
 export interface PortalHealth {
   state: InstallState;
   checks: { id: string; state: string; detail?: string }[];
@@ -112,6 +133,7 @@ export interface PortalHealth {
   profile: string | null;
   updated_at: string | null;
   forge_portal?: ForgePortalPresence;
+  account_environment?: AccountEnvironment;
 }
 
 export interface InstallationReceipt {
@@ -231,6 +253,7 @@ export interface DocHit {
 export interface BootstrapPayload {
   descriptor: PortalDescriptor;
   health: PortalHealth;
+  account_environment?: AccountEnvironment;
 }
 
 export interface FederationSpecialist {

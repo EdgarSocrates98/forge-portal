@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import {
   AgentDescriptor,
+  AccountEnvironment,
   ApiEnvelope,
   BootstrapPayload,
   DocHit,
@@ -66,6 +67,9 @@ export class PortalApi {
   }
   installationStatus() {
     return this.get<PortalHealth>('/installation/status');
+  }
+  accountEnvironment() {
+    return this.get<AccountEnvironment>('/environment');
   }
   installationPlan(
     input: Partial<InstallSelection> & {
