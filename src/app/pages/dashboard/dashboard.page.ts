@@ -142,12 +142,17 @@ import { UiIcon } from '../../shared/icon';
                     <code>{{ variable.name }}</code>
                     <ui-state-badge [state]="variableState(variable)" />
                   </div>
-                  <small class="env-vars__path">{{ variable.path ?? ('environmentState.UNSET' | t) }}</small>
+                  <small class="env-vars__path">{{
+                    variable.path ?? ('environmentState.UNSET' | t)
+                  }}</small>
                 </li>
               }
             </ul>
           } @else {
-            <ui-empty [title]="'environmentState.MISSING' | t" [hint]="'dashboard.environmentMissing' | t" />
+            <ui-empty
+              [title]="'environmentState.MISSING' | t"
+              [hint]="'dashboard.environmentMissing' | t"
+            />
           }
         </article>
       </section>
