@@ -9,6 +9,7 @@ import {
   GraphBundle,
   HostDetection,
   InstallationReceipt,
+  InstallSelection,
   McpServerDescriptor,
   PortalCapability,
   PortalHealth,
@@ -63,12 +64,14 @@ export class PortalApi {
   installationStatus() {
     return this.get<PortalHealth>('/installation/status');
   }
-  installationPlan(input: {
-    scope?: string;
-    host?: string;
-    profile?: string;
-    components?: Record<string, boolean>;
-  }) {
+  installationPlan(
+    input: Partial<InstallSelection> & {
+      scope?: string;
+      host?: string;
+      profile?: string;
+      components?: Record<string, boolean>;
+    },
+  ) {
     return this.post<InstallationReceipt>('/installation/plan', input);
   }
   installationApply(plan: Record<string, unknown>, planToken: string, confirm = 'apply') {

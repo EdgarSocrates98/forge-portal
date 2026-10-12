@@ -58,7 +58,7 @@ import { UiIcon } from '../../shared/icon';
             </div>
             <div>
               <dt>{{ 'hosts.integration' | t }}</dt>
-              <dd><ui-state-badge [state]="h.integration" [labelOverride]="h.integration" /></dd>
+              <dd><ui-state-badge [state]="h.integration" /></dd>
             </div>
           </dl>
           @if (h.detail) {
