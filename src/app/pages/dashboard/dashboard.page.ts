@@ -397,11 +397,15 @@ export class DashboardPage {
     const state = this.store.health()?.state ?? 'NOT_INSTALLED';
     const installed = !['NOT_INSTALLED', 'FAILED'].includes(state);
     const verified = ['VERIFIED', 'ACTIVE'].includes(state);
-    return [
-      { label: 'dashboard.step.install', route: '/install', done: installed },
+    const steps = [{ label: 'dashboard.step.install', route: '/install', done: installed }];
+    if (this.store.federated()) {
+      steps.push({ label: 'dashboard.step.family', route: '/federation', done: false });
+    }
+    steps.push(
       { label: 'dashboard.step.host', route: '/hosts', done: installed },
       { label: 'dashboard.step.mcp', route: '/mcp', done: verified },
       { label: 'dashboard.step.task', route: '/tasks', done: verified },
-    ];
+    );
+    return steps;
   });
 }

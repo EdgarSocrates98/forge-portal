@@ -14,6 +14,8 @@ motores existentes.
   serve o portal via `<cli> portal` — Node.js só é dependência de
   desenvolvimento aqui.
 - **Contratos**: `forge/PortalApi/1` — ver `docs/fase0/contracts.md`.
+- **Onboarding federado**: a página `/federation` reúne catálogo, escopo,
+  hosts, perfis, componentes e o fluxo `plan → review → confirm` da família.
 - **Arquitetura e decisões**: `docs/fase0/architecture.md`,
   `docs/fase0/security-matrix.md`, `docs/fase0/capability-map.md`,
   `docs/fase0/distribution-plan.md`.

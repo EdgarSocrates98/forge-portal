@@ -24,6 +24,8 @@ const PATHS: Record<string, string> = {
   tasks: '<circle cx="12" cy="12" r="9"/><path d="m10.5 8.8 5.5 3.2-5.5 3.2v-6.4Z"/>',
   graph:
     '<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="5.5" r="2.6"/><circle cx="18" cy="18.5" r="2.6"/><path d="m8.4 11 7.2-4M8.4 13l7.2 4"/>',
+  network:
+    '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="5" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.5-4.3M8.2 13.2l7.5 4.3"/>',
   knowledge:
     '<path d="M2.5 4.5C4 3.6 6 3 8 3s3.5.6 4 1.7v14.5c-.5-1.1-2-1.7-4-1.7s-4 .6-5.5 1.5V4.5Z"/><path d="M21.5 4.5C20 3.6 18 3 16 3s-3.5.6-4 1.7v14.5c.5-1.1 2-1.7 4-1.7s4 .6 5.5 1.5V4.5Z"/>',
   settings:

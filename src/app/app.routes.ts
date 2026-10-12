@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/install/install.page').then((m) => m.InstallPage),
   },
   {
+    path: 'federation',
+    loadComponent: () => import('./pages/federation/federation.page').then((m) => m.FederationPage),
+  },
+  {
     path: 'profiles',
     loadComponent: () => import('./pages/profiles/profiles.page').then((m) => m.ProfilesPage),
   },

@@ -15,8 +15,8 @@ fora.
   e alternadores de idioma e tema. Itens de nav podem exigir capability
   (`tasks`, `graph`) e somem quando `unsupported` — nunca ficam como
   botões mortos.
-- 11 rotas lazy (`app.routes.ts`): dashboard, install, profiles, hosts,
-  mcp, skills, agents, tasks, graph, knowledge, settings. Cada página é
+- 12 rotas lazy (`app.routes.ts`): dashboard, install, federation, profiles,
+  hosts, mcp, skills, agents, tasks, graph, knowledge, settings. Cada página é
   um chunk separado — o usuário baixa só o que abre.
 
 ### Design tokens e temas
@@ -67,14 +67,15 @@ fora.
 ### Páginas
 
 Todas funcionais contra a API real: dashboard (saúde, quick-start com
-passos derivados do estado, capabilities), install (scope + componentes
+passos derivados do estado e onboarding federado, capabilities), install (scope + componentes
 → plano → revisão → apply/repair/uninstall com recibo), profiles
 (3 perfis, diff de componentes, apply), hosts (detecção, auth,
 integração, launch-hint honesto — o portal nunca finge que lança o
 host), mcp (servidores + verify handshake), skills/agents (catálogos
 com busca), tasks (intent → plano → execução com recibo), graph
 (disponibilidade + link do Graph Studio), knowledge (busca em docs),
-settings (idioma, tema, sobre).
+settings (idioma, tema, sobre), federation (catálogo real e fluxo governado
+de `install_auto` com escopo, host, perfis e componentes).
 
 ## Verificação
 

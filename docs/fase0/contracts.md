@@ -44,6 +44,7 @@ Erro estruturado (§20 do programa):
 | `TaskRequest/Execution/Evidence` | execução de verbo seguro da Forja (scan/analyze/ask) — stage, exit_code, receipt |
 | `GraphDescriptor` | `graphview.build_view()` → ForgeGraphView/v1 + availability |
 | `DocHit` | `docs/knowledge-program/inventory.jsonl` + title/excerpt local |
+| `FederationSnapshot/Plan` | catálogo de especialistas, registry local e `install_auto` com decisões propagadas |
 
 ## Endpoints
 
@@ -58,6 +59,9 @@ POST /api/v1/installation/repair
 POST /api/v1/installation/uninstall {confirm:"uninstall"}
 GET  /api/v1/profiles         profiles + atual + diffs
 POST /api/v1/profiles/apply   {profile, confirm} → receipt
+GET  /api/v1/federation       catálogo, registry e estado observado dos especialistas
+POST /api/v1/federation/plan  {scope, host, profile, gateway_profile, components?, forge?} → plano federado
+POST /api/v1/federation/install-auto {plan_token, confirm:"install"} → recibo por Forja
 GET  /api/v1/hosts            HostDetection[] observe-only
 POST /api/v1/hosts/launch     {host} → recusa se !tty/!login — portal nunca lança sem TTY real? ver nota
 GET  /api/v1/mcp/servers

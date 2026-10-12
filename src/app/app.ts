@@ -17,6 +17,7 @@ const NAV: NavEntry[] = [
     section: 'nav.section.operate',
     items: [
       { route: '/dashboard', label: 'nav.dashboard', icon: 'dashboard' },
+      { route: '/federation', label: 'nav.federation', icon: 'network', capability: 'federation' },
       { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
       { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
     ],

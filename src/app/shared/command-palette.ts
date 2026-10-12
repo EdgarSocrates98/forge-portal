@@ -149,6 +149,12 @@ export class CommandPalette {
       },
       { id: 'p:install', icon: 'install', label: 'nav.install', run: () => this.go('/install') },
       {
+        id: 'p:federation',
+        icon: 'network',
+        label: 'nav.federation',
+        run: () => this.go('/federation'),
+      },
+      {
         id: 'p:profiles',
         icon: 'profiles',
         label: 'nav.profiles',

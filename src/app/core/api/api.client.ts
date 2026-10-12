@@ -6,6 +6,9 @@ import {
   ApiEnvelope,
   BootstrapPayload,
   DocHit,
+  FederationPlanResponse,
+  FederationSelection,
+  FederationSnapshot,
   GraphBundle,
   HostDetection,
   InstallationReceipt,
@@ -86,6 +89,19 @@ export class PortalApi {
   }
   installationUninstall() {
     return this.post<InstallationReceipt>('/installation/uninstall', { confirm: 'uninstall' });
+  }
+  federation() {
+    return this.get<FederationSnapshot>('/federation');
+  }
+  federationPlan(input: FederationSelection) {
+    return this.post<FederationPlanResponse>('/federation/plan', input);
+  }
+  federationInstallAuto(plan: Record<string, unknown>, planToken: string) {
+    return this.post<InstallationReceipt>('/federation/install-auto', {
+      plan,
+      plan_token: planToken,
+      confirm: 'install',
+    });
   }
   profiles() {
     return this.get<ProfileDescriptor[]>('/profiles');
