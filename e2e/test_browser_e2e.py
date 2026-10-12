@@ -54,6 +54,16 @@ class E2EAdapter(fp.PortalAdapter):
                 confirm="apply",
                 needs_plan_token=True,
             ),
+            fp.Operation("GET", "/federation", lambda ctx: self._federation()),
+            fp.Operation("POST", "/federation/plan", self._federation_plan, mutating=True),
+            fp.Operation(
+                "POST",
+                "/federation/install-auto",
+                self._federation_apply,
+                mutating=True,
+                confirm="install",
+                needs_plan_token=True,
+            ),
             fp.Operation(
                 "POST",
                 "/mcp/verify",
@@ -92,6 +102,8 @@ class E2EAdapter(fp.PortalAdapter):
                  "icon": "dashboard"},
                 {"id": "install", "label_key": "nav.install", "route": "/install",
                  "icon": "install"},
+                {"id": "federation", "label_key": "nav.federation", "route": "/federation",
+                 "icon": "network"},
                 {"id": "profiles", "label_key": "nav.profiles", "route": "/profiles",
                  "icon": "profiles"},
                 {"id": "hosts", "label_key": "nav.hosts", "route": "/hosts",
@@ -114,6 +126,7 @@ class E2EAdapter(fp.PortalAdapter):
     def capabilities(self) -> list[dict]:
         return [
             {"id": "install", "state": "supported"},
+            {"id": "federation", "state": "supported"},
             {"id": "profiles", "state": "supported"},
             {"id": "hosts", "state": "supported"},
             {"id": "mcp", "state": "supported"},
@@ -192,6 +205,17 @@ class E2EAdapter(fp.PortalAdapter):
             "edges": [{"from": "a", "to": "b", "kind": "imports"}],
         }
 
+    def _federation(self) -> dict:
+        return {
+            "specialists": [
+                {"provider": "e2e-forge", "state": "ACTIVE", "cli": self.cli,
+                 "checkout": str(REPO), "mcp": {"state": "CONFIGURED"}},
+            ],
+            "installed_forges": ["e2e-forge"],
+            "registry": {"count": 1, "path": "E:/e2e/.forge/installations"},
+            "summary": {"catalog": 1, "installed": 1, "with_mcp": 1, "with_checkout": 1},
+        }
+
 
     def _plan(self, ctx: fp.RequestContext) -> dict:
         plan = {
@@ -224,6 +248,42 @@ class E2EAdapter(fp.PortalAdapter):
             "status": "completed",
             "managed_files": [{"path": ".mcp.json"}, {"path": "AGENTS.md"}],
             "checks": [{"id": "write", "status": "PASS", "detail": "2 files"}],
+            "verification": {"status": "PASS"},
+        }
+
+    def _federation_plan(self, ctx: fp.RequestContext) -> dict:
+        body = ctx.body or {}
+        plan = {
+            "scope": body.get("scope", "project"),
+            "forge": body.get("forge"),
+            "host": body.get("host", "all"),
+            "profile": body.get("profile", "recommended"),
+            "gateway_profile": body.get("gateway_profile", "balanced"),
+            "components": body.get("components"),
+        }
+        return {
+            "status": "planned",
+            "plan": plan,
+            "plan_token": ctx.handler.server.sign_plan(plan),
+            "receipt": {"status": "planned"},
+            "actions": [{"kind": "forge", "path": "e2e-forge", "status": "planned"}],
+        }
+
+    def _federation_apply(self, ctx: fp.RequestContext) -> dict:
+        body = ctx.body or {}
+        plan = body.get("plan") or {}
+        if not ctx.handler.server.check_plan(body["plan_token"], plan):
+            raise fp.PortalError("PORTAL-PLAN-STALE", "plan token invalid", http=409)
+        self.applied.append(plan)
+        return {
+            "schema": "forge/InstallReceipt/v1",
+            "forge_id": self.forge_id,
+            "operation": "install-auto",
+            "status": "completed",
+            "host": plan.get("host"),
+            "profile": plan.get("profile"),
+            "execution_profile": plan.get("gateway_profile"),
+            "forges": [{"forge_id": "e2e-forge", "status": "completed", "via": "self"}],
             "verification": {"status": "PASS"},
         }
 
@@ -314,7 +374,7 @@ def test_global_stylesheet_applies(page, portal):
 
 
 def test_all_routes_render(page, portal):
-    routes = ["/install", "/profiles", "/hosts", "/mcp", "/skills",
+    routes = ["/install", "/federation", "/profiles", "/hosts", "/mcp", "/skills",
               "/agents", "/tasks", "/graph", "/settings"]
     _open(page, portal)
     for r in routes:
@@ -367,6 +427,27 @@ def test_install_flow_plan_apply(page, portal):
             page.wait_for_timeout(600)
             _shot(page, "04-install-applied")
             assert page.locator("text=/completed|concluí|PASS/i").count() > 0
+
+
+def test_federation_flow_plan_apply(page, portal):
+    _open(page, portal)
+    page.goto(f"http://127.0.0.1:{portal.port}/federation"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    assert page.locator("text=/Família de Forjas|Forge family/i").count() > 0
+    plan_btn = page.locator("button:has-text('Gerar plano'),"
+                            " button:has-text('Generate family plan')").first
+    assert plan_btn.is_enabled()
+    plan_btn.click()
+    page.wait_for_timeout(600)
+    assert page.locator("text=/Revisar plano|Review family plan/i").count() > 0
+    apply_btn = page.locator("button:has-text('Aplicar família'),"
+                             " button:has-text('Apply family')").first
+    assert apply_btn.is_enabled()
+    apply_btn.click()
+    page.wait_for_timeout(600)
+    assert page.locator("text=/completed|concluí|PASS/i").count() > 0
 
 
 def test_command_palette(page, portal):

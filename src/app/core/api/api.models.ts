@@ -232,3 +232,46 @@ export interface BootstrapPayload {
   descriptor: PortalDescriptor;
   health: PortalHealth;
 }
+
+export interface FederationSpecialist {
+  provider: string;
+  state?: string;
+  status?: string;
+  cli?: string | null;
+  checkout?: string | null;
+  mcp?: Record<string, unknown> | null;
+  checks?: { id: string; status: string; detail?: string }[];
+  notes?: string[];
+  [key: string]: unknown;
+}
+
+export interface FederationSummary {
+  catalog: number;
+  installed: number;
+  with_mcp: number;
+  with_checkout: number;
+}
+
+export interface FederationSnapshot {
+  specialists: FederationSpecialist[];
+  installed_forges: string[];
+  registry: { count: number; path: string };
+  summary: FederationSummary;
+}
+
+export interface FederationSelection {
+  scope: 'project' | 'workspace' | 'user';
+  host: 'all' | 'none' | HostId;
+  profile: 'minimal' | 'recommended' | 'full';
+  gateway_profile?: ExecutionProfile;
+  components: Partial<Record<ComponentId, boolean>>;
+  forge?: string | null;
+}
+
+export interface FederationPlanResponse {
+  status: string;
+  plan: Record<string, unknown>;
+  plan_token: string;
+  receipt: InstallationReceipt;
+  actions: { kind: string; path: string; status: string }[];
+}
