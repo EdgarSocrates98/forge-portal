@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo.png" alt="Forge Portal" width="440">
+</p>
+
 # Forge Portal
 
 Portal web local e opcional para o ecossistema The Forge — um centro de
