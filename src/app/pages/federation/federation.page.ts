@@ -663,8 +663,8 @@ export class FederationPage {
       this.result.set(
         await firstValueFrom(this.api.federationInstallAuto(planned.plan, planned.plan_token)),
       );
-      this.phase.set('done');
       await Promise.all([this.load(), this.store.refreshHealth()]);
+      this.phase.set('done');
     } catch (e) {
       this.fail(e);
     } finally {
