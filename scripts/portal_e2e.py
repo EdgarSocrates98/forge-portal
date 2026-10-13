@@ -16,9 +16,12 @@ Uso: python scripts/portal_e2e.py [forge ...]
 from __future__ import annotations
 
 import json
+import queue
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -80,12 +83,55 @@ def check(name: str, ok: bool, detail: str = "") -> bool:
     return ok
 
 
-def wait_url(proc: subprocess.Popen[str]) -> str:
-    line = proc.stdout.readline() if proc.stdout else ""
-    if not line:
-        raise RuntimeError(f"portal exited early: rc={proc.poll()}")
-    doc = json.loads(line)
-    return doc["url"]
+def wait_url(proc: subprocess.Popen[str], timeout: int = TIMEOUT) -> str:
+    """Read portal startup output without blocking forever on noisy entrypoints.
+
+    Portal adapters must eventually emit one JSON object containing ``url``, but
+    their logs are allowed to precede it. Reading ``stdout.readline()`` directly
+    made this harness hang when an adapter stayed alive without emitting its
+    contract line, hiding the real failure. A daemon reader plus a deadline keeps
+    the harness bounded on Windows and POSIX alike.
+    """
+    lines: queue.Queue[tuple[str, str]] = queue.Queue()
+
+    def drain() -> None:
+        stream = proc.stdout
+        if stream is None:
+            lines.put(("eof", ""))
+            return
+        for line in stream:
+            lines.put(("line", line))
+        lines.put(("eof", ""))
+
+    threading.Thread(target=drain, daemon=True, name="portal-e2e-stdout").start()
+    deadline = time.monotonic() + timeout
+    recent: list[str] = []
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            detail = "; ".join(recent[-3:])
+            raise RuntimeError(
+                f"portal did not emit startup URL within {timeout}s"
+                + (f"; output: {detail}" if detail else "")
+            )
+        try:
+            kind, line = lines.get(timeout=min(remaining, 0.25))
+        except queue.Empty:
+            continue
+        if kind == "eof":
+            raise RuntimeError(f"portal exited before startup URL: rc={proc.poll()}")
+        text = line.strip()
+        if not text:
+            continue
+        try:
+            doc = json.loads(text)
+        except json.JSONDecodeError:
+            recent.append(text[:240])
+            continue
+        url = doc.get("url") if isinstance(doc, dict) else None
+        if isinstance(url, str) and url:
+            return url
+        recent.append(text[:240])
 
 
 def run_forge(forge: str, repo: str, argv: list[str]) -> bool:

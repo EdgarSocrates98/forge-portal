@@ -41,6 +41,10 @@ construção.
   subprocesso real do verbo, 403 sem sessão, envelope `forge/PortalApi/1`,
   estados honestos, `PORTAL-PLAN-STALE` em token forjado, traversal e
   op desconhecida 404, task plan. 126 assertions verdes.
+- O harness de startup agora é bounded: drena logs precedentes, encontra a
+  linha JSON de contrato e falha em até 30s quando a URL não chega; dois testes
+  cobrem logs antes da URL e processo sem contrato. Execução real pós-correção:
+  7/7 forjas PASS.
 - **i18n gate** (`scripts/check_i18n.py`): 240/240 chaves pt-BR/en,
   112 chaves estáticas cobertas, zero prosa hardcoded, estados de
   contrato do badge cobertos.
