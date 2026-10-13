@@ -288,7 +288,7 @@ import { UiIcon } from '../../shared/icon';
       gap: var(--space-4);
     }
     .cards {
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
       margin-bottom: var(--space-4);
     }
     .card h2 {
