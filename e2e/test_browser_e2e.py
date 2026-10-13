@@ -486,6 +486,26 @@ def test_mobile_viewport(page, portal):
     page.set_viewport_size({"width": 1440, "height": 900})
 
 
+def test_content_scrolls_in_constrained_viewport(page, portal):
+    """Shell must keep long pages reachable inside short browser windows."""
+    page.set_viewport_size({"width": 1024, "height": 420})
+    page.goto(f"http://127.0.0.1:{portal.port}/install"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(300)
+    metrics = page.locator(".content").evaluate(
+        "el => ({clientHeight: el.clientHeight, scrollHeight: el.scrollHeight, "
+        "overflowY: getComputedStyle(el).overflowY})"
+    )
+    assert metrics["overflowY"] in ("auto", "scroll")
+    assert metrics["scrollHeight"] > metrics["clientHeight"]
+    moved = page.locator(".content").evaluate(
+        "el => { el.scrollTop = el.scrollHeight; return el.scrollTop; }"
+    )
+    assert moved > 0, "content viewport did not scroll"
+    page.set_viewport_size({"width": 1440, "height": 900})
+
+
 def test_offline_banner(page):
     # dedicated server — the module fixture must stay alive for other tests
     server = fp.PortalServer(E2EAdapter(), quiet=True)

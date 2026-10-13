@@ -17,6 +17,7 @@ python -m pytest tests -q
 | Paridade i18n | PASS | chaves EN/PT-BR verificadas pelo script |
 | Testes Angular 11 | PASS | execução headless do conjunto existente |
 | Testes Python | PASS | suíte do portal executada |
+| Scroll vertical em viewport curta | PASS | `.content` mantém overflow interno e alcança conteúdo longo |
 | PTY Windows real | BLOCKED | ambiente atual não fornece sessão ConPTY interativa reproduzível |
 | Handshake de host real | BLOCKED | nenhum host externo autenticado no ambiente de CI local |
 | E2E visual real | UNVERIFIED | artefato PNG pré-existente preservado; não representa nova execução |

@@ -1259,6 +1259,7 @@ details > summary::marker {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
   background:
     radial-gradient(
       1200px 300px at 30% -80px,
@@ -1345,8 +1346,10 @@ details > summary::marker {
 
 .content {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-6);
+  overscroll-behavior: contain;
 }
 
 .offline-banner {
