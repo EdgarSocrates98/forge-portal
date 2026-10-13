@@ -1,0 +1,6 @@
+/* App shell chrome lives in src/styles.css — the root component is
+ * itself global, so its selectors get no benefit from encapsulation
+ * and the per-component style budget stays honest. */
+:host {
+  display: contents;
+}
