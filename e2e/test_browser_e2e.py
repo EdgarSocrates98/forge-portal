@@ -478,6 +478,10 @@ def test_mobile_viewport(page, portal):
     page.set_viewport_size({"width": 390, "height": 844})
     _open(page, portal)
     page.wait_for_timeout(300)
+    overflow = page.evaluate(
+        "document.documentElement.scrollWidth - window.innerWidth"
+    )
+    assert overflow <= 1, f"mobile horizontal overflow: {overflow}px"
     _shot(page, "07-mobile")
     page.set_viewport_size({"width": 1440, "height": 900})
 
