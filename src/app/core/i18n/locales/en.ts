@@ -417,6 +417,111 @@ export const EN: Record<string, string> = {
   'table.verb': 'Verb',
   'table.stage': 'Stage',
   'table.exit': 'Exit',
+
+  // ── C3: control center ─────────────────────────────────────────
+  'nav.forges': 'Forges',
+  'nav.config': 'Configuration',
+  'notify.region': 'Notifications',
+  'common.updatedAt': 'updated {time}',
+
+  // global search (§3.6)
+  'command.kind.page': 'Pages & actions',
+  'command.kind.forge': 'Forges',
+  'command.kind.capability': 'Capabilities',
+  'command.kind.skill': 'Skills',
+  'command.kind.agent': 'Agents',
+  'command.kind.mcp': 'MCP',
+  'command.kind.host': 'Hosts',
+  'command.kind.doc': 'Documents',
+  'command.kind.error': 'Known errors',
+  'command.filters': 'Filter by type',
+  'command.searching': 'Searching…',
+  'command.footer': '↑↓ navigate · ←→ filter · Enter open · Esc close',
+  'command.unverified': 'Source unverified for this search',
+
+  // dashboard 360 (§3.2)
+  'dashboard.forges': 'Discovered Forjas',
+  'dashboard.forges.hint': 'The serving Forja plus specialists from the federation registry.',
+  'dashboard.inventory': 'Inventory',
+  'dashboard.inventory.hint': 'Live counts read from each catalog endpoint.',
+  'federation.unavailable': 'This Forja does not expose a federation registry — data unverified.',
+
+  // Forja explorer (§3.3)
+  'explorer.title': 'Forja explorer',
+  'explorer.subtitle':
+    'Every Forja this workspace can verify — the serving Forja plus federation specialists.',
+  'explorer.serving': 'serving',
+  'explorer.registryOnly': 'Registry entry only — never observed live.',
+  'explorer.empty': 'No Forja could be discovered.',
+  'explorer.notFound': 'No Forja with this identity in the federation snapshot.',
+  'explorer.back': 'All Forjas',
+  'explorer.detail.subtitle':
+    'Fields verified by the portal and the federation registry — absent data is marked, never filled in.',
+  'explorer.identity': 'Identity',
+  'explorer.presence': 'Presence',
+  'explorer.notes': 'Notes',
+  'explorer.checkout': 'Checkout',
+
+  // installation center — nine-step flow (§3.4)
+  'install.step.discover': 'Discover',
+  'install.step.select': 'Select',
+  'install.step.reviewDiff': 'Review diff',
+  'install.step.confirm': 'Confirm',
+  'install.step.execute': 'Execute',
+  'install.step.verify': 'Verify',
+  'install.step.receipt': 'Receipt',
+  'install.discover.hosts': 'AI hosts detected in this environment',
+  'install.planning': 'Computing the installation plan…',
+  'install.diff.none': 'The backend provided no field-level diff — reviewing actions.',
+  'install.confirm.hint':
+    'Review the plan above. Execution only happens after explicit confirmation.',
+  'install.confirm.execute': 'Confirm and execute',
+  'install.confirm.back': 'Back',
+  'install.confirm.next': 'Continue',
+  'install.executing': 'Executing the approved plan…',
+  'install.verify.running': 'Revalidating the post-install state…',
+  'install.verify.unverified': 'The backend returned no checks — verification unconfirmed.',
+  'install.reinstall': 'Reinstall',
+  'install.newPlan': 'New plan',
+  'install.flow.hint':
+    'Nothing executes without a reviewed plan and explicit confirmation — same as the CLI.',
+  'install.ops.title': 'Operations',
+  'install.ops.update': 'Update',
+  'install.ops.update.hint': 'Update via portal is not exposed by this adapter — path unverified.',
+  'install.ops.repair.hint': 'Re-runs checks and repairs divergent entries.',
+
+  // configuration center (§3.5)
+  'config.title': 'Configuration center',
+  'config.subtitle': "This Forja's environment variables — metadata only, never values.",
+  'config.alert.missing': 'Missing or invalid required variables prevent the Forja from operating.',
+  'config.env.prefix': 'Prefix',
+  'config.env.scope': 'Scope',
+  'config.env.aliases': 'Windows aliases',
+  'config.col.name': 'Variable',
+  'config.col.required': 'Required',
+  'config.col.present': 'Present',
+  'config.col.valid': 'Valid',
+  'config.col.kind': 'Kind',
+  'config.col.path': 'Path',
+  'config.prepare.title': 'Prepare changes',
+  'config.prepare.hint':
+    'Ready-to-paste shell commands — the portal never writes variables for you.',
+  'config.prepare.none': 'No pending variables — environment ready.',
+  'config.apply.title': 'Apply changes',
+  'config.apply.portal': 'Apply via portal',
+  'config.apply.unsupported':
+    'This adapter does not expose configuration writes — path unverified.',
+  'config.profiles.link': 'View component profiles',
+  'config.profiles.hint': 'Profiles define which components each installation enables.',
+
+  // profile comparison (§3.4)
+  'profiles.compare': 'Compare profiles',
+  'profiles.compare.hint': 'Select two profiles to see the component differences.',
+  'profiles.compare.a': 'Profile A',
+  'profiles.compare.b': 'Profile B',
+  'profiles.compare.component': 'Component',
+  'profiles.compare.differences': '{count} differences',
+  'profiles.compare.same': 'Identical profiles',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN

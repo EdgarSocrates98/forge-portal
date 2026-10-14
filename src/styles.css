@@ -795,6 +795,9 @@ a.btn:hover {
 }
 page-dashboard,
 page-install,
+page-config,
+page-explorer,
+page-forge-detail,
 page-profiles,
 page-hosts,
 page-mcp,
@@ -814,6 +817,9 @@ page-settings {
   }
   page-dashboard,
   page-install,
+  page-config,
+  page-explorer,
+  page-forge-detail,
   page-profiles,
   page-hosts,
   page-mcp,
@@ -1394,4 +1400,21 @@ details > summary::marker {
     justify-content: center;
     padding-inline: 0;
   }
+}
+
+/* ============ control-center additions (Agent A — tokens only) ============
+   Nothing above was renamed or removed; every token below is additive.
+   Light theme is the `:root` default (color-scheme: light) and is already
+   complete — dark overrides live in `[data-scheme='dark']`. */
+:root {
+  /* explicit z-index rungs for floating UI — the command palette sits at a
+     literal 90 and the skip-link at 100; components use these names instead
+     of new magic numbers */
+  --z-overlay: 90;
+  --z-dialog: 100;
+  --z-toast: 120;
+
+  /* static skeleton fill — shimmer-free by design; adapts to both schemes
+     because it mixes against --fg-text */
+  --skeleton: color-mix(in srgb, var(--fg-text) 10%, transparent);
 }

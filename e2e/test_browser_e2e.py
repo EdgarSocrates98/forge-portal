@@ -55,6 +55,13 @@ class E2EAdapter(fp.PortalAdapter):
                 needs_plan_token=True,
             ),
             fp.Operation("GET", "/federation", lambda ctx: self._federation()),
+            fp.Operation("GET", "/skills", lambda ctx: self.skills()),
+            fp.Operation("GET", "/agents", lambda ctx: self.agents()),
+            fp.Operation("GET", "/hosts", lambda ctx: self.hosts()),
+            fp.Operation("GET", "/profiles", lambda ctx: self.profiles()),
+            fp.Operation("GET", "/tasks", lambda ctx: self.tasks()),
+            fp.Operation("GET", "/mcp/servers", lambda ctx: self._mcp_servers()),
+            fp.Operation("GET", "/docs/search", self._docs_search),
             fp.Operation("POST", "/federation/plan", self._federation_plan, mutating=True),
             fp.Operation(
                 "POST",
@@ -204,6 +211,23 @@ class E2EAdapter(fp.PortalAdapter):
             ],
             "edges": [{"from": "a", "to": "b", "kind": "imports"}],
         }
+
+    def _mcp_servers(self) -> list[dict]:
+        return [
+            {"id": "e2e-forge-mcp", "state": "TOOLS_DISCOVERED",
+             "host": "devin", "tools_count": 4,
+             "last_verify": "2026-10-11T00:00:00Z"},
+        ]
+
+    def _docs_search(self, ctx: fp.RequestContext) -> list[dict]:
+        q = (ctx.query.get("q") or [""])[0].lower()
+        hits = [
+            {"path": "docs/install.md", "title": "Install guide",
+             "excerpt": "plan review confirm apply", "category": "guide"},
+            {"path": "docs/env.md", "title": "Environment variables",
+             "excerpt": "E2E_FORGE_HOME setup", "category": "reference"},
+        ]
+        return [h for h in hits if q and (q in h["title"].lower() or q in h["excerpt"].lower())]
 
     def _federation(self) -> dict:
         return {
@@ -374,7 +398,8 @@ def test_global_stylesheet_applies(page, portal):
 
 
 def test_all_routes_render(page, portal):
-    routes = ["/install", "/federation", "/profiles", "/hosts", "/mcp", "/skills",
+    routes = ["/install", "/config", "/forges", "/forges/self", "/federation",
+              "/profiles", "/hosts", "/mcp", "/skills",
               "/agents", "/tasks", "/graph", "/settings"]
     _open(page, portal)
     for r in routes:
@@ -412,21 +437,71 @@ def test_install_flow_plan_apply(page, portal):
               f"?forge_session={portal.session_token}")
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(400)
+    # nine-step stepper renders (pt-BR or en)
+    stepper = page.locator(".stepper__step")
+    assert stepper.count() == 9, f"expected 9 steps, got {stepper.count()}"
     plan_btn = page.locator("button:has-text('Plan'),"
                             " button:has-text('Planejar')").first
     if plan_btn.count() and plan_btn.is_enabled():
         plan_btn.click()
         page.wait_for_timeout(600)
         _shot(page, "03-install-plan")
-        # plan rendered — stepper advanced or planned files visible
-        assert page.locator("text=/PLANNED|planned|planejad/i").count() > 0
-        apply_btn = page.locator("button:has-text('Apply'),"
-                                 " button:has-text('Aplicar')").first
+        # review-diff step reached — planned files or actions visible
+        assert page.locator("text=/PLANNED|planned|planejad|Review|Revisar/i").count() > 0
+        # confirm is a separate, explicit step
+        next_btn = page.locator("button:has-text('Continue'),"
+                                " button:has-text('Continuar')").first
+        if next_btn.count() and next_btn.is_enabled():
+            next_btn.click()
+            page.wait_for_timeout(300)
+        apply_btn = page.locator("button:has-text('Confirm and execute'),"
+                                 " button:has-text('Confirmar e executar')").first
         if apply_btn.count() and apply_btn.is_enabled():
             apply_btn.click()
-            page.wait_for_timeout(600)
+            page.wait_for_timeout(800)
             _shot(page, "04-install-applied")
-            assert page.locator("text=/completed|concluí|PASS/i").count() > 0
+            # verify + receipt steps: checks and final status rendered
+            assert page.locator("text=/completed|concluí|PASS|verified|Verific/i").count() > 0
+
+
+def test_config_center_env_vars(page, portal):
+    _open(page, portal)
+    page.goto(f"http://127.0.0.1:{portal.port}/config"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    _shot(page, "05-config-center")
+    # variables table renders from /environment (core op — always present)
+    assert page.locator("table, .card").count() > 0
+
+
+def test_explorer_and_detail(page, portal):
+    _open(page, portal)
+    page.goto(f"http://127.0.0.1:{portal.port}/forges"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    _shot(page, "06-explorer")
+    # serving Forja row is always present even without federation
+    assert page.locator("text=/e2e-forge/i").count() > 0
+    page.goto(f"http://127.0.0.1:{portal.port}/forges/self"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    _shot(page, "07-forge-detail")
+    assert page.locator("text=/e2e-forge|serving|servidora/i").count() > 0
+
+
+def test_palette_grouped_search(page, portal):
+    _open(page, portal)
+    page.keyboard.press("Control+k")
+    page.wait_for_timeout(300)
+    page.keyboard.type("install")
+    page.wait_for_timeout(700)
+    _shot(page, "08-palette-search")
+    # grouped results — at least a page-kind hit for the query
+    assert page.locator(".cp__list li, .cp__group, [role='option']").count() > 0
+    page.keyboard.press("Escape")
 
 
 def test_federation_flow_plan_apply(page, portal):

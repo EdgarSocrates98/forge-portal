@@ -1,21 +1,38 @@
 import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { I18nService } from '../core/i18n/i18n.service';
 import { TPipe } from '../core/i18n/i18n.pipe';
-import { PortalStore } from '../core/portal/portal.store';
-import { ThemeStore } from '../core/theme/theme.store';
+import {
+  SEARCH_KIND_LABEL,
+  SEARCH_KIND_ORDER,
+  SearchKind,
+  SearchResult,
+  SearchService,
+} from '../core/search/search.service';
 import { UiIcon } from './icon';
 
-interface CmdItem {
-  id: string;
-  icon: string;
-  label: string;
-  run: () => void;
+type ChipKind = SearchKind | 'all';
+
+interface Chip {
+  kind: ChipKind;
+  labelKey: string;
+  unverified: boolean;
 }
 
 /**
- * Command palette (Ctrl/Cmd+K) — frequência altíssima, então zero
- * animação: abre e executa instantaneamente (framework de motion).
+ * Global search palette (Ctrl/Cmd+K) — spec §3.6 front-end for
+ * `SearchService`. Zero-animation philosophy kept: opens and executes
+ * instantly, no motion anywhere.
+ *
+ * Keyboard contract (documented choice):
+ *  - `↑`/`↓` cycle the flat result list (wraps), `↵` runs the active item,
+ *    `Esc` closes — from the input or any chip.
+ *  - Kind filter chips form a `radiogroup` with a roving tabindex:
+ *    `←`/`→` on the chip row moves AND activates the previous/next filter,
+ *    `↑`/`↓` returns focus to the input. `Tab` is left untouched so it can
+ *    always move focus out of the widget.
+ *  - Results are grouped by kind under `presentation` headers; the list
+ *    stays a single `listbox` so `aria-selected`/arrow semantics are
+ *    unchanged from the previous palette.
  */
 @Component({
   selector: 'ui-command-palette',
@@ -39,28 +56,72 @@ interface CmdItem {
             #inp
             class="cp__input"
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="cp-list"
+            [attr.aria-activedescendant]="activeDesc()"
             [value]="query()"
             (input)="onQuery($event)"
             (keydown)="onKey($event)"
             [placeholder]="'command.hint' | t"
             [attr.aria-label]="'command.open' | t"
           />
-          <ul class="cp__list" role="listbox">
-            @for (item of filtered(); track item.id; let i = $index) {
+          <div class="cp__filters" role="radiogroup" [attr.aria-label]="'command.filters' | t">
+            @for (chip of chips(); track chip.kind; let ci = $index) {
+              <button
+                type="button"
+                class="cp__chip"
+                role="radio"
+                [attr.aria-checked]="filter() === chip.kind"
+                [attr.data-active]="filter() === chip.kind || null"
+                [attr.data-unverified]="chip.unverified || null"
+                [attr.title]="chip.unverified ? ('command.unverified' | t) : null"
+                [tabindex]="filter() === chip.kind ? 0 : -1"
+                (click)="setFilter(chip.kind)"
+                (keydown)="onChipKey($event, ci)"
+              >
+                {{ chip.labelKey | t }}
+                @if (chip.unverified) {
+                  <ui-icon name="alert" [size]="11" />
+                }
+              </button>
+            }
+          </div>
+          <ul
+            #list
+            id="cp-list"
+            class="cp__list"
+            role="listbox"
+            [attr.aria-busy]="search.loading() || null"
+          >
+            @if (search.loading()) {
+              <li class="cp__status" role="presentation">{{ 'command.searching' | t }}</li>
+            }
+            @for (item of flat(); track item.id; let i = $index) {
+              @if (i === 0 || flat()[i - 1].kind !== item.kind) {
+                <li class="cp__group" role="presentation">{{ labels[item.kind] | t }}</li>
+              }
               <li
+                class="cp__item"
                 role="option"
-                [attr.aria-selected]="i === active()"
-                [attr.data-active]="i === active() || null"
+                [id]="'cp-opt-' + i"
+                [attr.aria-selected]="i === idx()"
+                [attr.data-active]="i === idx() || null"
                 (click)="run(item)"
                 (mousemove)="active.set(i)"
               >
                 <ui-icon [name]="item.icon" [size]="15" />
-                <span>{{ item.label | t }}</span>
+                <span class="cp__label">{{ item.label }}</span>
+                @if (item.sublabel) {
+                  <span class="cp__sub">{{ item.sublabel }}</span>
+                }
               </li>
-            } @empty {
-              <li class="cp__empty">{{ 'command.empty' | t }}</li>
+            }
+            @if (!search.loading() && search.searched() && flat().length === 0) {
+              <li class="cp__empty" role="presentation">{{ 'command.empty' | t }}</li>
             }
           </ul>
+          <div class="cp__footer">{{ 'command.footer' | t }}</div>
         </div>
       </div>
     }
@@ -94,6 +155,34 @@ interface CmdItem {
       font-size: var(--font-lg);
       outline: none;
     }
+    .cp__filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--border);
+    }
+    .cp__chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--fg-muted);
+      padding: 1px var(--space-2);
+      font: inherit;
+      font-size: var(--font-xs);
+      cursor: pointer;
+    }
+    .cp__chip[data-active] {
+      background: var(--accent-bg);
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+      color: var(--accent-strong);
+    }
+    .cp__chip[data-unverified] ui-icon {
+      color: var(--warning, var(--accent));
+    }
     .cp__list {
       list-style: none;
       margin: 0;
@@ -101,7 +190,16 @@ interface CmdItem {
       max-height: 320px;
       overflow-y: auto;
     }
-    .cp__list li {
+    .cp__group {
+      padding: var(--space-2) var(--space-3) var(--space-1);
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: default;
+    }
+    .cp__item {
       display: flex;
       align-items: center;
       gap: var(--space-3);
@@ -111,102 +209,98 @@ interface CmdItem {
       cursor: pointer;
       font-size: var(--font-sm);
     }
-    .cp__list li ui-icon {
+    .cp__item ui-icon {
       color: var(--fg-muted);
       flex: none;
     }
-    .cp__list li[data-active] {
+    .cp__item[data-active] {
       background: var(--accent-bg);
       color: var(--accent-strong);
     }
-    .cp__list li[data-active] ui-icon {
+    .cp__item[data-active] ui-icon {
       color: var(--accent-strong);
     }
-    .cp__empty {
+    .cp__label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cp__sub {
+      margin-left: auto;
+      flex: none;
+      max-width: 45%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--fg-muted);
+      font-size: var(--font-xs);
+    }
+    .cp__status,
+    .cp__empty {
+      padding: var(--space-2) var(--space-3);
+      color: var(--fg-muted);
+      font-size: var(--font-sm);
       cursor: default;
+    }
+    .cp__footer {
+      border-top: 1px solid var(--border);
+      padding: var(--space-2) var(--space-4);
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
     }
   `,
 })
 export class CommandPalette {
   private readonly router = inject(Router);
-  private readonly store = inject(PortalStore);
-  private readonly theme = inject(ThemeStore);
-  private readonly i18n = inject(I18nService);
+  readonly search = inject(SearchService);
 
   readonly open = signal(false);
   readonly query = signal('');
   readonly active = signal(0);
-  private readonly input = viewChild<ElementRef<HTMLInputElement>>('inp');
+  readonly filter = signal<ChipKind>('all');
+  readonly labels = SEARCH_KIND_LABEL;
 
-  readonly items = computed<CmdItem[]>(() => {
-    const pages: CmdItem[] = [
-      {
-        id: 'p:dashboard',
-        icon: 'dashboard',
-        label: 'nav.dashboard',
-        run: () => this.go('/dashboard'),
-      },
-      { id: 'p:install', icon: 'install', label: 'nav.install', run: () => this.go('/install') },
-      {
-        id: 'p:federation',
-        icon: 'network',
-        label: 'nav.federation',
-        run: () => this.go('/federation'),
-      },
-      {
-        id: 'p:profiles',
-        icon: 'profiles',
-        label: 'nav.profiles',
-        run: () => this.go('/profiles'),
-      },
-      { id: 'p:hosts', icon: 'hosts', label: 'nav.hosts', run: () => this.go('/hosts') },
-      { id: 'p:mcp', icon: 'mcp', label: 'nav.mcp', run: () => this.go('/mcp') },
-      { id: 'p:skills', icon: 'skills', label: 'nav.skills', run: () => this.go('/skills') },
-      { id: 'p:agents', icon: 'agents', label: 'nav.agents', run: () => this.go('/agents') },
-      { id: 'p:tasks', icon: 'tasks', label: 'nav.tasks', run: () => this.go('/tasks') },
-      { id: 'p:graph', icon: 'graph', label: 'nav.graph', run: () => this.go('/graph') },
-      {
-        id: 'p:knowledge',
-        icon: 'knowledge',
-        label: 'nav.knowledge',
-        run: () => this.go('/knowledge'),
-      },
-      {
-        id: 'p:settings',
-        icon: 'settings',
-        label: 'nav.settings',
-        run: () => this.go('/settings'),
-      },
-    ];
-    const caps = this.store.capabilities();
-    const hidden = new Set(
-      caps.length
-        ? ['tasks', 'graph'].filter(
-            (id) => !caps.some((c) => c.id === id && c.state !== 'unsupported'),
-          )
-        : [],
-    );
-    return [
-      ...pages.filter((p) => !hidden.has(p.id.slice(2))),
-      { id: 'a:refresh', icon: 'refresh', label: 'state.refresh', run: () => this.refresh() },
-      { id: 'a:theme', icon: 'contrast', label: 'settings.theme', run: () => this.cycleTheme() },
-      { id: 'a:locale', icon: 'globe', label: 'settings.language', run: () => this.toggleLocale() },
-    ];
+  private readonly input = viewChild<ElementRef<HTMLInputElement>>('inp');
+  private readonly list = viewChild<ElementRef<HTMLUListElement>>('list');
+
+  /** Visible results — kind-filtered, preserving the service's rank order. */
+  readonly flat = computed<SearchResult[]>(() => {
+    const f = this.filter();
+    const all = this.search.results();
+    return f === 'all' ? all : all.filter((r) => r.kind === f);
   });
 
-  readonly filtered = computed(() => {
-    const q = this.query().trim().toLowerCase();
-    if (!q) return this.items();
-    return this.items().filter((i) => this.i18n.t(i.label).toLowerCase().includes(q));
+  /** Active row clamped to the visible list — never out of bounds. */
+  readonly idx = computed(() => {
+    const n = this.flat().length;
+    return n ? Math.min(this.active(), n - 1) : 0;
+  });
+
+  readonly activeDesc = computed(() => (this.flat().length ? `cp-opt-${this.idx()}` : null));
+
+  /** "All" plus one chip per kind present in the results (or unverified),
+   *  in `SEARCH_KIND_ORDER`. The active filter's chip is always kept. */
+  readonly chips = computed<Chip[]>(() => {
+    const present = new Set(this.search.results().map((r) => r.kind));
+    const failed = new Set(this.search.unverified());
+    const out: Chip[] = [{ kind: 'all', labelKey: 'state.all', unverified: false }];
+    for (const k of SEARCH_KIND_ORDER) {
+      if (present.has(k) || failed.has(k) || this.filter() === k) {
+        out.push({ kind: k, labelKey: SEARCH_KIND_LABEL[k], unverified: failed.has(k) });
+      }
+    }
+    return out;
   });
 
   toggle(e?: Event): void {
     e?.preventDefault();
-    this.open.set(!this.open());
-    if (this.open()) {
+    const next = !this.open();
+    this.open.set(next);
+    if (next) {
       this.query.set('');
+      this.filter.set('all');
       this.active.set(0);
+      this.search.setQuery('');
       setTimeout(() => this.input()?.nativeElement.focus());
     }
   }
@@ -216,50 +310,72 @@ export class CommandPalette {
   }
 
   onQuery(e: Event): void {
-    this.query.set((e.target as HTMLInputElement).value);
+    const q = (e.target as HTMLInputElement).value;
+    this.query.set(q);
     this.active.set(0);
+    this.search.setQuery(q);
   }
 
   onKey(e: KeyboardEvent): void {
-    const n = this.filtered().length;
+    const n = this.flat().length;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      this.active.set(n ? (this.active() + 1) % n : 0);
+      this.active.set(n ? (this.idx() + 1) % n : 0);
+      this.scrollActive();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      this.active.set(n ? (this.active() - 1 + n) % n : 0);
+      this.active.set(n ? (this.idx() - 1 + n) % n : 0);
+      this.scrollActive();
     } else if (e.key === 'Enter') {
-      const item = this.filtered()[this.active()];
+      const item = this.flat()[this.idx()];
       if (item) this.run(item);
     } else if (e.key === 'Escape') {
       this.close();
     }
   }
 
-  run(item: CmdItem): void {
+  /** `←`/`→` on the chip row cycles the kind filter (roving radiogroup);
+   *  `↑`/`↓` hands focus back to the input; `Esc` closes. */
+  onChipKey(e: KeyboardEvent, i: number): void {
+    const chips = this.chips();
+    const n = chips.length;
+    if (!n) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const j = e.key === 'ArrowRight' ? (i + 1) % n : (i - 1 + n) % n;
+      const chip = chips[j];
+      if (!chip) return;
+      this.filter.set(chip.kind);
+      this.active.set(0);
+      const row = (e.currentTarget as HTMLElement).parentElement;
+      (row?.children[j] as HTMLElement | undefined)?.focus();
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      this.input()?.nativeElement.focus();
+    } else if (e.key === 'Escape') {
+      this.close();
+    }
+  }
+
+  setFilter(kind: ChipKind): void {
+    this.filter.set(kind);
+    this.active.set(0);
+    this.input()?.nativeElement.focus();
+  }
+
+  run(item: SearchResult): void {
     this.close();
-    item.run();
+    if (item.run) item.run();
+    else if (item.route) void this.router.navigateByUrl(item.route);
+    else if (item.url) window.open(item.url, '_blank', 'noopener');
   }
 
-  private go(route: string): void {
-    void this.router.navigateByUrl(route);
-  }
-
-  private refresh(): void {
-    void this.store.refreshHealth();
-  }
-
-  private cycleTheme(): void {
-    const next =
-      this.theme.scheme() === 'system'
-        ? 'light'
-        : this.theme.scheme() === 'light'
-          ? 'dark'
-          : 'system';
-    this.theme.setScheme(next);
-  }
-
-  private toggleLocale(): void {
-    void this.i18n.applyPreference(this.i18n.locale() === 'pt-BR' ? 'en' : 'pt-BR');
+  /** Keeps the active row inside the max-h scroll viewport — instant,
+   *  `block: 'nearest'`, no smooth behavior (zero-animation rule). */
+  private scrollActive(): void {
+    setTimeout(() => {
+      const el = this.list()?.nativeElement.querySelector('[data-active]');
+      (el as HTMLElement | undefined)?.scrollIntoView?.({ block: 'nearest' });
+    });
   }
 }

@@ -6,6 +6,8 @@ import { TPipe } from './core/i18n/i18n.pipe';
 import { ThemeStore } from './core/theme/theme.store';
 import { UiIcon } from './shared/icon';
 import { CommandPalette } from './shared/command-palette';
+import { UiToastOutlet } from './shared/toast';
+import { UiConfirmHost } from './shared/confirm-dialog';
 
 interface NavEntry {
   section: string;
@@ -18,6 +20,7 @@ const NAV: NavEntry[] = [
     items: [
       { route: '/dashboard', label: 'nav.dashboard', icon: 'dashboard' },
       { route: '/federation', label: 'nav.federation', icon: 'network', capability: 'federation' },
+      { route: '/forges', label: 'nav.forges', icon: 'compass', capability: 'federation' },
       { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
       { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
     ],
@@ -26,6 +29,7 @@ const NAV: NavEntry[] = [
     section: 'nav.section.configure',
     items: [
       { route: '/install', label: 'nav.install', icon: 'install' },
+      { route: '/config', label: 'nav.config', icon: 'key' },
       { route: '/profiles', label: 'nav.profiles', icon: 'profiles' },
       { route: '/hosts', label: 'nav.hosts', icon: 'hosts' },
       { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
@@ -45,7 +49,16 @@ const NAV: NavEntry[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TPipe, UiIcon, CommandPalette],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    TPipe,
+    UiIcon,
+    CommandPalette,
+    UiToastOutlet,
+    UiConfirmHost,
+  ],
   styleUrl: './app.css',
   template: `
     <a class="skip-link" href="#content">{{ 'nav.skip' | t }}</a>
@@ -140,6 +153,8 @@ const NAV: NavEntry[] = [
       </div>
     </div>
     <ui-command-palette #palette />
+    <ui-toast-outlet />
+    <ui-confirm-host />
   `,
 })
 export class App {

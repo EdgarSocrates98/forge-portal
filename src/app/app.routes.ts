@@ -11,6 +11,19 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/install/install.page').then((m) => m.InstallPage),
   },
   {
+    path: 'config',
+    loadComponent: () => import('./pages/config/config.page').then((m) => m.ConfigPage),
+  },
+  {
+    path: 'forges',
+    loadComponent: () => import('./pages/explorer/explorer.page').then((m) => m.ExplorerPage),
+  },
+  {
+    path: 'forges/:id',
+    loadComponent: () =>
+      import('./pages/explorer/forge-detail.page').then((m) => m.ForgeDetailPage),
+  },
+  {
     path: 'federation',
     loadComponent: () => import('./pages/federation/federation.page').then((m) => m.FederationPage),
   },

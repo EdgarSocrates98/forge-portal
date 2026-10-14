@@ -54,6 +54,10 @@ const PATHS: Record<string, string> = {
   gem: '<path d="M6 3h12l4 6-10 13L2 9 6 3Z"/><path d="m11 3-3 6 4 13 4-13-3-6"/><path d="M2 9h20"/>',
   inbox:
     '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/>',
+  key: '<circle cx="8" cy="15" r="4.5"/><path d="m11.2 11.8 8.3-8.3"/><path d="M16 4.5l3.5 3.5"/><path d="m13 7.5 3 3"/>',
+  diff: '<path d="M12 3v18"/><path d="M8 8l4-4 4 4"/><path d="m8 16 4 4 4-4"/>',
+  history: '<path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>',
 };
 
 @Component({

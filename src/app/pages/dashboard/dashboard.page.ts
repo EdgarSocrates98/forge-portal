@@ -1,168 +1,242 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { PortalApi } from '../../core/api/api.client';
+import { FederationSnapshot, TaskExecution } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
-import { AccountEnvironmentVariable } from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
+import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { EmptyState } from '../../shared/empty-state';
+import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
+import { UiSkeleton } from '../../shared/skeleton';
+import { Source, buildForgeRows, stamp } from '../explorer/forges.data';
+import { InventoryPanel } from '../explorer/inventory-panel';
 
+/**
+ * Dashboard 360° — one honest section per data source. Each section
+ * carries its endpoint label, a refresh control and the timestamp of
+ * the last real answer; a failed source degrades only its own section
+ * (UNVERIFIED / error panel) while the rest keep rendering real data.
+ */
 @Component({
   selector: 'page-dashboard',
   standalone: true,
-  imports: [RouterLink, TPipe, StateBadge, EmptyState, UiIcon],
+  imports: [
+    RouterLink,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiSkeleton,
+    InventoryPanel,
+  ],
   template: `
-    @if (store.status() === 'booting') {
-      <div class="hero hero--skeleton">
-        <div class="skeleton skeleton--line" style="width: 40%"></div>
-        <div class="skeleton skeleton--line" style="width: 60%"></div>
-      </div>
-      <div class="stats">
-        @for (i of [1, 2, 3, 4]; track i) {
-          <div class="skeleton skeleton--block"></div>
-        }
+    <ui-page-header [title]="'dashboard.title' | t" [subtitle]="'dashboard.subtitle' | t">
+      <button class="btn" (click)="refreshAll()">
+        <ui-icon name="refresh" [size]="15" />
+        {{ 'state.refresh' | t }}
+      </button>
+    </ui-page-header>
+
+    @if (store.status() === 'booting' && !health()) {
+      <div class="boot" role="status" [attr.aria-label]="'state.loading' | t">
+        <ui-skeleton kind="card" />
+        <ui-skeleton kind="row" [lines]="4" />
       </div>
     } @else {
-      <section class="hero">
-        <div class="hero__text">
-          <div class="hero__eyebrow">
-            <span class="hero__forge">{{ store.forgeName() }}</span>
-            @if (descriptor()?.forge_version) {
-              <code class="hero__ver">v{{ descriptor()!.forge_version }}</code>
+      <section class="card status" data-section="status">
+        <div class="status__top">
+          <div class="status__id">
+            <strong>{{ store.forgeName() }}</strong>
+            @if (descriptor()?.forge_version; as v) {
+              <code class="ver">v{{ v }}</code>
             }
             @if (store.federated()) {
-              <span class="hero__fed">{{ 'settings.federated' | t }}</span>
+              <span class="fed">{{ 'settings.federated' | t }}</span>
             }
           </div>
-          <h1 class="hero__title">{{ 'dashboard.title' | t }}</h1>
-          <p class="hero__sub">{{ 'dashboard.subtitle' | t }}</p>
-          <div class="hero__meta">
-            @if (health(); as h) {
-              <ui-state-badge [state]="h.state" />
-            }
-            @if (store.workspace()?.name; as ws) {
-              <span class="hero__ws"><ui-icon name="folder" [size]="13" />{{ ws }}</span>
-            }
-          </div>
+          <button
+            class="icon-btn"
+            (click)="store.refreshHealth()"
+            [attr.aria-label]="'state.refresh' | t"
+          >
+            <ui-icon name="refresh" [size]="14" />
+          </button>
         </div>
-        <button class="btn btn--ghost-inverse" (click)="store.refreshHealth()">
-          <ui-icon name="refresh" [size]="14" />
-          {{ 'state.refresh' | t }}
-        </button>
-      </section>
-
-      <section class="stats stagger">
-        <div class="stat" [style.--stat-rail]="'var(--accent)'">
-          <span class="stat__value">
+        <div class="status__meta">
+          <ui-state-badge [state]="health()?.state ?? 'UNVERIFIED'" />
+          <span class="meta">
+            <ui-icon name="folder" [size]="13" />{{
+              store.workspace()?.name ?? ('dashboard.noWorkspace' | t)
+            }}
+          </span>
+          <span class="meta">
+            {{ 'dashboard.profile' | t }}:
             @if (health(); as h) {
-              <ui-state-badge [state]="h.state" />
+              {{ h.profile ?? ('state.none' | t) }}
             } @else {
-              —
+              <ui-state-badge state="UNVERIFIED" />
             }
           </span>
-          <span class="stat__label">{{ 'dashboard.stat.state' | t }}</span>
-        </div>
-        <div class="stat" [style.--stat-rail]="'var(--ok)'">
-          <span class="stat__value">{{ capsSupported() }}/{{ store.capabilities().length }}</span>
-          <span class="stat__label">{{ 'dashboard.stat.capabilities' | t }}</span>
-        </div>
-        <div class="stat" [style.--stat-rail]="'var(--info)'">
-          <span class="stat__value">{{ checksOk() }}/{{ health()?.checks?.length ?? 0 }}</span>
-          <span class="stat__label">{{ 'dashboard.stat.checks' | t }}</span>
-        </div>
-        <div class="stat" [style.--stat-rail]="'var(--fg-muted)'">
-          <span class="stat__value">{{ descriptor()?.portal_version ?? '—' }}</span>
-          <span class="stat__label">{{ 'dashboard.stat.portal' | t }}</span>
-        </div>
-      </section>
-
-      <section class="grid cards">
-        <article class="card" data-lift>
-          <h2>{{ 'dashboard.health' | t }}</h2>
-          @if (health(); as h) {
-            <dl class="kv">
-              <div>
-                <dt>{{ 'dashboard.workspace' | t }}</dt>
-                <dd>{{ h.workspace ?? ('dashboard.noWorkspace' | t) }}</dd>
-              </div>
-              <div>
-                <dt>{{ 'dashboard.profile' | t }}</dt>
-                <dd>{{ h.profile ?? ('state.unknown' | t) }}</dd>
-              </div>
-            </dl>
-            @if (h.checks.length) {
-              <ul class="checks">
-                @for (c of h.checks; track c.id) {
-                  <li>
-                    <ui-state-badge [state]="c.state" [labelOverride]="c.id" />
-                    @if (c.detail) {
-                      <small>{{ c.detail }}</small>
-                    }
-                  </li>
-                }
-              </ul>
-            }
-          } @else {
-            <ui-empty [title]="'empty.noData' | t" [hint]="'empty.noData.hint' | t" />
-          }
-        </article>
-
-        <article class="card" data-lift>
-          <h2>{{ 'dashboard.quickStart' | t }}</h2>
-          <p class="muted">{{ 'dashboard.quickStart.hint' | t }}</p>
-          <ol class="steps">
-            @for (step of steps(); track step.label) {
-              <li [attr.data-done]="step.done || null">
-                <span class="steps__mark" aria-hidden="true">
-                  @if (step.done) {
-                    <ui-icon name="check" [size]="12" />
-                  } @else {
-                    {{ $index + 1 }}
-                  }
-                </span>
-                <a [routerLink]="step.route">{{ step.label | t }}</a>
-              </li>
-            }
-          </ol>
-        </article>
-
-        <article class="card card--environment" data-lift>
-          <div class="card__heading">
-            <h2>{{ 'dashboard.accountEnvironment' | t }}</h2>
+          <span class="meta">
+            {{ 'dashboard.accountEnvironment' | t }}
             @if (store.accountEnvironment(); as env) {
               <ui-state-badge [state]="env.state" />
+            } @else {
+              <ui-state-badge state="MISSING" />
             }
-          </div>
-          <p class="muted">{{ 'dashboard.accountEnvironmentHint' | t }}</p>
-          @if (store.accountEnvironment(); as env) {
-            <ul class="env-vars">
-              @for (variable of env.variables; track variable.name) {
-                <li>
-                  <div class="env-vars__topline">
-                    <code>{{ variable.name }}</code>
-                    <ui-state-badge [state]="variableState(variable)" />
-                  </div>
-                  <small class="env-vars__path">{{
-                    variable.path ?? ('environmentState.UNSET' | t)
-                  }}</small>
-                </li>
-              }
-            </ul>
-          } @else {
-            <ui-empty
-              [title]="'environmentState.MISSING' | t"
-              [hint]="'dashboard.environmentMissing' | t"
-            />
+          </span>
+        </div>
+        <p class="src">
+          <code>bootstrap · GET /api/v1/installation/status</code>
+          @if (store.refreshedAt(); as ts) {
+            <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
           }
-        </article>
+        </p>
       </section>
 
-      <section class="card" data-lift>
-        <h2>{{ 'dashboard.capabilities' | t }}</h2>
+      <section data-section="stats">
+        <div class="stats stagger">
+          <div class="stat" [style.--stat-rail]="'var(--accent)'">
+            <span class="stat__value">
+              <ui-state-badge [state]="health()?.state ?? 'UNVERIFIED'" />
+            </span>
+            <span class="stat__label">{{ 'dashboard.stat.state' | t }}</span>
+          </div>
+          <div class="stat" [style.--stat-rail]="'var(--ok)'">
+            <span class="stat__value">{{ capsSupported() }}/{{ store.capabilities().length }}</span>
+            <span class="stat__label">{{ 'dashboard.stat.capabilities' | t }}</span>
+          </div>
+          <div class="stat" [style.--stat-rail]="'var(--info)'">
+            <span class="stat__value">{{ checksOk() }}/{{ health()?.checks.length ?? 0 }}</span>
+            <span class="stat__label">{{ 'dashboard.stat.checks' | t }}</span>
+          </div>
+          <div class="stat" [style.--stat-rail]="'var(--fg-muted)'">
+            <span class="stat__value">{{ descriptor()?.portal_version ?? '—' }}</span>
+            <span class="stat__label">{{ 'dashboard.stat.portal' | t }}</span>
+          </div>
+        </div>
+        <p class="src">
+          <code>bootstrap · GET /api/v1/installation/status</code>
+          @if (store.refreshedAt(); as ts) {
+            <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
+          }
+        </p>
+      </section>
+
+      <section class="card" data-section="forges">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'dashboard.forges' | t }}</h2>
+            <p class="src">
+              <code>GET /api/v1/federation</code>
+              @if (fed.loadedAt(); as ts) {
+                <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
+              }
+            </p>
+          </div>
+          <button
+            class="icon-btn"
+            (click)="loadFederation()"
+            [attr.aria-label]="'state.refresh' | t"
+          >
+            <ui-icon name="refresh" [size]="14" />
+          </button>
+        </div>
+        <p class="muted sec__hint">{{ 'dashboard.forges.hint' | t }}</p>
+
+        @if (fed.unavailable()) {
+          <div class="unv" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'federation.unavailable' | t }}</span>
+          </div>
+        }
+        @if (fed.error(); as e) {
+          <ui-error [error]="e" (retry)="loadFederation()" />
+        }
+        @if (fed.loading() && !fed.data()) {
+          <div role="status"><ui-skeleton kind="row" [lines]="3" /></div>
+        }
+        @if (forgesRows().length) {
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'table.id' | t }}</th>
+                  <th>{{ 'skills.state' | t }}</th>
+                  <th>{{ 'explorer.checkout' | t }}</th>
+                  <th>{{ 'mcp.title' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of forgesRows(); track row.id) {
+                  <tr [attr.data-serving]="row.serving || null">
+                    <td>
+                      <a class="link" [routerLink]="['/forges', row.id]">{{
+                        row.name ?? row.id
+                      }}</a>
+                      @if (row.serving) {
+                        <span class="chip">{{ 'explorer.serving' | t }}</span>
+                      }
+                    </td>
+                    <td><ui-state-badge [state]="row.state ?? 'UNVERIFIED'" /></td>
+                    <td>
+                      @if (row.checkout === undefined) {
+                        <ui-state-badge state="UNVERIFIED" />
+                      } @else if (row.checkout === null) {
+                        <span class="muted">{{ 'state.absent' | t }}</span>
+                      } @else {
+                        <code class="path" [attr.title]="row.checkout">{{ row.checkout }}</code>
+                      }
+                    </td>
+                    <td>
+                      @if (row.mcp === undefined) {
+                        <ui-state-badge state="UNVERIFIED" />
+                      } @else {
+                        <span class="muted">{{
+                          (row.mcp === null ? 'federation.mcpAbsent' : 'federation.mcpReady') | t
+                        }}</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (fed.attempted() && !fed.loading() && !fed.error()) {
+          <ui-empty icon="network" [title]="'federation.empty' | t" />
+        }
+        <a class="more" routerLink="/forges">
+          {{ 'state.viewDetails' | t }}<ui-icon name="chevron-right" [size]="14" />
+        </a>
+      </section>
+
+      <section class="card" data-section="capabilities">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'dashboard.capabilities' | t }}</h2>
+            <p class="src">
+              <code>bootstrap</code>
+              @if (store.refreshedAt(); as ts) {
+                <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
+              }
+            </p>
+          </div>
+          <button
+            class="icon-btn"
+            (click)="store.refreshHealth()"
+            [attr.aria-label]="'state.refresh' | t"
+          >
+            <ui-icon name="refresh" [size]="14" />
+          </button>
+        </div>
         @if (store.capabilities().length) {
           <div class="caps">
             @for (cap of store.capabilities(); track cap.id) {
-              <span class="cap" [attr.data-state]="cap.state" [title]="cap.state">
+              <span class="cap" [attr.data-state]="cap.state" [attr.title]="cap.state">
                 <ui-icon [name]="capIcon(cap.id)" [size]="15" />
                 <span class="cap__id">{{ cap.id }}</span>
                 <i class="cap__dot" aria-hidden="true"></i>
@@ -173,272 +247,259 @@ import { UiIcon } from '../../shared/icon';
           <ui-empty icon="dashboard" [title]="'dashboard.none' | t" />
         }
       </section>
+
+      <inventory-panel />
+
+      <section class="card" data-section="tasks">
+        <div class="sec__head">
+          <div>
+            <h2>
+              {{ 'tasks.recent' | t }}
+              @if (failures()) {
+                <span class="failn" [attr.data-failures]="failures()">{{ failures() }}</span>
+              }
+            </h2>
+            <p class="src">
+              <code>GET /api/v1/tasks</code>
+              @if (tasksSrc.loadedAt(); as ts) {
+                <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
+              }
+            </p>
+          </div>
+          <button class="icon-btn" (click)="loadTasks()" [attr.aria-label]="'state.refresh' | t">
+            <ui-icon name="refresh" [size]="14" />
+          </button>
+        </div>
+
+        @if (tasksSrc.unavailable()) {
+          <div class="unv" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'federation.unavailable' | t }}</span>
+          </div>
+        }
+        @if (tasksSrc.error(); as e) {
+          <ui-error [error]="e" (retry)="loadTasks()" />
+        }
+        @if (tasksSrc.loading() && !tasksSrc.data()) {
+          <div role="status"><ui-skeleton kind="row" [lines]="3" /></div>
+        }
+        @if (recentTasks().length) {
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'table.task' | t }}</th>
+                  <th>{{ 'table.verb' | t }}</th>
+                  <th>{{ 'table.stage' | t }}</th>
+                  <th>{{ 'table.exit' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (task of recentTasks(); track task.id) {
+                  <tr [attr.data-fail]="taskFailed(task) || null">
+                    <td>{{ task.label }}</td>
+                    <td>
+                      <code>{{ task.verb }}</code>
+                    </td>
+                    <td>
+                      <ui-state-badge [state]="taskState(task)" [labelOverride]="task.stage" />
+                    </td>
+                    <td>{{ task.exit_code ?? '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (
+          tasksSrc.attempted() &&
+          !tasksSrc.loading() &&
+          !tasksSrc.error() &&
+          !tasksSrc.unavailable()
+        ) {
+          <ui-empty icon="tasks" [title]="'tasks.empty' | t" />
+        }
+      </section>
     }
   `,
   styles: `
-    .hero {
-      position: relative;
+    .card,
+    .boot {
+      margin-bottom: var(--space-4);
+    }
+    .status__top {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-6);
-      border-radius: var(--radius-lg);
-      background: var(--gradient);
-      color: #fff;
-      box-shadow: var(--elev-hover);
-      overflow: hidden;
-      margin-bottom: var(--space-5);
+      align-items: flex-start;
+      gap: var(--space-3);
     }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(400px 200px at 90% -40px, rgb(255 255 255 / 0.18), transparent 65%),
-        radial-gradient(300px 180px at 10% 120%, rgb(0 0 0 / 0.12), transparent 70%);
-      pointer-events: none;
-    }
-    .hero--skeleton {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      min-height: 148px;
-      display: grid;
-      align-content: center;
-      gap: var(--space-2);
-    }
-    .hero__text {
-      position: relative;
-      z-index: 1;
-    }
-    .hero__eyebrow {
+    .status__id {
       display: flex;
       align-items: center;
       gap: var(--space-2);
-      margin-bottom: 6px;
-    }
-    .hero__forge {
-      font-size: var(--font-xs);
+      font-size: var(--font-lg);
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.85;
+      letter-spacing: -0.01em;
+      min-width: 0;
     }
-    .hero__ver {
+    .ver {
       font-size: var(--font-xs);
       font-weight: 600;
-      background: rgb(255 255 255 / 0.18);
+      background: var(--accent-bg);
+      color: var(--accent-strong);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
     }
-    .hero__fed {
+    .fed {
       font-size: var(--font-xs);
       font-weight: 700;
-      background: rgb(0 0 0 / 0.22);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
+      background: var(--accent-bg);
     }
-    .hero__title {
-      font-size: 1.625rem;
-      font-weight: 750;
-      letter-spacing: -0.02em;
-    }
-    .hero__sub {
-      margin-top: 4px;
-      opacity: 0.85;
-      max-width: 56ch;
-      font-size: var(--font-sm);
-    }
-    .hero__meta {
+    .status__meta {
       display: flex;
       align-items: center;
-      gap: var(--space-3);
-      margin-top: var(--space-4);
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-4);
+      margin-top: var(--space-3);
     }
-    .hero__ws {
+    .meta {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: var(--font-sm);
-      font-weight: 600;
-      opacity: 0.9;
+      color: var(--fg-muted);
     }
-    .btn--ghost-inverse {
-      position: relative;
-      z-index: 1;
-      background: rgb(255 255 255 / 0.14);
-      border-color: rgb(255 255 255 / 0.35);
-      color: #fff;
-      backdrop-filter: blur(4px);
+    .src {
+      margin: var(--space-3) 0 0;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
     }
-    .btn--ghost-inverse:hover {
-      background: rgb(255 255 255 / 0.24);
-      border-color: rgb(255 255 255 / 0.6);
+    .sec__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-3);
     }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--space-4);
-      margin-bottom: var(--space-5);
-    }
-
-    .grid {
-      display: grid;
-      gap: var(--space-4);
-    }
-    .cards {
-      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-      margin-bottom: var(--space-4);
-    }
-    .card h2 {
-      margin: 0 0 var(--space-3);
+    .sec__head h2 {
+      margin: 0;
       font-size: var(--font-lg);
       font-weight: 650;
-      letter-spacing: -0.01em;
     }
-    .card__heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
+    .sec__head .src {
+      margin-top: 4px;
     }
-    .card__heading h2 {
-      margin-bottom: 0;
+    .sec__hint {
+      margin: 2px 0 var(--space-3);
+      font-size: var(--font-sm);
     }
-    .kv {
-      display: grid;
-      gap: 6px;
-      margin: var(--space-3) 0;
-    }
-    .kv div {
-      display: flex;
-      gap: var(--space-2);
-    }
-    .kv dt {
-      color: var(--fg-muted);
-      min-width: 110px;
-    }
-    .kv dd {
-      margin: 0;
-    }
-    .checks {
-      list-style: none;
-      padding: 0;
-      margin: var(--space-3) 0 0;
-      display: grid;
-      gap: 6px;
-    }
-    .checks li {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-    }
-    .checks small {
+    .muted {
       color: var(--fg-muted);
     }
-    .steps {
-      list-style: none;
-      margin: var(--space-3) 0 0;
-      padding: 0;
+    .stats {
       display: grid;
-      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
     }
-    .steps li {
+    .unv {
       display: flex;
       align-items: center;
       gap: var(--space-3);
-      padding: 8px var(--space-3);
-      border: 1px solid var(--border);
+      padding: var(--space-3);
+      margin-bottom: var(--space-3);
+      border: 1px dashed color-mix(in srgb, var(--warn) 55%, transparent);
       border-radius: var(--radius-md);
-      transition:
-        border-color var(--motion-fast),
-        background var(--motion-fast);
+      background: var(--warn-bg);
+      font-size: var(--font-sm);
     }
-    .steps li:hover {
-      border-color: var(--border-strong);
-      background: var(--bg-hover);
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: var(--space-2);
     }
-    .steps__mark {
-      display: grid;
-      place-items: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
+    .path {
+      display: inline-block;
+      max-width: 34ch;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: bottom;
+    }
+    .chip {
+      margin-left: 6px;
       font-size: var(--font-xs);
       font-weight: 700;
       color: var(--accent);
       background: var(--accent-bg);
-      flex-shrink: 0;
+      border-radius: var(--radius-pill);
+      padding: 1px 8px;
     }
-    .steps li[data-done] {
-      border-color: color-mix(in srgb, var(--ok) 40%, transparent);
-    }
-    .steps li[data-done] .steps__mark {
-      color: var(--ok);
-      background: var(--ok-bg);
-      animation: fg-pop var(--fg-motion-med) var(--fg-ease-out) both;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .steps li[data-done] .steps__mark {
-        animation: none;
-      }
-    }
-    .steps a {
-      color: var(--fg);
-      font-weight: 550;
+    .more {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: var(--space-3);
+      font-size: var(--font-sm);
+      font-weight: 600;
       text-decoration: none;
     }
-    .steps a:hover {
-      text-decoration: underline;
+    .failn {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      margin-left: 6px;
+      padding: 0 6px;
+      border-radius: var(--radius-pill);
+      background: var(--error-bg);
+      color: var(--error);
+      font-size: var(--font-xs);
+      font-weight: 700;
+      vertical-align: 2px;
+    }
+    tr[data-fail] td {
+      background: color-mix(in srgb, var(--error-bg) 55%, transparent);
     }
     .caps {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-2);
+      margin-top: var(--space-3);
     }
-    .muted {
-      color: var(--fg-muted);
-    }
-    .env-vars {
-      display: grid;
-      gap: 8px;
-      list-style: none;
-      margin: var(--space-3) 0 0;
-      padding: 0;
-    }
-    .env-vars li {
-      min-width: 0;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: var(--bg-elevated);
-    }
-    .env-vars__topline {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .env-vars__path {
+    inventory-panel {
       display: block;
-      margin-top: 4px;
-      overflow-wrap: anywhere;
-      color: var(--fg-muted);
+      margin-bottom: var(--space-4);
     }
   `,
 })
 export class DashboardPage {
   readonly store = inject(PortalStore);
+  private readonly api = inject(PortalApi);
+
+  readonly fed = new Source<FederationSnapshot>();
+  readonly tasksSrc = new Source<TaskExecution[]>();
+  readonly inventory = viewChild(InventoryPanel);
+
   readonly health = computed(() => this.store.health());
   readonly descriptor = computed(() => this.store.descriptor());
-
+  readonly forgesRows = computed(() =>
+    buildForgeRows(this.descriptor(), this.health(), this.fed.data()).slice(0, 8),
+  );
+  readonly recentTasks = computed(() =>
+    [...(this.tasksSrc.data() ?? [])]
+      .sort((a, b) => b.started_at.localeCompare(a.started_at))
+      .slice(0, 6),
+  );
+  readonly failures = computed(() => this.recentTasks().filter((t) => this.taskFailed(t)).length);
   readonly capsSupported = computed(
     () => this.store.capabilities().filter((c) => c.state === 'supported').length,
   );
   readonly checksOk = computed(
-    () => (this.store.health()?.checks ?? []).filter((c) => c.state === 'PASS').length,
+    () => (this.health()?.checks ?? []).filter((c) => c.state === 'PASS').length,
   );
+  readonly stamp = stamp;
 
   private readonly capIcons: Record<string, string> = {
     tasks: 'tasks',
@@ -450,33 +511,49 @@ export class DashboardPage {
     hosts: 'hosts',
     install: 'install',
     profiles: 'profiles',
+    federation: 'network',
     scan: 'search',
     analyze: 'search',
     docs: 'knowledge',
   };
 
+  constructor() {
+    void this.refreshAll();
+  }
+
+  async refreshAll(): Promise<void> {
+    await Promise.allSettled([
+      this.store.refreshHealth(),
+      this.loadFederation(),
+      this.loadTasks(),
+      this.inventory()?.loadCounts() ?? Promise.resolve(),
+    ]);
+  }
+
+  async loadFederation(): Promise<void> {
+    await this.fed.load(() => this.api.federation());
+  }
+
+  async loadTasks(): Promise<void> {
+    await this.tasksSrc.load(() => this.api.tasks());
+  }
+
+  taskFailed(t: TaskExecution): boolean {
+    const stage = (t.stage || '').toLowerCase();
+    if (['failed', 'refused', 'cancelled'].includes(stage)) return true;
+    return t.exit_code !== null && t.exit_code !== 0;
+  }
+
+  taskState(t: TaskExecution): string {
+    const s = (t.stage || '').toLowerCase();
+    if (s === 'completed') return 'supported';
+    if (['failed', 'refused', 'cancelled'].includes(s)) return 'error';
+    if (['awaiting_approval', 'partial'].includes(s)) return 'warn';
+    if (['running', 'planning', 'verifying', 'started', 'selected'].includes(s)) return 'info';
+    return 'muted';
+  }
+
   capIcon(id: string): string {
     return this.capIcons[id] ?? 'check';
   }
-
-  variableState(variable: AccountEnvironmentVariable): string {
-    if (!variable.present) return 'UNSET';
-    return variable.valid ? 'READY' : 'INVALID';
-  }
-
-  readonly steps = computed(() => {
-    const state = this.store.health()?.state ?? 'NOT_INSTALLED';
-    const installed = !['NOT_INSTALLED', 'FAILED'].includes(state);
-    const verified = ['VERIFIED', 'ACTIVE'].includes(state);
-    const steps = [{ label: 'dashboard.step.install', route: '/install', done: installed }];
-    if (this.store.federated()) {
-      steps.push({ label: 'dashboard.step.family', route: '/federation', done: false });
-    }
-    steps.push(
-      { label: 'dashboard.step.host', route: '/hosts', done: installed },
-      { label: 'dashboard.step.mcp', route: '/mcp', done: verified },
-      { label: 'dashboard.step.task', route: '/tasks', done: verified },
-    );
-    return steps;
-  });
 }
