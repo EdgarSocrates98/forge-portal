@@ -36,7 +36,7 @@ describe('App shell', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const items = el.querySelectorAll('.nav__item');
-    expect(items.length).toBe(12);
+    expect(items.length).toBe(14);
   });
 
   it('shows the offline banner when the server is unreachable', async () => {

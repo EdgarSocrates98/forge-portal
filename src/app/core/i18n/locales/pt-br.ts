@@ -417,4 +417,110 @@ export const PT_BR: Record<string, string> = {
   'table.verb': 'Verbo',
   'table.stage': 'Estágio',
   'table.exit': 'Saída',
+
+  // ── C3: control center ─────────────────────────────────────────
+  'nav.forges': 'Forjas',
+  'nav.config': 'Configuração',
+  'notify.region': 'Notificações',
+  'common.updatedAt': 'atualizado {time}',
+
+  // busca global (§3.6)
+  'command.kind.page': 'Páginas e ações',
+  'command.kind.forge': 'Forjas',
+  'command.kind.capability': 'Capacidades',
+  'command.kind.skill': 'Skills',
+  'command.kind.agent': 'Agents',
+  'command.kind.mcp': 'MCP',
+  'command.kind.host': 'Hosts',
+  'command.kind.doc': 'Documentos',
+  'command.kind.error': 'Erros conhecidos',
+  'command.filters': 'Filtrar por tipo',
+  'command.searching': 'Buscando…',
+  'command.footer': '↑↓ navegar · ←→ filtrar · Enter abrir · Esc fechar',
+  'command.unverified': 'Fonte não verificada nesta busca',
+
+  // dashboard 360 (§3.2)
+  'dashboard.forges': 'Forjas descobertas',
+  'dashboard.forges.hint':
+    'A Forja que serve este portal mais os especialistas do registry federado.',
+  'dashboard.inventory': 'Inventário',
+  'dashboard.inventory.hint': 'Contagens reais lidas de cada endpoint de catálogo.',
+  'federation.unavailable': 'Esta Forja não expõe um registry federado — dados não verificados.',
+
+  // explorador de Forjas (§3.3)
+  'explorer.title': 'Explorador de Forjas',
+  'explorer.subtitle':
+    'Todas as Forjas que este workspace consegue verificar — a servidora mais os especialistas federados.',
+  'explorer.serving': 'servidora',
+  'explorer.registryOnly': 'Apenas entrada no registry — nunca observada ao vivo.',
+  'explorer.empty': 'Nenhuma Forja pôde ser descoberta.',
+  'explorer.notFound': 'Nenhuma Forja com esta identidade no snapshot federado.',
+  'explorer.back': 'Todas as Forjas',
+  'explorer.detail.subtitle':
+    'Campos verificados pelo portal e pelo registry federado — dados ausentes são marcados, nunca preenchidos.',
+  'explorer.identity': 'Identidade',
+  'explorer.presence': 'Presença',
+  'explorer.notes': 'Notas',
+  'explorer.checkout': 'Checkout',
+
+  // installation center — fluxo de 9 passos (§3.4)
+  'install.step.discover': 'Descobrir',
+  'install.step.select': 'Selecionar',
+  'install.step.reviewDiff': 'Revisar diff',
+  'install.step.confirm': 'Confirmar',
+  'install.step.execute': 'Executar',
+  'install.step.verify': 'Verificar',
+  'install.step.receipt': 'Recibo',
+  'install.discover.hosts': 'Hosts de IA detectados neste ambiente',
+  'install.planning': 'Calculando plano de instalação…',
+  'install.diff.none': 'O backend não forneceu diff campo a campo — revisando ações.',
+  'install.confirm.hint':
+    'Revise o plano acima. A execução só acontece após confirmação explícita.',
+  'install.confirm.execute': 'Confirmar e executar',
+  'install.confirm.back': 'Voltar',
+  'install.confirm.next': 'Continuar',
+  'install.executing': 'Executando o plano aprovado…',
+  'install.verify.running': 'Revalidando o estado pós-instalação…',
+  'install.verify.unverified': 'O backend não retornou checks — verificação não confirmada.',
+  'install.reinstall': 'Reinstalar',
+  'install.newPlan': 'Novo plano',
+  'install.flow.hint': 'Nada é executado sem plano revisado e confirmação explícita — como na CLI.',
+  'install.ops.title': 'Operações',
+  'install.ops.update': 'Atualizar',
+  'install.ops.update.hint':
+    'Atualização via portal não é exposta por este adapter — caminho não verificado.',
+  'install.ops.repair.hint': 'Reexecuta verificações e repara entradas divergentes.',
+
+  // configuration center (§3.5)
+  'config.title': 'Centro de configuração',
+  'config.subtitle': 'Variáveis de ambiente desta Forja — somente metadados, nunca valores.',
+  'config.alert.missing': 'Variáveis obrigatórias ausentes ou inválidas impedem a Forja de operar.',
+  'config.env.prefix': 'Prefixo',
+  'config.env.scope': 'Escopo',
+  'config.env.aliases': 'Aliases do Windows',
+  'config.col.name': 'Variável',
+  'config.col.required': 'Obrigatória',
+  'config.col.present': 'Presente',
+  'config.col.valid': 'Válida',
+  'config.col.kind': 'Tipo',
+  'config.col.path': 'Caminho',
+  'config.prepare.title': 'Preparar alterações',
+  'config.prepare.hint':
+    'Comandos prontos para colar no seu shell — o portal nunca escreve variáveis por você.',
+  'config.prepare.none': 'Nenhuma variável pendente — ambiente pronto.',
+  'config.apply.title': 'Aplicar alterações',
+  'config.apply.portal': 'Aplicar pelo portal',
+  'config.apply.unsupported':
+    'Este adapter não expõe escrita de configuração — caminho não verificado.',
+  'config.profiles.link': 'Ver perfis de componentes',
+  'config.profiles.hint': 'Perfis definem quais componentes cada instalação habilita.',
+
+  // comparação de perfis (§3.4)
+  'profiles.compare': 'Comparar perfis',
+  'profiles.compare.hint': 'Selecione dois perfis para ver a diferença de componentes.',
+  'profiles.compare.a': 'Perfil A',
+  'profiles.compare.b': 'Perfil B',
+  'profiles.compare.component': 'Componente',
+  'profiles.compare.differences': '{count} diferenças',
+  'profiles.compare.same': 'Perfis idênticos',
 };
