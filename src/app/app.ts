@@ -40,6 +40,7 @@ const NAV: NavEntry[] = [
     items: [
       { route: '/skills', label: 'nav.skills', icon: 'skills' },
       { route: '/agents', label: 'nav.agents', icon: 'agents' },
+      { route: '/match', label: 'nav.match', icon: 'compass' },
       { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
       { route: '/settings', label: 'nav.settings', icon: 'settings' },
     ],

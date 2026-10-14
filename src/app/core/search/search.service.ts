@@ -123,6 +123,7 @@ const STATIC_PAGES: { route: string; labelKey: string; icon: string; capability?
   { route: '/mcp', labelKey: 'nav.mcp', icon: 'mcp' },
   { route: '/skills', labelKey: 'nav.skills', icon: 'skills' },
   { route: '/agents', labelKey: 'nav.agents', icon: 'agents' },
+  { route: '/match', labelKey: 'nav.match', icon: 'compass' },
   { route: '/tasks', labelKey: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
   { route: '/graph', labelKey: 'nav.graph', icon: 'graph', capability: 'graph' },
   { route: '/knowledge', labelKey: 'nav.knowledge', icon: 'knowledge' },

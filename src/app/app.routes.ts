@@ -24,6 +24,10 @@ export const routes: Routes = [
       import('./pages/explorer/forge-detail.page').then((m) => m.ForgeDetailPage),
   },
   {
+    path: 'match',
+    loadComponent: () => import('./pages/match/match.page').then((m) => m.MatchPage),
+  },
+  {
     path: 'federation',
     loadComponent: () => import('./pages/federation/federation.page').then((m) => m.FederationPage),
   },

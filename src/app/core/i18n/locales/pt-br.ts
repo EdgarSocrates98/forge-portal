@@ -523,4 +523,86 @@ export const PT_BR: Record<string, string> = {
   'profiles.compare.component': 'Componente',
   'profiles.compare.differences': '{count} diferenças',
   'profiles.compare.same': 'Perfis idênticos',
+
+  // ── C4: hosts/MCP/agents studios ────────────────────────────────
+  'nav.match': 'Capacidades',
+
+  // host integration center (§4.1)
+  'hosts.launchable': 'Iniciável pelo portal',
+  'hosts.commandHint': 'Comando para o seu terminal',
+  'hosts.request': 'Solicitar integração',
+  'hosts.ops.plan': 'Planejar integração',
+  'hosts.ops.files': 'Inspecionar arquivos afetados',
+  'hosts.ops.fix': 'Corrigir integração',
+  'hosts.ops.disable': 'Desativar integração',
+  'hosts.ops.unsupported': 'Op não exposta por este adapter — não verificado',
+
+  // mcp operations center (§4.3)
+  'mcp.safety': 'A verificação de handshake é somente-leitura — o portal nunca invoca tools MCP.',
+  'mcp.host.unbound': 'não vinculado a host',
+  'mcp.inspector': 'Inspetor',
+  'mcp.selectHint': 'Selecione um servidor no registro para inspecioná-lo.',
+  'mcp.detail': 'Detalhe',
+  'mcp.explain.NOT_CONFIGURED': 'Declarado, mas sem configuração para nenhum host.',
+  'mcp.explain.CONFIGURED': 'Configurado — nenhum handshake executado ainda.',
+  'mcp.explain.STARTING': 'Processo iniciando — handshake em andamento.',
+  'mcp.explain.HANDSHAKE_VERIFIED':
+    'O handshake de initialize foi verificado contra o servidor real.',
+  'mcp.explain.TOOLS_DISCOVERED': 'A descoberta de tools foi verificada após o handshake.',
+  'mcp.explain.INVOCATION_VERIFIED': 'Uma sonda de invocação foi verificada pelo adapter.',
+  'mcp.explain.DEGRADED': 'O servidor respondeu, mas o adapter reporta evidência degradada.',
+  'mcp.explain.FAILED': 'A última verificação falhou — veja o detalhe.',
+  'mcp.surface.tools': 'Ferramentas',
+  'mcp.surface.resources': 'Recursos',
+  'mcp.surface.prompts': 'Prompts',
+  'mcp.surface.notExposed': 'Superfície não exposta por este adapter — não verificada.',
+  'mcp.surface.countOnly': 'Somente a contagem é informada — nomes não são expostos.',
+  'mcp.surface.noTools': 'O adapter não informou a contagem de tools — não verificada.',
+  'mcp.receipt.latency': 'latência medida pelo portal',
+  'mcp.receipt.latencyHint':
+    'Ida e volta HTTP medida pelo portal — não é a latência do protocolo MCP.',
+  'mcp.verifying': 'Verificando handshake…',
+  'mcp.compat.title': 'Relatório de compatibilidade',
+  'mcp.compat.hint': 'Estado observado vs a progressão esperada de handshake — por servidor.',
+  'mcp.diag.title': 'Diagnóstico',
+  'mcp.diag.hint': 'Servidores em FAILED ou DEGRADED — evidência primeiro, depois re-verifique.',
+
+  // agent studio (§4.4)
+  'agents.detail': 'Detalhes',
+  'agents.responsibility': 'Responsabilidade',
+  'agents.origin': 'Forja de origem',
+  'agents.compatibleHosts': 'Hosts compatíveis',
+  'agents.tools': 'Ferramentas / MCP',
+  'agents.permissions': 'Permissões',
+  'agents.deps': 'Dependências',
+  'agents.evidence': 'Evidência',
+  'agents.notExposed': 'Não exposto por este adapter — não verificado',
+
+  // skills studio (§4.5)
+  'skills.detail.description': 'Descrição',
+  'skills.origin': 'Forja de origem',
+  'skills.compatibility': 'Hosts compatíveis',
+  'skills.prerequisites': 'Pré-requisitos',
+  'skills.fileValidation': 'Validação de arquivos',
+  'skills.deps': 'Dependências',
+  'skills.actions': 'Instalar / reparar',
+  'skills.actionsUnverified':
+    'Ops de instalação/reparo não expostas por este adapter — não verificado',
+  'skills.notExposed': 'Não exposto por este adapter — não verificado',
+  'skills.evidence': 'Evidência',
+  'skills.dedup.title': 'Colisões de nome',
+  'skills.dedup.hint': 'Linhas com mesmo nome são sinalizadas para revisão — nunca mescladas.',
+  'skills.dedup.possible': 'possível duplicata',
+  'skills.dedup.different': 'mesmo nome, entidade diferente',
+
+  // capability matching (§4.6)
+  'match.title': 'Busca de capacidades',
+  'match.subtitle':
+    'Qual agent, skill, Forja ou MCP cobre uma capacidade — respondido apenas com metadados reais de catálogo.',
+  'match.placeholder': 'Ex.: pyspark glue, contratos de api, graph…',
+  'match.hint': 'Tente: qual agent trabalha com X? · qual skill suporta Y? · qual Forja cobre Z?',
+  'match.empty': 'Nenhuma entrada de catálogo corresponde a essa capacidade.',
+  'match.limitation':
+    'Apenas metadados de catálogo pesquisados — capacidade em runtime não verificada.',
+  'match.evidence': 'Evidência',
 };

@@ -522,6 +522,85 @@ export const EN: Record<string, string> = {
   'profiles.compare.component': 'Component',
   'profiles.compare.differences': '{count} differences',
   'profiles.compare.same': 'Identical profiles',
+
+  // ── C4: hosts/MCP/agents studios ────────────────────────────────
+  'nav.match': 'Match',
+
+  // host integration center (§4.1)
+  'hosts.launchable': 'Launchable by the portal',
+  'hosts.commandHint': 'Command for your terminal',
+  'hosts.request': 'Request integration',
+  'hosts.ops.plan': 'Plan integration',
+  'hosts.ops.files': 'Inspect affected files',
+  'hosts.ops.fix': 'Fix integration',
+  'hosts.ops.disable': 'Disable integration',
+  'hosts.ops.unsupported': 'Op not exposed by this adapter — unverified',
+
+  // mcp operations center (§4.3)
+  'mcp.safety': 'Handshake verification is read-only — the portal never invokes MCP tools.',
+  'mcp.host.unbound': 'not host-bound',
+  'mcp.inspector': 'Inspector',
+  'mcp.selectHint': 'Select a server in the registry to inspect it.',
+  'mcp.detail': 'Detail',
+  'mcp.explain.NOT_CONFIGURED': 'Declared but not configured for any host.',
+  'mcp.explain.CONFIGURED': 'Configured — no handshake performed yet.',
+  'mcp.explain.STARTING': 'Server process starting — handshake in progress.',
+  'mcp.explain.HANDSHAKE_VERIFIED':
+    'The initialize handshake was verified against the real server.',
+  'mcp.explain.TOOLS_DISCOVERED': 'Tool discovery was verified after the handshake.',
+  'mcp.explain.INVOCATION_VERIFIED': 'An invocation probe was verified by the adapter.',
+  'mcp.explain.DEGRADED': 'The server responded, but the adapter reports degraded evidence.',
+  'mcp.explain.FAILED': 'The last verification attempt failed — see the detail.',
+  'mcp.surface.tools': 'Tools',
+  'mcp.surface.resources': 'Resources',
+  'mcp.surface.prompts': 'Prompts',
+  'mcp.surface.notExposed': 'Surface not exposed by this adapter — unverified.',
+  'mcp.surface.countOnly': 'Only the tool count is reported — names are not exposed.',
+  'mcp.surface.noTools': 'The adapter did not report a tool count — unverified.',
+  'mcp.receipt.latency': 'portal-measured latency',
+  'mcp.receipt.latencyHint': 'HTTP round-trip measured by the portal — not MCP protocol latency.',
+  'mcp.verifying': 'Verifying handshake…',
+  'mcp.compat.title': 'Compatibility report',
+  'mcp.compat.hint': 'Observed state vs the expected handshake progression — per server.',
+  'mcp.diag.title': 'Diagnostics',
+  'mcp.diag.hint': 'Servers in FAILED or DEGRADED state — evidence first, then re-verify.',
+
+  // agent studio (§4.4)
+  'agents.detail': 'Details',
+  'agents.responsibility': 'Responsibility',
+  'agents.origin': 'Origin Forja',
+  'agents.compatibleHosts': 'Compatible hosts',
+  'agents.tools': 'Tools / MCP',
+  'agents.permissions': 'Permissions',
+  'agents.deps': 'Dependencies',
+  'agents.evidence': 'Evidence',
+  'agents.notExposed': 'Not exposed by this adapter — unverified',
+
+  // skills studio (§4.5)
+  'skills.detail.description': 'Description',
+  'skills.origin': 'Origin Forja',
+  'skills.compatibility': 'Compatible hosts',
+  'skills.prerequisites': 'Prerequisites',
+  'skills.fileValidation': 'File validation',
+  'skills.deps': 'Dependencies',
+  'skills.actions': 'Install / repair',
+  'skills.actionsUnverified': 'Install/repair ops are not exposed by this adapter — unverified',
+  'skills.notExposed': 'Not exposed by this adapter — unverified',
+  'skills.evidence': 'Evidence',
+  'skills.dedup.title': 'Name collisions',
+  'skills.dedup.hint': 'Same-name rows are flagged for review — never merged.',
+  'skills.dedup.possible': 'possible duplicate',
+  'skills.dedup.different': 'same name, different entity',
+
+  // capability matching (§4.6)
+  'match.title': 'Capability match',
+  'match.subtitle':
+    'Which agent, skill, Forja or MCP covers a capability — answered from real catalog metadata only.',
+  'match.placeholder': 'E.g.: pyspark glue, api contracts, graph…',
+  'match.hint': 'Try: which agent works with X? · which skill supports Y? · which Forja covers Z?',
+  'match.empty': 'No catalog entry matches that capability.',
+  'match.limitation': 'Only catalog metadata searched — runtime capability unverified.',
+  'match.evidence': 'Evidence',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN
