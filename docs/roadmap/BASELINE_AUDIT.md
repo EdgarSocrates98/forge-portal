@@ -5,29 +5,29 @@ against the real `main` checkout.
 
 ## §1.1 — Repository identity
 
-| Item | Value | Evidence |
-|---|---|---|
-| Branch | `main` | `git branch --show-current` |
-| HEAD SHA | `2b2debc4b5cff460ccb7407b27471a41bce8229e` | `git rev-parse HEAD` |
-| Remote | `https://github.com/EdgarSocrates98/forge-portal.git` | `git remote -v` |
-| Package | `forge-portal-app@0.0.0` (Angular 22, signals, standalone) | `package.json`, `angular.json` |
-| History | real merge/PR history on `main` (PRs #12, #14, #15 merged) | `git log --oneline` |
-| Open PRs | none | `gh pr list` (authenticated) |
-| Working tree | clean except untracked `nul` file (pre-existing Windows artifact) | `git status` |
+| Item         | Value                                                             | Evidence                       |
+| ------------ | ----------------------------------------------------------------- | ------------------------------ |
+| Branch       | `main`                                                            | `git branch --show-current`    |
+| HEAD SHA     | `2b2debc4b5cff460ccb7407b27471a41bce8229e`                        | `git rev-parse HEAD`           |
+| Remote       | `https://github.com/EdgarSocrates98/forge-portal.git`             | `git remote -v`                |
+| Package      | `forge-portal-app@0.0.0` (Angular 22, signals, standalone)        | `package.json`, `angular.json` |
+| History      | real merge/PR history on `main` (PRs #12, #14, #15 merged)        | `git log --oneline`            |
+| Open PRs     | none                                                              | `gh pr list` (authenticated)   |
+| Working tree | clean except untracked `nul` file (pre-existing Windows artifact) | `git status`                   |
 
 Remote branches exist for prior evolution work (`codex/*`, `feat/*`) — all
 behind `main`'s HEAD or stale; none conflict with F0.
 
 ## Quality gate results (run verbatim)
 
-| Command | Result | Evidence |
-|---|---|---|
-| `npm ci` | OK | node_modules populated |
-| `npm run build` (ng build) | OK | 325 KB initial (86.7 KB transfer), 12 lazy routes + en/pt-br i18n chunks, 18.7s |
-| `npm test` (ng test, vitest) | OK | **3 spec files, 11 tests, all passing**, ~33s — frontend unit coverage is thin |
-| `npx prettier --check "src/**/*"` | OK | all matched files clean |
-| `python -m pytest tests/` | OK | **45 tests in 2.22s** (server contract, sessions, CSRF, rate limit, traversal, plan tokens, redaction, envelope) |
-| `python -m pytest e2e/` (Playwright) | OK | **12 tests in 37.9s — real Chromium**: boot session → UI → navigation → install plan/apply flow end-to-end, screenshots under `e2e/artifacts/` |
+| Command                              | Result | Evidence                                                                                                                                       |
+| ------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm ci`                             | OK     | node_modules populated                                                                                                                         |
+| `npm run build` (ng build)           | OK     | 325 KB initial (86.7 KB transfer), 12 lazy routes + en/pt-br i18n chunks, 18.7s                                                                |
+| `npm test` (ng test, vitest)         | OK     | **3 spec files, 11 tests, all passing**, ~33s — frontend unit coverage is thin                                                                 |
+| `npx prettier --check "src/**/*"`    | OK     | all matched files clean                                                                                                                        |
+| `python -m pytest tests/`            | OK     | **45 tests in 2.22s** (server contract, sessions, CSRF, rate limit, traversal, plan tokens, redaction, envelope)                               |
+| `python -m pytest e2e/` (Playwright) | OK     | **12 tests in 37.9s — real Chromium**: boot session → UI → navigation → install plan/apply flow end-to-end, screenshots under `e2e/artifacts/` |
 
 Environment limits (§14.3): Playwright + Chromium present in this env —
 browser E2E executed for real. `e2e/` requires `dist/` (built before run).
@@ -44,11 +44,11 @@ verbatim as `<pkg>/_forge_portal.py` (`forge-doctor-api` keeps it under
 - **Contract**: `forge/PortalApi/1` envelope `{schema, correlation_id, data|error}`.
 - **Security model — all verified in code** (`PortalServer`, `PortalHandler`):
   loopback-only bind enforced in constructor (`host not in ("127.0.0.1",
-  "localhost", "::1")` → `ValueError`); 128-bit session token, `X-Forge-Session`
+"localhost", "::1")` → `ValueError`); 128-bit session token, `X-Forge-Session`
   header required on every `/api/v1` call + SameSite=Strict HttpOnly
   `forge_session` cookie; **Host-header loopback allowlist = DNS-rebinding
   guard**; POST requires Origin loopback allowlist + `Content-Type:
-  application/json`; 1 MiB body cap; 10 mutating POST/min token bucket;
+application/json`; 1 MiB body cap; 10 mutating POST/min token bucket;
   per-op timeouts via ThreadPoolExecutor; request-body draining on reject
   (fixes WinError 10053); response payload scrub via secret-key allowlist
   redaction (`plan_token` deliberately exempt — it must round-trip).
@@ -56,17 +56,17 @@ verbatim as `<pkg>/_forge_portal.py` (`forge-doctor-api` keeps it under
   prefix, 15-minute TTL — binds `plan` output to `apply` input
   (`make_plan_token`/`check_plan_token`, lines 350-370).
 - **`Operation` registry**: typed `method, path, mutating, confirm literal,
-  needs_plan_token, timeout`. Unknown op → `PORTAL-NOT-FOUND`. No shell —
+needs_plan_token, timeout`. Unknown op → `PORTAL-NOT-FOUND`. No shell —
   handlers are Python callables supplied by the adapter.
 - **`PortalAdapter` contract**: `forge_id/name/version/cli/theme/federated/
-  assets_dir/workspace`, `descriptor()`, `capabilities()`, `nav()`,
+assets_dir/workspace`, `descriptor()`, `capabilities()`, `nav()`,
   `health()`, `account_environment()`, `register(op)`.
 - **`default_operations`** (free, read-only): `/bootstrap` (descriptor +
   health + account_environment), `/health`, `/environment`,
   `/capabilities`, `/installation/status` — all enriched with portal
   presence (`detect_forge_portal`) and `forge/InstallEnvironment/v1`
   (`detect_account_environment`: `FORGE_ID_{HOME,INSTALL_ROOT,VENV,PYTHON,
-  CLI,LAUNCHER}` presence+validity — never echoes arbitrary env, never reads
+CLI,LAUNCHER}` presence+validity — never echoes arbitrary env, never reads
   values beyond paths).
 - **Static serving**: traversal-proof (`..` normalization + `relative_to`
   containment), SPA fallback, session-token-in-URL → cookie upgrade,
@@ -113,7 +113,7 @@ verbatim as `<pkg>/_forge_portal.py` (`forge-doctor-api` keeps it under
 
 ### What "operational" means here (§1.3 warning honored)
 
-A page exists AND its data path is typed — but the *real* data comes from
+A page exists AND its data path is typed — but the _real_ data comes from
 the serving Forja's adapter, not from this repo. The browser E2E suite
 (12 tests, Chromium) exercises the full UI against a real `PortalServer`
 with an `E2EAdapter` that registers real plan/apply ops — so rendering,
@@ -146,14 +146,14 @@ policy, Copilot `logged_in: null` honesty).
 
 ## Integration points evaluated (consumer Forjas — read-only)
 
-| Check | Result |
-|---|---|
-| Vendored `_forge_portal.py` parity | **byte-parity in all 7 Forjas** — same sha256 (`701cfe13…`) as `portal_core/forge_portal.py` |
-| Real adapters | `the-forge` 20 ops / 1057 LOC; `api-forge` 17 / 881; `forge-doctor-data` 17 / 750; `platform-forge` 17 / 740; `spark-forge-aws` 17 / 716; `spark-forge-azure` 17 / 722; `forge-doctor-api` (scripts/) 17 / 672 |
-| `_installkit.py` vendored | 6 Forjas (all but forge-doctor-api, which uses `scripts/forge_install.py` + canonical `the-forge/scripts/installkit/forge_installkit.py`) |
-| `_graphstudio.py` vendored | 6 Forjas |
-| Local install registry | `~/.forge/installations/*.json` live on this machine for all 7 Forjas — adapter health/detection has real data to consume |
-| Frontend↔contract drift | api.client.ts method set ⊇ contracts.md endpoint list; `default_operations` ⊆ adapter op lists |
+| Check                              | Result                                                                                                                                                                                                         |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vendored `_forge_portal.py` parity | **byte-parity in all 7 Forjas** — same sha256 (`701cfe13…`) as `portal_core/forge_portal.py`                                                                                                                   |
+| Real adapters                      | `the-forge` 20 ops / 1057 LOC; `api-forge` 17 / 881; `forge-doctor-data` 17 / 750; `platform-forge` 17 / 740; `spark-forge-aws` 17 / 716; `spark-forge-azure` 17 / 722; `forge-doctor-api` (scripts/) 17 / 672 |
+| `_installkit.py` vendored          | 6 Forjas (all but forge-doctor-api, which uses `scripts/forge_install.py` + canonical `the-forge/scripts/installkit/forge_installkit.py`)                                                                      |
+| `_graphstudio.py` vendored         | 6 Forjas                                                                                                                                                                                                       |
+| Local install registry             | `~/.forge/installations/*.json` live on this machine for all 7 Forjas — adapter health/detection has real data to consume                                                                                      |
+| Frontend↔contract drift            | api.client.ts method set ⊇ contracts.md endpoint list; `default_operations` ⊆ adapter op lists                                                                                                                 |
 
 ## Snapshot verdict
 

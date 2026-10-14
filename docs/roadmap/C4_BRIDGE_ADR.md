@@ -15,17 +15,17 @@ The byte-parity `portal_core/forge_portal.py` (vendored into every
 Forja as `_forge_portal.py`) provides, out of the box, every property
 §4.2 would require from a bridge:
 
-| §4.2 bridge property         | Already provided by                                     |
-|------------------------------|----------------------------------------------------------|
-| loopback only                | `_host_ok()` — Host must be 127.0.0.1/localhost/::1      |
-| session auth                 | 128-bit token → `X-Forge-Session` header, per process     |
-| typed op registry            | `PortalAdapter.ops` — `Operation` dataclass, no shell    |
-| no arbitrary shell           | ops are typed handlers; CSP forbids inline; no exec path |
-| payload/rate limits          | 1 MiB body cap, 10 mutating POST/min, per-op timeout     |
-| auditing                     | correlation ids, structured envelopes, server log        |
-| secret hygiene               | `redact()` scrub on every response + SSE event           |
-| explicit lifecycle           | `serve()`/`PortalServer.serve_in_thread`, clean shutdown |
-| mutating consent             | `confirm` literal + HMAC `plan_token` bound to plan      |
+| §4.2 bridge property | Already provided by                                      |
+| -------------------- | -------------------------------------------------------- |
+| loopback only        | `_host_ok()` — Host must be 127.0.0.1/localhost/::1      |
+| session auth         | 128-bit token → `X-Forge-Session` header, per process    |
+| typed op registry    | `PortalAdapter.ops` — `Operation` dataclass, no shell    |
+| no arbitrary shell   | ops are typed handlers; CSP forbids inline; no exec path |
+| payload/rate limits  | 1 MiB body cap, 10 mutating POST/min, per-op timeout     |
+| auditing             | correlation ids, structured envelopes, server log        |
+| secret hygiene       | `redact()` scrub on every response + SSE event           |
+| explicit lifecycle   | `serve()`/`PortalServer.serve_in_thread`, clean shutdown |
+| mutating consent     | `confirm` literal + HMAC `plan_token` bound to plan      |
 
 Verified live against the real adapters (api-forge, 17 ops; all 7
 Forjas carry adapters with the same contract):
@@ -40,7 +40,7 @@ Forjas carry adapters with the same contract):
   plan tokens), installation ops (`/installation/*`), federation
   (`/federation*` on orchestrating Forjas), docs search, profiles,
   graphs.
-- **Where a surface is absent it is a *data* gap, not an ops gap**:
+- **Where a surface is absent it is a _data_ gap, not an ops gap**:
   adapters don't yet expose plan-integration/fix/disable for hosts,
   tool/resource/prompt listings for MCP, or config writes. Those are
   contract-level additions to `PortalAdapter.ops` — they do not need a
@@ -82,15 +82,15 @@ Constraint (spec): "same honest state model; Portal and CLI must not
 diverge on what 'integrated' means." The two models use different
 granularity but the same monotonic ladder and the same auth rule:
 
-| CLI (`src/hosts/types.ts` HostState) | Portal (`HostLifecycleState`)        | Evidence required                                   |
-|--------------------------------------|--------------------------------------|------------------------------------------------------|
-| `absent`                             | `NOT_DETECTED`                       | binary/config probe found nothing                    |
-| `installed`                          | `DETECTED`/`INSTALLED`               | binary probe hit (version when parsable)             |
-| `configured`                         | `CONFIGURED`                         | config dir/file exists for the host                  |
-| `authenticated`                      | — (axis: `logged_in` tri-state)      | real auth probe only (CLI `auth:verified`)           |
-| `integrated`                         | `MCP_REGISTERED`                     | integration record present in host config            |
-| `validated`                          | `HANDSHAKE_VERIFIED` … `EXECUTION_VERIFIED` | live handshake/tools/invocation evidence       |
-| —                                    | `FAILED` / `BLOCKED`                 | adapter probe result; CLI surfaces via `detail`/errors |
+| CLI (`src/hosts/types.ts` HostState) | Portal (`HostLifecycleState`)               | Evidence required                                      |
+| ------------------------------------ | ------------------------------------------- | ------------------------------------------------------ |
+| `absent`                             | `NOT_DETECTED`                              | binary/config probe found nothing                      |
+| `installed`                          | `DETECTED`/`INSTALLED`                      | binary probe hit (version when parsable)               |
+| `configured`                         | `CONFIGURED`                                | config dir/file exists for the host                    |
+| `authenticated`                      | — (axis: `logged_in` tri-state)             | real auth probe only (CLI `auth:verified`)             |
+| `integrated`                         | `MCP_REGISTERED`                            | integration record present in host config              |
+| `validated`                          | `HANDSHAKE_VERIFIED` … `EXECUTION_VERIFIED` | live handshake/tools/invocation evidence               |
+| —                                    | `FAILED` / `BLOCKED`                        | adapter probe result; CLI surfaces via `detail`/errors |
 
 Shared rules both sides implement:
 

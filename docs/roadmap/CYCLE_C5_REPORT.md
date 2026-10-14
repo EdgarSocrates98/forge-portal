@@ -60,3 +60,22 @@ estado nativo (receipts `.forge-cli/receipts/` ↔ task history do adapter).
   `unavailable`, nunca dado inventado.
 - Métricas de observability são derivadas do histórico do adapter — escopo limitado
   ao que a Forja relata (limitação declarada na página).
+
+---
+
+## §13 Addendum (homologation 008)
+
+- **Baseline**: forge-portal `cycle/c5-operations` sobre `cycle/c4-hosts`;
+  páginas novas: observe, versions, tasks; fed-graph studio.
+- **Segurança**: `test_security_c5.py` 24/24 — sessão/CSRF/origin/host-
+  header/rate-limit/traversal/symlink/RCE-inerte/SSRF/CRLF/secrets/plan
+  replay+expired+cross-plan/cancelamento/concorrência/payload cap. Finding
+  honesto: sessão sem TTL temporal (P2, threat #19).
+- **Interoperabilidade**: consome `forge/PortalApi/1` — novos endpoints
+  opcionais (`graphs/skills/agents/hosts/mcp`), ausência → `unavailable`,
+  nunca dado inventado; i18n 585/585 paridade.
+- **Performance**: 221 ng tests, 69 pytest, build 726 KB lazy; latências
+  reais em forge-cli/docs/roadmap/PERFORMANCE_BASELINE.md.
+- **Release readiness**: PASS_WITH_LIMITATIONS.
+- **Pendências**: P2 — TTL de sessão; P3 — métricas derivadas do histórico
+  do adapter (limitação declarada).
