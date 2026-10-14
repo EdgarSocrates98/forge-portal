@@ -58,6 +58,7 @@ const PATHS: Record<string, string> = {
   key: '<circle cx="8" cy="15" r="4.5"/><path d="m11.2 11.8 8.3-8.3"/><path d="M16 4.5l3.5 3.5"/><path d="m13 7.5 3 3"/>',
   diff: '<path d="M12 3v18"/><path d="M8 8l4-4 4 4"/><path d="m8 16 4 4 4-4"/>',
   history: '<path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>',
+  pulse: '<path d="M3 12h4l2.5-6 4 12 2.5-6h5"/>',
 };
 
 @Component({

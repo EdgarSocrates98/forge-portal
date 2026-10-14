@@ -23,6 +23,8 @@ const NAV: NavEntry[] = [
       { route: '/forges', label: 'nav.forges', icon: 'compass', capability: 'federation' },
       { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
       { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
+      { route: '/observe', label: 'nav.observe', icon: 'pulse' },
+      { route: '/versions', label: 'nav.versions', icon: 'history' },
     ],
   },
   {

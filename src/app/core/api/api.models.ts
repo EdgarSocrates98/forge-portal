@@ -219,6 +219,35 @@ export interface TaskExecution {
   exit_code: number | null;
   receipt?: Record<string, unknown>;
   refusal?: string;
+  correlation_id?: string;
+}
+
+/** §5.4 — local-only metrics. Only real recorded events; no remote telemetry. */
+export interface MetricsEvent {
+  kind: string; // task | install | verify | repair | …
+  at: string;
+  duration_ms: number | null;
+  status: string;
+  origin: string;
+  correlation_id: string | null;
+  detail?: string;
+}
+
+export interface MetricsReport {
+  generated_at: string;
+  counters: Record<string, number>;
+  events: MetricsEvent[];
+  truncated: boolean;
+}
+
+/** §5.5 — version manager. Remote-dependent fields stay null + unverified. */
+export interface VersionInfo {
+  installed: { version: string | null; origin: string | null; channel: string | null };
+  available: { version: string | null; source: string };
+  compat: string;
+  changelog: string | null;
+  history: { version: string | null; at: string | null; detail?: string }[];
+  rollback: { supported: boolean; hint?: string };
 }
 
 export interface TaskEvent {

@@ -360,6 +360,23 @@ export const EN: Record<string, string> = {
   'graph.unavailable': 'No graph built yet.',
   'graph.buildHint': 'Build the graph with the Forge, then reload this page.',
   'graph.federated': 'Federated',
+  // federated studio (§5.6)
+  'graph.fed.title': 'Federated ecosystem graph',
+  'graph.fed.export': 'Export graph',
+  'graph.fed.sources': 'Data sources',
+  'graph.fed.evidenceNote':
+    'Every node carries the endpoint that supplied it — nothing is assumed.',
+  'graph.fed.search': 'Search nodes by name or id…',
+  'graph.fed.kind': 'Kind',
+  'graph.fed.verification': 'Verification',
+  'graph.fed.observed': 'observed',
+  'graph.fed.impact': 'Direct impact',
+  'graph.fed.noImpact': 'No edges recorded for this node.',
+  'graph.fed.empty': 'No nodes match the filters.',
+  'graph.fed.none': 'No federated data available.',
+  'graph.source.loaded': 'loaded',
+  'graph.source.unverified': 'unverified',
+  'graph.source.unavailable': 'unavailable',
 
   // knowledge
   'knowledge.title': 'Knowledge',
@@ -601,6 +618,74 @@ export const EN: Record<string, string> = {
   'match.empty': 'No catalog entry matches that capability.',
   'match.limitation': 'Only catalog metadata searched — runtime capability unverified.',
   'match.evidence': 'Evidence',
+
+  // ── C5: operations & observability ─────────────────────────────
+  'nav.observe': 'Observability',
+  'nav.versions': 'Versions',
+
+  // execution center (§5.3)
+  'tasks.correlation': 'Correlation',
+  'tasks.executing': 'Executing plan…',
+  'tasks.export': 'Export receipt',
+  'tasks.stale.title': 'Plan expired',
+  'tasks.stale.hint':
+    'The plan token is stale — generate a new plan for the same intent. Execution never retries on its own.',
+  'tasks.stale.regenerate': 'Regenerate plan',
+  'tasks.ops.title': 'Operations',
+  'tasks.ops.plan.hint': 'Builds a plan from the intent — nothing runs yet.',
+  'tasks.ops.execute.hint': 'Executes a reviewed plan, bound to its plan token.',
+  'tasks.ops.cancel.hint': 'Cancel op not exposed by the adapter.',
+  'tasks.limits':
+    'Mutating ops are rate-limited and bound to a plan token; stage transitions come from real task records.',
+  'table.correlation': 'Correlation',
+  'table.duration': 'Duration',
+
+  // observability (§5.4)
+  'observe.title': 'Observability',
+  'observe.subtitle': 'Local metrics recorded by this Forge — no remote telemetry.',
+  'observe.localOnly': 'Local-only metrics — nothing leaves this machine.',
+  'observe.unavailable':
+    'This Forge does not expose local metrics — the capability is unverified, never assumed.',
+  'observe.counters': 'Counters',
+  'observe.events': 'Events',
+  'observe.generatedAt': 'generated {time}',
+  'observe.truncated':
+    'Showing a bounded window — older events were dropped to keep the report small.',
+  'observe.filter.kind': 'Kind',
+  'observe.filter.status': 'Status',
+  'observe.col.kind': 'Kind',
+  'observe.col.at': 'At',
+  'observe.col.duration': 'Duration',
+  'observe.col.status': 'Status',
+  'observe.col.origin': 'Origin',
+  'observe.col.correlation': 'Correlation',
+  'observe.col.detail': 'Detail',
+  'observe.empty': 'No events recorded yet.',
+  'observe.empty.hint': 'Metrics appear when the Forge runs tasks, installs or verifications.',
+  'observe.noMatches': 'No events match the current filters.',
+
+  // version manager (§5.5)
+  'versions.title': 'Versions',
+  'versions.subtitle': 'Installed version, compatibility and release history — offline-first.',
+  'versions.unavailable':
+    'This Forge does not expose version info — the capability is unverified, never assumed.',
+  'versions.installed': 'Installed',
+  'versions.installed.version': 'Version',
+  'versions.installed.origin': 'Origin',
+  'versions.installed.channel': 'Channel',
+  'versions.compat': 'Compatibility',
+  'versions.available': 'Available',
+  'versions.available.version': 'Latest',
+  'versions.available.source': 'Source',
+  'versions.offline':
+    'No remote release lookups in offline mode — the latest available version is unverified, never guessed.',
+  'versions.changelog': 'Changelog',
+  'versions.history': 'History',
+  'versions.history.version': 'Version',
+  'versions.history.at': 'At',
+  'versions.history.detail': 'Detail',
+  'versions.history.empty': 'No version history recorded yet.',
+  'versions.rollback': 'Rollback',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN

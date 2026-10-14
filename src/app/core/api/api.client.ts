@@ -15,11 +15,13 @@ import {
   InstallationReceipt,
   InstallSelection,
   McpServerDescriptor,
+  MetricsReport,
   PortalCapability,
   PortalHealth,
   ProfileDescriptor,
   SkillDescriptor,
   TaskExecution,
+  VersionInfo,
 } from './api.models';
 import { ApiError } from './api.error';
 
@@ -136,6 +138,12 @@ export class PortalApi {
   }
   tasks() {
     return this.get<TaskExecution[]>('/tasks');
+  }
+  metrics() {
+    return this.get<MetricsReport>('/metrics');
+  }
+  versions() {
+    return this.get<VersionInfo>('/versions');
   }
   tasksPlan(input: { intent?: string; verb?: string; args?: Record<string, unknown> }) {
     return this.post<{ plan_token: string; plan: Record<string, unknown> }>('/tasks/plan', input);
