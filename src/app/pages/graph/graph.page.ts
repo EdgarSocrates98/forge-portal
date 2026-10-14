@@ -162,7 +162,7 @@ const norm = (s: string): string =>
                 [attr.data-kind-chip]="k"
                 (click)="toggleKind(k)"
               >
-                {{ kindKey(k) | t }} · {{ g.counts[k] }}
+                {{ k }} · {{ g.counts[k] }}
               </button>
             }
           </ui-filter-bar>
@@ -600,10 +600,6 @@ export class GraphPage {
 
   kindOptions(g: FedGraph): FedNodeKind[] {
     return FED_NODE_KINDS.filter((k) => (g.counts[k] ?? 0) > 0);
-  }
-
-  kindKey(k: FedNodeKind): string {
-    return `graph.kind.${k}`;
   }
 
   label(id: string): string {

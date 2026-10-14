@@ -37,14 +37,14 @@ de segurança §5.7 completa como suite pytest dedicada.
 
 ## Verificação (spec frontmatter)
 
-| Comando | Resultado |
-|---|---|
-| `npm ci` | ✅ 278 pkgs, 0 vulnerabilities |
-| `npm run build` | ✅ (warning pré-existente: install.page css budget) |
-| `npm test` | ✅ 26 files / **221 tests** |
-| `python -m pytest tests/` | ✅ **69 passed** (incl. security_c5 24) |
-| `python scripts/check_i18n.py` | ✅ 585/585 |
-| `npx tsc --noEmit` | ✅ clean |
+| Comando                        | Resultado                                           |
+| ------------------------------ | --------------------------------------------------- |
+| `npm ci`                       | ✅ 278 pkgs, 0 vulnerabilities                      |
+| `npm run build`                | ✅ (warning pré-existente: install.page css budget) |
+| `npm test`                     | ✅ 26 files / **221 tests**                         |
+| `python -m pytest tests/`      | ✅ **69 passed** (incl. security_c5 24)             |
+| `python scripts/check_i18n.py` | ✅ 585/585                                          |
+| `npx tsc --noEmit`             | ✅ clean                                            |
 
 ## Gate C5 — evidência real
 

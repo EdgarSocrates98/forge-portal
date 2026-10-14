@@ -212,7 +212,7 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     expect(doc.nodes.length).toBe(c.fed()!.nodes.length);
     expect(doc.edges.length).toBe(c.fed()!.edges.length);
     // click path — the export anchor is created detached; capture its href
-    let downloaded: string | null = null;
+    let downloaded = '';
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
       this: HTMLAnchorElement,
     ) {
@@ -221,7 +221,7 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     (fixture.nativeElement.querySelector('.fed__head .btn') as HTMLButtonElement).click();
     expect(click).toHaveBeenCalledOnce();
     expect(downloaded).toContain('data:application/json');
-    const payload = JSON.parse(decodeURIComponent((downloaded as string).split(',', 2)[1]));
+    const payload = JSON.parse(decodeURIComponent(downloaded.split(',', 2)[1]));
     expect(payload.schema).toBe('forge/FederatedGraph/v1');
     expect(payload.nodes.length).toBe(doc.nodes.length);
     click.mockRestore();
