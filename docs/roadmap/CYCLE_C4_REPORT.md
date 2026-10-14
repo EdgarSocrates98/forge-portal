@@ -28,7 +28,7 @@ Spec: `factory/specs/active/005-c4-hosts-mcp-agents.md` · Branches: `cycle/c4-h
 `docs/roadmap/C4_BRIDGE_ADR.md` — evidence-based decision: **no separate
 bridge**. The vendored backend + typed op registry already covers the
 required local surface (hosts, MCP, skills, agents, tasks, graphs); the
-remaining gap (plan/files/fix/disable host ops) is an *adapter capability*
+remaining gap (plan/files/fix/disable host ops) is an _adapter capability_
 gap, not a transport gap — a bridge would not supply it. Includes the
 CLI↔Portal host-state mapping table; guarded on the CLI side by
 `forge-cli/tests/hosts-mapping.test.ts` (pins the six-state ladder and
@@ -42,7 +42,7 @@ auth-verified-never-default).
   (`null` → unverified, never zero), last verification, detail.
 - Inspector per server: state explanation strings for the full progression
   `NOT_CONFIGURED → CONFIGURED → STARTING → HANDSHAKE_VERIFIED →
-  TOOLS_DISCOVERED → INVOCATION_VERIFIED` + `DEGRADED`/`FAILED`.
+TOOLS_DISCOVERED → INVOCATION_VERIFIED` + `DEGRADED`/`FAILED`.
 - Tools/resources/prompts surfaces: count-only when names aren't exposed;
   `notExposed` → unverified; no fabricated surface.
 - Compatibility report: observed state vs expected progression per server.
@@ -93,16 +93,16 @@ blocks; nested maps/sequences still return `None` (honest absence).
 
 ## Verification
 
-| Command | Result |
-|---|---|
-| `npm ci` | clean (install scripts blocked by npm policy; build unaffected) |
-| `npm run build` | OK — only pre-existing `install.page.ts` 6.67 kB style warning |
-| `npm test` | **171/171** across 21 files (+60 vs C3) |
-| `npx prettier --check "src/**/*"` | clean |
-| `python -m pytest tests/` | **45/45** |
-| `python scripts/check_i18n.py` | 516 pt-BR / 516 en keys, 308 static keys |
-| forge-cli `npm test` | **438/438** (+2 host-mapping contract guards) |
-| api-forge `pytest tests/test_portal_adapter.py` | **22/22** |
+| Command                                         | Result                                                          |
+| ----------------------------------------------- | --------------------------------------------------------------- |
+| `npm ci`                                        | clean (install scripts blocked by npm policy; build unaffected) |
+| `npm run build`                                 | OK — only pre-existing `install.page.ts` 6.67 kB style warning  |
+| `npm test`                                      | **171/171** across 21 files (+60 vs C3)                         |
+| `npx prettier --check "src/**/*"`               | clean                                                           |
+| `python -m pytest tests/`                       | **45/45**                                                       |
+| `python scripts/check_i18n.py`                  | 516 pt-BR / 516 en keys, 308 static keys                        |
+| forge-cli `npm test`                            | **438/438** (+2 host-mapping contract guards)                   |
+| api-forge `pytest tests/test_portal_adapter.py` | **22/22**                                                       |
 
 ## Files changed
 
@@ -120,10 +120,29 @@ blocks; nested maps/sequences still return `None` (honest absence).
 2. `hosts.launchable` wording could read as "portal launches"; mitigated by
    the outcome panel's "command for your terminal" framing.
 3. MCP `tools_count` is `null` for the api-forge adapter — surfaces as
-   unverified; tool/resource/prompt *names* are not exposed by any current
+   unverified; tool/resource/prompt _names_ are not exposed by any current
    adapter.
 4. Capability matching searches catalog metadata only — runtime capability
    stays explicitly unverified per result.
 5. Request-integration button stays enabled when `!launchable` so the
    adapter's refusal is the arbiter (one-line change if hard gating is
    preferred).
+
+---
+
+## §13 Addendum (homologation 008)
+
+- **Baseline**: forge-portal `cycle/c4-hosts` sobre `cycle/c3-*`; api-forge
+  adapter extended (PR #75); forge-cli hosts-side (`hosts plan/validate/rollback`).
+- **Segurança**: capability matching consulta só metadados do catálogo —
+  runtime capability permanece `unverified`; refusal codes verbatim na UI;
+  adapter é o árbitro final (nenhuma ação oferecida sem evidência).
+- **Interoperabilidade**: state bridge estudado via ADR (C4_BRIDGE_ADR.md —
+  decisão: sem bridge de estado CLI↔Portal, modelos distintos por design);
+  api-forge adapter ganhou `mcp_servers`/`docs_search`; byte-parity
+  `_forge_portal.py` mantida nas 7 Forjas.
+- **Performance**: bundle +lazy routes; medidas reais em
+  forge-cli/docs/roadmap/PERFORMANCE_BASELINE.md.
+- **Release readiness**: PASS_WITH_LIMITATIONS.
+- **Pendências**: P3 — botão request-integration ativo quando
+  `!launchable` (adapter recusa — decisão documentada).
