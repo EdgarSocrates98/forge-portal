@@ -206,6 +206,7 @@ def _make_link(link: Path, target: Path, *, is_dir: bool) -> str | None:
         r = subprocess.run(
             ["cmd", "/c", "mklink", "/J", str(link), str(target)],
             capture_output=True,
+            check=False,
         )
         if r.returncode == 0:
             return "junction"
