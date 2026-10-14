@@ -126,6 +126,8 @@ const STATIC_PAGES: { route: string; labelKey: string; icon: string; capability?
   { route: '/match', labelKey: 'nav.match', icon: 'compass' },
   { route: '/tasks', labelKey: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
   { route: '/graph', labelKey: 'nav.graph', icon: 'graph', capability: 'graph' },
+  { route: '/observe', labelKey: 'nav.observe', icon: 'pulse' },
+  { route: '/versions', labelKey: 'nav.versions', icon: 'history' },
   { route: '/knowledge', labelKey: 'nav.knowledge', icon: 'knowledge' },
   { route: '/settings', labelKey: 'nav.settings', icon: 'settings' },
   { route: '/config', labelKey: 'nav.config', icon: 'settings' },

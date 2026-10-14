@@ -360,6 +360,22 @@ export const PT_BR: Record<string, string> = {
   'graph.unavailable': 'Nenhum grafo construído ainda.',
   'graph.buildHint': 'Construa o grafo pela Forja e recarregue esta página.',
   'graph.federated': 'Federado',
+  // federated studio (§5.6)
+  'graph.fed.title': 'Grafo federado do ecossistema',
+  'graph.fed.export': 'Exportar grafo',
+  'graph.fed.sources': 'Fontes de dados',
+  'graph.fed.evidenceNote': 'Cada nó carrega o endpoint que o forneceu — nada é presumido.',
+  'graph.fed.search': 'Buscar nós por nome ou id…',
+  'graph.fed.kind': 'Tipo',
+  'graph.fed.verification': 'Verificação',
+  'graph.fed.observed': 'observado',
+  'graph.fed.impact': 'Impacto direto',
+  'graph.fed.noImpact': 'Nenhuma aresta registrada para este nó.',
+  'graph.fed.empty': 'Nenhum nó corresponde aos filtros.',
+  'graph.fed.none': 'Nenhum dado federado disponível.',
+  'graph.source.loaded': 'carregado',
+  'graph.source.unverified': 'não verificado',
+  'graph.source.unavailable': 'indisponível',
 
   // conhecimento
   'knowledge.title': 'Conhecimento',
@@ -605,4 +621,73 @@ export const PT_BR: Record<string, string> = {
   'match.limitation':
     'Apenas metadados de catálogo pesquisados — capacidade em runtime não verificada.',
   'match.evidence': 'Evidência',
+
+  // ── C5: operations & observability ─────────────────────────────
+  'nav.observe': 'Observabilidade',
+  'nav.versions': 'Versões',
+
+  // execution center (§5.3)
+  'tasks.correlation': 'Correlação',
+  'tasks.executing': 'Executando plano…',
+  'tasks.export': 'Exportar recibo',
+  'tasks.stale.title': 'Plano expirado',
+  'tasks.stale.hint':
+    'O plan token expirou — gere um novo plano para a mesma intenção. A execução nunca tenta de novo sozinha.',
+  'tasks.stale.regenerate': 'Regenerar plano',
+  'tasks.ops.title': 'Operações',
+  'tasks.ops.plan.hint': 'Monta o plano a partir da intenção — nada executa ainda.',
+  'tasks.ops.execute.hint': 'Executa um plano revisado, vinculado ao plan token.',
+  'tasks.ops.cancel.hint': 'Operação de cancelamento não exposta pelo adapter.',
+  'tasks.limits':
+    'Operações mutáveis têm limite de taxa e são vinculadas a um plan token; as transições de estágio vêm de registros reais de tarefas.',
+  'table.correlation': 'Correlação',
+  'table.duration': 'Duração',
+
+  // observability (§5.4)
+  'observe.title': 'Observabilidade',
+  'observe.subtitle': 'Métricas locais registradas por esta Forja — sem telemetria remota.',
+  'observe.localOnly': 'Métricas somente locais — nada sai desta máquina.',
+  'observe.unavailable':
+    'Esta Forja não expõe métricas locais — a capacidade está não verificada, nunca presumida.',
+  'observe.counters': 'Contadores',
+  'observe.events': 'Eventos',
+  'observe.generatedAt': 'gerado {time}',
+  'observe.truncated':
+    'Exibindo uma janela limitada — eventos mais antigos foram descartados para manter o relatório pequeno.',
+  'observe.filter.kind': 'Tipo',
+  'observe.filter.status': 'Status',
+  'observe.col.kind': 'Tipo',
+  'observe.col.at': 'Quando',
+  'observe.col.duration': 'Duração',
+  'observe.col.status': 'Status',
+  'observe.col.origin': 'Origem',
+  'observe.col.correlation': 'Correlação',
+  'observe.col.detail': 'Detalhe',
+  'observe.empty': 'Nenhum evento registrado ainda.',
+  'observe.empty.hint':
+    'Métricas aparecem quando a Forja executa tarefas, instalações ou verificações.',
+  'observe.noMatches': 'Nenhum evento corresponde aos filtros atuais.',
+
+  // version manager (§5.5)
+  'versions.title': 'Versões',
+  'versions.subtitle': 'Versão instalada, compatibilidade e histórico de releases — offline-first.',
+  'versions.unavailable':
+    'Esta Forja não expõe informações de versão — a capacidade está não verificada, nunca presumida.',
+  'versions.installed': 'Instalado',
+  'versions.installed.version': 'Versão',
+  'versions.installed.origin': 'Origem',
+  'versions.installed.channel': 'Canal',
+  'versions.compat': 'Compatibilidade',
+  'versions.available': 'Disponível',
+  'versions.available.version': 'Última',
+  'versions.available.source': 'Fonte',
+  'versions.offline':
+    'Sem consultas remotas de release no modo offline — a versão mais recente está não verificada, nunca suposta.',
+  'versions.changelog': 'Changelog',
+  'versions.history': 'Histórico',
+  'versions.history.version': 'Versão',
+  'versions.history.at': 'Quando',
+  'versions.history.detail': 'Detalhe',
+  'versions.history.empty': 'Nenhum histórico de versões registrado ainda.',
+  'versions.rollback': 'Rollback',
 };
