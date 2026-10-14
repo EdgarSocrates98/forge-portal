@@ -20,10 +20,13 @@ APP = ROOT / "src" / "app"
 KEY_RE = re.compile(r"^\s*'([^']+)':", re.MULTILINE)
 USE_RE = re.compile(r"'([a-z][\w.-]*)'\s*\|\s*t\b")
 PROSE_RE = re.compile(r">([^<>{}\n]*[A-Za-zÀ-ÿ][^<>{}\n]*)<")
+CODE_RE = re.compile(r"<code[^>]*>.*?</code>", re.DOTALL)
 # data vocabulary allowed untranslated (proper nouns, contract literals)
 PROSE_ALLOW = {
     "—", "…", "all", "PT", "EN", "◆", "»", "«", "?", "portal",
     "Ctrl K",  # keyboard chord literal, not prose
+    "×", "·",  # glyphs, not prose
+    "PowerShell", "bash",  # shell names, contract vocabulary
 }
 
 BADGE_CONTRACT_STATES = [
@@ -57,7 +60,10 @@ def main() -> int:
             used.setdefault(m.group(1), []).append(str(f.relative_to(ROOT)))
         tpl = re.search(r"template:\s*`(.*?)`,\n", text, re.DOTALL)
         if tpl:
-            for hit in PROSE_RE.findall(tpl.group(1)):
+            # <code>…</code> wraps contract vocabulary (endpoint labels,
+            # paths, flags) — technical literals, never prose.
+            tpl_body = CODE_RE.sub("", tpl.group(1))
+            for hit in PROSE_RE.findall(tpl_body):
                 txt = hit.strip()
                 if txt and "| t" not in txt and "{{" not in txt and txt not in PROSE_ALLOW:
                     problems.append(
