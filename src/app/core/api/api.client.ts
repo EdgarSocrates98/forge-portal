@@ -22,6 +22,7 @@ import {
   SkillDescriptor,
   TaskExecution,
   VersionInfo,
+  LabData,
 } from './api.models';
 import { ApiError } from './api.error';
 
@@ -144,6 +145,9 @@ export class PortalApi {
   }
   versions() {
     return this.get<VersionInfo>('/versions');
+  }
+  lab() {
+    return this.get<LabData>('/lab');
   }
   tasksPlan(input: { intent?: string; verb?: string; args?: Record<string, unknown> }) {
     return this.post<{ plan_token: string; plan: Record<string, unknown> }>('/tasks/plan', input);

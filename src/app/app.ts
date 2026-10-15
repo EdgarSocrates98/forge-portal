@@ -24,6 +24,7 @@ const NAV: NavEntry[] = [
       { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
       { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
       { route: '/observe', label: 'nav.observe', icon: 'pulse' },
+      { route: '/lab', label: 'nav.lab', icon: 'diff' },
       { route: '/versions', label: 'nav.versions', icon: 'history' },
     ],
   },
