@@ -1,7 +1,7 @@
 ---
 id: cyc9-10
 title: portal-forge-lab-section
-status: inbox
+status: done
 created: 2026-10-15
 owner: forge-portal
 scope: repo

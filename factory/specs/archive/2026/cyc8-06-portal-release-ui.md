@@ -1,7 +1,7 @@
 ---
 id: cyc8-06
 title: portal-release-management-ui
-status: active
+status: done
 created: 2026-10-15
 owner: forge-portal
 scope: repo
