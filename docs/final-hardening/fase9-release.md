@@ -7,9 +7,9 @@ Data: 2026-10-11. Estado: **READY_WITH_DOCUMENTED_LIMITATIONS**.
 `scripts/vendor.py --check` — byte-parity server (`_forge_portal.py`) +
 `manifest unchanged (22 files)` nos 7 destinos, executado no HEAD pós-merge:
 
-| Destino | Server | Assets |
-|---|---|---|
-| the-forge / spark-aws / spark-azure / api-forge / platform / doctor-data / doctor-api | ok | ok |
+| Destino                                                                               | Server | Assets |
+| ------------------------------------------------------------------------------------- | ------ | ------ |
+| the-forge / spark-aws / spark-azure / api-forge / platform / doctor-data / doctor-api | ok     | ok     |
 
 ## 9.2 API parity
 
@@ -57,20 +57,20 @@ AWS v0.5.0`, capabilities reais (7/8, graph `unverified` honesto),
 
 ## 9.7 Security review (adversarial executado)
 
-| Vetor | Defesa | Evidência |
-|---|---|---|
-| Sem sessão | 403 `PORTAL-SESSION` | teste + e2e 7/7 |
-| Cross-origin POST | 403 `PORTAL-ORIGIN` | teste + e2e |
-| DNS rebinding (Host) | 403 `PORTAL-HOST` — novo | 4 testes novos |
-| Content-Type errado | 415 `PORTAL-CONTENT-TYPE` | teste (agora chega ao cliente) |
-| Rate limit | 429 `PORTAL-RATE-LIMITED` | teste |
-| Payload >1 MiB | 413 | teste |
-| Plan token forjado | 409 `PORTAL-PLAN-STALE` | e2e 7/7 |
-| Path traversal | 404 | e2e 7/7 |
-| Recusa cega (socket RST) | `_reject()` drena body | teste + causa-raiz documentada |
-| CSP vs bundle | `inlineCritical: false` | `test_global_stylesheet_applies` |
-| Secrets | denylist `redact()` + sem secrets no código | revisão manual |
-| Loopback bind | `PortalServer` recusa host não-loopback | `ValueError` no construtor |
+| Vetor                    | Defesa                                      | Evidência                        |
+| ------------------------ | ------------------------------------------- | -------------------------------- |
+| Sem sessão               | 403 `PORTAL-SESSION`                        | teste + e2e 7/7                  |
+| Cross-origin POST        | 403 `PORTAL-ORIGIN`                         | teste + e2e                      |
+| DNS rebinding (Host)     | 403 `PORTAL-HOST` — novo                    | 4 testes novos                   |
+| Content-Type errado      | 415 `PORTAL-CONTENT-TYPE`                   | teste (agora chega ao cliente)   |
+| Rate limit               | 429 `PORTAL-RATE-LIMITED`                   | teste                            |
+| Payload >1 MiB           | 413                                         | teste                            |
+| Plan token forjado       | 409 `PORTAL-PLAN-STALE`                     | e2e 7/7                          |
+| Path traversal           | 404                                         | e2e 7/7                          |
+| Recusa cega (socket RST) | `_reject()` drena body                      | teste + causa-raiz documentada   |
+| CSP vs bundle            | `inlineCritical: false`                     | `test_global_stylesheet_applies` |
+| Secrets                  | denylist `redact()` + sem secrets no código | revisão manual                   |
+| Loopback bind            | `PortalServer` recusa host não-loopback     | `ValueError` no construtor       |
 
 ## 9.8 Accessibility
 
@@ -110,6 +110,7 @@ adversarial coberta por testes, jornada install/task legível e real nas
 7 forjas, i18n integral, CI entregue.
 
 Limitações registradas (não bloqueantes, sem falsidade):
+
 1. Telas especializadas por domínio (PySpark/Glue/OpenAPI/Terraform…)
    ainda não existem como páginas dedicadas — o portal expõe o que cada
    adapter declara; especialização vem dos descriptors/ops por forja.
@@ -123,13 +124,13 @@ Limitações registradas (não bloqueantes, sem falsidade):
 
 ## PRs desta homologação
 
-| Repo | PR |
-|---|---|
-| forge-portal | #5 — Task Center, E2E, Host guard, CSP/beasties fix |
-| the-forge | #48 |
-| spark-forge-aws | #153 |
-| spark-forge-azure | #45 |
-| api-forge | #57 |
-| platform-forge | #26 |
-| forge-doctor-data | #30 |
-| forge-doctor-api | #34 |
+| Repo              | PR                                                  |
+| ----------------- | --------------------------------------------------- |
+| forge-portal      | #5 — Task Center, E2E, Host guard, CSP/beasties fix |
+| the-forge         | #48                                                 |
+| spark-forge-aws   | #153                                                |
+| spark-forge-azure | #45                                                 |
+| api-forge         | #57                                                 |
+| platform-forge    | #26                                                 |
+| forge-doctor-data | #30                                                 |
+| forge-doctor-api  | #34                                                 |

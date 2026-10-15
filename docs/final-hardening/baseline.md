@@ -6,16 +6,16 @@ histórico é assumido — cada item foi reexecutado no HEAD atual.
 
 ## Estado dos repositórios (main, HEAD)
 
-| Repo | HEAD | Working tree | Portal suite | Resultado |
-|---|---|---|---|---|
-| forge-portal | `6b74373` | clean | `tests/test_forge_portal.py` | **1 failed / 36 pass** → corrigido nesta fase |
-| the-forge | `e479ebb` | clean | `tests/test_portal.py` | 20/20 pass |
-| api-forge | `19af787` | clean | `tests/test_portal_adapter.py` | 20/20 pass |
-| spark-forge-aws | `0e48cbc5` | clean | `tests/test_portal_adapter.py` | 17/17 pass |
-| spark-forge-azure | `7c57843` | clean | `tests/test_portal_adapter.py` | 18/18 pass |
-| platform-forge | `c5b3f1d` | clean | `tests/test_portal_adapter.py` | 18/18 pass |
-| forge-doctor-data | `8158f32` | clean | `tests/test_portal_adapter.py` | 18/18 pass |
-| forge-doctor-api | `9aaa331` | clean | `tests/test_forge_portal.py` | 15/15 pass |
+| Repo              | HEAD       | Working tree | Portal suite                   | Resultado                                     |
+| ----------------- | ---------- | ------------ | ------------------------------ | --------------------------------------------- |
+| forge-portal      | `6b74373`  | clean        | `tests/test_forge_portal.py`   | **1 failed / 36 pass** → corrigido nesta fase |
+| the-forge         | `e479ebb`  | clean        | `tests/test_portal.py`         | 20/20 pass                                    |
+| api-forge         | `19af787`  | clean        | `tests/test_portal_adapter.py` | 20/20 pass                                    |
+| spark-forge-aws   | `0e48cbc5` | clean        | `tests/test_portal_adapter.py` | 17/17 pass                                    |
+| spark-forge-azure | `7c57843`  | clean        | `tests/test_portal_adapter.py` | 18/18 pass                                    |
+| platform-forge    | `c5b3f1d`  | clean        | `tests/test_portal_adapter.py` | 18/18 pass                                    |
+| forge-doctor-data | `8158f32`  | clean        | `tests/test_portal_adapter.py` | 18/18 pass                                    |
+| forge-doctor-api  | `9aaa331`  | clean        | `tests/test_forge_portal.py`   | 15/15 pass                                    |
 
 Asset parity: `scripts/vendor.py --check` — **server byte-parity ok +
 manifest unchanged (22 files) nos 7 destinos.**

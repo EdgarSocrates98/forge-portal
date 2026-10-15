@@ -35,13 +35,13 @@ npm test           # testes unitários (vitest)
 
 Gates de qualidade deste repo:
 
-| Comando          | Para quê / quando usar |
-|------------------|------------------------|
-| `npm run build`  | Antes de commitar — prova que compila e gera o bundle a ser vendored. |
-| `npm test`       | Sempre — unidade de stores, i18n, api client e páginas. |
-| `npx prettier --check "src/**/*"` | Antes de commitar — estilo canônico (`.prettierrc`). |
-| `python -m pytest tests/` | Quando `server/` existir (FASE 2) — testes do backend stdlib. |
-| `python scripts/vendor.py` | Após um build de release — propaga o bundle + `_forge_portal.py` para as 7 Forjas. |
+| Comando                           | Para quê / quando usar                                                             |
+| --------------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run build`                   | Antes de commitar — prova que compila e gera o bundle a ser vendored.              |
+| `npm test`                        | Sempre — unidade de stores, i18n, api client e páginas.                            |
+| `npx prettier --check "src/**/*"` | Antes de commitar — estilo canônico (`.prettierrc`).                               |
+| `python -m pytest tests/`         | Quando `server/` existir (FASE 2) — testes do backend stdlib.                      |
+| `python scripts/vendor.py`        | Após um build de release — propaga o bundle + `_forge_portal.py` para as 7 Forjas. |
 
 ## Princípios
 

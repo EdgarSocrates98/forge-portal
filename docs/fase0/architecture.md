@@ -31,6 +31,7 @@ Avaliado: FastAPI, Starlette, `http.server` stdlib.
 `_graphstudio.py` (já serve uma UI local real hoje).
 
 Motivos:
+
 - 3 dos 7 repos proíbem deps de runtime além do conjunto mínimo
   (the-forge é stdlib-only; doctors congelam deps via `sbom.py`/
   `rc-discipline`). FastAPI forçaria exceção de dependência em todos.
@@ -44,8 +45,8 @@ Motivos:
   routes, signals, sem zone (zoneless por padrão no scaffold novo).
 - Estrutura: app única `src/app/` com features espelhando a taxonomia
   do prompt (`core/`, `shared/`≈design-system, `features/{dashboard,
-  install,profiles,hosts,mcp,skills,agents,tasks,graph,knowledge,
-  settings}`). Não cria libs Nx separadas — um bundle pequeno e sem
+install,profiles,hosts,mcp,skills,agents,tasks,graph,knowledge,
+settings}`). Não cria libs Nx separadas — um bundle pequeno e sem
   overhead de multi-projeto é a escolha econômica (prompt permite).
 - **i18n runtime**: dicionários JSON `assets/i18n/{pt-BR,en}.json` +
   `I18nService` por signals. `@angular/localize` compila por locale
@@ -80,7 +81,7 @@ inspector/export cobertos pelo documento + trilhos Angular.
   sessão obrigatório, `Origin`/`Host` allowlist (loopback), registry
   de operações tipadas — **nenhum shell arbitrário**.
 - Aprovação humana: `plan → review → confirm → execute → verify →
-  receipt` — o mesmo pipeline do install service (não reimplementado).
+receipt` — o mesmo pipeline do install service (não reimplementado).
 - Sem segredos nas respostas; redação via allowlist de campos.
 - Path serving: somente `assets/` hash-manifest; fora → 404.
 - Rate limit simples por sessão nos POSTs mutáveis.

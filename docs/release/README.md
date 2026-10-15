@@ -19,4 +19,3 @@
 ## Limitações conhecidas
 
 O portal tipa e apresenta os contratos, mas a confirmação de que cada backend irmão persiste todos os campos deve ocorrer nos testes de integração correspondentes. A execução em hosts reais e a validação ConPTY permanecem pendentes por limitação do ambiente atual.
-

@@ -672,7 +672,8 @@ export const PT_BR: Record<string, string> = {
   'nav.lab': 'Lab',
   'lab.title': 'Forge Lab',
   'lab.subtitle': 'Execuções de benchmark, catálogo de cenários e comparações — só receipts reais.',
-  'lab.unavailable': 'O endpoint /lab não existe neste adaptador — os dados de lab não podem ser verificados.',
+  'lab.unavailable':
+    'O endpoint /lab não existe neste adaptador — os dados de lab não podem ser verificados.',
   'lab.empty.title': 'Sem dados é honesto: nenhuma execução de lab coletada ainda.',
   'lab.empty.subtitle': 'Rode theforge lab collect — os resultados aparecem aqui, nunca mock.',
   'lab.runs': 'Histórico de execuções',

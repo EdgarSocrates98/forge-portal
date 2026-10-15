@@ -21,16 +21,16 @@ construção.
 
 ## Commits por repositório (branch `feat/forge-portal`)
 
-| Repo | Commits principais |
-|---|---|
-| forge-portal | `9d43dd4` fase0 · `52512d8` fase1 · `56ca995` fase2 · `2d393de` fase3 frontend · `d250486` vendor overrides · `558937b` fase8 · `1b4e6c9` e2e |
-| spark-forge-aws | `a4308b44` portal + verbo + SDD · `1ea0a57f` doc_manifest · `51aa521b` assets f8 · `0b311b5b` flush |
-| api-forge | `d8297fa` portal + analyze real + SDD · `ef384e4` doc_manifest · `4ec5fb6` assets f8 · `b751b39` flush |
-| spark-forge-azure | `66c4f80` portal + SDD · `398cc87` doc_manifest+claims · `d0b7d5d` assets f8 · `d10286f` flush |
-| platform-forge | `e2ea6f6` portal · `fda0cc5` doc_manifest · `c68110a` assets f8 · `a6eb8dc` flush |
-| forge-doctor-data | `78d2017` portal (poetry portal_assets) · `ed7a597` doc_manifest+parity · `517e101` assets f8 · `98caba8` flush |
-| forge-doctor-api | `a47e416` portal checkout-level (scripts/, boundary/RC-safe) · `cb4799d` doc_manifest · `dc830ec` assets f8 |
-| the-forge | `4abc7aa` command center + ADR 0059 · `79543ef` assets f8 |
+| Repo              | Commits principais                                                                                                                            |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| forge-portal      | `9d43dd4` fase0 · `52512d8` fase1 · `56ca995` fase2 · `2d393de` fase3 frontend · `d250486` vendor overrides · `558937b` fase8 · `1b4e6c9` e2e |
+| spark-forge-aws   | `a4308b44` portal + verbo + SDD · `1ea0a57f` doc_manifest · `51aa521b` assets f8 · `0b311b5b` flush                                           |
+| api-forge         | `d8297fa` portal + analyze real + SDD · `ef384e4` doc_manifest · `4ec5fb6` assets f8 · `b751b39` flush                                        |
+| spark-forge-azure | `66c4f80` portal + SDD · `398cc87` doc_manifest+claims · `d0b7d5d` assets f8 · `d10286f` flush                                                |
+| platform-forge    | `e2ea6f6` portal · `fda0cc5` doc_manifest · `c68110a` assets f8 · `a6eb8dc` flush                                                             |
+| forge-doctor-data | `78d2017` portal (poetry portal_assets) · `ed7a597` doc_manifest+parity · `517e101` assets f8 · `98caba8` flush                               |
+| forge-doctor-api  | `a47e416` portal checkout-level (scripts/, boundary/RC-safe) · `cb4799d` doc_manifest · `dc830ec` assets f8                                   |
+| the-forge         | `4abc7aa` command center + ADR 0059 · `79543ef` assets f8                                                                                     |
 
 ## Evidência de verificação
 

@@ -224,7 +224,9 @@ import { Source, stamp } from '../explorer/forges.data';
               <tbody>
                 @for (r of v.receipts; track r.file) {
                   <tr>
-                    <td><code>{{ r.file }}</code></td>
+                    <td>
+                      <code>{{ r.file }}</code>
+                    </td>
                     <td>{{ r.operation ?? '—' }}</td>
                     <td>{{ r.status ?? '—' }}</td>
                   </tr>

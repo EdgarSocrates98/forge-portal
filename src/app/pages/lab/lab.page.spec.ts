@@ -148,7 +148,7 @@ describe('LabPage', () => {
   it('shows UNVERIFIED when the adapter lacks /lab (404)', async () => {
     const { el } = await setup({
       lab: vi.fn(() =>
-        throwError(() => new ApiError(404, { code: 'PORTAL-NOT-FOUND', message: 'no route' }))
+        throwError(() => new ApiError(404, { code: 'PORTAL-NOT-FOUND', message: 'no route' })),
       ),
     });
     expect(section(el, 'unavailable')).toBeTruthy();

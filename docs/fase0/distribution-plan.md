@@ -24,6 +24,7 @@ forge-portal repo
 ```
 
 Regras:
+
 - Assets só são servidos se o `manifest.json` conferir (sha256 por
   arquivo) — integridade de distribuição, não só cache-bust.
 - Versionamento: `PORTAL_VERSION` no módulo; descriptor expõe

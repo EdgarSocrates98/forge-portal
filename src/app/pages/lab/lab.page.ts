@@ -57,7 +57,9 @@ interface ScenarioRow extends LabScenarioResult {
     @if (data(); as d) {
       <p class="src">
         <code>GET /api/v1/lab</code>
-        @if (d.dir) { <span> · {{ d.dir }}</span> }
+        @if (d.dir) {
+          <span> · {{ d.dir }}</span>
+        }
         @if (src.loadedAt(); as ts) {
           <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
         }
@@ -76,35 +78,53 @@ interface ScenarioRow extends LabScenarioResult {
           <div class="sec__head">
             <h2><ui-icon name="history" [size]="15" />{{ 'lab.runs' | t }}</h2>
             <div class="row">
-              <label>{{ 'lab.compare.a' | t }}
+              <label
+                >{{ 'lab.compare.a' | t }}
                 <select [value]="runA()" (change)="runA.set($any($event.target).value)">
-                  @for (r of d.runs; track r.file) { <option [value]="r.file">{{ r.file }}</option> }
+                  @for (r of d.runs; track r.file) {
+                    <option [value]="r.file">{{ r.file }}</option>
+                  }
                 </select>
               </label>
-              <label>{{ 'lab.compare.b' | t }}
+              <label
+                >{{ 'lab.compare.b' | t }}
                 <select [value]="runB()" (change)="runB.set($any($event.target).value)">
                   <option value="">—</option>
-                  @for (r of d.runs; track r.file) { <option [value]="r.file">{{ r.file }}</option> }
+                  @for (r of d.runs; track r.file) {
+                    <option [value]="r.file">{{ r.file }}</option>
+                  }
                 </select>
               </label>
             </div>
           </div>
           <table class="tbl">
-            <thead><tr>
-              <th>{{ 'lab.col.file' | t }}</th><th>{{ 'lab.col.forges' | t }}</th>
-              <th>{{ 'lab.col.scenarios' | t }}</th><th>{{ 'lab.col.pass' | t }}</th>
-              <th>{{ 'lab.col.fail' | t }}</th><th>{{ 'lab.col.skipped' | t }}</th><th></th>
-            </tr></thead>
+            <thead>
+              <tr>
+                <th>{{ 'lab.col.file' | t }}</th>
+                <th>{{ 'lab.col.forges' | t }}</th>
+                <th>{{ 'lab.col.scenarios' | t }}</th>
+                <th>{{ 'lab.col.pass' | t }}</th>
+                <th>{{ 'lab.col.fail' | t }}</th>
+                <th>{{ 'lab.col.skipped' | t }}</th>
+                <th></th>
+              </tr>
+            </thead>
             <tbody>
               @for (r of d.runs; track r.file) {
                 <tr [class.sel]="r.file === runA()">
-                  <td><code>{{ r.file }}</code></td>
+                  <td>
+                    <code>{{ r.file }}</code>
+                  </td>
                   <td>{{ r.forges.length }}</td>
                   <td>{{ countOf(r, null) }}</td>
                   <td class="ok">{{ countOf(r, 'pass') }}</td>
                   <td class="bad">{{ countOf(r, 'fail') }}</td>
                   <td>{{ countOf(r, 'skipped') }}</td>
-                  <td><button class="btn sm" (click)="exportJson(r)">{{ 'lab.export.json' | t }}</button></td>
+                  <td>
+                    <button class="btn sm" (click)="exportJson(r)">
+                      {{ 'lab.export.json' | t }}
+                    </button>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -116,22 +136,33 @@ interface ScenarioRow extends LabScenarioResult {
           <div class="sec__head">
             <h2><ui-icon name="compass" [size]="15" />{{ 'lab.catalog' | t }}</h2>
             <div class="chips">
-              <button class="chip" [class.on]="!forge()" (click)="forge.set('')">{{ 'lab.filter.all' | t }}</button>
+              <button class="chip" [class.on]="!forge()" (click)="forge.set('')">
+                {{ 'lab.filter.all' | t }}
+              </button>
               @for (f of forgeNames(); track f) {
-                <button class="chip" [class.on]="forge() === f" (click)="forge.set(f)">{{ f }}</button>
+                <button class="chip" [class.on]="forge() === f" (click)="forge.set(f)">
+                  {{ f }}
+                </button>
               }
             </div>
           </div>
           <table class="tbl" data-table="scenarios">
-            <thead><tr>
-              <th>{{ 'lab.col.forge' | t }}</th><th>{{ 'lab.col.scenario' | t }}</th>
-              <th>{{ 'lab.col.verdict' | t }}</th><th>{{ 'lab.col.duration' | t }}</th>
-              <th>{{ 'lab.col.metrics' | t }}</th><th>{{ 'lab.col.detail' | t }}</th>
-            </tr></thead>
+            <thead>
+              <tr>
+                <th>{{ 'lab.col.forge' | t }}</th>
+                <th>{{ 'lab.col.scenario' | t }}</th>
+                <th>{{ 'lab.col.verdict' | t }}</th>
+                <th>{{ 'lab.col.duration' | t }}</th>
+                <th>{{ 'lab.col.metrics' | t }}</th>
+                <th>{{ 'lab.col.detail' | t }}</th>
+              </tr>
+            </thead>
             <tbody>
               @for (s of scenarioRows(); track s.forge + '/' + s.scenario_id) {
                 <tr>
-                  <td><code>{{ s.forge }}</code></td>
+                  <td>
+                    <code>{{ s.forge }}</code>
+                  </td>
                   <td>{{ s.scenario_id }}</td>
                   <td><ui-state-badge [state]="badgeFor(s.verdict)" /></td>
                   <td>{{ s.duration_ms != null ? s.duration_ms + 'ms' : '—' }}</td>
@@ -153,16 +184,24 @@ interface ScenarioRow extends LabScenarioResult {
           <section class="card" data-section="compare">
             <div class="sec__head">
               <h2><ui-icon name="graph" [size]="15" />{{ 'lab.compare.title' | t }}</h2>
-              <button class="btn sm" (click)="exportComparisonMd()">{{ 'lab.export.md' | t }}</button>
+              <button class="btn sm" (click)="exportComparisonMd()">
+                {{ 'lab.export.md' | t }}
+              </button>
             </div>
             <table class="tbl">
-              <thead><tr>
-                <th>{{ 'lab.col.scenario' | t }}</th><th>{{ runA() }}</th><th>{{ runB() }}</th>
-              </tr></thead>
+              <thead>
+                <tr>
+                  <th>{{ 'lab.col.scenario' | t }}</th>
+                  <th>{{ runA() }}</th>
+                  <th>{{ runB() }}</th>
+                </tr>
+              </thead>
               <tbody>
                 @for (c of comparison(); track c.id) {
                   <tr>
-                    <td><code>{{ c.forge }}</code> {{ c.id }}</td>
+                    <td>
+                      <code>{{ c.forge }}</code> {{ c.id }}
+                    </td>
                     <td><ui-state-badge [state]="badgeFor(c.a)" /></td>
                     <td><ui-state-badge [state]="badgeFor(c.b)" /></td>
                   </tr>
@@ -179,8 +218,12 @@ interface ScenarioRow extends LabScenarioResult {
             </div>
             @for (rep of d.reports; track rep.file) {
               <details class="rep">
-                <summary><code>{{ rep.file }}</code>
-                  <button class="btn sm" (click)="exportReport(rep.file, rep.content); $event.preventDefault()">
+                <summary>
+                  <code>{{ rep.file }}</code>
+                  <button
+                    class="btn sm"
+                    (click)="exportReport(rep.file, rep.content); $event.preventDefault()"
+                  >
                     {{ 'lab.export.md' | t }}
                   </button>
                 </summary>
@@ -193,29 +236,96 @@ interface ScenarioRow extends LabScenarioResult {
         @if (d.notes.length) {
           <section class="card" data-section="notes">
             <h2>{{ 'lab.notes' | t }}</h2>
-            @for (n of d.notes; track n) { <p class="muted">{{ n }}</p> }
+            @for (n of d.notes; track n) {
+              <p class="muted">{{ n }}</p>
+            }
           </section>
         }
       }
     }
   `,
   styles: `
-    .unv { display:flex; gap:10px; align-items:center; }
-    .src { color:var(--muted,#888); font-size:12px; }
-    .sec__head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
-    .row { display:flex; gap:12px; align-items:center; }
-    .chips { display:flex; gap:6px; flex-wrap:wrap; }
-    .chip { padding:3px 10px; border-radius:99px; border:1px solid var(--line,#444); background:none; cursor:pointer; }
-    .chip.on { background:var(--accent,#4f8cff); color:#fff; }
-    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
-    .tbl th,.tbl td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line,#333); }
-    .ok { color:var(--ok,#4caf50); } .bad { color:var(--bad,#f44336); }
-    .sel { background:color-mix(in srgb,var(--accent,#4f8cff) 10%,transparent); }
-    .metrics { display:flex; flex-wrap:wrap; gap:4px; max-width:420px; }
-    .metric { font-size:11px; padding:1px 6px; border:1px solid var(--line,#444); border-radius:4px; }
-    .rep__body { max-height:340px; overflow:auto; font-size:12px; white-space:pre-wrap; }
-    select { margin-left:6px; }
-    .muted { color:var(--muted,#888); }
+    .unv {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .src {
+      color: var(--muted, #888);
+      font-size: 12px;
+    }
+    .sec__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 3px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--line, #444);
+      background: none;
+      cursor: pointer;
+    }
+    .chip.on {
+      background: var(--accent, #4f8cff);
+      color: #fff;
+    }
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .tbl th,
+    .tbl td {
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--line, #333);
+    }
+    .ok {
+      color: var(--ok, #4caf50);
+    }
+    .bad {
+      color: var(--bad, #f44336);
+    }
+    .sel {
+      background: color-mix(in srgb, var(--accent, #4f8cff) 10%, transparent);
+    }
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-width: 420px;
+    }
+    .metric {
+      font-size: 11px;
+      padding: 1px 6px;
+      border: 1px solid var(--line, #444);
+      border-radius: 4px;
+    }
+    .rep__body {
+      max-height: 340px;
+      overflow: auto;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    select {
+      margin-left: 6px;
+    }
+    .muted {
+      color: var(--muted, #888);
+    }
   `,
 })
 export class LabPage {
@@ -251,7 +361,8 @@ export class LabPage {
       if (sel && r.file !== sel) continue;
       for (const f of r.forges) {
         if (this.forge() && f.forge !== this.forge()) continue;
-        for (const s of f.results ?? []) rows.push({ ...s, forge: f.forge ?? '?', runFile: r.file });
+        for (const s of f.results ?? [])
+          rows.push({ ...s, forge: f.forge ?? '?', runFile: r.file });
       }
     }
     return rows;
@@ -304,7 +415,11 @@ export class LabPage {
   exportJson(r: { file: string }) {
     const run = this.data()?.runs.find((x: LabRun) => x.file === r.file);
     if (!run) return;
-    this.download(r.file.replace(/\.jsonl$/, '.json'), JSON.stringify(run, null, 2), 'application/json');
+    this.download(
+      r.file.replace(/\.jsonl$/, '.json'),
+      JSON.stringify(run, null, 2),
+      'application/json',
+    );
   }
 
   exportReport(name: string, content: string) {
@@ -312,9 +427,18 @@ export class LabPage {
   }
 
   exportComparisonMd() {
-    const lines = [`# Lab comparison ${this.runA()} vs ${this.runB()}`, '', '| scenario | A | B |', '|---|---|---|'];
+    const lines = [
+      `# Lab comparison ${this.runA()} vs ${this.runB()}`,
+      '',
+      '| scenario | A | B |',
+      '|---|---|---|',
+    ];
     for (const c of this.comparison()) lines.push(`| ${c.forge}/${c.id} | ${c.a} | ${c.b} |`);
-    this.download(`lab-compare-${this.runA()}-vs-${this.runB()}.md`, lines.join('\n') + '\n', 'text/markdown');
+    this.download(
+      `lab-compare-${this.runA()}-vs-${this.runB()}.md`,
+      lines.join('\n') + '\n',
+      'text/markdown',
+    );
   }
 
   private download(name: string, content: string, type: string) {

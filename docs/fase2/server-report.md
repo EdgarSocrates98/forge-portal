@@ -16,13 +16,13 @@ inteira.
   tipadas mapeando para seus serviços reais — nenhum shell, nenhum
   comando arbitrário.
 - **Operation registry**: `Operation(method, path, handler, mutating,
-  confirm, needs_plan_token, timeout)`. Paths aceitam `{param}` —
+confirm, needs_plan_token, timeout)`. Paths aceitam `{param}` —
   `"/tasks/{task_id}/events"`. Operação fora do registry → 404 nomeado.
 - **Envelope único** `{schema: "forge/PortalApi/1", correlation_id,
-  data|error}` em toda resposta `/api/v1/*`; `X-Correlation-Id` ecoado
+data|error}` em toda resposta `/api/v1/*`; `X-Correlation-Id` ecoado
   ou gerado.
 - **Erros estruturados**: `PortalError(code, message, http, severity,
-  retryable, action, message_key, details)` — `code` estável nunca
+retryable, action, message_key, details)` — `code` estável nunca
   traduzido, `message_key` alimenta o i18n do cliente.
 - **Plan tokens**: HMAC-SHA256 sobre o plano canonicalizado
   (`json sort_keys`) + timestamp + nonce; `check_plan_token` exige
@@ -37,19 +37,19 @@ inteira.
 
 ## Segurança (matriz FASE 0 implementada, não só documentada)
 
-| Controle | Implementação |
-|---|---|
-| Bind | loopback only — `ValueError` se `host` ≠ 127.0.0.1/localhost/::1 |
-| Sessão | token 192-bit por run; `X-Forge-Session` exigido em todo `/api`; cookie `SameSite=Strict; HttpOnly` plantado via `?forge_session=` e verificado se presente |
-| CSRF | `Origin` loopback-allowlist (ausente = cliente não-browser, ok) + `Content-Type: application/json` obrigatório em POST + header custom (não forjável por form) |
-| GET | nunca muta — ops `mutating=True` só existem como POST |
-| Mutação | `confirm` literal por op + `plan_token` assinado quando exigido |
-| Payload | >1 MiB → dreno até 8 MiB + 413 `Connection: close` (drenar evita RST cego no Windows) |
-| Rate | 10 POSTs mutáveis/min por processo → 429 `PORTAL-RATE-LIMITED` |
-| Estático | só `assets_dir` com resolve+prefix check; `..` → 404; SPA fallback `index.html` para rotas sem extensão |
-| Headers | nosniff, Referrer-Policy no-referrer, CSP estrito (`default-src 'self'`, `frame-ancestors 'none'`), Cache-Control no-store |
-| Redação | chaves `*token*|*secret*|*password*|*cookie*|*authorization*|*api_key*|*credential*` → `«redacted»`, com allowlist `_REDACT_EXEMPT` para `plan_token` (client-usável por desenho) |
-| Erro interno | 500 genérico — tipo da exceção só vai para o log do servidor |
+| Controle     | Implementação                                                                                                                                                  |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bind         | loopback only — `ValueError` se `host` ≠ 127.0.0.1/localhost/::1                                                                                               |
+| Sessão       | token 192-bit por run; `X-Forge-Session` exigido em todo `/api`; cookie `SameSite=Strict; HttpOnly` plantado via `?forge_session=` e verificado se presente    |
+| CSRF         | `Origin` loopback-allowlist (ausente = cliente não-browser, ok) + `Content-Type: application/json` obrigatório em POST + header custom (não forjável por form) |
+| GET          | nunca muta — ops `mutating=True` só existem como POST                                                                                                          |
+| Mutação      | `confirm` literal por op + `plan_token` assinado quando exigido                                                                                                |
+| Payload      | >1 MiB → dreno até 8 MiB + 413 `Connection: close` (drenar evita RST cego no Windows)                                                                          |
+| Rate         | 10 POSTs mutáveis/min por processo → 429 `PORTAL-RATE-LIMITED`                                                                                                 |
+| Estático     | só `assets_dir` com resolve+prefix check; `..` → 404; SPA fallback `index.html` para rotas sem extensão                                                        |
+| Headers      | nosniff, Referrer-Policy no-referrer, CSP estrito (`default-src 'self'`, `frame-ancestors 'none'`), Cache-Control no-store                                     |
+| Redação      | chaves `_token_                                                                                                                                                | _secret_ | _password_ | _cookie_ | _authorization_ | _api_key_ | _credential_`→`«redacted»`, com allowlist `_REDACT_EXEMPT`para`plan_token` (client-usável por desenho) |
+| Erro interno | 500 genérico — tipo da exceção só vai para o log do servidor                                                                                                   |
 
 ## Bugs reais encontrados pela suíte
 

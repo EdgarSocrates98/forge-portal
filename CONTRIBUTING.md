@@ -28,5 +28,5 @@ explicada é a norma — nunca "funcionou na minha máquina".
 ## Commits e PRs
 
 - Conventional commits (`feat:`, `fix:`, `docs:`, `chore:` …).
-- PR descreve o *porquê*, evidencia a verificação e lista o que ficou
+- PR descreve o _porquê_, evidencia a verificação e lista o que ficou
   `unresolved`.

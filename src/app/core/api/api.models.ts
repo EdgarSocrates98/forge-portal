@@ -337,18 +337,38 @@ export interface FederationPlanResponse {
 }
 
 // ---- Forge Lab (cyc9-10) — verbatim shapes from GET /api/v1/lab ----
-export interface LabMetric { state: string; unit: string; value: number | null }
+export interface LabMetric {
+  state: string;
+  unit: string;
+  value: number | null;
+}
 export interface LabScenarioResult {
-  scenario_id: string; verdict: string; duration_ms?: number;
-  detail?: string; evidence_ref?: string; judge?: string | null;
+  scenario_id: string;
+  verdict: string;
+  duration_ms?: number;
+  detail?: string;
+  evidence_ref?: string;
+  judge?: string | null;
   metrics?: Record<string, LabMetric>;
 }
 export interface LabForgeRow {
-  forge?: string; status?: string; suite?: string | null; mode?: string;
+  forge?: string;
+  status?: string;
+  suite?: string | null;
+  mode?: string;
   results?: LabScenarioResult[];
 }
-export interface LabRun { file: string; forges: LabForgeRow[] }
-export interface LabReport { file: string; content: string }
+export interface LabRun {
+  file: string;
+  forges: LabForgeRow[];
+}
+export interface LabReport {
+  file: string;
+  content: string;
+}
 export interface LabData {
-  dir: string | null; runs: LabRun[]; reports: LabReport[]; notes: string[];
+  dir: string | null;
+  runs: LabRun[];
+  reports: LabReport[];
+  notes: string[];
 }

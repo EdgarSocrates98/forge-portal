@@ -3,19 +3,19 @@
 Fonte: audit real dos checkouts (CLI verbs, manifests, services) — mesma
 varredura da matriz de aceite do Ultimate Completion.
 
-| capability | the-forge | api-forge | spark-aws | spark-azure | platform | doctor-data | doctor-api |
-|---|---|---|---|---|---|---|---|
-| install lifecycle | installkit + ledger | installkit | installkit | installkit | installkit | installkit | scripts/ (checkout) |
-| hosts observe | `hosts observe` | `ai` flow | `ai` flow | `ai` flow | `hosts` | `hosts` | `forge_hosts.py` |
-| host launch | `hosts launch` (TTY) | `ai --launch` | `ai --launch` | `ai --launch` | `hosts --launch` | `hosts --launch` | `--launch` |
-| MCP verify | registry+invoke | `mcp-verify` | `mcp-verify` | `mcp-verify` | `mcp-verify` | `mcp-verify` | `mcp-verify` |
-| skills catalog | 33 canonical | 14 | 60 | 22 | 12 | — | — |
-| agents catalog | 8 AgentSpec | 31 | 19 | 40 | 41 | — | — |
-| task/exec | `task`, `ask` | `analyze`, `judge`, `task` | `analyze`,`diagnose`,`judge` | `analyze`,`diagnose`,`judge` | `analyze`,`judge`,`policy` | `scan`,`diagnose` | `scan`,`diff`,`diagnose` |
-| graph view | `graph`+federated | `graph view` | `graph view` | `graph view` | `graph view` | `graph view` | `graph <dir> --view` |
-| docs catalog | knowledge-program | docs inventory | commands.generated | docs index | manifest | learn recipes | learn recipes |
-| profiles | components | components | components | components | components | components | components |
-| TUI | command-center | home+wizard | menu | menu | menu | menu | menu+sentinelas |
+| capability        | the-forge            | api-forge                  | spark-aws                    | spark-azure                  | platform                   | doctor-data       | doctor-api               |
+| ----------------- | -------------------- | -------------------------- | ---------------------------- | ---------------------------- | -------------------------- | ----------------- | ------------------------ |
+| install lifecycle | installkit + ledger  | installkit                 | installkit                   | installkit                   | installkit                 | installkit        | scripts/ (checkout)      |
+| hosts observe     | `hosts observe`      | `ai` flow                  | `ai` flow                    | `ai` flow                    | `hosts`                    | `hosts`           | `forge_hosts.py`         |
+| host launch       | `hosts launch` (TTY) | `ai --launch`              | `ai --launch`                | `ai --launch`                | `hosts --launch`           | `hosts --launch`  | `--launch`               |
+| MCP verify        | registry+invoke      | `mcp-verify`               | `mcp-verify`                 | `mcp-verify`                 | `mcp-verify`               | `mcp-verify`      | `mcp-verify`             |
+| skills catalog    | 33 canonical         | 14                         | 60                           | 22                           | 12                         | —                 | —                        |
+| agents catalog    | 8 AgentSpec          | 31                         | 19                           | 40                           | 41                         | —                 | —                        |
+| task/exec         | `task`, `ask`        | `analyze`, `judge`, `task` | `analyze`,`diagnose`,`judge` | `analyze`,`diagnose`,`judge` | `analyze`,`judge`,`policy` | `scan`,`diagnose` | `scan`,`diff`,`diagnose` |
+| graph view        | `graph`+federated    | `graph view`               | `graph view`                 | `graph view`                 | `graph view`               | `graph view`      | `graph <dir> --view`     |
+| docs catalog      | knowledge-program    | docs inventory             | commands.generated           | docs index                   | manifest                   | learn recipes     | learn recipes            |
+| profiles          | components           | components                 | components                   | components                   | components                 | components        | components               |
+| TUI               | command-center       | home+wizard                | menu                         | menu                         | menu                       | menu              | menu+sentinelas          |
 
 ## Perfis (economy / balanced / full)
 
