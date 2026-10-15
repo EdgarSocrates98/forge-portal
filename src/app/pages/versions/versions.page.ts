@@ -140,6 +140,101 @@ import { Source, stamp } from '../explorer/forges.data';
         }
       </section>
 
+      <!-- Integrity — sha256 of the consulted ecosystem manifest. -->
+      @if (v.integrity) {
+        <section class="card" data-section="integrity">
+          <div class="sec__head">
+            <div>
+              <h2><ui-icon name="knowledge" [size]="15" />{{ 'versions.integrity' | t }}</h2>
+            </div>
+          </div>
+          <dl class="kv">
+            <div>
+              <dt>{{ 'versions.integrity.release' | t }}</dt>
+              <dd>
+                @if (v.integrity.manifest_release) {
+                  <code>{{ v.integrity.manifest_release }}</code>
+                } @else {
+                  <span class="muted" data-unverified>— {{ 'state.unverified' | t }}</span>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'versions.integrity.sha256' | t }}</dt>
+              <dd>
+                @if (v.integrity.manifest_sha256) {
+                  <code class="hash">{{ v.integrity.manifest_sha256 }}</code>
+                } @else {
+                  <span class="muted" data-unverified>— {{ 'state.unverified' | t }}</span>
+                }
+              </dd>
+            </div>
+          </dl>
+        </section>
+      }
+
+      <!-- Pending / upgrade plan — update discovery belongs to the CLI;
+           the portal reports null as UNVERIFIED instead of guessing. -->
+      <section class="card" data-section="pending">
+        <div class="sec__head">
+          <div>
+            <h2><ui-icon name="refresh" [size]="15" />{{ 'versions.pending' | t }}</h2>
+          </div>
+        </div>
+        @if (v.pending || v.upgrade_plan) {
+          <dl class="kv">
+            @if (v.pending) {
+              <div>
+                <dt>{{ 'versions.pending.updates' | t }}</dt>
+                <dd>{{ v.pending }}</dd>
+              </div>
+            }
+            @if (v.upgrade_plan) {
+              <div>
+                <dt>{{ 'versions.pending.plan' | t }}</dt>
+                <dd>{{ v.upgrade_plan }}</dd>
+              </div>
+            }
+          </dl>
+        } @else {
+          <div class="unv" data-note="cli" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'versions.pending.cli' | t }}</span>
+          </div>
+        }
+      </section>
+
+      <!-- Receipts — raw operation receipts backing the history above. -->
+      @if (v.receipts?.length) {
+        <section class="card" data-section="receipts">
+          <div class="sec__head">
+            <div>
+              <h2><ui-icon name="install" [size]="15" />{{ 'versions.receipts' | t }}</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'versions.receipts.file' | t }}</th>
+                  <th>{{ 'versions.receipts.operation' | t }}</th>
+                  <th>{{ 'versions.receipts.status' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of v.receipts; track r.file) {
+                  <tr>
+                    <td><code>{{ r.file }}</code></td>
+                    <td>{{ r.operation ?? '—' }}</td>
+                    <td>{{ r.status ?? '—' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+
       <!-- Changelog — null means the adapter could not verify it. -->
       <section class="card" data-section="changelog">
         <div class="sec__head">

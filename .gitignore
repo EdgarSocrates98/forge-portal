@@ -47,3 +47,7 @@ Thumbs.db
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Environment stubs/secrets — never commit filled .env files
+.env
+.env.*

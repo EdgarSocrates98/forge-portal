@@ -245,8 +245,16 @@ export interface VersionInfo {
   installed: { version: string | null; origin: string | null; channel: string | null };
   available: { version: string | null; source: string };
   compat: string;
+  integrity?: {
+    manifest_sha256: string | null;
+    manifest_release?: string | null;
+    manifest_path?: string | null;
+  };
   changelog: string | null;
   history: { version: string | null; at: string | null; detail?: string }[];
+  receipts?: { file: string; operation: string | null; status: string | null }[];
+  pending?: string | null;
+  upgrade_plan?: string | null;
   rollback: { supported: boolean; hint?: string };
 }
 

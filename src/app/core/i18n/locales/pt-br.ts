@@ -689,5 +689,17 @@ export const PT_BR: Record<string, string> = {
   'versions.history.at': 'Quando',
   'versions.history.detail': 'Detalhe',
   'versions.history.empty': 'Nenhum histórico de versões registrado ainda.',
+  'versions.integrity': 'Integridade',
+  'versions.integrity.release': 'Release do manifesto',
+  'versions.integrity.sha256': 'sha256 do manifesto',
+  'versions.pending': 'Pendências e plano de upgrade',
+  'versions.pending.updates': 'Atualizações pendentes',
+  'versions.pending.plan': 'Plano de upgrade',
+  'versions.pending.cli':
+    'A descoberta de atualizações é do Forge CLI — o portal não supõe pendências.',
+  'versions.receipts': 'Receipts',
+  'versions.receipts.file': 'Receipt',
+  'versions.receipts.operation': 'Operação',
+  'versions.receipts.status': 'Status',
   'versions.rollback': 'Rollback',
 };

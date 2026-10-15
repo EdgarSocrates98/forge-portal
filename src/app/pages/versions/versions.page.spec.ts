@@ -160,6 +160,84 @@ describe('VersionsPage', () => {
     expect(text(rb)).toContain('no snapshots kept');
   });
 
+  it('renders manifest integrity verbatim — sha256 + release', async () => {
+    const { el } = await setup({
+      versions: () =>
+        of({
+          ...INFO,
+          integrity: {
+            manifest_sha256: 'a'.repeat(64),
+            manifest_release: '2026.10',
+            manifest_path: '/x/ecosystem-compatibility.json',
+          },
+        }),
+    });
+    const integrity = section(el, 'integrity')!;
+    expect(text(integrity)).toContain('2026.10');
+    expect(text(integrity)).toContain('a'.repeat(64));
+    expect(integrity.querySelectorAll('[data-unverified]').length).toBe(0);
+  });
+
+  it('marks missing integrity data unverified instead of fabricating a hash', async () => {
+    const { el } = await setup({
+      versions: () =>
+        of({
+          ...INFO,
+          integrity: { manifest_sha256: null, manifest_release: null },
+        }),
+    });
+    const integrity = section(el, 'integrity')!;
+    expect(integrity.querySelectorAll('[data-unverified]').length).toBe(2);
+    expect(text(integrity)).not.toMatch(/[0-9a-f]{64}/);
+  });
+
+  it('reports pending/upgrade plan as UNVERIFIED when the adapter reports null', async () => {
+    const { el } = await setup({
+      versions: () => of({ ...INFO, pending: null, upgrade_plan: null }),
+    });
+    const pending = section(el, 'pending')!;
+    const note = pending.querySelector('[data-note="cli"]');
+    expect(note).toBeTruthy();
+    expect(text(note)).toContain('UNVERIFIED');
+    // update discovery stays with the CLI — never invented client-side
+    expect(text(pending)).not.toMatch(/\d+ (update|pending)/i);
+  });
+
+  it('renders pending updates verbatim when the adapter reports them', async () => {
+    const { el } = await setup({
+      versions: () =>
+        of({ ...INFO, pending: '2 components behind', upgrade_plan: 'apply 2026.11' }),
+    });
+    const pending = section(el, 'pending')!;
+    expect(text(pending)).toContain('2 components behind');
+    expect(text(pending)).toContain('apply 2026.11');
+    expect(pending.querySelector('[data-note="cli"]')).toBeNull();
+  });
+
+  it('renders receipts verbatim and hides the section when none exist', async () => {
+    const { el } = await setup({
+      versions: () =>
+        of({
+          ...INFO,
+          receipts: [
+            { file: 'apply-20261015T120000Z.json', operation: 'apply', status: 'completed' },
+            { file: 'repair-20261015T130000Z.json', operation: null, status: null },
+          ],
+        }),
+    });
+    const receipts = section(el, 'receipts')!;
+    const trs = [...receipts.querySelectorAll('tbody tr')];
+    expect(trs.length).toBe(2);
+    expect(text(trs[0])).toContain('apply-20261015T120000Z.json');
+    expect(text(trs[0])).toContain('completed');
+    expect(text(trs[1])).toContain('—');
+  });
+
+  it('omits the receipts section entirely when the list is empty', async () => {
+    const { el } = await setup({ versions: () => of({ ...INFO, receipts: [] }) });
+    expect(section(el, 'receipts')).toBeNull();
+  });
+
   it('marks the whole capability UNVERIFIED on 404 / PORTAL-NOT-FOUND', async () => {
     const { el } = await setup({
       versions: () =>
