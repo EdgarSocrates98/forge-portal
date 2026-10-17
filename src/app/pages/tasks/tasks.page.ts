@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { InstallationReceipt, TaskExecution } from '../../core/api/api.models';
+import { InstallationReceipt, MetricsReport, TaskExecution } from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -12,6 +12,8 @@ import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { ForgeDoc, UiForgeDoc } from '../../shared/forge-doc';
 import { UiSkeleton } from '../../shared/skeleton';
+import { Source } from '../explorer/forges.data';
+import { buildReplay, buildTimeline, fmtTaskDuration } from './tasks.data';
 
 interface PendingPlan {
   plan_token: string;
@@ -37,6 +39,18 @@ interface PendingPlan {
  *    that mutating ops are rate-limited + plan-token bound;
  *  - stage transitions come from real TaskExecution records — no fake
  *    progress, no simulated stages.
+ *
+ * Cycle 4 §7 additions:
+ *  - Execution timeline: bars positioned by the records' real
+ *    `started_at`/`finished_at`; unfinished or contradictory ends render
+ *    as open bars (never a fake finish) and records without a usable
+ *    `started_at` stay undrawn, counting toward a `partial` marker —
+ *    the timeline never claims to be the whole history.
+ *  - Replay: a click on any record opens its detail plus a stepper over
+ *    the *persisted* `/metrics` events sharing its `correlation_id`.
+ *    Only recorded events replay — stages the adapter never logged are
+ *    never reconstructed; when /metrics or the correlation id is absent
+ *    the card says so instead of fabricating steps.
  */
 @Component({
   selector: 'page-tasks',
@@ -279,6 +293,62 @@ interface PendingPlan {
       <p class="muted limits">{{ 'tasks.limits' | t }}</p>
     </section>
 
+    <!-- Execution timeline — bars drawn only from recorded timestamps.
+         A PARTIAL badge marks records that could not be placed; open
+         bars are tasks with no trustworthy finished_at — never a fake
+         finish. -->
+    @if (tasks().length) {
+      <section class="card" data-section="timeline" aria-labelledby="tl-h">
+        <h2 id="tl-h">
+          {{ 'tasks.timeline.title' | t }}
+          @if (timeline().partial) {
+            <ui-state-badge state="PARTIAL" />
+          }
+        </h2>
+        <p class="muted">{{ 'tasks.timeline.hint' | t }}</p>
+        @if (timeline(); as tl) {
+          @if (tl.rows.length) {
+            <div class="tl" role="list" [attr.aria-label]="'tasks.timeline.title' | t">
+              <div class="tl__axis" aria-hidden="true">
+                <span>{{ fmtAt(tl.windowStart) }}</span>
+                <span>{{ fmtAt(tl.windowEnd) }}</span>
+              </div>
+              @for (r of tl.rows; track r.task.id) {
+                <button
+                  class="tl__row"
+                  type="button"
+                  role="listitem"
+                  [attr.data-selected]="selectedId() === r.task.id || null"
+                  [attr.aria-label]="r.task.label || r.task.verb"
+                  (click)="selectTask(r.task)"
+                >
+                  <span class="tl__label">{{ r.task.label || r.task.verb }}</span>
+                  <span class="tl__track">
+                    <span
+                      class="tl__bar"
+                      [attr.data-kind]="stageKind(r.task.stage)"
+                      [attr.data-open]="r.endMs === null || null"
+                      [style.left.%]="r.leftPct"
+                      [style.width.%]="r.widthPct"
+                      [title]="tipFor(r)"
+                    ></span>
+                  </span>
+                  <span class="tl__dur num">{{ duration(r.task) }}</span>
+                </button>
+              }
+            </div>
+            @if (tl.unplaced.length) {
+              <p class="muted tl__unplaced" data-note="unplaced">
+                {{ 'tasks.timeline.unplaced' | t: { count: tl.unplaced.length } }}
+              </p>
+            }
+          } @else {
+            <ui-empty icon="tasks" [title]="'tasks.timeline.empty' | t" />
+          }
+        }
+      </section>
+    }
+
     <section class="card" data-section="history">
       <h2>{{ 'tasks.recent' | t }}</h2>
       @if (loading()) {
@@ -300,8 +370,17 @@ interface PendingPlan {
           </thead>
           <tbody>
             @for (t of tasks(); track t.id) {
-              <tr>
-                <td>{{ t.label }}</td>
+              <tr [attr.data-selected]="selectedId() === t.id || null">
+                <td>
+                  <button
+                    class="linklike"
+                    type="button"
+                    data-action="inspect"
+                    (click)="selectTask(t)"
+                  >
+                    {{ t.label }}
+                  </button>
+                </td>
                 <td>
                   <code>{{ t.verb }}</code>
                 </td>
@@ -321,6 +400,154 @@ interface PendingPlan {
         }
       }
     </section>
+
+    <!-- Task detail + recorded-events replay — opened from the timeline
+         or the history table; every field comes from the task record. -->
+    @if (selectedTask(); as t) {
+      <section class="card detail" data-section="task-detail" aria-live="polite">
+        <header class="detail__head">
+          <h2><ui-icon name="tasks" [size]="15" />{{ t.label || t.verb }}</h2>
+          <button
+            class="icon-btn"
+            (click)="selectedId.set(null)"
+            [attr.aria-label]="'state.close' | t"
+          >
+            <ui-icon name="chevron-right" [size]="14" />
+          </button>
+        </header>
+        <dl class="plan-card">
+          <div class="kv">
+            <dt>{{ 'table.id' | t }}</dt>
+            <dd>
+              <code>{{ t.id }}</code>
+            </dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.verb' | t }}</dt>
+            <dd>
+              <code>{{ t.verb }}</code>
+            </dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.stage' | t }}</dt>
+            <dd>
+              <ui-state-badge [state]="stageKind(t.stage)" [labelOverride]="t.stage" />
+            </dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.started' | t }}</dt>
+            <dd>{{ t.started_at ? fmtEventAt(t.started_at) : '—' }}</dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.finished' | t }}</dt>
+            <dd>{{ t.finished_at ? fmtEventAt(t.finished_at) : '—' }}</dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.duration' | t }}</dt>
+            <dd class="num">{{ duration(t) }}</dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'table.exit' | t }}</dt>
+            <dd>{{ t.exit_code ?? '—' }}</dd>
+          </div>
+          <div class="kv">
+            <dt>{{ 'tasks.correlation' | t }}</dt>
+            <dd class="corr" [attr.title]="t.correlation_id ?? null">
+              <code>{{ t.correlation_id ?? '—' }}</code>
+            </dd>
+          </div>
+          @if (t.refusal) {
+            <div class="kv">
+              <dt>{{ 'tasks.refusal' | t }}</dt>
+              <dd>
+                <code>{{ t.refusal }}</code>
+              </dd>
+            </div>
+          }
+        </dl>
+
+        @if (replay(); as rep) {
+          <div class="replay" data-section="replay">
+            <h3 class="replay__title">
+              <ui-icon name="history" [size]="14" />
+              {{ 'tasks.replay.title' | t }}
+              @if (rep.truncated) {
+                <ui-state-badge state="PARTIAL" />
+              }
+            </h3>
+            <p class="muted">{{ 'tasks.replay.hint' | t }}</p>
+
+            @switch (rep.state) {
+              @case ('ready') {
+                <div class="replay__controls">
+                  <button
+                    class="btn btn--mini"
+                    data-action="prev"
+                    [disabled]="replayIdx() <= 0"
+                    (click)="replayIdx.set(replayIdx() - 1)"
+                  >
+                    {{ 'tasks.replay.prev' | t }}
+                  </button>
+                  <span class="muted">
+                    {{
+                      'tasks.replay.step' | t: { current: replayIdx() + 1, total: rep.steps.length }
+                    }}
+                  </span>
+                  <button
+                    class="btn btn--mini"
+                    data-action="next"
+                    [disabled]="replayIdx() >= rep.steps.length - 1"
+                    (click)="replayIdx.set(replayIdx() + 1)"
+                  >
+                    {{ 'tasks.replay.next' | t }}
+                  </button>
+                </div>
+                <ol class="replay__steps">
+                  @for (e of rep.steps; track $index) {
+                    <li
+                      [attr.data-current]="$index === replayIdx() || null"
+                      [attr.data-kind-tone]="statusKind(e.status)"
+                    >
+                      <button
+                        class="replay__step"
+                        type="button"
+                        [attr.data-current]="$index === replayIdx() || null"
+                        (click)="replayIdx.set($index)"
+                      >
+                        <code class="replay__kind">{{ e.kind }}</code>
+                        <span class="replay__at">{{ fmtEventAt(e.at) }}</span>
+                        <ui-state-badge [state]="statusKind(e.status)" [labelOverride]="e.status" />
+                        @if (e.duration_ms !== null) {
+                          <span class="num">{{ e.duration_ms }} ms</span>
+                        }
+                        <span class="replay__origin">{{ e.origin }}</span>
+                        @if (e.detail) {
+                          <span class="replay__detail">{{ e.detail }}</span>
+                        }
+                      </button>
+                    </li>
+                  }
+                </ol>
+              }
+              @case ('empty') {
+                <p class="muted" data-state="empty">{{ 'tasks.replay.empty' | t }}</p>
+              }
+              @case ('no-correlation') {
+                <p class="muted" data-state="no-correlation">
+                  {{ 'tasks.replay.noCorrelation' | t }}
+                </p>
+              }
+              @case ('unavailable') {
+                <p class="unv-cell" data-state="unavailable">
+                  <ui-state-badge state="UNVERIFIED" />
+                  <span class="muted">{{ 'tasks.replay.unavailable' | t }}</span>
+                </p>
+              }
+            }
+          </div>
+        }
+      </section>
+    }
   `,
   styles: `
     .card {
@@ -494,6 +721,212 @@ interface PendingPlan {
     .op__body small {
       color: var(--fg-muted);
     }
+    /* -- execution timeline ------------------------------------- */
+    .tl {
+      display: grid;
+      gap: 4px;
+      margin-top: var(--space-3);
+    }
+    .tl__axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      margin-left: 12rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .tl__row {
+      display: grid;
+      grid-template-columns: 12rem 1fr 5.5rem;
+      align-items: center;
+      gap: var(--space-2);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      background: none;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      padding: 3px var(--space-2);
+      cursor: pointer;
+      width: 100%;
+    }
+    .tl__row:hover {
+      background: var(--bg-hover);
+    }
+    .tl__row[data-selected] {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+    .tl__label {
+      font-size: var(--font-sm);
+      font-weight: 550;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tl__track {
+      position: relative;
+      height: 14px;
+      border-radius: var(--radius-pill);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .tl__bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      min-width: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--bar-fg, var(--fg-muted));
+    }
+    .tl__bar[data-open] {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--bar-fg, var(--fg-muted)) 0 3px,
+        transparent 3px 6px
+      );
+      border-right: 2px dashed var(--bar-fg, var(--fg-muted));
+    }
+    .tl__bar[data-kind='supported'] {
+      --bar-fg: var(--ok);
+    }
+    .tl__bar[data-kind='error'] {
+      --bar-fg: var(--error);
+    }
+    .tl__bar[data-kind='warn'] {
+      --bar-fg: var(--warn);
+    }
+    .tl__bar[data-kind='info'] {
+      --bar-fg: var(--info);
+    }
+    .tl__dur {
+      text-align: right;
+    }
+    .tl__dur,
+    .tl__unplaced,
+    .replay__at,
+    .replay__origin {
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+    }
+    .tl__unplaced {
+      margin: var(--space-2) 0 0;
+    }
+    /* -- task detail + replay ----------------------------------- */
+    .detail {
+      border-left: 3px solid var(--accent);
+    }
+    .detail__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+    .linklike {
+      border: 0;
+      background: none;
+      padding: 0;
+      font: inherit;
+      font-weight: 550;
+      color: var(--accent);
+      cursor: pointer;
+      text-align: left;
+    }
+    .linklike:hover {
+      text-decoration: underline;
+    }
+    tr[data-selected] td {
+      background: var(--accent-bg);
+    }
+    .replay {
+      margin-top: var(--space-3);
+      border-top: 1px solid var(--border);
+      padding-top: var(--space-3);
+    }
+    .replay__title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-1);
+      font-size: var(--font-md);
+    }
+    .replay__title ui-icon {
+      color: var(--accent);
+    }
+    .replay__controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: var(--space-2) 0;
+    }
+    .replay__steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 4px;
+    }
+    .replay__step {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: none;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      cursor: pointer;
+    }
+    .replay__step:hover,
+    .replay__step[data-current] {
+      border-color: var(--accent);
+    }
+    .replay__step[data-current] {
+      box-shadow: 0 0 0 1px var(--accent);
+      background: var(--accent-bg);
+    }
+    .replay__kind {
+      color: var(--accent);
+    }
+    .replay__at {
+      font-variant-numeric: tabular-nums;
+    }
+    .replay__detail {
+      flex-basis: 100%;
+      font-size: var(--font-sm);
+      color: var(--fg-muted);
+      overflow-wrap: anywhere;
+    }
+    .unv-cell {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    #tl-h,
+    .detail__head h2 {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    @media (max-width: 720px) {
+      .tl__axis {
+        margin-left: 0;
+      }
+      .tl__row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .tl__dur {
+        text-align: left;
+      }
+    }
   `,
 })
 export class TasksPage {
@@ -510,11 +943,27 @@ export class TasksPage {
   readonly executing = signal(false);
   readonly loading = signal(true);
 
+  /** Cycle 4 §7 — execution intelligence over the same real records:
+   *  timeline derived from `started_at`/`finished_at`, and replay fed
+   *  by /metrics events linked through the task's `correlation_id`.
+   *  /metrics is an auxiliary source — its failure never blocks the
+   *  page; the replay card reports `unavailable` instead. */
+  readonly metricsSrc = new Source<MetricsReport>();
+  readonly selectedId = signal<string | null>(null);
+  readonly replayIdx = signal(0);
+
+  readonly timeline = computed(() => buildTimeline(this.tasks()));
+  readonly selectedTask = computed(
+    () => this.tasks().find((t) => t.id === this.selectedId()) ?? null,
+  );
+  readonly replay = computed(() => buildReplay(this.metricsSrc.data(), this.selectedTask()));
+
   constructor() {
     void this.load();
   }
 
   async load(): Promise<void> {
+    const metricsCall = this.metricsSrc.load(() => this.api.metrics());
     try {
       this.tasks.set(await firstValueFrom(this.api.tasks()));
     } catch (e) {
@@ -522,6 +971,46 @@ export class TasksPage {
     } finally {
       this.loading.set(false);
     }
+    await metricsCall;
+  }
+
+  /** Open the task detail + replay card — id-keyed so a history
+   *  refresh after execute never keeps a stale object. */
+  selectTask(t: TaskExecution): void {
+    this.selectedId.set(t.id);
+    this.replayIdx.set(0);
+  }
+
+  /** Axis/tooltip timestamp — localized from the recorded epoch ms. */
+  fmtAt(ms: number | null): string {
+    return ms === null ? '—' : new Date(ms).toLocaleString();
+  }
+
+  /** Event timestamp — localized; the raw value stays when unparsable
+   *  (it is still real recorded data). */
+  fmtEventAt(at: string): string {
+    const ms = Date.parse(at);
+    return Number.isNaN(ms) ? at : new Date(ms).toLocaleString();
+  }
+
+  /** Bar tooltip — recorded window only; open bars say so. */
+  tipFor(r: { task: TaskExecution; startMs: number; endMs: number | null }): string {
+    const start = this.fmtAt(r.startMs);
+    const end = r.endMs === null ? '—' : this.fmtAt(r.endMs);
+    return `${start} → ${end}`;
+  }
+
+  /** Badge tone for a free-form event/task status — same mapping the
+   *  observability page uses; label stays verbatim. */
+  statusKind(status: string): string {
+    const s = (status || '').toLowerCase();
+    if (['ok', 'done', 'completed', 'success', 'succeeded', 'pass', 'passed'].includes(s))
+      return 'supported';
+    if (['failed', 'fail', 'error', 'refused', 'denied'].includes(s)) return 'error';
+    if (['skipped', 'cancelled', 'canceled', 'partial', 'degraded'].includes(s)) return 'warn';
+    if (['running', 'pending', 'started', 'in_progress', 'planning', 'verifying'].includes(s))
+      return 'info';
+    return 'muted';
   }
 
   async plan(): Promise<void> {
@@ -619,16 +1108,10 @@ export class TasksPage {
     return cid === '—' ? null : cid;
   }
 
-  /** finished_at − started_at, only when both real timestamps exist. */
+  /** finished_at − started_at, only when both real timestamps exist —
+   *  pure derivation shared with the timeline (tasks.data.ts). */
   duration(t: TaskExecution): string {
-    if (!t.started_at || !t.finished_at) return '—';
-    const ms = Date.parse(t.finished_at) - Date.parse(t.started_at);
-    if (!Number.isFinite(ms) || ms < 0) return '—';
-    if (ms < 1000) return `${ms} ms`;
-    const s = ms / 1000;
-    if (s < 60) return `${Number(s.toFixed(1))} s`;
-    const m = Math.floor(s / 60);
-    return `${m}m ${Math.round(s - m * 60)}s`;
+    return fmtTaskDuration(t);
   }
 
   planField(plan: Record<string, unknown>, key: string): string {
