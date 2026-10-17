@@ -402,6 +402,48 @@ export const PT_BR: Record<string, string> = {
   'knowledge.results': '{count, plural, one{# resultado} other{# resultados}}',
   'knowledge.empty': 'Nada encontrado — tente outro termo.',
   'knowledge.open': 'Abrir documento',
+  'knowledge.entities': 'Entidades observadas',
+  'knowledge.noEntities': 'Nenhuma entidade corresponde aos filtros.',
+  'knowledge.related': 'Relações verificáveis',
+  'knowledge.relatedEmpty': 'Nenhuma relação declarada para esta entidade.',
+  'knowledge.sameDomain': 'Skills no mesmo domínio declarado',
+  'knowledge.declaredBy': 'Agents que declaram esta skill',
+  'knowledge.domainAgents': 'Agents no mesmo domínio declarado',
+  'knowledge.entityDocs': 'Documentos sobre esta entidade',
+  'knowledge.entityDocsEmpty':
+    'A busca de documentos não retornou nada para o nome desta entidade.',
+  'knowledge.entityDocsUnverified': 'Busca de documentos não verificada para esta entidade.',
+  'knowledge.docs': 'Documentos',
+  'knowledge.docsHint': 'Busque na documentação real desta Forja.',
+  'knowledge.docsUnavailable': 'Esta Forja não expõe um endpoint de busca de documentos.',
+
+  // recomendações explicáveis (§8.5)
+  'recommend.title': 'Recomendações explicáveis',
+  'recommend.note':
+    'Cada recomendação mostra o motivo e a fonte (endpoint → campo) que a comprova — nada é inferido.',
+  'recommend.partial': 'Algumas fontes não foram verificadas — a lista pode estar incompleta.',
+  'recommend.empty': 'Nenhuma recomendação derivável dos dados carregados.',
+  'recommend.goto': 'Abrir',
+  'recommend.sev.warning': 'atenção',
+  'recommend.sev.info': 'info',
+  'recommend.kind.missingComponent': 'Componente ausente',
+  'recommend.kind.incompleteConfig': 'Configuração incompleta',
+  'recommend.kind.incompatibleDependency': 'Dependência incompatível',
+  'recommend.kind.mcpUnavailable': 'MCP indisponível',
+  'recommend.kind.recurringFailure': 'Falha recorrente',
+  'recommend.kind.relatedSkill': 'Skills relacionadas',
+  'recommend.reason.missingComponent':
+    '{forge} consta no catálogo da federação, mas não há instalação registrada.',
+  'recommend.reason.envMissing': 'Variável obrigatória {name} ausente no ambiente.',
+  'recommend.reason.envInvalid':
+    'Variável obrigatória {name} presente, mas reportada como inválida.',
+  'recommend.reason.hostNotIntegrated':
+    'Host {host} detectado, mas a integração ainda está em NOT_DETECTED.',
+  'recommend.reason.hostUnsupported': 'Host {host} detectado e reportado como não suportado.',
+  'recommend.reason.mcpState': '{id} reporta o estado {state}.',
+  'recommend.reason.recurringFailure':
+    '{count} execuções do verbo {verb} terminaram recusadas ou sem status ok.',
+  'recommend.reason.sameDomain': '{count} skills compartilham o domínio declarado {domain}.',
 
   // configurações
   'settings.title': 'Configurações',
@@ -466,6 +508,7 @@ export const PT_BR: Record<string, string> = {
   'command.kind.mcp': 'MCP',
   'command.kind.host': 'Hosts',
   'command.kind.doc': 'Documentos',
+  'command.kind.operation': 'Operações',
   'command.kind.error': 'Erros conhecidos',
   'command.filters': 'Filtrar por tipo',
   'command.searching': 'Buscando…',

@@ -272,6 +272,32 @@ describe('SearchService', () => {
     expect(service.unverified()).not.toContain('forge');
   });
 
+  it('indexes every task as an operation — refused or not', async () => {
+    const { service } = await setup();
+    await service.searchNow('');
+    const ops = service.results().filter((r) => r.kind === 'operation');
+    expect(ops.map((o) => o.id).sort()).toEqual(['op:t1', 'op:t2', 'op:t3']);
+    expect(ops[0]?.route).toBe('/tasks');
+  });
+
+  it('makes operations searchable by verb and label', async () => {
+    const { service } = await setup();
+    await service.searchNow('apply');
+    const hit = service.results().find((r) => r.id === 'op:t1');
+    expect(hit).toBeTruthy();
+    expect(hit?.label).toBe('Apply plan');
+  });
+
+  it('flags both task kinds unverified when /tasks fails', async () => {
+    const { service } = await setup({
+      tasks: vi.fn(() => throwError(() => new ApiError(500))),
+    });
+    await service.searchNow('');
+    expect(service.unverified()).toContain('operation');
+    expect(service.unverified()).toContain('error');
+    expect(service.results().some((r) => r.kind === 'operation')).toBe(false);
+  });
+
   it('surfaces known errors only for refused / non-ok task receipts', async () => {
     const { service } = await setup();
     await service.searchNow('');
