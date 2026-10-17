@@ -681,3 +681,66 @@ class TestRegistryOps:
                   "plan": plan, "plan_token": token},
         )
         assert env2["error"]["code"] == "PORTAL-PLAN-MISMATCH"
+
+    # pin/unpin have no `--plan` mode in forge-cli (the verb writes
+    # state.json unconditionally) — planning them must be a pure read of
+    # the shared registry state, never a spawned mutation.
+
+    def _seed_state(self, home, forges):
+        state_dir = home / ".forge-cli" / "forges"
+        state_dir.mkdir(parents=True)
+        (state_dir / "state.json").write_text(json.dumps({"forges": forges}), encoding="utf-8")
+
+    def test_plan_pin_spawns_no_cli(self, server, monkeypatch, isolated_forge_home):
+        calls = []
+        monkeypatch.setattr(ro, "_run_cli", lambda *a, **k: calls.append(a[0]) or {"ok": True})
+        monkeypatch.setattr(ro, "_cli_binary", lambda: "/fake/forge-cli")
+        self._seed_state(
+            isolated_forge_home,
+            {"api-forge": {"forge": "api-forge", "version": "1.0.0"}},
+        )
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "pin", "forge": "api-forge"},
+        )
+        assert status == 200
+        data = env["data"]
+        assert data["status"] == "planned"
+        assert data["plan"]["preview"]["installed"] is True
+        assert data["plan"]["preview"]["version"] == "1.0.0"
+        assert calls == [], "plan pin must not spawn forge-cli — it mutates"
+        # and the receipt itself is untouched (no pinned field written)
+        state = json.loads(
+            (isolated_forge_home / ".forge-cli" / "forges" / "state.json").read_text()
+        )
+        assert "pinned" not in state["forges"]["api-forge"]
+
+    def test_plan_unpin_spawns_no_cli(self, server, monkeypatch, isolated_forge_home):
+        calls = []
+        monkeypatch.setattr(ro, "_run_cli", lambda *a, **k: calls.append(a[0]) or {"ok": True})
+        monkeypatch.setattr(ro, "_cli_binary", lambda: "/fake/forge-cli")
+        self._seed_state(
+            isolated_forge_home,
+            {"api-forge": {"forge": "api-forge", "version": "1.0.0", "pinned": "1.0.0"}},
+        )
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "unpin", "forge": "api-forge"},
+        )
+        assert status == 200
+        assert env["data"]["status"] == "planned"
+        assert env["data"]["plan"]["preview"]["pinned"] == "1.0.0"
+        assert calls == []
+
+    def test_plan_pin_uninstalled_is_honest(self, server, monkeypatch, isolated_forge_home):
+        calls = []
+        monkeypatch.setattr(ro, "_run_cli", lambda *a, **k: calls.append(a[0]) or {"ok": True})
+        monkeypatch.setattr(ro, "_cli_binary", lambda: "/fake/forge-cli")
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "pin", "forge": "ghost-forge"},
+        )
+        assert status == 200
+        assert env["data"]["status"] == "plan-failed"
+        assert env["data"]["plan"]["preview"]["installed"] is False
+        assert calls == []

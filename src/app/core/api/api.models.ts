@@ -352,6 +352,41 @@ export interface RegistryState {
   forges: Record<string, RegistryReceipt>;
 }
 
+/**
+ * POST /api/v1/registry/plan|execute — plan → confirm → execute via
+ * real forge-cli (argv allowlist server-side). `plan.preview` is the
+ * CLI's `--plan` doc (or the offline state preview for pin/unpin,
+ * whose CLI verb has no plan mode). `plan_token` is one-time and bound
+ * to the exact plan — the client must echo `plan` + `plan_token` on
+ * execute.
+ */
+export type RegistryAction =
+  | 'install'
+  | 'update'
+  | 'reinstall'
+  | 'uninstall'
+  | 'rollback'
+  | 'pin'
+  | 'unpin'
+  | 'repair'
+  | 'verify';
+
+export interface RegistryPlanResponse {
+  /** 'planned' | 'plan-failed' — a failed plan still carries the
+   *  preview the CLI produced; nothing was executed. */
+  status: string;
+  plan: { action: string; forge: string; preview?: unknown };
+  plan_token: string;
+  cli?: string;
+}
+
+export interface RegistryExecuteResponse {
+  /** 'executed' | 'failed' — the CLI's own verdict, never assumed. */
+  status: string;
+  result?: unknown;
+  state: RegistryState;
+}
+
 export interface FederationSelection {
   scope: 'project' | 'workspace' | 'user';
   host: 'all' | 'none' | HostId;

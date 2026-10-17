@@ -30,6 +30,14 @@ _REGISTRY_ACTIONS: dict[str, list[str]] = {
     "verify": ["mcp", "--verify"],
 }
 
+# `forge-cli pin|unpin --method registry` has NO `--plan` mode: the CLI
+# writes `state.json` unconditionally, so a "plan" subprocess would mutate
+# during a read-only phase — breaking the non-mutating contract of
+# POST /registry/plan. Their preview is derivable offline from the shared
+# registry state (the only thing they touch), so planning never spawns
+# the CLI for these actions.
+_OFFLINE_PLAN_ACTIONS = frozenset({"pin", "unpin"})
+
 
 def _cli_binary() -> str | None:
     found = shutil.which("forge-cli")
@@ -76,6 +84,23 @@ def json_loads_last(text: str) -> Any:
     return json.loads(text.splitlines()[-1])
 
 
+def _offline_plan(action: str, forge: str) -> tuple[dict[str, Any], bool]:
+    """Plan preview for actions the CLI cannot plan without mutating
+    (pin/unpin — see _OFFLINE_PLAN_ACTIONS). Reads the shared registry
+    state only; the second element is whether the op has a target."""
+    receipt = fp.read_registry_state().get("forges", {}).get(forge)
+    installed = isinstance(receipt, dict)
+    preview: dict[str, Any] = {
+        "forge": forge,
+        "installed": installed,
+        "version": receipt.get("version") if installed else None,
+        "pinned": receipt.get("pinned") if installed else None,
+    }
+    if not installed:
+        preview["detail"] = "forge is not installed via registry"
+    return {"action": action, "forge": forge, "preview": preview}, installed
+
+
 def _registry_op(ctx: fp.RequestContext, phase: str) -> Any:
     body = ctx.body or {}
     action = str(body.get("action") or "")
@@ -98,10 +123,18 @@ def _registry_op(ctx: fp.RequestContext, phase: str) -> Any:
             http=409,
         )
     if phase == "plan":
-        res = _run_cli([cli, *argv_head, forge, "--plan", "--json", "--yes"], timeout=60.0)
-        plan = {"action": action, "forge": forge, "preview": res.get("doc") or res.get("stderr") or res}
+        if action in _OFFLINE_PLAN_ACTIONS:
+            plan, ok = _offline_plan(action, forge)
+        else:
+            res = _run_cli([cli, *argv_head, forge, "--plan", "--json", "--yes"], timeout=60.0)
+            plan = {
+                "action": action,
+                "forge": forge,
+                "preview": res.get("doc") or res.get("stderr") or res,
+            }
+            ok = res["ok"]
         return {
-            "status": "planned" if res["ok"] else "plan-failed",
+            "status": "planned" if ok else "plan-failed",
             "plan": plan,
             "plan_token": ctx.handler.server.sign_plan(plan),
             "cli": cli,

@@ -13,7 +13,12 @@ Run:  python -m pytest e2e/ -q        (requires playwright + chromium)
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -22,9 +27,16 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "portal_core"))
 
 import forge_portal as fp
+import registry_ops as ro
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 BUNDLE = REPO / "dist" / "forge-portal-app" / "browser"
+
+# The registry E2E runs the REAL forge-cli subprocess boundary (no
+# _run_cli patching) into an isolated FORGE_CLI_HOME — real installs hit
+# PyPI; when forge-cli or the network is absent the real-flow test skips
+# explicitly instead of faking a pass.
+FORGE_CLI = shutil.which("forge-cli")
 
 playwright = pytest.importorskip("playwright.sync_api", reason="playwright not installed")
 
@@ -45,7 +57,7 @@ class E2EAdapter(fp.PortalAdapter):
         self.assets_dir = BUNDLE if BUNDLE.is_dir() else None
         self.applied: list[dict] = []
         self.task_log: list[dict] = []
-        self.ops = fp.default_operations(self) + [
+        self.ops = fp.default_operations(self) + ro.registry_operations() + [
             fp.Operation("POST", "/installation/plan", self._plan, mutating=True),
             fp.Operation(
                 "POST",
@@ -833,6 +845,213 @@ def test_no_console_errors(page, portal):
     fatal = [e for e in errors if "SyntaxError" in e or "TypeError" in e
              or "NG" in e[:12]]
     assert not fatal, f"console errors: {fatal}"
+
+
+# ---------------------------------------------------------------------------
+# P1-003 — registry operations E2E: the REAL forge-cli boundary (no
+# _run_cli patching) into an isolated FORGE_CLI_HOME. HTTP-level security
+# checks run fully offline (pin only writes state.json); the Chromium
+# flow does a real PyPI install and skips explicitly when unreachable.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture()
+def ops_home(tmp_path, monkeypatch):
+    """Isolated forge-cli home: the CLI writes state/venvs under
+    FORGE_CLI_HOME and the portal reads the same root through
+    FORGE_HOME_OVERRIDE — the real ~/.forge-cli is never touched."""
+    home = tmp_path / "cli-home"
+    home.mkdir()
+    monkeypatch.setenv("FORGE_CLI_HOME", str(home))
+    monkeypatch.setenv("FORGE_HOME_OVERRIDE", str(home))
+    return home
+
+
+@pytest.fixture()
+def ops_server(ops_home):
+    """Dedicated server per registry test — own rate limiter + plan store."""
+    server = fp.PortalServer(E2EAdapter(), quiet=True)
+    server.serve_in_thread()
+    yield server
+    server.shutdown()
+    server.server_close()
+
+
+def _req(server, method, path, *, body=None, session=True, headers=None):
+    url = f"http://127.0.0.1:{server.port}/api/v1{path}"
+    hdrs = {"Content-Type": "application/json"}
+    if session:
+        hdrs[fp.SESSION_HEADER] = server.session_token
+    hdrs.update(headers or {})
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(url, data=data, method=method, headers=hdrs)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.status, json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        return e.code, json.loads(e.read())
+
+
+def _seed_registry(home: Path, forges: dict) -> None:
+    d = home / ".forge-cli" / "forges"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "state.json").write_text(json.dumps({"forges": forges}), encoding="utf-8")
+
+
+_SEEDED = {"e2e-forge": {"forge": "e2e-forge", "method": "pypi", "version": "0.1.0"}}
+
+
+@pytest.mark.skipif(FORGE_CLI is None, reason="forge-cli not on PATH")
+def test_registry_security_http(ops_server, ops_home):
+    """Registry boundary at HTTP level against the real server: session,
+    origin, confirm literal, argv allowlist, forge-name pattern and the
+    one-time plan token — with a real (instant, offline) pin execute."""
+    _seed_registry(ops_home, _SEEDED)
+    PLAN, EXEC = "/registry/plan", "/registry/execute"
+
+    s, env = _req(ops_server, "POST", PLAN,
+                  body={"action": "pin", "forge": "e2e-forge"}, session=False)
+    assert s == 403 and env["error"]["code"] == "PORTAL-SESSION"
+
+    s, _ = _req(ops_server, "POST", PLAN,
+                body={"action": "pin", "forge": "e2e-forge"},
+                headers={fp.SESSION_HEADER: "forged"})
+    assert s == 403
+
+    s, env = _req(ops_server, "POST", PLAN,
+                  body={"action": "pin", "forge": "e2e-forge"},
+                  headers={"Origin": "https://evil.example"})
+    assert s == 403 and env["error"]["code"] == "PORTAL-ORIGIN"
+
+    s, env = _req(ops_server, "POST", PLAN,
+                  body={"action": "shell; rm -rf /", "forge": "e2e-forge"})
+    assert s == 400 and env["error"]["code"] == "PORTAL-ACTION"
+
+    s, env = _req(ops_server, "POST", PLAN,
+                  body={"action": "install", "forge": "../../etc/passwd"})
+    assert s == 400 and env["error"]["code"] == "PORTAL-FORGE"
+
+    s, env = _req(ops_server, "POST", EXEC,
+                  body={"action": "pin", "forge": "e2e-forge"})
+    assert s == 400 and env["error"]["code"] == "PORTAL-CONFIRM"
+
+    s, env = _req(ops_server, "POST", EXEC,
+                  body={"action": "pin", "forge": "e2e-forge", "confirm": "execute"})
+    assert s == 400 and env["error"]["code"] == "PORTAL-PLAN-REQUIRED"
+
+    # real roundtrip: plan pin (offline preview) → execute (real CLI pin —
+    # instant, state.json only) → the same token replays to a refusal
+    s, env = _req(ops_server, "POST", PLAN, body={"action": "pin", "forge": "e2e-forge"})
+    assert s == 200 and env["data"]["status"] == "planned"
+    plan, token = env["data"]["plan"], env["data"]["plan_token"]
+
+    s, env = _req(ops_server, "POST", EXEC,
+                  body={"action": "pin", "forge": "e2e-forge", "confirm": "execute",
+                        "plan": plan, "plan_token": token})
+    assert s == 200 and env["data"]["status"] == "executed"
+
+    s, env = _req(ops_server, "POST", EXEC,
+                  body={"action": "pin", "forge": "e2e-forge", "confirm": "execute",
+                        "plan": plan, "plan_token": token})
+    assert s == 409 and env["error"]["code"] == "PORTAL-PLAN-INVALID"
+
+    # the executed pin really landed in the isolated state — not asserted
+    # from the response alone
+    state = json.loads((ops_home / ".forge-cli/forges/state.json").read_text())
+    assert state["forges"]["e2e-forge"]["pinned"] == "0.1.0"
+
+
+@pytest.mark.skipif(FORGE_CLI is None, reason="forge-cli not on PATH")
+def test_registry_plan_is_side_effect_free(ops_server, ops_home):
+    """Regression: planning must never mutate. pin/unpin have no `--plan`
+    mode in the CLI (the verb writes state.json unconditionally), so the
+    portal derives their preview offline — state stays byte-identical."""
+    _seed_registry(ops_home, _SEEDED)
+    state_file = ops_home / ".forge-cli" / "forges" / "state.json"
+    before = state_file.read_text()
+    s, env = _req(ops_server, "POST", "/registry/plan",
+                  body={"action": "pin", "forge": "e2e-forge"})
+    assert s == 200
+    assert env["data"]["status"] == "planned"
+    assert env["data"]["plan"]["preview"]["version"] == "0.1.0"
+    assert json.loads(state_file.read_text()) == json.loads(before)
+
+
+def test_registry_session_in_browser(page, ops_server):
+    """From the real SPA origin, a POST without the session header is a
+    403 — Chromium cannot mint or guess the per-boot token."""
+    page.goto(ops_server.url)
+    page.wait_for_load_state("networkidle")
+    res = page.evaluate(
+        """async () => {
+          const r = await fetch('/api/v1/registry/plan', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({action: 'pin', forge: 'e2e-forge'}),
+          });
+          return {status: r.status, env: await r.json()};
+        }"""
+    )
+    assert res["status"] == 403
+    assert res["env"]["error"]["code"] == "PORTAL-SESSION"
+
+
+def test_registry_browser_flow_real_cli(page, ops_server, ops_home):
+    """Chromium drives the real boundary end-to-end: plan install of
+    forge-doctor-api (real PyPI resolve + venv install) → confirm →
+    registry state reflects it → uninstall planned → confirmed → gone."""
+    if FORGE_CLI is None:
+        pytest.skip("forge-cli not on PATH")
+    # preflight: a real --plan must resolve — offline hosts skip honestly
+    pre = subprocess.run(
+        [FORGE_CLI, "install", "--method", "registry", "forge-doctor-api",
+         "--plan", "--json", "--yes"],
+        capture_output=True, text=True, timeout=60, check=False,
+        env={**os.environ, "FORGE_CLI_HOME": str(ops_home)},
+    )
+    if pre.returncode != 0:
+        pytest.skip(f"registry plan unavailable (offline?): {pre.stdout[-200:]}")
+
+    page.goto(f"http://127.0.0.1:{ops_server.port}/forges"
+              f"?forge_session={ops_server.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.locator("[data-section='registry-ops']").wait_for(state="visible")
+    _shot(page, "20-registry-ops")
+
+    # plan install — the real CLI resolves the dist on PyPI
+    page.locator("#registry-forge").fill("forge-doctor-api")
+    page.locator(".rops__actions button[data-plan='install']").click()
+    review = page.locator("[data-section='registry-review']")
+    review.wait_for(state="visible", timeout=90000)
+    assert review.get_attribute("data-status") == "planned"
+    assert review.get_attribute("data-action") == "install"
+    assert review.get_attribute("data-forge") == "forge-doctor-api"
+    _shot(page, "21-registry-plan")
+
+    # confirm + execute — real venv install (measured ~9s locally)
+    page.locator("button[data-exec]").click()
+    receipt = page.locator("[data-section='registry-receipt']")
+    receipt.wait_for(state="visible", timeout=300000)
+    assert receipt.get_attribute("data-status") == "executed"
+    row = page.locator("tr[data-forge='forge-doctor-api']")
+    row.wait_for(state="visible", timeout=15000)
+    _shot(page, "22-registry-executed")
+
+    # uninstall — planned then confirmed; the row disappears for real
+    row.locator("button[data-plan='uninstall']").click()
+    review2 = page.locator("[data-section='registry-review']")
+    review2.wait_for(state="visible", timeout=90000)
+    page.locator("button[data-exec]").click()
+    receipt2 = page.locator("[data-section='registry-receipt']")
+    receipt2.wait_for(state="visible", timeout=180000)
+    assert receipt2.get_attribute("data-status") == "executed"
+    page.wait_for_timeout(600)
+    assert page.locator("tr[data-forge='forge-doctor-api']").count() == 0
+    _shot(page, "23-registry-uninstalled")
+
+    # the isolated state file agrees with the UI — real, not optimism
+    state = json.loads((ops_home / ".forge-cli/forges/state.json").read_text())
+    assert "forge-doctor-api" not in state["forges"]
 
 
 # playwright sync API needs a page fixture
