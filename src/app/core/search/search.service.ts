@@ -14,101 +14,59 @@ import {
 import { I18nService } from '../i18n/i18n.service';
 import { PortalStore } from '../portal/portal.store';
 import { ThemeStore } from '../theme/theme.store';
+import {
+  SEARCH_DEBOUNCE_MS,
+  SEARCH_KIND_ORDER,
+  SearchEntry,
+  SearchKind,
+  SearchResult,
+  makeSearchEntry,
+  rankSearchEntries,
+} from './search.data';
+
+// The data contract lives in `search.data.ts` (pure, spec'd there);
+// re-exported so existing consumers keep one import site.
+export {
+  MAX_SEARCH_RESULTS,
+  SEARCH_DEBOUNCE_MS,
+  SEARCH_KIND_LABEL,
+  SEARCH_KIND_ORDER,
+  normalizeSearchText,
+  rankSearchEntries,
+} from './search.data';
+export type { SearchEntry, SearchKind, SearchResult } from './search.data';
 
 /**
- * Global search (spec §3.6) — deterministic, local-first, lazy.
+ * Global search (§3.6 + Cycle 5 §8.1) — deterministic, local-first,
+ * lazy. The async shell around `search.data.ts`: it owns source
+ * loading, caching and debounce; indexing + ranking stay pure.
  *
- * The index is built on demand (first query — never at bootstrap), cached
- * by a data version (`refreshedAt` + locale + manual bump) and rebuilt only
- * when that version changes or `refresh()` is called. Sources:
+ * The index is built on demand (first query — never at bootstrap),
+ * cached by a data version (`refreshedAt` + locale + manual bump) and
+ * rebuilt only when that version changes or `refresh()` is called.
+ * Sources — one per real endpoint, all read-only:
  *
  *  - pages/operations: `store.nav()` + static routes + shell actions
  *    (refresh / theme / locale) — always available, even offline.
- *  - forjas: `api.federation()` specialists (provider/state). A 404 means
- *    the serving Forja does not expose federation → the kind is skipped
- *    silently (not applicable), other failures flag the kind `unverified`.
+ *  - forjas: `api.federation()` specialists (provider/state). A 404
+ *    means the serving Forja does not expose federation → the kind is
+ *    skipped silently (not applicable), other failures flag the kind
+ *    `unverified`.
  *  - capabilities: `store.capabilities()` (id + state).
- *  - skills / agents / mcp / hosts / known-errors: one PortalApi call each;
- *    known-errors = task receipts with `refusal` or `receipt.status != 'ok'`.
+ *  - skills / agents / mcp / hosts: one PortalApi call each.
+ *  - operations + known-errors: `api.tasks()` — every task indexes as
+ *    an operation; tasks with `refusal` or `receipt.status != 'ok'`
+ *    additionally index as known errors.
  *  - docs: `api.docsSearch(q)` per query (server-side deterministic) —
  *    never pre-fetched.
  *
  * Failure of one source never blocks the others: the failed kind is
  * flagged in `unverified()` and the rest of the results still render.
- *
- * Ranking: exact > prefix > substring; kind boost pages > forjas > others;
- * deterministic tie-break by normalized label, then id. Diacritics are
- * folded so `instalacao` matches `Instalação`.
  */
-export type SearchKind =
-  'page' | 'forge' | 'capability' | 'skill' | 'agent' | 'mcp' | 'host' | 'doc' | 'error';
-
-export interface SearchResult {
-  id: string;
-  kind: SearchKind;
-  label: string;
-  sublabel?: string;
-  icon: string;
-  /** Internal navigation target (pages, entities, errors, in-app docs). */
-  route?: string;
-  /** External doc URL — opened in a new tab when present. */
-  url?: string;
-  /** Shell actions (refresh / theme / locale) carry a runnable closure. */
-  run?: () => void;
-}
-
-interface SearchEntry extends SearchResult {
-  /** normalized label — exact/prefix scoring */
-  normLabel: string;
-  /** normalized label + sublabel — substring scoring */
-  norm: string;
-}
-
 interface BuiltIndex {
   entries: SearchEntry[];
   failed: readonly SearchKind[];
 }
-
-export const SEARCH_DEBOUNCE_MS = 250;
-const MAX_RESULTS = 60;
-
-/** Display + boost order: pages first, forjas second, all others equal. */
-export const SEARCH_KIND_ORDER: readonly SearchKind[] = [
-  'page',
-  'forge',
-  'capability',
-  'skill',
-  'agent',
-  'mcp',
-  'host',
-  'doc',
-  'error',
-];
-
-const KIND_RANK: Record<SearchKind, number> = {
-  page: 0,
-  forge: 1,
-  capability: 2,
-  skill: 2,
-  agent: 2,
-  mcp: 2,
-  host: 2,
-  doc: 2,
-  error: 2,
-};
-
-/** i18n keys for group headers / filter chips (reported for the locales). */
-export const SEARCH_KIND_LABEL: Record<SearchKind, string> = {
-  page: 'command.kind.page',
-  forge: 'command.kind.forge',
-  capability: 'command.kind.capability',
-  skill: 'command.kind.skill',
-  agent: 'command.kind.agent',
-  mcp: 'command.kind.mcp',
-  host: 'command.kind.host',
-  doc: 'command.kind.doc',
-  error: 'command.kind.error',
-};
 
 /** Static routes — also the offline fallback when `store.nav()` is empty.
  *  Includes the control-center routes landing from sibling agents
@@ -133,16 +91,6 @@ const STATIC_PAGES: { route: string; labelKey: string; icon: string; capability?
   { route: '/settings', labelKey: 'nav.settings', icon: 'settings' },
   { route: '/config', labelKey: 'nav.config', icon: 'settings' },
 ];
-
-const norm = (s: string): string =>
-  s
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const cmpText = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
@@ -207,7 +155,7 @@ export class SearchService {
       const entries = await this.ensureIndex();
       const docs = q.trim() ? await this.fetchDocs(q.trim(), token) : [];
       if (token !== this.seq) return;
-      this.results.set(this.rank(q.trim(), [...entries, ...docs]));
+      this.results.set(rankSearchEntries(q.trim(), [...entries, ...docs]));
     } finally {
       if (token === this.seq) this.loading.set(false);
     }
@@ -279,7 +227,17 @@ export class SearchService {
       load('host', async () =>
         (await firstValueFrom(this.api.hosts())).map((h) => this.hostEntry(h)),
       ),
-      load('error', async () => this.errorEntries(await firstValueFrom(this.api.tasks()))),
+      // one call feeds both task-derived kinds; a failure flags both.
+      (async () => {
+        try {
+          entries.push(...this.taskEntries(await firstValueFrom(this.api.tasks())));
+        } catch (err) {
+          if (!(err instanceof ApiError && err.status === 404)) {
+            failed.add('operation');
+            failed.add('error');
+          }
+        }
+      })(),
     ]);
 
     return { entries, failed: SEARCH_KIND_ORDER.filter((k) => failed.has(k)) };
@@ -294,62 +252,6 @@ export class SearchService {
       if (token === this.seq) this.docsFailed.set(!(err instanceof ApiError && err.status === 404));
       return [];
     }
-  }
-
-  // -- ranking -------------------------------------------------------------
-
-  private rank(q: string, entries: SearchEntry[]): SearchResult[] {
-    const n = norm(q);
-    if (!n) {
-      return entries
-        .slice()
-        .sort(
-          (a, b) =>
-            KIND_RANK[a.kind] - KIND_RANK[b.kind] ||
-            cmpText(a.normLabel, b.normLabel) ||
-            cmpText(a.id, b.id),
-        )
-        .slice(0, MAX_RESULTS)
-        .map((e) => this.strip(e));
-    }
-    const scored: { e: SearchEntry; s: number }[] = [];
-    for (const e of entries) {
-      let s = -1;
-      if (e.normLabel === n) s = 0;
-      else if (e.normLabel.startsWith(n)) s = 1;
-      else if (e.norm.includes(n)) s = 2;
-      else if (e.kind === 'doc') s = 2; // server-side hit (excerpt/path) — keep, lowest tier
-      if (s >= 0) scored.push({ e, s });
-    }
-    scored.sort(
-      (a, b) =>
-        a.s - b.s ||
-        KIND_RANK[a.e.kind] - KIND_RANK[b.e.kind] ||
-        cmpText(a.e.normLabel, b.e.normLabel) ||
-        cmpText(a.e.id, b.e.id),
-    );
-    return scored.slice(0, MAX_RESULTS).map((x) => this.strip(x.e));
-  }
-
-  private strip(e: SearchEntry): SearchResult {
-    return {
-      id: e.id,
-      kind: e.kind,
-      label: e.label,
-      sublabel: e.sublabel,
-      icon: e.icon,
-      route: e.route,
-      url: e.url,
-      run: e.run,
-    };
-  }
-
-  private mk(r: SearchResult): SearchEntry {
-    return {
-      ...r,
-      normLabel: norm(r.label),
-      norm: norm(`${r.label} ${r.sublabel ?? ''}`),
-    };
   }
 
   // -- sources -------------------------------------------------------------
@@ -370,7 +272,7 @@ export class SearchService {
       }
       seen.add(item.route);
       out.push(
-        this.mk({
+        makeSearchEntry({
           id: `page:${item.route}`,
           kind: 'page',
           label: this.i18n.t(item.label_key),
@@ -384,7 +286,7 @@ export class SearchService {
       if (seen.has(p.route) || !this.capVisible(p.capability)) continue;
       seen.add(p.route);
       out.push(
-        this.mk({
+        makeSearchEntry({
           id: `page:${p.route}`,
           kind: 'page',
           label: this.i18n.t(p.labelKey),
@@ -395,21 +297,21 @@ export class SearchService {
       );
     }
     out.push(
-      this.mk({
+      makeSearchEntry({
         id: 'act:refresh',
         kind: 'page',
         label: this.i18n.t('state.refresh'),
         icon: 'refresh',
         run: () => void this.store.refreshHealth(),
       }),
-      this.mk({
+      makeSearchEntry({
         id: 'act:theme',
         kind: 'page',
         label: this.i18n.t('settings.theme'),
         icon: 'contrast',
         run: () => this.cycleTheme(),
       }),
-      this.mk({
+      makeSearchEntry({
         id: 'act:locale',
         kind: 'page',
         label: this.i18n.t('settings.language'),
@@ -422,7 +324,7 @@ export class SearchService {
 
   private capabilityEntries(): SearchEntry[] {
     return this.store.capabilities().map((c) =>
-      this.mk({
+      makeSearchEntry({
         id: `cap:${c.id}`,
         kind: 'capability',
         label: c.label_key ? this.i18n.t(c.label_key) : c.id,
@@ -434,7 +336,7 @@ export class SearchService {
   }
 
   private forgeEntry(s: FederationSpecialist): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `forge:${s.provider}`,
       kind: 'forge',
       label: s.provider,
@@ -445,7 +347,7 @@ export class SearchService {
   }
 
   private skillEntry(s: SkillDescriptor): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `skill:${s.id}`,
       kind: 'skill',
       label: s.name || s.id,
@@ -456,7 +358,7 @@ export class SearchService {
   }
 
   private agentEntry(a: AgentDescriptor): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `agent:${a.id}`,
       kind: 'agent',
       label: a.name || a.id,
@@ -467,7 +369,7 @@ export class SearchService {
   }
 
   private mcpEntry(s: McpServerDescriptor): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `mcp:${s.id}`,
       kind: 'mcp',
       label: s.id,
@@ -478,7 +380,7 @@ export class SearchService {
   }
 
   private hostEntry(h: HostDetection): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `host:${h.host}`,
       kind: 'host',
       label: h.host,
@@ -488,8 +390,40 @@ export class SearchService {
     });
   }
 
+  /** §8.1 — every recorded task is an operation; the subset carrying a
+   *  refusal or a non-ok receipt additionally indexes as a known error. */
+  private taskEntries(tasks: TaskExecution[]): SearchEntry[] {
+    const out: SearchEntry[] = [];
+    for (const t of tasks) {
+      out.push(
+        makeSearchEntry({
+          id: `op:${t.id}`,
+          kind: 'operation',
+          label: t.label || t.verb,
+          sublabel: [t.verb, t.stage].filter(Boolean).join(' · ') || undefined,
+          icon: 'tasks',
+          route: '/tasks',
+        }),
+      );
+      const status = t.receipt?.['status'];
+      if (t.refusal || (typeof status === 'string' && status !== 'ok')) {
+        out.push(
+          makeSearchEntry({
+            id: `err:${t.id}`,
+            kind: 'error',
+            label: t.refusal ?? (t.label || t.verb),
+            sublabel: [t.verb, t.stage].filter(Boolean).join(' · ') || undefined,
+            icon: 'alert',
+            route: '/tasks',
+          }),
+        );
+      }
+    }
+    return out;
+  }
+
   private docEntry(h: DocHit): SearchEntry {
-    return this.mk({
+    return makeSearchEntry({
       id: `doc:${h.path}`,
       kind: 'doc',
       label: h.title || h.path,
@@ -497,25 +431,6 @@ export class SearchService {
       icon: 'knowledge',
       ...(h.url ? { url: h.url } : { route: '/knowledge' }),
     });
-  }
-
-  private errorEntries(tasks: TaskExecution[]): SearchEntry[] {
-    return tasks
-      .filter((t) => {
-        if (t.refusal) return true;
-        const status = t.receipt?.['status'];
-        return typeof status === 'string' && status !== 'ok';
-      })
-      .map((t) =>
-        this.mk({
-          id: `err:${t.id}`,
-          kind: 'error',
-          label: t.refusal ?? (t.label || t.verb),
-          sublabel: [t.verb, t.stage].filter(Boolean).join(' · ') || undefined,
-          icon: 'alert',
-          route: '/tasks',
-        }),
-      );
   }
 
   // -- actions -------------------------------------------------------------
