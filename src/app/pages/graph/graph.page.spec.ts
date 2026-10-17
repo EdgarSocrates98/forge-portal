@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import cytoscape from 'cytoscape';
 import { GraphPage } from './graph.page';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
@@ -295,5 +296,138 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     // …but no serving Forja → zero declares edges are invented
     expect(fixture.componentInstance.fed()!.edges.some((e) => e.kind === 'declares')).toBe(false);
     expect(el.textContent).toContain('capability:graph');
+  });
+});
+
+describe('GraphPage — §5.6 canvas surface', () => {
+  async function mountCanvas(fixture: Awaited<ReturnType<typeof make>>) {
+    const c = fixture.componentInstance;
+    c.setMode('canvas');
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(c.canvasRenderer()).toBeTruthy());
+    fixture.detectChanges();
+    return c.canvasRenderer()!.nativeHandle() as cytoscape.Core;
+  }
+
+  it('toggles list↔canvas preserving selection and mounts the renderer', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('[data-list="nodes"]')).toBeTruthy();
+    expect(el.querySelector('[data-canvas="graph"]')).toBeNull();
+
+    const forge = c.fed()!.nodes.find((n) => n.id === 'forge:the-forge')!;
+    c.select(forge);
+    const cy = await mountCanvas(fixture);
+
+    expect(el.querySelector('[data-list="nodes"]')).toBeNull();
+    expect(el.querySelector('[data-canvas="graph"]')).toBeTruthy();
+    // selection preserved and mirrored on the canvas with its neighbors lit
+    expect(c.selected()?.id).toBe('forge:the-forge');
+    expect(cy.getElementById('forge:the-forge').selected()).toBe(true);
+    expect(cy.getElementById('capability:graph').hasClass('nh')).toBe(true);
+    // kind legend present
+    expect(el.querySelectorAll('.fed__legend li').length).toBe(7);
+    // back to the list: canvas torn down, state intact
+    c.setMode('list');
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(c.canvasRenderer()).toBeNull());
+    fixture.detectChanges();
+    expect(el.querySelector('[data-list="nodes"]')).toBeTruthy();
+    expect(c.selected()?.id).toBe('forge:the-forge');
+    expect(el.querySelector('[data-section="inspector"]')).toBeTruthy();
+  });
+
+  it('canvas taps drive the node and edge inspectors', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    const cy = await mountCanvas(fixture);
+
+    cy.getElementById('agent:reviewer').emit('tap');
+    fixture.detectChanges();
+    expect(c.selected()?.id).toBe('agent:reviewer');
+    expect(c.selectedEdge()).toBeNull();
+    expect(el.querySelector('[data-section="inspector"]')).toBeTruthy();
+
+    const edge = c.fed()!.edges.find((e) => e.kind === 'associated')!;
+    cy.getElementById(edge.id).emit('tap');
+    fixture.detectChanges();
+    expect(c.selected()).toBeNull();
+    expect(c.selectedEdge()?.id).toBe(edge.id);
+    const panel = el.querySelector('[data-section="edge-inspector"]');
+    expect(panel).toBeTruthy();
+    expect(panel!.textContent).toContain('associated');
+    expect(panel!.textContent).toContain('agent:reviewer');
+    expect(panel!.textContent).toContain('skill:kiro-spec');
+    expect(panel!.textContent).toContain('GET /api/v1/agents');
+
+    cy.emit('tap'); // background tap clears both inspectors
+    fixture.detectChanges();
+    expect(c.selected()).toBeNull();
+    expect(c.selectedEdge()).toBeNull();
+  });
+
+  it('layout pills re-run the layout without dropping selection', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    const cy = await mountCanvas(fixture);
+    cy.getElementById('agent:reviewer').emit('tap');
+    fixture.detectChanges();
+
+    (el.querySelector('[data-layout="grid"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.layoutName()).toBe('grid');
+    expect(c.selected()?.id).toBe('agent:reviewer');
+    expect(cy.getElementById('agent:reviewer').selected()).toBe(true);
+    // reset returns to the active layout name
+    (el.querySelector('[data-action="reset"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.layoutName()).toBe('grid');
+  });
+
+  it('search dims canvas nodes but never drops the selection', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const cy = await mountCanvas(fixture);
+    cy.getElementById('skill:kiro-spec').emit('tap');
+    fixture.detectChanges();
+    c.query.set('kiro');
+    fixture.detectChanges();
+    expect(c.selected()?.id).toBe('skill:kiro-spec');
+    expect(cy.getElementById('skill:kiro-spec').hasClass('dimmed')).toBe(false);
+    expect(cy.getElementById('forge:the-forge').hasClass('dimmed')).toBe(true);
+    c.query.set('');
+    fixture.detectChanges();
+    expect(cy.getElementById('forge:the-forge').hasClass('dimmed')).toBe(false);
+  });
+
+  it('exports SVG markup and honestly skips PNG when headless', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    const downloads: string[] = [];
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
+      downloads.push(this.href);
+    });
+    (el.querySelector('[data-action="svg"]') as HTMLButtonElement).click();
+    expect(downloads.length).toBe(1);
+    expect(downloads[0]).toContain('data:image/svg+xml');
+    const svg = decodeURIComponent(downloads[0].split(',', 2)[1]);
+    expect(svg).toContain('<svg');
+    expect(svg).toContain('kiro-spec');
+    // jsdom has no rasterizer — the PNG button stays silent
+    (el.querySelector('[data-action="png"]') as HTMLButtonElement).click();
+    expect(downloads.length).toBe(1);
+    click.mockRestore();
   });
 });
