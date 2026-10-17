@@ -504,3 +504,81 @@ class TestForgePortalPresence:
         status, env, _ = call(server, "GET", "/api/v1/bootstrap")
         assert status == 200
         assert env["data"]["health"]["forge_portal"]["state"] == "vendored"
+
+
+# ---------------------------------------------------------------------------
+# forge-cli registry state — GET /api/v1/registry/state
+
+
+class TestRegistryState:
+    def test_absent_state_is_honest(self, server, isolated_forge_home):
+        status, env, _ = call(server, "GET", "/api/v1/registry/state")
+        assert status == 200
+        data = env["data"]
+        assert data["schema"] == "forge-cli/RegistryState/v1"
+        assert data["present"] is False
+        assert data["forges"] == {}
+
+    def test_receipts_projected(self, server, isolated_forge_home):
+        state_dir = isolated_forge_home / ".forge-cli" / "forges"
+        state_dir.mkdir(parents=True)
+        (state_dir / "state.json").write_text(
+            json.dumps(
+                {
+                    "forges": {
+                        "api-forge": {
+                            "forge": "api-forge",
+                            "method": "registry",
+                            "dist": "apiforge-af",
+                            "version": "0.1.0",
+                            "bin": "/x/venv/bin/apiforge",
+                            "verifiedHash": "abc123",
+                            "pinned": "0.1.0",
+                            "history": [{"version": "0.0.9", "installedAt": "t"}],
+                        }
+                    }
+                }
+            ),
+            encoding="utf-8",
+        )
+        status, env, _ = call(server, "GET", "/api/v1/registry/state")
+        assert status == 200
+        data = env["data"]
+        assert data["present"] is True
+        rec = data["forges"]["api-forge"]
+        assert rec["version"] == "0.1.0"
+        assert rec["verifiedHash"] == "abc123"
+        assert rec["pinned"] == "0.1.0"
+        assert rec["history"][0]["version"] == "0.0.9"
+
+    def test_malformed_state_reported_not_faked(self, server, isolated_forge_home):
+        state_dir = isolated_forge_home / ".forge-cli" / "forges"
+        state_dir.mkdir(parents=True)
+        (state_dir / "state.json").write_text("{not json", encoding="utf-8")
+        status, env, _ = call(server, "GET", "/api/v1/registry/state")
+        assert status == 200
+        assert env["data"]["present"] is False
+        assert env["data"]["error"] == "malformed"
+
+    def test_wrong_shape_reported(self, server, isolated_forge_home):
+        state_dir = isolated_forge_home / ".forge-cli" / "forges"
+        state_dir.mkdir(parents=True)
+        (state_dir / "state.json").write_text('{"forges": []}', encoding="utf-8")
+        status, env, _ = call(server, "GET", "/api/v1/registry/state")
+        assert status == 200
+        assert env["data"]["present"] is False
+        assert env["data"]["error"] == "malformed"
+
+    def test_non_object_receipts_filtered(self, server, isolated_forge_home):
+        state_dir = isolated_forge_home / ".forge-cli" / "forges"
+        state_dir.mkdir(parents=True)
+        (state_dir / "state.json").write_text(
+            json.dumps({"forges": {"bad": "garbage", "ok": {"version": "1.0.0"}}}),
+            encoding="utf-8",
+        )
+        status, env, _ = call(server, "GET", "/api/v1/registry/state")
+        assert status == 200
+        data = env["data"]
+        assert data["present"] is True
+        assert "bad" not in data["forges"]
+        assert data["forges"]["ok"]["version"] == "1.0.0"
