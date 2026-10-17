@@ -124,13 +124,13 @@ import { UiIcon } from '../../shared/icon';
       font-weight: 550;
     }
     .opt input[type='radio'] {
-      accent-color: var(--accent);
+      accent-color: var(--accent-ink);
     }
     .opt ui-icon {
       color: var(--fg-muted);
     }
     .opt[data-active] ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .kv {
       display: grid;

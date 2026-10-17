@@ -211,13 +211,13 @@ const STATE_ORDER: Record<McpState, number | null> = {
           <table class="table">
             <thead>
               <tr>
-                <th>{{ 'table.id' | t }}</th>
-                <th>{{ 'skills.state' | t }}</th>
-                <th>{{ 'table.host' | t }}</th>
-                <th>{{ 'mcp.surface.tools' | t }}</th>
-                <th>{{ 'mcp.lastVerify' | t }}</th>
-                <th>{{ 'mcp.limitations' | t }}</th>
-                <th>
+                <th scope="col">{{ 'table.id' | t }}</th>
+                <th scope="col">{{ 'skills.state' | t }}</th>
+                <th scope="col">{{ 'table.host' | t }}</th>
+                <th scope="col">{{ 'mcp.surface.tools' | t }}</th>
+                <th scope="col">{{ 'mcp.lastVerify' | t }}</th>
+                <th scope="col">{{ 'mcp.limitations' | t }}</th>
+                <th scope="col">
                   <span class="sr-only">{{ 'state.viewDetails' | t }}</span>
                 </th>
               </tr>
@@ -401,12 +401,12 @@ const STATE_ORDER: Record<McpState, number | null> = {
           <table class="table compat">
             <thead>
               <tr>
-                <th>{{ 'table.id' | t }}</th>
-                <th>{{ 'skills.state' | t }}</th>
+                <th scope="col">{{ 'table.id' | t }}</th>
+                <th scope="col">{{ 'skills.state' | t }}</th>
                 @for (st of stages; track st) {
-                  <th>{{ 'mcpState.' + st | t }}</th>
+                  <th scope="col">{{ 'mcpState.' + st | t }}</th>
                 }
-                <th>{{ 'mcp.limitations' | t }}</th>
+                <th scope="col">{{ 'mcp.limitations' | t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -491,7 +491,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
       gap: var(--space-2);
     }
     .sec__head h2 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .src {
       margin: 4px 0 0;
@@ -610,7 +610,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
       min-width: 0;
     }
     .id ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
       flex: none;
     }
     tr[data-selected] td {
@@ -632,7 +632,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
       min-width: 0;
     }
     .insp__head h3 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .explain {
       margin: var(--space-2) 0 var(--space-3);
@@ -680,7 +680,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
       gap: var(--space-2);
     }
     .surface h4 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .surface p {
       margin: var(--space-2) 0 0;

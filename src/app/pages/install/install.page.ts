@@ -606,10 +606,10 @@ interface HostChoice {
           <table class="table">
             <thead>
               <tr>
-                <th>{{ 'table.task' | t }}</th>
-                <th>{{ 'table.verb' | t }}</th>
-                <th>{{ 'table.stage' | t }}</th>
-                <th>{{ 'table.exit' | t }}</th>
+                <th scope="col">{{ 'table.task' | t }}</th>
+                <th scope="col">{{ 'table.verb' | t }}</th>
+                <th scope="col">{{ 'table.stage' | t }}</th>
+                <th scope="col">{{ 'table.exit' | t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -667,7 +667,7 @@ interface HostChoice {
       border-radius: 50%;
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     }
@@ -772,7 +772,7 @@ interface HostChoice {
       padding: 2px var(--space-2);
       border-radius: var(--radius-sm);
       background: var(--accent-bg);
-      color: var(--accent-strong);
+      color: var(--accent-ink);
       font-family: var(--font-mono);
       font-size: var(--font-xs);
       font-weight: 600;
@@ -792,7 +792,7 @@ interface HostChoice {
       flex: none;
       border-radius: 50%;
       border: 2px solid var(--accent-bg);
-      border-top-color: var(--accent);
+      border-top-color: var(--accent-ink);
       animation: fg-spin 0.8s linear infinite;
     }
     @keyframes fg-spin {
@@ -868,7 +868,7 @@ interface HostChoice {
       overflow-wrap: anywhere;
     }
     .actions li code {
-      color: var(--accent);
+      color: var(--accent-ink);
       flex: none;
     }
     .actions__status {
@@ -898,7 +898,7 @@ interface HostChoice {
       font-weight: 550;
     }
     .repairable {
-      color: var(--accent);
+      color: var(--accent-ink);
       font-size: var(--font-xs);
       font-weight: 650;
     }
@@ -980,7 +980,7 @@ interface HostChoice {
       color: var(--fg-muted);
     }
     .scope input[type='radio'] {
-      accent-color: var(--accent);
+      accent-color: var(--accent-ink);
       margin-top: 2px;
     }
     .scope input[disabled],
@@ -1015,7 +1015,7 @@ interface HostChoice {
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
     }
     .comp input[type='checkbox'] {
-      accent-color: var(--accent);
+      accent-color: var(--accent-ink);
     }
     .comp[data-active] {
       border-color: color-mix(in srgb, var(--accent) 55%, transparent);

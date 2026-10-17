@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PortalStore } from './core/portal/portal.store';
 import { I18nService } from './core/i18n/i18n.service';
 import { TPipe } from './core/i18n/i18n.pipe';
@@ -96,12 +97,17 @@ const NAV: NavEntry[] = [
           </span>
         </a>
 
-        <nav class="nav" id="shell-nav" aria-label="portal">
+        <nav class="nav" id="shell-nav" [attr.aria-label]="'nav.primary' | t">
           @for (group of visibleNav(); track group.key) {
             <div class="nav__group" role="group" [attr.aria-labelledby]="'nav-h-' + group.key">
               <p class="nav__section" [id]="'nav-h-' + group.key">{{ group.label | t }}</p>
               @for (item of group.items; track item.route) {
-                <a class="nav__item" [routerLink]="item.route" routerLinkActive="nav__item--active">
+                <a
+                  class="nav__item"
+                  [routerLink]="item.route"
+                  routerLinkActive="nav__item--active"
+                  ariaCurrentWhenActive="page"
+                >
                   <ui-icon class="nav__icon" [name]="item.icon" [size]="17" />
                   <span class="nav__label">{{ item.label | t }}</span>
                 </a>
@@ -190,9 +196,16 @@ export class App {
   readonly store = inject(PortalStore);
   readonly i18n = inject(I18nService);
   private readonly theme = inject(ThemeStore);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly collapsed = signal(false);
   readonly nav = NAV;
+
+  /** First navigation keeps default focus (skip-link still leads); every
+   *  later navigation moves focus into <main> so keyboard/AT users land
+   *  on the new page's content instead of staying on the old focus. */
+  private navigated = false;
 
   readonly visibleNav = computed(() =>
     this.nav
@@ -217,6 +230,18 @@ export class App {
 
   constructor() {
     void this.store.bootstrap();
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
+      if (!(e instanceof NavigationEnd)) return;
+      if (!this.navigated) {
+        this.navigated = true;
+        return;
+      }
+      const main = document.getElementById('content');
+      if (main) {
+        main.focus();
+        main.scrollTop = 0;
+      }
+    });
   }
 
   toggleLocale(): void {

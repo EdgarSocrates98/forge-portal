@@ -18,6 +18,13 @@ interface Chip {
   unverified: boolean;
 }
 
+const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** External doc hits ride `window.open` — only web-safe schemes ever
+ *  leave the app; anything else (javascript:, data:, vbscript:) is a
+ *  no-op instead of executing adapter-supplied markup. */
+const SAFE_URL = /^(https?:|mailto:|ftp:|\/|#)/i;
+
 /**
  * Global search palette (Ctrl/Cmd+K) — spec §3.6 front-end for
  * `SearchService`. Zero-animation philosophy kept: opens and executes
@@ -46,11 +53,13 @@ interface Chip {
     @if (open()) {
       <div class="cp" (click)="close()">
         <div
+          #panel
           class="cp__panel"
           role="dialog"
           aria-modal="true"
           [attr.aria-label]="'command.open' | t"
           (click)="$event.stopPropagation()"
+          (keydown)="onPanelKey($event)"
         >
           <input
             #inp
@@ -178,7 +187,7 @@ interface Chip {
     .cp__chip[data-active] {
       background: var(--accent-bg);
       border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-      color: var(--accent-strong);
+      color: var(--accent-ink);
     }
     .cp__chip[data-unverified] ui-icon {
       color: var(--warning, var(--accent));
@@ -215,10 +224,10 @@ interface Chip {
     }
     .cp__item[data-active] {
       background: var(--accent-bg);
-      color: var(--accent-strong);
+      color: var(--accent-ink);
     }
     .cp__item[data-active] ui-icon {
-      color: var(--accent-strong);
+      color: var(--accent-ink);
     }
     .cp__label {
       overflow: hidden;
@@ -262,6 +271,8 @@ export class CommandPalette {
 
   private readonly input = viewChild<ElementRef<HTMLInputElement>>('inp');
   private readonly list = viewChild<ElementRef<HTMLUListElement>>('list');
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private prevFocus: HTMLElement | null = null;
 
   /** Visible results — kind-filtered, preserving the service's rank order. */
   readonly flat = computed<SearchResult[]>(() => {
@@ -297,6 +308,7 @@ export class CommandPalette {
     const next = !this.open();
     this.open.set(next);
     if (next) {
+      this.prevFocus = document.activeElement as HTMLElement | null;
       this.query.set('');
       this.filter.set('all');
       this.active.set(0);
@@ -306,7 +318,15 @@ export class CommandPalette {
   }
 
   close(): void {
+    if (!this.open()) return;
     this.open.set(false);
+    // modal dialogs restore focus to the invoking element — otherwise
+    // keyboard users lose their place every time the palette closes
+    const prev = this.prevFocus;
+    this.prevFocus = null;
+    setTimeout(() => {
+      if (prev?.isConnected) prev.focus();
+    });
   }
 
   onQuery(e: Event): void {
@@ -357,6 +377,32 @@ export class CommandPalette {
     }
   }
 
+  /** Tab stays inside the modal panel (aria-modal contract): cycling
+   *  first↔last across input, chips and result actions. */
+  protected onPanelKey(e: KeyboardEvent): void {
+    if (e.key !== 'Tab') return;
+    const el = this.panel()?.nativeElement;
+    if (!el) return;
+    const items = [...el.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+      (n) => !n.hasAttribute('disabled') && n.tabIndex >= 0,
+    );
+    if (items.length === 0) {
+      e.preventDefault();
+      this.input()?.nativeElement.focus();
+      return;
+    }
+    const first = items[0];
+    const last = items[items.length - 1];
+    const activeEl = document.activeElement;
+    const atBoundary = e.shiftKey
+      ? activeEl === first || !el.contains(activeEl)
+      : activeEl === last || !el.contains(activeEl);
+    if (atBoundary) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+  }
+
   setFilter(kind: ChipKind): void {
     this.filter.set(kind);
     this.active.set(0);
@@ -367,7 +413,9 @@ export class CommandPalette {
     this.close();
     if (item.run) item.run();
     else if (item.route) void this.router.navigateByUrl(item.route);
-    else if (item.url) window.open(item.url, '_blank', 'noopener');
+    else if (item.url && SAFE_URL.test(item.url)) {
+      window.open(item.url, '_blank', 'noopener');
+    }
   }
 
   /** Keeps the active row inside the max-h scroll viewport — instant,

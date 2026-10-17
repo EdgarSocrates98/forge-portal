@@ -478,14 +478,14 @@ const norm = (s: string): string =>
     .views strong ui-icon,
     .fed__head ui-icon,
     .fed__detail-head ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .chip,
     .fed__kind,
     .chip-link {
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -530,14 +530,14 @@ const norm = (s: string): string =>
       cursor: pointer;
     }
     .fed__node:hover {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
     }
     .fed__node[data-unverified] {
       border-style: dashed;
       opacity: 0.72;
     }
     .fed__node[data-selected] {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
       box-shadow: 0 0 0 1px var(--accent);
     }
     .fed__node[data-neighbor] {

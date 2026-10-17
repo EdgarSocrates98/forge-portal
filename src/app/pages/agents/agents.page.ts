@@ -234,9 +234,9 @@ type StudioMode = 'cards' | 'table' | 'graph';
             <table class="table cmp__table">
               <thead>
                 <tr>
-                  <th>{{ 'agents.compare.field' | t }}</th>
+                  <th scope="col">{{ 'agents.compare.field' | t }}</th>
                   @for (a of comparePair(); track a.id) {
-                    <th>
+                    <th scope="col">
                       <code>{{ a.id }}</code>
                     </th>
                   }
@@ -454,13 +454,13 @@ type StudioMode = 'cards' | 'table' | 'graph';
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'table.name' | t }}</th>
-                  <th>{{ 'agents.role' | t }}</th>
-                  <th>{{ 'agents.domains' | t }}</th>
-                  <th>{{ 'agents.skills' | t }}</th>
-                  <th>{{ 'agents.compatibleHosts' | t }}</th>
-                  <th>{{ 'skills.state' | t }}</th>
-                  <th>
+                  <th scope="col">{{ 'table.name' | t }}</th>
+                  <th scope="col">{{ 'agents.role' | t }}</th>
+                  <th scope="col">{{ 'agents.domains' | t }}</th>
+                  <th scope="col">{{ 'agents.skills' | t }}</th>
+                  <th scope="col">{{ 'agents.compatibleHosts' | t }}</th>
+                  <th scope="col">{{ 'skills.state' | t }}</th>
+                  <th scope="col">
                     <span class="sr-only">{{ 'table.actions' | t }}</span>
                   </th>
                 </tr>
@@ -596,10 +596,10 @@ type StudioMode = 'cards' | 'table' | 'graph';
       gap: var(--space-2);
     }
     h2 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .role {
-      color: var(--accent);
+      color: var(--accent-ink);
       font-size: var(--font-sm);
       margin: 4px 0;
     }
@@ -655,7 +655,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
       gap: 4px;
       font-size: var(--font-xs);
       font-weight: 600;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 2px 6px 2px 10px;
@@ -807,7 +807,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
     .chip-link {
       font-size: var(--font-xs);
       font-weight: 600;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -819,7 +819,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
     .chip {
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;

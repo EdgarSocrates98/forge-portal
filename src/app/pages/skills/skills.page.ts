@@ -222,11 +222,11 @@ const norm = (s: string): string =>
         <table class="table">
           <thead>
             <tr>
-              <th>{{ 'table.id' | t }}</th>
-              <th>{{ 'skills.domain' | t }}</th>
-              <th>{{ 'skills.state' | t }}</th>
-              <th>{{ 'skills.hosts' | t }}</th>
-              <th>
+              <th scope="col">{{ 'table.id' | t }}</th>
+              <th scope="col">{{ 'skills.domain' | t }}</th>
+              <th scope="col">{{ 'skills.state' | t }}</th>
+              <th scope="col">{{ 'skills.hosts' | t }}</th>
+              <th scope="col">
                 <span class="sr-only">{{ 'state.viewDetails' | t }}</span>
               </th>
             </tr>
@@ -360,7 +360,7 @@ const norm = (s: string): string =>
       gap: var(--space-2);
     }
     .detail__head h2 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .kv {
       display: grid;
@@ -390,7 +390,7 @@ const norm = (s: string): string =>
     .chip-link {
       font-size: var(--font-xs);
       font-weight: 600;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -400,7 +400,7 @@ const norm = (s: string): string =>
     .chip {
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;

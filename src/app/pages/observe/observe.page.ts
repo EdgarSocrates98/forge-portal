@@ -142,13 +142,13 @@ import { Source, stamp } from '../explorer/forges.data';
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'observe.col.kind' | t }}</th>
-                  <th>{{ 'observe.col.at' | t }}</th>
-                  <th>{{ 'observe.col.duration' | t }}</th>
-                  <th>{{ 'observe.col.status' | t }}</th>
-                  <th>{{ 'observe.col.origin' | t }}</th>
-                  <th>{{ 'observe.col.correlation' | t }}</th>
-                  <th>{{ 'observe.col.detail' | t }}</th>
+                  <th scope="col">{{ 'observe.col.kind' | t }}</th>
+                  <th scope="col">{{ 'observe.col.at' | t }}</th>
+                  <th scope="col">{{ 'observe.col.duration' | t }}</th>
+                  <th scope="col">{{ 'observe.col.status' | t }}</th>
+                  <th scope="col">{{ 'observe.col.origin' | t }}</th>
+                  <th scope="col">{{ 'observe.col.correlation' | t }}</th>
+                  <th scope="col">{{ 'observe.col.detail' | t }}</th>
                 </tr>
               </thead>
               <tbody>

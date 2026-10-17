@@ -121,9 +121,9 @@ interface CompareRow {
         <table class="table compare__table">
           <thead>
             <tr>
-              <th>{{ 'profiles.compare.component' | t }}</th>
-              <th>{{ compareA() }}</th>
-              <th>{{ compareB() }}</th>
+              <th scope="col">{{ 'profiles.compare.component' | t }}</th>
+              <th scope="col">{{ compareA() }}</th>
+              <th scope="col">{{ compareB() }}</th>
             </tr>
           </thead>
           <tbody>
@@ -198,7 +198,7 @@ interface CompareRow {
       gap: var(--space-2);
     }
     .card__head h2 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .muted {
       color: var(--fg-muted);
@@ -227,7 +227,7 @@ interface CompareRow {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      color: var(--accent);
+      color: var(--accent-ink);
       font-weight: 600;
       font-size: var(--font-xs);
       background: var(--accent-bg);

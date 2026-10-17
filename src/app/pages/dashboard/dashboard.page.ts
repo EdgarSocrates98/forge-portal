@@ -249,10 +249,10 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'table.id' | t }}</th>
-                  <th>{{ 'skills.state' | t }}</th>
-                  <th>{{ 'explorer.checkout' | t }}</th>
-                  <th>{{ 'mcp.title' | t }}</th>
+                  <th scope="col">{{ 'table.id' | t }}</th>
+                  <th scope="col">{{ 'skills.state' | t }}</th>
+                  <th scope="col">{{ 'explorer.checkout' | t }}</th>
+                  <th scope="col">{{ 'mcp.title' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -371,11 +371,11 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'table.id' | t }}</th>
-                  <th>{{ 'ops.versions.col.installed' | t }}</th>
-                  <th>{{ 'ops.versions.col.pinned' | t }}</th>
-                  <th>{{ 'ops.versions.col.method' | t }}</th>
-                  <th>{{ 'ops.versions.col.source' | t }}</th>
+                  <th scope="col">{{ 'table.id' | t }}</th>
+                  <th scope="col">{{ 'ops.versions.col.installed' | t }}</th>
+                  <th scope="col">{{ 'ops.versions.col.pinned' | t }}</th>
+                  <th scope="col">{{ 'ops.versions.col.method' | t }}</th>
+                  <th scope="col">{{ 'ops.versions.col.source' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -471,10 +471,10 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'table.task' | t }}</th>
-                  <th>{{ 'table.verb' | t }}</th>
-                  <th>{{ 'table.stage' | t }}</th>
-                  <th>{{ 'table.exit' | t }}</th>
+                  <th scope="col">{{ 'table.task' | t }}</th>
+                  <th scope="col">{{ 'table.verb' | t }}</th>
+                  <th scope="col">{{ 'table.stage' | t }}</th>
+                  <th scope="col">{{ 'table.exit' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -549,14 +549,14 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       font-size: var(--font-xs);
       font-weight: 600;
       background: var(--accent-bg);
-      color: var(--accent-strong);
+      color: var(--accent-ink);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
     }
     .fed {
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -635,7 +635,7 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       margin-left: 6px;
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -754,7 +754,7 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       text-decoration: none;
     }
     .shortcut:hover {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
     }
     .shortcut__label {
       flex: 1;

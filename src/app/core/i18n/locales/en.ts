@@ -23,6 +23,7 @@ export const EN: Record<string, string> = {
   'nav.section.operate': 'Operate',
   'nav.section.analyze': 'Analyze',
   'nav.section.settings': 'Settings',
+  'nav.primary': 'Primary navigation',
   'nav.collapse': 'Collapse menu',
   'nav.expand': 'Expand menu',
   'nav.shortcut.collapse': 'Collapse menu (press [)',
