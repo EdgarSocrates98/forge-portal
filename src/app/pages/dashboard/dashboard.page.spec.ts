@@ -8,9 +8,12 @@ import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
 import {
   FederationSnapshot,
+  GraphBundle,
   PortalDescriptor,
   PortalHealth,
+  RegistryState,
   TaskExecution,
+  VersionInfo,
 } from '../../core/api/api.models';
 
 const DESCRIPTOR: PortalDescriptor = {
@@ -90,6 +93,38 @@ const TASKS: TaskExecution[] = [
   },
 ];
 
+const REGISTRY: RegistryState = {
+  schema: 'forge-cli/RegistryState/v1',
+  state_path: '/home/u/.forge-cli/forges/state.json',
+  present: true,
+  forges: {
+    'api-forge': {
+      forge: 'api-forge',
+      method: 'registry',
+      dist: 'apiforge-af',
+      version: '0.1.0',
+      pinned: '0.1.0',
+      verifiedHash: 'abc123',
+    },
+    'platform-forge': { forge: 'platform-forge', method: 'registry', version: '3.0.0' },
+  },
+};
+
+const VERSIONS: VersionInfo = {
+  installed: { version: '1.2.3', origin: 'registry', channel: 'stable' },
+  available: { version: null, source: 'offline' },
+  compat: 'compatible',
+  changelog: null,
+  history: [],
+  rollback: { supported: false },
+};
+
+const GRAPHS: GraphBundle = {
+  availability: { state: 'available' },
+  views: [{ id: 'v1' }],
+  studio_url: null,
+};
+
 function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
   return {
     bootstrap: () => of({ descriptor: DESCRIPTOR, health: HEALTH }),
@@ -102,6 +137,9 @@ function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
     mcpServers: () => of([{ id: 'm1' }]),
     hosts: () => of([{ host: 'claude' }, { host: 'devin' }]),
     tasks: () => of(TASKS),
+    registryState: () => of(REGISTRY),
+    versions: () => of(VERSIONS),
+    graphs: () => of(GRAPHS),
     ...overrides,
   } as unknown as PortalApi;
 }
@@ -210,5 +248,118 @@ describe('DashboardPage', () => {
     const tasks = section(el, 'tasks');
     expect(tasks?.querySelector('ui-empty')).toBeTruthy();
     expect(text(tasks)).toContain('No tasks run in this session.');
+  });
+
+  // ── Cycle 3: operational control center ─────────────────────────
+
+  it('renders actionable alerts linking each one to its resolution page', async () => {
+    const el = (await setup()).nativeElement as HTMLElement;
+    const alerts = section(el, 'alerts');
+    const items = [...(alerts?.querySelectorAll('[data-alert-id]') ?? [])] as HTMLElement[];
+
+    // failing check → /install · BLOCKED specialist → forge detail ·
+    // failed task → /tasks — every alert resolves somewhere real
+    const byId = new Map(items.map((li) => [li.dataset['alertId'], li]));
+    expect(byId.get('check-mcp')?.dataset['severity']).toBe('error');
+    expect(byId.get('check-mcp')?.querySelector('a')?.getAttribute('href')).toBe('/install');
+    expect(text(byId.get('check-mcp'))).toContain('mcp');
+    expect(byId.get('spec-forge-doctor-api')?.querySelector('a')?.getAttribute('href')).toBe(
+      '/forges/forge-doctor-api',
+    );
+    expect(byId.get('tasks-failed')?.querySelector('a')?.getAttribute('href')).toBe('/tasks');
+    // exactly the three real problems — nothing else was invented
+    expect(items.length).toBe(3);
+    expect(alerts?.querySelector('[data-alerts]')?.getAttribute('data-alerts')).toBe('3');
+    // errors sort before warnings and info
+    expect(items[0].dataset['severity']).toBe('error');
+  });
+
+  it('shows the honest empty state when no observed signal reports a problem', async () => {
+    const clean: PortalHealth = { ...HEALTH, checks: [{ id: 'ledger', state: 'PASS' }] };
+    const el = (
+      await setup({
+        bootstrap: () => of({ descriptor: DESCRIPTOR, health: clean }),
+        installationStatus: () => of(clean),
+        federation: () =>
+          of({
+            specialists: [],
+            installed_forges: [],
+            registry: { count: 0, path: '/x' },
+            summary: { catalog: 0, installed: 0, with_mcp: 0, with_checkout: 0 },
+          }),
+        tasks: () => of([]),
+        mcpServers: () => of([]),
+        hosts: () => of([]),
+        registryState: () => of({ ...REGISTRY, forges: {} }),
+      })
+    ).nativeElement as HTMLElement;
+
+    const alerts = section(el, 'alerts');
+    expect(alerts?.querySelectorAll('[data-alert-id]').length).toBe(0);
+    expect(alerts?.querySelector('ui-empty')).toBeTruthy();
+    expect(text(alerts)).toContain('No actionable alerts.');
+  });
+
+  it('renders installed versions from registry receipts, bootstrap and federation', async () => {
+    const el = (await setup()).nativeElement as HTMLElement;
+    const versions = section(el, 'versions');
+    const rows = [...(versions?.querySelectorAll('tbody tr') ?? [])] as HTMLElement[];
+
+    // serving Forja first, then api-forge + platform-forge (registry),
+    // spark-forge-aws + forge-doctor-api (federation, no version key)
+    expect(rows.length).toBe(5);
+    expect(rows[0].hasAttribute('data-serving')).toBe(true);
+    expect(text(rows[0])).toContain('the-forge');
+    expect(text(rows[0])).toContain('1.2.3');
+    expect(text(versions)).toContain('api-forge');
+    expect(text(versions)).toContain('0.1.0');
+    expect(text(versions)).toContain('platform-forge');
+    expect(text(versions)).toContain('3.0.0');
+    expect(text(versions)).toContain('spark-forge-aws');
+    expect(text(versions)).toContain('2.0.0');
+    // no verifiable update → no update chip, never a guessed one
+    expect(versions?.querySelector('[data-update]')).toBeNull();
+  });
+
+  it('shows the update chip only when /versions reports a concrete newer version', async () => {
+    const el = (
+      await setup({
+        versions: () => of({ ...VERSIONS, available: { version: '2.0.0', source: 'offline' } }),
+      })
+    ).nativeElement as HTMLElement;
+    const versions = section(el, 'versions');
+
+    const chip = versions?.querySelector('[data-update]');
+    expect(chip?.getAttribute('data-update')).toBe('2.0.0');
+    // and the alert surfaces too — verifiably, from the same source
+    const alerts = section(el, 'alerts');
+    expect(alerts?.querySelector('[data-alert-id="update-available"]')).toBeTruthy();
+    expect(
+      alerts?.querySelector('[data-alert-id="update-available"] a')?.getAttribute('href'),
+    ).toBe('/versions');
+  });
+
+  it('keeps rendering versions from the remaining sources when the registry is absent', async () => {
+    const el = (
+      await setup({
+        registryState: () =>
+          throwError(() => new ApiError(404, { code: 'PORTAL-NOT-FOUND', message: 'no op' })),
+      })
+    ).nativeElement as HTMLElement;
+    const versions = section(el, 'versions');
+
+    expect(text(versions)).toContain('UNVERIFIED');
+    // bootstrap + federation rows are still real — they must not vanish
+    // (api-forge/platform-forge exist only in the absent registry source)
+    expect(versions?.querySelectorAll('tbody tr').length).toBe(3);
+  });
+
+  it('links diagnostics shortcuts to real pages', async () => {
+    const el = (await setup()).nativeElement as HTMLElement;
+    const diag = section(el, 'diagnostics');
+    const hrefs = [...(diag?.querySelectorAll('a[data-shortcut]') ?? [])].map((a) =>
+      a.getAttribute('href'),
+    );
+    expect(hrefs).toEqual(['/hosts', '/observe', '/config', '/versions', '/mcp', '/tasks']);
   });
 });

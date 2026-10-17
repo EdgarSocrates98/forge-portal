@@ -319,6 +319,34 @@ export interface FederationSnapshot {
   summary: FederationSummary;
 }
 
+/**
+ * forge-cli/RegistryState/v1 — read-only projection of
+ * `~/.forge-cli/forges/state.json` served by `GET /api/v1/registry/state`.
+ * forge-cli is the only writer; receipts arrive whitelisted to
+ * scalars/small containers. `present: false` means absent OR malformed
+ * state — `error` discriminates ('malformed') — never treat as empty.
+ */
+export interface RegistryReceipt {
+  forge?: string;
+  method?: string;
+  dist?: string;
+  version?: string;
+  bin?: string;
+  verifiedHash?: string;
+  pinned?: string;
+  installedAt?: string;
+  history?: { version?: string; installedAt?: string }[];
+  [key: string]: unknown;
+}
+
+export interface RegistryState {
+  schema: 'forge-cli/RegistryState/v1';
+  state_path: string;
+  present: boolean;
+  error?: string;
+  forges: Record<string, RegistryReceipt>;
+}
+
 export interface FederationSelection {
   scope: 'project' | 'workspace' | 'user';
   host: 'all' | 'none' | HostId;

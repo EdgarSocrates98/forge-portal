@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { StateBadge } from '../../shared/state-badge';
@@ -14,7 +15,7 @@ import { CountTile, countLoader, countTiles } from './forges.data';
 @Component({
   selector: 'inventory-panel',
   standalone: true,
-  imports: [TPipe, StateBadge, UiIcon, UiSkeleton],
+  imports: [RouterLink, TPipe, StateBadge, UiIcon, UiSkeleton],
   template: `
     <section class="inv" data-section="inventory">
       <div class="inv__head">
@@ -31,7 +32,7 @@ import { CountTile, countLoader, countTiles } from './forges.data';
           <article class="tile" [attr.data-count-id]="t.id">
             <header>
               <ui-icon [name]="t.icon" [size]="15" />
-              <span class="tile__label">{{ t.labelKey | t }}</span>
+              <a class="tile__label tile__link" [routerLink]="t.route">{{ t.labelKey | t }}</a>
               <button
                 class="tile__reload"
                 (click)="reload(t)"
@@ -99,6 +100,14 @@ import { CountTile, countLoader, countTiles } from './forges.data';
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+    }
+    .tile__link {
+      color: inherit;
+      text-decoration: none;
+    }
+    .tile__link:hover {
+      color: var(--accent-strong);
+      text-decoration: underline;
     }
     .tile__reload {
       display: inline-flex;

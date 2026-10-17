@@ -19,6 +19,7 @@ import {
   PortalCapability,
   PortalHealth,
   ProfileDescriptor,
+  RegistryState,
   SkillDescriptor,
   TaskExecution,
   VersionInfo,
@@ -99,6 +100,9 @@ export class PortalApi {
   }
   federation() {
     return this.get<FederationSnapshot>('/federation');
+  }
+  registryState() {
+    return this.get<RegistryState>('/registry/state');
   }
   federationPlan(input: FederationSelection) {
     return this.post<FederationPlanResponse>('/federation/plan', input);
