@@ -10,18 +10,50 @@ import { UiToastOutlet } from './shared/toast';
 import { UiConfirmHost } from './shared/confirm-dialog';
 
 interface NavEntry {
-  section: string;
+  key: string;
+  label: string;
   items: { route: string; label: string; icon: string; capability?: string }[];
 }
 
+/** Journey-grouped nav — groups mirror real routes only (app.routes.ts);
+ *  `capability` hides an item when the serving Forge declares it
+ *  unsupported, never reorders the journey. */
 const NAV: NavEntry[] = [
   {
-    section: 'nav.section.operate',
+    key: 'overview',
+    label: 'nav.section.overview',
     items: [
       { route: '/dashboard', label: 'nav.dashboard', icon: 'dashboard' },
       { route: '/federation', label: 'nav.federation', icon: 'network', capability: 'federation' },
-      { route: '/forges', label: 'nav.forges', icon: 'compass', capability: 'federation' },
+    ],
+  },
+  {
+    key: 'explore',
+    label: 'nav.section.explore',
+    items: [
+      { route: '/forges', label: 'nav.forges', icon: 'gem', capability: 'federation' },
+      { route: '/agents', label: 'nav.agents', icon: 'agents' },
+      { route: '/skills', label: 'nav.skills', icon: 'skills' },
+      { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
+      { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
+      { route: '/match', label: 'nav.match', icon: 'compass' },
+    ],
+  },
+  {
+    key: 'operate',
+    label: 'nav.section.operate',
+    items: [
       { route: '/tasks', label: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
+      { route: '/install', label: 'nav.install', icon: 'install' },
+      { route: '/profiles', label: 'nav.profiles', icon: 'profiles' },
+      { route: '/hosts', label: 'nav.hosts', icon: 'hosts' },
+      { route: '/config', label: 'nav.config', icon: 'key' },
+    ],
+  },
+  {
+    key: 'analyze',
+    label: 'nav.section.analyze',
+    items: [
       { route: '/graph', label: 'nav.graph', icon: 'graph', capability: 'graph' },
       { route: '/observe', label: 'nav.observe', icon: 'pulse' },
       { route: '/lab', label: 'nav.lab', icon: 'diff' },
@@ -29,24 +61,9 @@ const NAV: NavEntry[] = [
     ],
   },
   {
-    section: 'nav.section.configure',
-    items: [
-      { route: '/install', label: 'nav.install', icon: 'install' },
-      { route: '/config', label: 'nav.config', icon: 'key' },
-      { route: '/profiles', label: 'nav.profiles', icon: 'profiles' },
-      { route: '/hosts', label: 'nav.hosts', icon: 'hosts' },
-      { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
-    ],
-  },
-  {
-    section: 'nav.section.explore',
-    items: [
-      { route: '/skills', label: 'nav.skills', icon: 'skills' },
-      { route: '/agents', label: 'nav.agents', icon: 'agents' },
-      { route: '/match', label: 'nav.match', icon: 'compass' },
-      { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
-      { route: '/settings', label: 'nav.settings', icon: 'settings' },
-    ],
+    key: 'settings',
+    label: 'nav.section.settings',
+    items: [{ route: '/settings', label: 'nav.settings', icon: 'settings' }],
   },
 ];
 
@@ -64,6 +81,9 @@ const NAV: NavEntry[] = [
     UiConfirmHost,
   ],
   styleUrl: './app.css',
+  host: {
+    '(document:keydown)': 'onDocKeydown($event)',
+  },
   template: `
     <a class="skip-link" href="#content">{{ 'nav.skip' | t }}</a>
     <div class="shell">
@@ -76,22 +96,27 @@ const NAV: NavEntry[] = [
           </span>
         </a>
 
-        <nav class="nav" aria-label="portal">
-          @for (section of visibleNav(); track section.section) {
-            <p class="nav__section">{{ section.section | t }}</p>
-            @for (item of section.items; track item.route) {
-              <a class="nav__item" [routerLink]="item.route" routerLinkActive="nav__item--active">
-                <ui-icon class="nav__icon" [name]="item.icon" [size]="17" />
-                <span class="nav__label">{{ item.label | t }}</span>
-              </a>
-            }
+        <nav class="nav" id="shell-nav" aria-label="portal">
+          @for (group of visibleNav(); track group.key) {
+            <div class="nav__group" role="group" [attr.aria-labelledby]="'nav-h-' + group.key">
+              <p class="nav__section" [id]="'nav-h-' + group.key">{{ group.label | t }}</p>
+              @for (item of group.items; track item.route) {
+                <a class="nav__item" [routerLink]="item.route" routerLinkActive="nav__item--active">
+                  <ui-icon class="nav__icon" [name]="item.icon" [size]="17" />
+                  <span class="nav__label">{{ item.label | t }}</span>
+                </a>
+              }
+            </div>
           }
         </nav>
 
         <button
           class="nav__collapse"
-          (click)="collapsed.set(!collapsed())"
+          (click)="toggleCollapsed()"
           [attr.aria-label]="(collapsed() ? 'nav.expand' : 'nav.collapse') | t"
+          [attr.aria-expanded]="!collapsed()"
+          aria-controls="shell-nav"
+          [title]="'nav.shortcut.collapse' | t"
         >
           <ui-icon [name]="collapsed() ? 'chevron-right' : 'chevron-left'" [size]="14" />
         </button>
@@ -196,6 +221,19 @@ export class App {
 
   toggleLocale(): void {
     void this.i18n.applyPreference(this.i18n.locale() === 'pt-BR' ? 'en' : 'pt-BR');
+  }
+
+  toggleCollapsed(): void {
+    this.collapsed.set(!this.collapsed());
+  }
+
+  /** `[` toggles the sidebar — ignored while typing or with modifiers. */
+  protected onDocKeydown(event: KeyboardEvent): void {
+    if (event.key !== '[' || event.ctrlKey || event.metaKey || event.altKey) return;
+    const el = event.target as HTMLElement | null;
+    const tag = el?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return;
+    this.toggleCollapsed();
   }
 
   cycleScheme(): void {

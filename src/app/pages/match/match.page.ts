@@ -204,7 +204,7 @@ type Filter = MatchKind | 'all';
     }
     .fg-pill[data-unverified] {
       border-style: dashed;
-      color: var(--warn);
+      color: var(--unverified);
     }
   `,
 })

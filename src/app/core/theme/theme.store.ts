@@ -13,10 +13,12 @@ const FORGE_ORDER: ForgeId[] = [
   'forge-doctor-api',
 ];
 
-/** Esquema claro/escuro + acento por Forja, aplicados em data-* no <html>. */
+/** Esquema claro/escuro + acento por Forja, aplicados em data-* no <html>.
+ *  Dark is the primary scheme: it is the default when no preference was
+ *  stored; `system` resolves via prefers-color-scheme. */
 @Injectable({ providedIn: 'root' })
 export class ThemeStore {
-  readonly scheme = signal<Scheme>('system');
+  readonly scheme = signal<Scheme>('dark');
   readonly forge = signal<ForgeId>('the-forge');
 
   private media = globalThis.matchMedia?.('(prefers-color-scheme: dark)');

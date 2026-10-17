@@ -15,6 +15,7 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
+import { UiSkeleton } from '../../shared/skeleton';
 import { UiIcon } from '../../shared/icon';
 
 type Phase = 'idle' | 'loading' | 'planning' | 'review' | 'running' | 'done' | 'error';
@@ -26,7 +27,7 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
 @Component({
   selector: 'page-federation',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, ErrorState, UiIcon],
+  imports: [TPipe, PageHeader, StateBadge, ErrorState, UiSkeleton, UiIcon],
   template: `
     <ui-page-header [title]="'federation.title' | t" [subtitle]="'federation.subtitle' | t">
       <button class="btn" [disabled]="busy()" (click)="load()">
@@ -37,9 +38,8 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
 
     @if (phase() === 'loading' && !snapshot()) {
       <section class="card loading" role="status" aria-live="polite">
-        <div class="skeleton skeleton--line" style="width: 42%"></div>
-        <div class="skeleton skeleton--line" style="width: 78%"></div>
-        <div class="skeleton skeleton--block"></div>
+        <ui-skeleton kind="text" [lines]="2" />
+        <ui-skeleton kind="card" />
       </section>
     } @else if (snapshot(); as data) {
       <section class="stats" aria-label="{{ 'federation.summary' | t }}">
