@@ -158,12 +158,14 @@ export function buildForgeRows(
 }
 
 /** Catalog count tile — one Source per endpoint so one failure never
- *  blanks the other tiles. */
+ *  blanks the other tiles. `route` links the tile to the page that owns
+ *  the catalog. */
 export interface CountTile {
   id: 'skills' | 'agents' | 'mcp' | 'hosts';
   icon: string;
   labelKey: string;
   endpoint: string;
+  route: string;
   src: Source<number>;
 }
 
@@ -174,6 +176,7 @@ export function countTiles(): CountTile[] {
       icon: 'skills',
       labelKey: 'skills.title',
       endpoint: 'GET /api/v1/skills',
+      route: '/skills',
       src: new Source<number>(),
     },
     {
@@ -181,6 +184,7 @@ export function countTiles(): CountTile[] {
       icon: 'agents',
       labelKey: 'agents.title',
       endpoint: 'GET /api/v1/agents',
+      route: '/agents',
       src: new Source<number>(),
     },
     {
@@ -188,6 +192,7 @@ export function countTiles(): CountTile[] {
       icon: 'mcp',
       labelKey: 'mcp.title',
       endpoint: 'GET /api/v1/mcp/servers',
+      route: '/mcp',
       src: new Source<number>(),
     },
     {
@@ -195,6 +200,7 @@ export function countTiles(): CountTile[] {
       icon: 'hosts',
       labelKey: 'hosts.title',
       endpoint: 'GET /api/v1/hosts',
+      route: '/hosts',
       src: new Source<number>(),
     },
   ];

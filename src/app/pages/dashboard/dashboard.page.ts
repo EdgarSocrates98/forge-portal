@@ -1,7 +1,15 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
-import { FederationSnapshot, TaskExecution } from '../../core/api/api.models';
+import {
+  FederationSnapshot,
+  GraphBundle,
+  HostDetection,
+  McpServerDescriptor,
+  RegistryState,
+  TaskExecution,
+  VersionInfo,
+} from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -12,12 +20,16 @@ import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
 import { Source, buildForgeRows, stamp } from '../explorer/forges.data';
 import { InventoryPanel } from '../explorer/inventory-panel';
+import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } from './ops.data';
 
 /**
- * Dashboard 360° — one honest section per data source. Each section
- * carries its endpoint label, a refresh control and the timestamp of
- * the last real answer; a failed source degrades only its own section
- * (UNVERIFIED / error panel) while the rest keep rendering real data.
+ * Operational control center — one honest section per data source.
+ * Each section carries its endpoint label, a refresh control and the
+ * timestamp of the last real answer; a failed source degrades only its
+ * own section (UNVERIFIED / error panel) while the rest keep rendering
+ * real data. Alerts derive from already-fetched payloads and always
+ * link to the page where the operator resolves them — nothing is
+ * inferred beyond what each endpoint answered.
  */
 @Component({
   selector: 'page-dashboard',
@@ -114,17 +126,89 @@ import { InventoryPanel } from '../explorer/inventory-panel';
             <span class="stat__value">{{ checksOk() }}/{{ health()?.checks.length ?? 0 }}</span>
             <span class="stat__label">{{ 'dashboard.stat.checks' | t }}</span>
           </div>
+          <div class="stat" [style.--stat-rail]="'var(--accent)'">
+            <span class="stat__value">
+              @if (registryCount() !== null) {
+                {{ registryCount() }}
+              } @else {
+                <ui-state-badge state="UNVERIFIED" />
+              }
+            </span>
+            <span class="stat__label">{{ 'dashboard.stat.registryInstalls' | t }}</span>
+          </div>
+          <div class="stat" [style.--stat-rail]="'var(--info)'">
+            <span class="stat__value">
+              @if (fed.data(); as snap) {
+                {{ snap.specialists.length }}
+              } @else {
+                <ui-state-badge state="UNVERIFIED" />
+              }
+            </span>
+            <span class="stat__label">{{ 'dashboard.stat.discovered' | t }}</span>
+          </div>
           <div class="stat" [style.--stat-rail]="'var(--fg-muted)'">
             <span class="stat__value">{{ descriptor()?.portal_version ?? '—' }}</span>
             <span class="stat__label">{{ 'dashboard.stat.portal' | t }}</span>
           </div>
         </div>
         <p class="src">
-          <code>bootstrap · GET /api/v1/installation/status</code>
+          <code
+            >bootstrap · GET /api/v1/installation/status · GET /api/v1/registry/state · GET
+            /api/v1/federation</code
+          >
           @if (store.refreshedAt(); as ts) {
             <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
           }
         </p>
+      </section>
+
+      <section class="card" data-section="alerts">
+        <div class="sec__head">
+          <div>
+            <h2>
+              {{ 'ops.alerts.title' | t }}
+              @if (alerts().length) {
+                <span class="failn" [attr.data-alerts]="alerts().length">{{
+                  alerts().length
+                }}</span>
+              }
+            </h2>
+            <p class="src">
+              <code>derived · {{ alertSources }}</code>
+            </p>
+          </div>
+          <button class="icon-btn" (click)="refreshAll()" [attr.aria-label]="'state.refresh' | t">
+            <ui-icon name="refresh" [size]="14" />
+          </button>
+        </div>
+        <p class="muted sec__hint">{{ 'ops.alerts.hint' | t }}</p>
+
+        @if (alertsLoading()) {
+          <div role="status"><ui-skeleton kind="row" [lines]="3" /></div>
+        } @else if (alerts().length) {
+          <ul class="alerts">
+            @for (a of alerts(); track a.id) {
+              <li class="alert" [attr.data-severity]="a.severity" [attr.data-alert-id]="a.id">
+                <ui-icon class="alert__icon" name="alert" [size]="15" />
+                <div class="alert__body">
+                  <span>{{ a.titleKey | t: a.params }}</span>
+                  @if (a.detail) {
+                    <small class="alert__detail">{{ a.detail }}</small>
+                  }
+                </div>
+                <a class="alert__go" [routerLink]="a.route"
+                  >{{ a.linkKey | t }}<ui-icon name="chevron-right" [size]="13"
+                /></a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <ui-empty
+            icon="shield-check"
+            [title]="'ops.alerts.empty' | t"
+            [hint]="'ops.alerts.emptyHint' | t"
+          />
+        }
       </section>
 
       <section class="card" data-section="forges">
@@ -250,6 +334,105 @@ import { InventoryPanel } from '../explorer/inventory-panel';
 
       <inventory-panel />
 
+      <section class="card" data-section="versions">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'ops.versions.title' | t }}</h2>
+            <p class="src">
+              <code
+                >GET /api/v1/registry/state · bootstrap · GET /api/v1/federation · GET
+                /api/v1/versions</code
+              >
+              @if (registrySrc.loadedAt(); as ts) {
+                <span> · {{ 'common.updatedAt' | t: { time: stamp(ts) } }}</span>
+              }
+            </p>
+          </div>
+          <button class="icon-btn" (click)="loadVersions()" [attr.aria-label]="'state.refresh' | t">
+            <ui-icon name="refresh" [size]="14" />
+          </button>
+        </div>
+        <p class="muted sec__hint">{{ 'ops.versions.hint' | t }}</p>
+
+        @if (registrySrc.unavailable()) {
+          <div class="unv" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'ops.registry.unavailable' | t }}</span>
+          </div>
+        }
+        @if (registrySrc.error(); as e) {
+          <ui-error [error]="e" (retry)="loadVersions()" />
+        }
+        @if (versionsLoading()) {
+          <div role="status"><ui-skeleton kind="row" [lines]="3" /></div>
+        }
+        @if (versionRows().length) {
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'table.id' | t }}</th>
+                  <th>{{ 'ops.versions.col.installed' | t }}</th>
+                  <th>{{ 'ops.versions.col.pinned' | t }}</th>
+                  <th>{{ 'ops.versions.col.method' | t }}</th>
+                  <th>{{ 'ops.versions.col.source' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of versionRows(); track row.id) {
+                  <tr [attr.data-serving]="row.serving || null">
+                    <td>
+                      <a class="link" [routerLink]="['/forges', row.id]">{{ row.id }}</a>
+                      @if (row.serving) {
+                        <span class="chip">{{ 'explorer.serving' | t }}</span>
+                      }
+                    </td>
+                    <td>
+                      @if (row.version) {
+                        <code>{{ row.version }}</code>
+                      } @else {
+                        <ui-state-badge state="UNVERIFIED" />
+                      }
+                      @if (row.updateTo; as next) {
+                        <span class="chip chip--update" [attr.data-update]="next">
+                          {{ 'ops.versions.update' | t: { version: next } }}
+                        </span>
+                      }
+                    </td>
+                    <td>
+                      @if (row.pinned) {
+                        <code>{{ row.pinned }}</code>
+                      } @else {
+                        <span class="muted">—</span>
+                      }
+                    </td>
+                    <td>
+                      @if (row.method) {
+                        <code>{{ row.method }}</code>
+                      } @else {
+                        <span class="muted">—</span>
+                      }
+                    </td>
+                    <td>
+                      <code class="src-cell">{{ row.source }}</code>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else if (versionsSettled()) {
+          <ui-empty
+            icon="history"
+            [title]="'ops.versions.empty' | t"
+            [hint]="'ops.versions.emptyHint' | t"
+          />
+        }
+        <a class="more" routerLink="/versions">
+          {{ 'state.viewDetails' | t }}<ui-icon name="chevron-right" [size]="14" />
+        </a>
+      </section>
+
       <section class="card" data-section="tasks">
         <div class="sec__head">
           <div>
@@ -318,6 +501,27 @@ import { InventoryPanel } from '../explorer/inventory-panel';
         ) {
           <ui-empty icon="tasks" [title]="'tasks.empty' | t" />
         }
+        <a class="more" routerLink="/tasks">
+          {{ 'state.viewDetails' | t }}<ui-icon name="chevron-right" [size]="14" />
+        </a>
+      </section>
+
+      <section class="card" data-section="diagnostics">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'ops.diagnostics.title' | t }}</h2>
+          </div>
+        </div>
+        <p class="muted sec__hint">{{ 'ops.diagnostics.hint' | t }}</p>
+        <div class="shortcuts">
+          @for (s of shortcuts; track s.route) {
+            <a class="shortcut" [routerLink]="s.route" [attr.data-shortcut]="s.id">
+              <ui-icon [name]="s.icon" [size]="16" />
+              <span class="shortcut__label">{{ s.labelKey | t }}</span>
+              <ui-icon name="chevron-right" [size]="14" />
+            </a>
+          }
+        </div>
       </section>
     }
   `,
@@ -436,6 +640,14 @@ import { InventoryPanel } from '../explorer/inventory-panel';
       border-radius: var(--radius-pill);
       padding: 1px 8px;
     }
+    .chip--update {
+      color: var(--info);
+      background: var(--info-bg);
+    }
+    .src-cell {
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+    }
     .more {
       display: inline-flex;
       align-items: center;
@@ -472,6 +684,81 @@ import { InventoryPanel } from '../explorer/inventory-panel';
       display: block;
       margin-bottom: var(--space-4);
     }
+    .alerts {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: var(--space-2);
+    }
+    .alert {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--alert-fg, var(--border));
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      font-size: var(--font-sm);
+    }
+    .alert[data-severity='error'] {
+      --alert-fg: var(--error);
+      background: color-mix(in srgb, var(--error-bg) 45%, var(--bg-elevated));
+    }
+    .alert[data-severity='warn'] {
+      --alert-fg: var(--warn);
+    }
+    .alert[data-severity='info'] {
+      --alert-fg: var(--info);
+    }
+    .alert__icon {
+      flex-shrink: 0;
+      color: var(--alert-fg, var(--fg-muted));
+    }
+    .alert__body {
+      flex: 1;
+      min-width: 0;
+    }
+    .alert__detail {
+      display: block;
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+    }
+    .alert__go {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .shortcuts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+    .shortcut {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--bg-elevated);
+      color: var(--fg);
+      font-size: var(--font-sm);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .shortcut:hover {
+      border-color: var(--accent);
+    }
+    .shortcut__label {
+      flex: 1;
+    }
   `,
 })
 export class DashboardPage {
@@ -480,6 +767,11 @@ export class DashboardPage {
 
   readonly fed = new Source<FederationSnapshot>();
   readonly tasksSrc = new Source<TaskExecution[]>();
+  readonly registrySrc = new Source<RegistryState>();
+  readonly mcpSrc = new Source<McpServerDescriptor[]>();
+  readonly hostsSrc = new Source<HostDetection[]>();
+  readonly versionsSrc = new Source<VersionInfo>();
+  readonly graphsSrc = new Source<GraphBundle>();
   readonly inventory = viewChild(InventoryPanel);
 
   readonly health = computed(() => this.store.health());
@@ -499,6 +791,72 @@ export class DashboardPage {
   readonly checksOk = computed(
     () => (this.health()?.checks ?? []).filter((c) => c.state === 'PASS').length,
   );
+  readonly registryCount = computed(() => registryInstallCount(this.registrySrc.data()));
+
+  private readonly opsSources = () => [
+    this.fed,
+    this.tasksSrc,
+    this.registrySrc,
+    this.mcpSrc,
+    this.hostsSrc,
+    this.versionsSrc,
+    this.graphsSrc,
+  ];
+
+  /** Skeleton only during the first fan-out — a refresh keeps the last
+   *  derived alerts visible instead of flickering. */
+  readonly alertsLoading = computed(() =>
+    this.opsSources().some((s) => s.loading() && !s.attempted()),
+  );
+
+  readonly alerts = computed(() =>
+    buildAlerts({
+      health: this.health(),
+      accountEnvironment: this.store.accountEnvironment(),
+      federation: this.fed.data(),
+      mcpServers: this.mcpSrc.data(),
+      hosts: this.hostsSrc.data(),
+      tasks: this.tasksSrc.data(),
+      registry: this.registrySrc.data(),
+      versions: this.versionsSrc.data(),
+      graphs: this.graphsSrc.data(),
+    }),
+  );
+
+  readonly versionRows = computed(() =>
+    buildVersionRows({
+      registry: this.registrySrc.data(),
+      federation: this.fed.data(),
+      descriptor: this.descriptor(),
+      versions: this.versionsSrc.data(),
+    }),
+  );
+
+  readonly versionsLoading = computed(
+    () => this.registrySrc.loading() && !this.registrySrc.attempted(),
+  );
+  /** Registry answered (or was attempted) AND no rows exist — the honest
+   *  "nothing installed via forge-cli" empty state. */
+  readonly versionsSettled = computed(
+    () =>
+      this.registrySrc.attempted() &&
+      !this.registrySrc.loading() &&
+      !this.registrySrc.error() &&
+      !this.registrySrc.unavailable(),
+  );
+
+  readonly alertSources =
+    '/health · /federation · /mcp/servers · /hosts · /tasks · /registry/state · /versions · /graphs';
+
+  readonly shortcuts = [
+    { id: 'hosts', route: '/hosts', icon: 'hosts', labelKey: 'nav.hosts' },
+    { id: 'observe', route: '/observe', icon: 'pulse', labelKey: 'nav.observe' },
+    { id: 'config', route: '/config', icon: 'key', labelKey: 'nav.config' },
+    { id: 'versions', route: '/versions', icon: 'history', labelKey: 'nav.versions' },
+    { id: 'mcp', route: '/mcp', icon: 'mcp', labelKey: 'nav.mcp' },
+    { id: 'tasks', route: '/tasks', icon: 'tasks', labelKey: 'nav.tasks' },
+  ] as const;
+
   readonly stamp = stamp;
 
   private readonly capIcons: Record<string, string> = {
@@ -526,6 +884,10 @@ export class DashboardPage {
       this.store.refreshHealth(),
       this.loadFederation(),
       this.loadTasks(),
+      this.loadVersions(),
+      this.loadMcp(),
+      this.loadHosts(),
+      this.loadGraphs(),
       this.inventory()?.loadCounts() ?? Promise.resolve(),
     ]);
   }
@@ -538,10 +900,29 @@ export class DashboardPage {
     await this.tasksSrc.load(() => this.api.tasks());
   }
 
+  /** Installed versions need the registry receipts plus /versions for
+   *  the verifiable "update available" signal. */
+  async loadVersions(): Promise<void> {
+    await Promise.allSettled([
+      this.registrySrc.load(() => this.api.registryState()),
+      this.versionsSrc.load(() => this.api.versions()),
+    ]);
+  }
+
+  async loadMcp(): Promise<void> {
+    await this.mcpSrc.load(() => this.api.mcpServers());
+  }
+
+  async loadHosts(): Promise<void> {
+    await this.hostsSrc.load(() => this.api.hosts());
+  }
+
+  async loadGraphs(): Promise<void> {
+    await this.graphsSrc.load(() => this.api.graphs());
+  }
+
   taskFailed(t: TaskExecution): boolean {
-    const stage = (t.stage || '').toLowerCase();
-    if (['failed', 'refused', 'cancelled'].includes(stage)) return true;
-    return t.exit_code !== null && t.exit_code !== 0;
+    return isFailedTask(t);
   }
 
   taskState(t: TaskExecution): string {

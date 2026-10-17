@@ -743,6 +743,56 @@ export const EN: Record<string, string> = {
   'versions.receipts.operation': 'Operation',
   'versions.receipts.status': 'Status',
   'versions.rollback': 'Rollback',
+
+  // ── Cycle 3: operational control center ─────────────────────────
+  'dashboard.stat.registryInstalls': 'Registry installs',
+  'dashboard.stat.discovered': 'Discovered specialists',
+  'ops.alerts.title': 'Actionable alerts',
+  'ops.alerts.hint':
+    'Each alert opens the page where the problem is resolved — derived from observed signals only.',
+  'ops.alerts.empty': 'No actionable alerts.',
+  'ops.alerts.emptyHint':
+    'All observed signals are ok — alerts only appear when an endpoint reports a real problem.',
+  'ops.alert.installState': 'The installation reports state {state}.',
+  'ops.alert.notInstalled': 'This Forge is not installed.',
+  'ops.alert.checkFailed': 'Check {id} failed.',
+  'ops.alert.env': 'The account environment reports {state}.',
+  'ops.alert.specialist': '{forge} reports state {state}.',
+  'ops.alert.forgeNotInstalled': '{forge} is in the catalog but not installed.',
+  'ops.alert.mcpState': 'MCP server {id} reports {state}.',
+  'ops.alert.mcpNotConfigured': 'MCP server {id} is declared but not configured.',
+  'ops.alert.hostIntegration': 'Host {host} integration reports {state}.',
+  'ops.alert.hostNotIntegrated': 'Host {host} detected, integration not started.',
+  'ops.alert.tasksFailed':
+    '{count, plural, one{# task failed} other{# tasks failed}} in this session.',
+  'ops.alert.registryMalformed':
+    'The forge-cli registry state is malformed — receipts could not be read.',
+  'ops.alert.updateAvailable': 'Update available: {version}.',
+  'ops.alert.pendingUpdates': 'Pending updates reported by the backend.',
+  'ops.alert.noGraph': 'No graph built yet.',
+  'ops.alert.goInstall': 'Go to Installation',
+  'ops.alert.goConfig': 'Go to Configuration',
+  'ops.alert.goForge': 'Open Forge',
+  'ops.alert.goFederation': 'Go to Forge family',
+  'ops.alert.goMcp': 'Go to MCP',
+  'ops.alert.goHosts': 'Go to hosts',
+  'ops.alert.goTasks': 'Go to Tasks',
+  'ops.alert.goVersions': 'Go to Versions',
+  'ops.alert.goGraph': 'Go to Graph',
+  'ops.versions.title': 'Installed versions',
+  'ops.versions.hint': 'One row per real source — forge-cli receipts, bootstrap and federation.',
+  'ops.versions.col.installed': 'Installed',
+  'ops.versions.col.pinned': 'Pinned',
+  'ops.versions.col.method': 'Method',
+  'ops.versions.col.source': 'Source',
+  'ops.versions.update': '→ {version} available',
+  'ops.versions.empty': 'No installed versions recorded.',
+  'ops.versions.emptyHint':
+    'forge-cli receipts appear here when forges are installed via the registry.',
+  'ops.registry.unavailable':
+    'This portal does not expose the forge-cli registry state — data unverified.',
+  'ops.diagnostics.title': 'Diagnostics',
+  'ops.diagnostics.hint': 'Shortcuts to the pages that investigate each signal.',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN
