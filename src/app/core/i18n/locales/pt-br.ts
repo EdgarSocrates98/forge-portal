@@ -798,4 +798,44 @@ export const PT_BR: Record<string, string> = {
     'Este portal não expõe o registry state do forge-cli — dados não verificados.',
   'ops.diagnostics.title': 'Diagnóstico',
   'ops.diagnostics.hint': 'Atalhos para as páginas que investigam cada sinal.',
+
+  // ── Cycle 4: Agent Studio + Execution Intelligence ──────────────
+  'agents.view.label': 'Visualização',
+  'agents.view.cards': 'Cards',
+  'agents.view.table': 'Tabela',
+  'agents.view.graph': 'Grafo',
+  'agents.declaredForge': 'Forja declarada',
+  'agents.undeclared': '(não declarado)',
+  'agents.compare.title': 'Comparar agents',
+  'agents.compare.pick': 'Escolha um segundo agent para comparar.',
+  'agents.compare.clear': 'Limpar',
+  'agents.compare.add': 'Comparar',
+  'agents.compare.remove': 'Remover da comparação',
+  'agents.compare.field': 'Campo',
+  'agents.compare.notDeclared': 'não declarado',
+  'agents.graph.hint':
+    'Visão filtrada do grafo federado — os agents que passam nos filtros mais as skills e Forjas que seus descritores declaram.',
+  'agents.graph.empty': 'Nenhum agent corresponde aos filtros — o subgrafo está vazio.',
+  'agents.graph.aria': 'Canvas do grafo de agents — panorâmica, zoom, arrastar e selecionar nós',
+  'table.name': 'Nome',
+  'table.actions': 'Ações',
+  'table.started': 'Início',
+  'table.finished': 'Fim',
+  'tasks.timeline.title': 'Linha do tempo de execução',
+  'tasks.timeline.hint': 'Registros reais posicionados pelos timestamps de início/fim gravados.',
+  'tasks.timeline.unplaced':
+    '{count, plural, one{# registro} other{# registros}} sem timestamp utilizável — não desenhado.',
+  'tasks.timeline.empty': 'Nenhum registro de tarefa tem timestamp utilizável.',
+  'tasks.refusal': 'Recusa',
+  'tasks.replay.title': 'Eventos registrados',
+  'tasks.replay.hint':
+    'Reprodução dos eventos persistidos em /metrics que compartilham o correlation id desta tarefa — não é uma reexecução.',
+  'tasks.replay.step': 'passo {current} de {total}',
+  'tasks.replay.prev': 'Anterior',
+  'tasks.replay.next': 'Próximo',
+  'tasks.replay.empty': 'Nenhum evento registrado compartilha este correlation id.',
+  'tasks.replay.noCorrelation':
+    'Este registro não tem correlation id — eventos registrados não podem ser vinculados.',
+  'tasks.replay.unavailable':
+    'O endpoint /metrics não respondeu — eventos registrados não verificados.',
 };

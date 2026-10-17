@@ -4,7 +4,7 @@ import { TasksPage } from './tasks.page';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
-import { InstallationReceipt, TaskExecution } from '../../core/api/api.models';
+import { InstallationReceipt, MetricsReport, TaskExecution } from '../../core/api/api.models';
 
 const TASKS: TaskExecution[] = [
   {
@@ -57,11 +57,45 @@ const RECEIPT: InstallationReceipt = {
 const STALE = () =>
   new ApiError(409, { code: 'PORTAL-PLAN-STALE', message: 'plan token is stale' });
 
+const METRICS: MetricsReport = {
+  generated_at: '2026-10-14T00:02:00.000Z',
+  counters: { tasks: 2 },
+  truncated: false,
+  events: [
+    {
+      kind: 'task',
+      at: '2026-10-14T00:00:00.000Z',
+      duration_ms: null,
+      status: 'started',
+      origin: 'tasks',
+      correlation_id: 'corr-abc-123',
+    },
+    {
+      kind: 'task',
+      at: '2026-10-14T00:00:01.500Z',
+      duration_ms: 1500,
+      status: 'completed',
+      origin: 'tasks',
+      correlation_id: 'corr-abc-123',
+      detail: 'install apply finished',
+    },
+    {
+      kind: 'verify',
+      at: '2026-10-14T00:00:03.000Z',
+      duration_ms: 10,
+      status: 'ok',
+      origin: 'verify',
+      correlation_id: 'unrelated',
+    },
+  ],
+};
+
 function fakeApi(overrides: Partial<Record<keyof PortalApi, unknown>> = {}): PortalApi {
   return {
     tasks: vi.fn(() => of(TASKS)),
     tasksPlan: vi.fn(() => of(PLAN)),
     tasksExecute: vi.fn(() => of(RECEIPT)),
+    metrics: vi.fn(() => of(METRICS)),
     ...overrides,
   } as unknown as PortalApi;
 }
@@ -270,5 +304,142 @@ describe('TasksPage — Execution Center', () => {
     expect(c.error()?.body.code).toBe('PORTAL-NOT-FOUND');
     expect(c.pending()).toBeNull();
     expect(el.querySelector('ui-error')).toBeTruthy();
+  });
+});
+
+describe('TasksPage — execution timeline (Cycle 4)', () => {
+  async function setup(overrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
+    const api = fakeApi(overrides);
+    await TestBed.configureTestingModule({
+      imports: [TasksPage],
+      providers: [{ provide: PortalApi, useValue: api }],
+    }).compileComponents();
+    await TestBed.inject(I18nService).applyPreference('en');
+    const fixture = TestBed.createComponent(TasksPage);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return { fixture, api, c: fixture.componentInstance, el: fixture.nativeElement as HTMLElement };
+  }
+
+  it('draws bars only from recorded timestamps — running task is an open bar', async () => {
+    const { c, el } = await setup();
+    const tl = c.timeline();
+    expect(tl.rows.length).toBe(2);
+    expect(tl.rows[0]!.task.id).toBe('t1');
+    expect(tl.rows[1]!.endMs).toBeNull(); // running — open bar
+    const section = el.querySelector('[data-section="timeline"]');
+    expect(section).toBeTruthy();
+    const bars = section!.querySelectorAll('.tl__bar');
+    expect(bars.length).toBe(2);
+    expect(bars[0]!.getAttribute('data-open')).toBeNull();
+    expect(bars[1]!.getAttribute('data-open')).not.toBeNull();
+    // durations come from real finished−started only
+    expect(text(bars[0]!.closest('.tl__row')!.querySelector('.tl__dur'))).toContain('1.5 s');
+    expect(text(bars[1]!.closest('.tl__row')!.querySelector('.tl__dur')).trim()).toBe('—');
+  });
+
+  it('marks the timeline partial when a record carries no usable started_at', async () => {
+    const { c, el } = await setup({
+      tasks: () => of([...TASKS, { ...TASKS[0]!, id: 'ghost', started_at: '', finished_at: null }]),
+    });
+    expect(c.timeline().partial).toBe(true);
+    expect(c.timeline().unplaced.map((t) => t.id)).toEqual(['ghost']);
+    const section = el.querySelector('[data-section="timeline"]')!;
+    expect(section.querySelector('.badge')).toBeTruthy(); // PARTIAL badge
+    expect(section.querySelector('[data-note="unplaced"]')).toBeTruthy();
+    expect(text(section.querySelector('[data-note="unplaced"]'))).toContain('1');
+  });
+
+  it('is absent only when there are no task records at all', async () => {
+    const { el } = await setup({ tasks: () => of([]) });
+    expect(el.querySelector('[data-section="timeline"]')).toBeNull();
+    expect(el.querySelector('[data-section="history"] ui-empty')).toBeTruthy();
+  });
+});
+
+describe('TasksPage — recorded-events replay (Cycle 4)', () => {
+  async function setup(overrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
+    const api = fakeApi(overrides);
+    await TestBed.configureTestingModule({
+      imports: [TasksPage],
+      providers: [{ provide: PortalApi, useValue: api }],
+    }).compileComponents();
+    await TestBed.inject(I18nService).applyPreference('en');
+    const fixture = TestBed.createComponent(TasksPage);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return { fixture, api, c: fixture.componentInstance, el: fixture.nativeElement as HTMLElement };
+  }
+
+  it('opens the task detail and replays only the events that share its correlation id', async () => {
+    const { fixture, c, el } = await setup();
+    c.selectTask(TASKS[0]!);
+    fixture.detectChanges();
+
+    const detail = section(el, 'task-detail');
+    expect(detail).toBeTruthy();
+    expect(text(detail)).toContain('t1');
+    expect(text(detail)).toContain('corr-abc-123');
+
+    const rep = c.replay();
+    expect(rep.state).toBe('ready');
+    expect(rep.steps.map((e) => e.status)).toEqual(['started', 'completed']);
+
+    const replay = section(el, 'replay');
+    expect(replay).toBeTruthy();
+    const steps = replay!.querySelectorAll('.replay__step');
+    expect(steps.length).toBe(2);
+    expect(steps[0]!.getAttribute('data-current')).not.toBeNull();
+    expect(text(steps[1])).toContain('install apply finished');
+
+    // step through: next highlights the second recorded event
+    replay!.querySelector<HTMLElement>('[data-action="next"]')!.click();
+    fixture.detectChanges();
+    expect(c.replayIdx()).toBe(1);
+    expect(steps[1]!.getAttribute('data-current')).not.toBeNull();
+  });
+
+  it('says no-correlation when the task record carries no id — nothing invented', async () => {
+    const { fixture, c, el } = await setup();
+    c.selectTask(TASKS[1]!); // no correlation_id
+    fixture.detectChanges();
+    expect(c.replay().state).toBe('no-correlation');
+    const replay = section(el, 'replay');
+    expect(replay).toBeTruthy();
+    expect(replay!.querySelector('[data-state="no-correlation"]')).toBeTruthy();
+    expect(replay!.querySelectorAll('.replay__step').length).toBe(0);
+  });
+
+  it('is empty (not fabricated) when no recorded event shares the id', async () => {
+    const { fixture, c, el } = await setup({
+      tasks: () => of([{ ...TASKS[0]!, id: 't-x', correlation_id: 'no-events-for-me' }]),
+    });
+    c.selectTask(c.tasks()[0]!);
+    fixture.detectChanges();
+    expect(c.replay().state).toBe('empty');
+    expect(section(el, 'replay')!.querySelector('[data-state="empty"]')).toBeTruthy();
+  });
+
+  it('reports UNVERIFIED when /metrics is absent on this adapter', async () => {
+    const { fixture, c, el } = await setup({
+      metrics: () => throwError(() => new ApiError(404, { code: 'PORTAL-NOT-FOUND' })),
+    });
+    c.selectTask(TASKS[0]!);
+    fixture.detectChanges();
+    expect(c.replay().state).toBe('unavailable');
+    const replay = section(el, 'replay');
+    expect(replay!.querySelector('[data-state="unavailable"]')).toBeTruthy();
+    expect(text(replay)).toContain('UNVERIFIED');
+    // the timeline itself does not depend on /metrics
+    expect(el.querySelector('[data-section="timeline"]')).toBeTruthy();
+  });
+
+  it('selecting via the timeline row opens the same detail card', async () => {
+    const { fixture, c, el } = await setup();
+    const row = el.querySelector<HTMLElement>('[data-section="timeline"] .tl__row')!;
+    row.click();
+    fixture.detectChanges();
+    expect(c.selectedId()).toBe('t1');
+    expect(section(el, 'task-detail')).toBeTruthy();
   });
 });

@@ -181,8 +181,12 @@ function text(v: unknown): string | null {
 /** The descriptor's declared origin Forja — or null. `source:` is only
  *  accepted when it names a forge we already know (an observed provider
  *  or a catalog id); 'catalog'-style provenance labels never become
- *  forges — that would be guessing. */
-function originOf(raw: Record<string, unknown>, knownForges: ReadonlySet<string>): string | null {
+ *  forges — that would be guessing. Exported so the Agent Studio probes
+ *  the same raw keys the graph builder trusts — one honest rule. */
+export function originOf(
+  raw: Record<string, unknown>,
+  knownForges: ReadonlySet<string>,
+): string | null {
   for (const key of ORIGIN_KEYS) {
     const v = text(raw[key]);
     if (v) return v;

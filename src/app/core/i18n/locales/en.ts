@@ -793,6 +793,46 @@ export const EN: Record<string, string> = {
     'This portal does not expose the forge-cli registry state — data unverified.',
   'ops.diagnostics.title': 'Diagnostics',
   'ops.diagnostics.hint': 'Shortcuts to the pages that investigate each signal.',
+
+  // ── Cycle 4: Agent Studio + Execution Intelligence ──────────────
+  'agents.view.label': 'View',
+  'agents.view.cards': 'Cards',
+  'agents.view.table': 'Table',
+  'agents.view.graph': 'Graph',
+  'agents.declaredForge': 'Declared Forja',
+  'agents.undeclared': '(not declared)',
+  'agents.compare.title': 'Compare agents',
+  'agents.compare.pick': 'Pick a second agent to compare.',
+  'agents.compare.clear': 'Clear',
+  'agents.compare.add': 'Compare',
+  'agents.compare.remove': 'Remove from comparison',
+  'agents.compare.field': 'Field',
+  'agents.compare.notDeclared': 'not declared',
+  'agents.graph.hint':
+    'Filtered view of the federated graph — the agents matching the filters plus the skills and Forjas their descriptors declare.',
+  'agents.graph.empty': 'No agent matches the filters — the subgraph is empty.',
+  'agents.graph.aria': 'Agent graph canvas — pan, zoom, drag and select nodes',
+  'table.name': 'Name',
+  'table.actions': 'Actions',
+  'table.started': 'Started',
+  'table.finished': 'Finished',
+  'tasks.timeline.title': 'Execution timeline',
+  'tasks.timeline.hint': 'Real task records positioned by their recorded start/end timestamps.',
+  'tasks.timeline.unplaced':
+    '{count, plural, one{# record} other{# records}} without usable timestamps — not drawn.',
+  'tasks.timeline.empty': 'No task record carries a usable timestamp.',
+  'tasks.refusal': 'Refusal',
+  'tasks.replay.title': 'Recorded events',
+  'tasks.replay.hint':
+    "Playback of persisted /metrics events that share this task's correlation id — not a re-execution.",
+  'tasks.replay.step': 'step {current} of {total}',
+  'tasks.replay.prev': 'Previous',
+  'tasks.replay.next': 'Next',
+  'tasks.replay.empty': 'No recorded event shares this correlation id.',
+  'tasks.replay.noCorrelation':
+    'This task record carries no correlation id — recorded events cannot be linked.',
+  'tasks.replay.unavailable':
+    'The /metrics endpoint did not answer — recorded events are unverified.',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN
