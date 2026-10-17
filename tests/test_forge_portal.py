@@ -19,6 +19,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "portal_core"))
 
 import forge_portal as fp
+import registry_ops as ro
 
 
 class DemoAdapter(fp.PortalAdapter):
@@ -29,7 +30,7 @@ class DemoAdapter(fp.PortalAdapter):
     def __init__(self, assets: Path | None = None) -> None:
         self.assets_dir = assets
         self.install_count = 0
-        self.ops = fp.default_operations(self) + [
+        self.ops = fp.default_operations(self) + ro.registry_operations() + [
             fp.Operation("GET", "/skills", lambda ctx: [{"id": "demo", "api_key": "sekret"}]),
             fp.Operation(
                 "POST",
@@ -582,3 +583,101 @@ class TestRegistryState:
         assert data["present"] is True
         assert "bad" not in data["forges"]
         assert data["forges"]["ok"]["version"] == "1.0.0"
+
+
+# ---------------------------------------------------------------------------
+# P1-003: registry operations — plan → confirm → execute via real forge-cli
+# boundary (mocked at _run_cli/_cli_binary; the HTTP + token path is real).
+
+
+class TestRegistryOps:
+    @pytest.fixture
+    def fake_cli(self, monkeypatch):
+        calls = []
+
+        def _fake(argv, timeout=120.0):
+            calls.append(list(argv))
+            return {"ok": True, "exit": 0, "doc": {"planned": True}, "stderr": ""}
+
+        monkeypatch.setattr(ro, "_run_cli", _fake)
+        monkeypatch.setattr(ro, "_cli_binary", lambda: "/fake/forge-cli")
+        return calls
+
+    def test_plan_returns_token(self, server, fake_cli):
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "install", "forge": "api-forge"},
+        )
+        assert status == 200
+        data = env["data"]
+        assert data["status"] == "planned"
+        assert data["plan_token"]
+        assert fake_cli[0][:4] == ["/fake/forge-cli", "install", "--method", "registry"]
+        assert "--plan" in fake_cli[0] and "--yes" in fake_cli[0]
+
+    def test_execute_requires_confirm_and_token(self, server, fake_cli):
+        status, _env, _ = call(
+            server, "POST", "/api/v1/registry/execute",
+            body={"action": "install", "forge": "api-forge"},
+        )
+        assert status == 400  # missing confirm literal
+
+    def test_execute_happy_path_and_replay_refused(self, server, fake_cli):
+        _, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "pin", "forge": "api-forge"},
+        )
+        plan, token = env["data"]["plan"], env["data"]["plan_token"]
+        status, env2, _ = call(
+            server, "POST", "/api/v1/registry/execute",
+            body={"action": "pin", "forge": "api-forge", "confirm": "execute",
+                  "plan": plan, "plan_token": token},
+        )
+        assert status == 200
+        assert env2["data"]["status"] == "executed"
+        assert env2["data"]["state"]["schema"] == "forge-cli/RegistryState/v1"
+        # replay com o mesmo token consome ⇒ recusa
+        status3, env3, _ = call(
+            server, "POST", "/api/v1/registry/execute",
+            body={"action": "pin", "forge": "api-forge", "confirm": "execute",
+                  "plan": plan, "plan_token": token},
+        )
+        assert status3 == 409
+        assert env3["error"]["code"] == "PORTAL-PLAN-INVALID"
+
+    def test_action_allowlist(self, server, fake_cli):
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "rm -rf /", "forge": "api-forge"},
+        )
+        assert status in (400, 409)
+        assert env["error"]["code"] == "PORTAL-ACTION"
+
+    def test_forge_name_validated(self, server, fake_cli):
+        _status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "install", "forge": "../../etc"},
+        )
+        assert env["error"]["code"] == "PORTAL-FORGE"
+
+    def test_cli_unavailable(self, server, monkeypatch):
+        monkeypatch.setattr(ro, "_cli_binary", lambda: None)
+        status, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "install", "forge": "api-forge"},
+        )
+        assert status == 409
+        assert env["error"]["code"] == "PORTAL-CLI-UNAVAILABLE"
+
+    def test_plan_mismatch_refused(self, server, fake_cli):
+        _, env, _ = call(
+            server, "POST", "/api/v1/registry/plan",
+            body={"action": "install", "forge": "api-forge"},
+        )
+        plan, token = env["data"]["plan"], env["data"]["plan_token"]
+        _, env2, _ = call(
+            server, "POST", "/api/v1/registry/execute",
+            body={"action": "uninstall", "forge": "api-forge", "confirm": "execute",
+                  "plan": plan, "plan_token": token},
+        )
+        assert env2["error"]["code"] == "PORTAL-PLAN-MISMATCH"

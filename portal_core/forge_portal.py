@@ -824,6 +824,7 @@ class PortalServer(ThreadingHTTPServer):
         self.adapter = adapter
         self.session_token = secrets.token_urlsafe(24)
         self._plan_secret = secrets.token_bytes(32)
+        self._used_plans: set[str] = set()
         self.rate_limiter = RateLimiter()
         self._quiet = quiet
         self._executor = __import__("concurrent.futures", fromlist=["ThreadPoolExecutor"]).ThreadPoolExecutor(
@@ -845,6 +846,18 @@ class PortalServer(ThreadingHTTPServer):
 
     def check_plan(self, token: str, plan: dict) -> bool:
         return check_plan_token(self._plan_secret, token, plan)
+
+    def consume_plan(self, token: str, plan: dict) -> bool:
+        """check_plan + marca uso — replay da mesma confirmação recusa."""
+        digest = hashlib.sha256(token.encode()).hexdigest()
+        if digest in self._used_plans:
+            return False
+        if not check_plan_token(self._plan_secret, token, plan):
+            return False
+        self._used_plans.add(digest)
+        if len(self._used_plans) > 4096:
+            self._used_plans = set(list(self._used_plans)[-2048:])
+        return True
 
     # -- public API ---------------------------------------------------------
     @property
