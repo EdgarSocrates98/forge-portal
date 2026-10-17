@@ -129,6 +129,17 @@ describe('AgentsPage — Agent Studio', () => {
     expect(c.filtered().map((a) => a.id)).toEqual(['spark-runner']);
   });
 
+  it('seeds the search from the ?q= route input — skills/agents deep links land here', async () => {
+    setup();
+    const fixture = TestBed.createComponent(AgentsPage);
+    fixture.componentRef.setInput('q', 'spark');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.query()).toBe('spark');
+    expect(fixture.componentInstance.filtered().map((a) => a.id)).toEqual(['spark-runner']);
+  });
+
   it('filters by host and by declared Forja — undeclared is its own bucket', async () => {
     setup();
     const fixture = await make();

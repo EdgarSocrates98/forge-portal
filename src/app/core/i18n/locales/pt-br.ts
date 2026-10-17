@@ -373,6 +373,7 @@ export const PT_BR: Record<string, string> = {
   'graph.fed.kind': 'Tipo',
   'graph.fed.verification': 'Verificação',
   'graph.fed.observed': 'observado',
+  'entity.openIn': 'Abrir em',
   'graph.fed.impact': 'Impacto direto',
   'graph.fed.noImpact': 'Nenhuma aresta registrada para este nó.',
   'graph.fed.empty': 'Nenhum nó corresponde aos filtros.',
@@ -654,6 +655,7 @@ export const PT_BR: Record<string, string> = {
   // mcp operations center (§4.3)
   'mcp.safety': 'A verificação de handshake é somente-leitura — o portal nunca invoca tools MCP.',
   'mcp.host.unbound': 'não vinculado a host',
+  'mcp.host.open': 'Abrir este host na página de hosts',
   'mcp.inspector': 'Inspetor',
   'mcp.selectHint': 'Selecione um servidor no registro para inspecioná-lo.',
   'mcp.detail': 'Detalhe',
@@ -703,6 +705,7 @@ export const PT_BR: Record<string, string> = {
   'skills.actionsUnverified':
     'Ops de instalação/reparo não expostas por este adapter — não verificado',
   'skills.notExposed': 'Não exposto por este adapter — não verificado',
+  'skills.agentsLink': 'Agentes que a declaram',
   'skills.evidence': 'Evidência',
   'skills.dedup.title': 'Colisões de nome',
   'skills.dedup.hint': 'Linhas com mesmo nome são sinalizadas para revisão — nunca mescladas.',
@@ -726,6 +729,7 @@ export const PT_BR: Record<string, string> = {
 
   // execution center (§5.3)
   'tasks.correlation': 'Correlação',
+  'tasks.events': 'Ver eventos correlacionados',
   'tasks.executing': 'Executando plano…',
   'tasks.export': 'Exportar recibo',
   'tasks.stale.title': 'Plano expirado',
@@ -754,6 +758,7 @@ export const PT_BR: Record<string, string> = {
     'Exibindo uma janela limitada — eventos mais antigos foram descartados para manter o relatório pequeno.',
   'observe.filter.kind': 'Tipo',
   'observe.filter.status': 'Status',
+  'observe.filter.corr': 'Correlação',
   'observe.col.kind': 'Tipo',
   'observe.col.at': 'Quando',
   'observe.col.duration': 'Duração',

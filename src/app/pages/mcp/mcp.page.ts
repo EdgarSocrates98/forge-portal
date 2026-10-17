@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { InstallationReceipt, McpServerDescriptor, McpState } from '../../core/api/api.models';
@@ -60,7 +61,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
 @Component({
   selector: 'page-mcp',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [RouterLink, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
   template: `
     <ui-page-header [title]="'mcp.title' | t" [subtitle]="'mcp.subtitle' | t">
       <button class="btn btn--primary" data-action="verify" [disabled]="busy()" (click)="verify()">
@@ -234,7 +235,16 @@ const STATE_ORDER: Record<McpState, number | null> = {
                   <td><ui-state-badge [state]="s.state" /></td>
                   <td>
                     @if (s.host) {
-                      <code>{{ s.host }}</code>
+                      <!-- bound_to is a declared descriptor field — the
+                           link targets the real #host-<id> anchor on the
+                           hosts page; unbound stays unlinked. -->
+                      <a
+                        class="linklike mono"
+                        [routerLink]="['/hosts']"
+                        [fragment]="'host-' + s.host"
+                        [attr.title]="'mcp.host.open' | t"
+                        >{{ s.host }}</a
+                      >
                     } @else {
                       <span class="muted" data-unbound>{{ 'mcp.host.unbound' | t }}</span>
                     }
@@ -289,98 +299,106 @@ const STATE_ORDER: Record<McpState, number | null> = {
       </div>
 
       @if (selected(); as s) {
-        <header class="insp__head">
-          <h3>
-            <ui-icon name="mcp" [size]="16" />
-            <code>{{ s.id }}</code>
-          </h3>
-          <ui-state-badge [state]="s.state" />
-        </header>
-        <p class="explain">{{ explainKey(s.state) | t }}</p>
-
-        <dl class="kv">
-          <div>
-            <dt>{{ 'table.id' | t }}</dt>
-            <dd>
+        <div class="fg-enter">
+          <header class="insp__head">
+            <h3>
+              <ui-icon name="mcp" [size]="16" />
               <code>{{ s.id }}</code>
-            </dd>
-          </div>
-          <div>
-            <dt>{{ 'skills.state' | t }}</dt>
-            <dd>
-              <ui-state-badge [state]="s.state" />
-            </dd>
-          </div>
-          <div>
-            <dt>{{ 'table.host' | t }}</dt>
-            <dd>
-              @if (s.host) {
-                <code>{{ s.host }}</code>
-              } @else {
-                <span class="muted">{{ 'mcp.host.unbound' | t }}</span>
+            </h3>
+            <ui-state-badge [state]="s.state" />
+          </header>
+          <p class="explain">{{ explainKey(s.state) | t }}</p>
+
+          <dl class="kv">
+            <div>
+              <dt>{{ 'table.id' | t }}</dt>
+              <dd>
+                <code>{{ s.id }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'skills.state' | t }}</dt>
+              <dd>
+                <ui-state-badge [state]="s.state" />
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'table.host' | t }}</dt>
+              <dd>
+                @if (s.host) {
+                  <a
+                    class="linklike mono"
+                    [routerLink]="['/hosts']"
+                    [fragment]="'host-' + s.host"
+                    [attr.title]="'mcp.host.open' | t"
+                    >{{ s.host }}</a
+                  >
+                } @else {
+                  <span class="muted">{{ 'mcp.host.unbound' | t }}</span>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'mcp.surface.tools' | t }}</dt>
+              <dd>
+                @if (s.tools_count !== null) {
+                  {{ 'mcp.tools' | t: { count: s.tools_count } }}
+                } @else {
+                  <ui-state-badge state="UNVERIFIED" />
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'mcp.lastVerify' | t }}</dt>
+              <dd>
+                @if (s.last_verify) {
+                  {{ fmt(s.last_verify) }}
+                } @else {
+                  <span class="muted">{{ 'mcp.never' | t }}</span>
+                }
+              </dd>
+            </div>
+            @if (s.detail) {
+              <div>
+                <dt>{{ 'mcp.detail' | t }}</dt>
+                <dd>{{ s.detail }}</dd>
+              </div>
+            }
+          </dl>
+
+          @if (s.limitations?.length) {
+            <h3 class="subhead">{{ 'mcp.limitations' | t }}</h3>
+            <ul class="limits">
+              @for (l of s.limitations; track l) {
+                <li>{{ l }}</li>
               }
-            </dd>
-          </div>
-          <div>
-            <dt>{{ 'mcp.surface.tools' | t }}</dt>
-            <dd>
+            </ul>
+          }
+
+          <!-- Explorers: adapters report only tools_count — listings are
+             never invented; unexposed surfaces render UNVERIFIED. -->
+          <div class="surfaces">
+            <section class="surface" data-surface="tools">
+              <h4><ui-icon name="settings" [size]="14" />{{ 'mcp.surface.tools' | t }}</h4>
               @if (s.tools_count !== null) {
-                {{ 'mcp.tools' | t: { count: s.tools_count } }}
+                <p class="surface__value">{{ 'mcp.tools' | t: { count: s.tools_count } }}</p>
+                <p class="muted">{{ 'mcp.surface.countOnly' | t }}</p>
               } @else {
                 <ui-state-badge state="UNVERIFIED" />
+                <p class="muted">{{ 'mcp.surface.noTools' | t }}</p>
               }
-            </dd>
-          </div>
-          <div>
-            <dt>{{ 'mcp.lastVerify' | t }}</dt>
-            <dd>
-              @if (s.last_verify) {
-                {{ fmt(s.last_verify) }}
-              } @else {
-                <span class="muted">{{ 'mcp.never' | t }}</span>
-              }
-            </dd>
-          </div>
-          @if (s.detail) {
-            <div>
-              <dt>{{ 'mcp.detail' | t }}</dt>
-              <dd>{{ s.detail }}</dd>
-            </div>
-          }
-        </dl>
-
-        @if (s.limitations?.length) {
-          <h3 class="subhead">{{ 'mcp.limitations' | t }}</h3>
-          <ul class="limits">
-            @for (l of s.limitations; track l) {
-              <li>{{ l }}</li>
-            }
-          </ul>
-        }
-
-        <!-- Explorers: adapters report only tools_count — listings are
-             never invented; unexposed surfaces render UNVERIFIED. -->
-        <div class="surfaces">
-          <section class="surface" data-surface="tools">
-            <h4><ui-icon name="settings" [size]="14" />{{ 'mcp.surface.tools' | t }}</h4>
-            @if (s.tools_count !== null) {
-              <p class="surface__value">{{ 'mcp.tools' | t: { count: s.tools_count } }}</p>
-              <p class="muted">{{ 'mcp.surface.countOnly' | t }}</p>
-            } @else {
+            </section>
+            <section class="surface" data-surface="resources">
+              <h4><ui-icon name="folder" [size]="14" />{{ 'mcp.surface.resources' | t }}</h4>
               <ui-state-badge state="UNVERIFIED" />
-              <p class="muted">{{ 'mcp.surface.noTools' | t }}</p>
-            }
-          </section>
-          <section class="surface" data-surface="resources">
-            <h4><ui-icon name="folder" [size]="14" />{{ 'mcp.surface.resources' | t }}</h4>
-            <ui-state-badge state="UNVERIFIED" />
-            <p class="muted">{{ 'mcp.surface.notExposed' | t }}</p>
-          </section>
-          <section class="surface" data-surface="prompts">
-            <h4><ui-icon name="terminal" [size]="14" />{{ 'mcp.surface.prompts' | t }}</h4>
-            <ui-state-badge state="UNVERIFIED" />
-            <p class="muted">{{ 'mcp.surface.notExposed' | t }}</p>
-          </section>
+              <p class="muted">{{ 'mcp.surface.notExposed' | t }}</p>
+            </section>
+            <section class="surface" data-surface="prompts">
+              <h4><ui-icon name="terminal" [size]="14" />{{ 'mcp.surface.prompts' | t }}</h4>
+              <ui-state-badge state="UNVERIFIED" />
+              <p class="muted">{{ 'mcp.surface.notExposed' | t }}</p>
+            </section>
+          </div>
         </div>
       } @else {
         <p class="muted">{{ 'mcp.selectHint' | t }}</p>
@@ -718,10 +736,16 @@ export class McpPage {
   private readonly api = inject(PortalApi);
   private readonly toast = inject(ToastService);
 
+  /** Route `?server=` deep-link — graph/knowledge inspectors land here.
+   *  Applied once per distinct value; an id no server matches is
+   *  consumed silently — never a fake selection. */
+  readonly server = input('');
+
   /** Registry slice — 404 → unavailable (UNVERIFIED), other → error. */
   readonly src = new Source<McpServerDescriptor[]>();
   readonly servers = computed(() => this.src.data() ?? []);
   readonly selectedId = signal<string | null>(null);
+  private readonly deepApplied = signal<string | null>(null);
   readonly selected = computed(
     () => this.servers().find((s) => s.id === this.selectedId()) ?? null,
   );
@@ -740,6 +764,12 @@ export class McpPage {
   readonly stamp = stamp;
 
   constructor() {
+    effect(() => {
+      const id = this.server();
+      if (!id || id === this.deepApplied() || !this.src.attempted()) return;
+      this.deepApplied.set(id);
+      if (this.servers().some((s) => s.id === id)) this.selectedId.set(id);
+    });
     void this.load();
   }
 

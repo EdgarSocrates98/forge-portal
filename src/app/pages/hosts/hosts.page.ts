@@ -145,6 +145,7 @@ interface HostCheck {
           <article
             class="card host"
             data-lift
+            [attr.id]="'host-' + h.host"
             [attr.data-off]="!h.detected || null"
             [attr.data-host]="h.host"
           >
@@ -373,6 +374,15 @@ interface HostCheck {
          WCAG AA (axe §1.4.3) — desaturate + dashed border instead */
       filter: grayscale(0.6);
       border-style: dashed;
+    }
+    /* #host-<id> anchors — fragment links from MCP/agent surfaces land
+       here; a breathing room keeps the card off the viewport edge. */
+    .host[id] {
+      scroll-margin-top: var(--space-4);
+    }
+    .host[id]:target {
+      border-color: var(--accent-ink);
+      box-shadow: 0 0 0 1px var(--accent);
     }
     .card__head,
     .outcome__head {

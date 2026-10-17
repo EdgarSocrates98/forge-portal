@@ -364,11 +364,14 @@ type DetailView =
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      min-height: 24px;
       margin-bottom: var(--space-3);
+      padding-block: 2px;
       font-size: var(--font-sm);
       font-weight: 600;
       color: var(--fg-muted);
       text-decoration: none;
+      transition: color var(--motion-fast);
     }
     .back:hover {
       color: var(--fg);

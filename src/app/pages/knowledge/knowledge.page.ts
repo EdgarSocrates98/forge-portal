@@ -37,6 +37,7 @@ import {
   skillsInDomain,
 } from '../../core/search/recommend.data';
 import { normalizeSearchText } from '../../core/search/search.data';
+import { EntityLink, entityLink } from '../../core/graph/entity-link';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -203,8 +204,8 @@ const KIND_ICON: Record<FedNodeKind, string> = {
                   (click)="select(n)"
                 >
                   <ui-icon [name]="kindIcon(n.kind)" [size]="14" />
-                  <span class="node__label">{{ n.label }}</span>
-                  <code class="node__id">{{ n.id }}</code>
+                  <span class="node__label" [attr.title]="n.label">{{ n.label }}</span>
+                  <code class="node__id" [attr.title]="n.id">{{ n.id }}</code>
                   @if (n.unverified) {
                     <ui-state-badge state="unverified" />
                   }
@@ -220,7 +221,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       </section>
 
       @if (selected(); as sel) {
-        <section class="card detail" data-section="inspector" aria-live="polite">
+        <section class="card detail fg-enter" data-section="inspector" aria-live="polite">
           <header class="sec-head">
             <h2>
               <ui-icon [name]="kindIcon(sel.kind)" [size]="15" />{{ sel.label }}
@@ -228,13 +229,28 @@ const KIND_ICON: Record<FedNodeKind, string> = {
                 <ui-state-badge state="unverified" />
               }
             </h2>
-            <button
-              class="icon-btn"
-              (click)="selected.set(null)"
-              [attr.aria-label]="'state.close' | t"
-            >
-              <ui-icon name="chevron-right" [size]="14" />
-            </button>
+            <span class="detail__actions">
+              <!-- Contextual navigation — only kinds with a real owning
+                   page get a link (entity-link.ts); capabilities don't. -->
+              @if (openLink(sel); as link) {
+                <a
+                  class="btn btn--mini"
+                  [routerLink]="link.commands"
+                  [queryParams]="link.queryParams ?? null"
+                  [fragment]="link.fragment"
+                >
+                  {{ 'entity.openIn' | t }} {{ link.navKey | t }}
+                  <ui-icon name="chevron-right" [size]="13" />
+                </a>
+              }
+              <button
+                class="icon-btn"
+                (click)="selected.set(null)"
+                [attr.aria-label]="'state.close' | t"
+              >
+                <ui-icon name="chevron-right" [size]="14" />
+              </button>
+            </span>
           </header>
           <dl class="kv">
             <div>
@@ -497,6 +513,14 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       cursor: pointer;
       background: transparent;
     }
+    /* one transition vocabulary for every hoverable surface below */
+    .node,
+    .hit,
+    .rec {
+      transition:
+        border-color var(--motion-fast),
+        box-shadow var(--motion-fast);
+    }
     .node ui-icon {
       color: var(--fg-muted);
       flex: none;
@@ -506,29 +530,37 @@ const KIND_ICON: Record<FedNodeKind, string> = {
     }
     .node[data-unverified] {
       border-style: dashed;
-      opacity: 0.72;
+      /* no opacity: alpha < 1 dims the badge text below AA — a
+         translucent surface keeps the "not yet observed" cue legal */
+      background: color-mix(in srgb, var(--bg-elevated) 55%, transparent);
     }
     .node[data-selected] {
       border-color: var(--accent-ink);
       box-shadow: 0 0 0 1px var(--accent);
     }
-    .node__label {
+    .node__label,
+    .node__id {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       min-width: 0;
+    }
+    .node__label,
+    .doc-title {
       font-weight: 600;
     }
     .node__id {
       margin-left: auto;
       color: var(--fg-muted);
       font-size: var(--font-xs);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
     .detail {
       border-left: 3px solid var(--accent);
+    }
+    .detail__actions {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
     }
     .kv {
       display: grid;
@@ -568,32 +600,24 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       gap: var(--space-1);
       font-size: var(--font-sm);
     }
-    .edge-ev {
+    .edge-ev,
+    .rec__src {
       color: var(--fg-muted);
       font-size: var(--font-xs);
     }
-    .chip,
-    .chip-link {
-      font-size: var(--font-xs);
-      font-weight: 700;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
-      flex: none;
-    }
-    .chip-link {
-      border: 0;
-      cursor: pointer;
-    }
-    .doc-title {
-      font-weight: 600;
-    }
+    /* .chip/.chip-link consolidated into styles.css shared blocks */
     .hit {
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: var(--space-3);
       margin-bottom: var(--space-2);
+    }
+    .hit:hover,
+    .rec:hover {
+      border-color: var(--border-strong);
+    }
+    .hit:hover {
+      box-shadow: var(--elev-hover);
     }
     .hit h3 {
       margin: 0 0 6px;
@@ -614,7 +638,8 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .hit .btn {
+    .hit .btn,
+    .rec footer .btn {
       margin-left: auto;
     }
     .cat {
@@ -673,13 +698,6 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       flex-wrap: wrap;
       align-items: center;
       gap: var(--space-1) var(--space-2);
-    }
-    .rec__src {
-      color: var(--fg-muted);
-      font-size: var(--font-xs);
-    }
-    .rec footer .btn {
-      margin-left: auto;
     }
   `,
 })
@@ -883,6 +901,12 @@ export class KnowledgePage {
 
   label(id: string): string {
     return this.nodeById().get(id)?.label ?? id;
+  }
+
+  /** Deep link into the page that owns this entity — null for kinds
+   *  with no dedicated surface (capability), never a pretend link. */
+  openLink(n: FedNode): EntityLink | null {
+    return entityLink(n);
   }
 
   endpointFor(src: FedSource): string {

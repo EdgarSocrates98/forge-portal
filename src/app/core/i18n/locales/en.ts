@@ -373,6 +373,7 @@ export const EN: Record<string, string> = {
   'graph.fed.search': 'Search nodes by name or id…',
   'graph.fed.kind': 'Kind',
   'graph.fed.verification': 'Verification',
+  'entity.openIn': 'Open in',
   'graph.fed.observed': 'observed',
   'graph.fed.impact': 'Direct impact',
   'graph.fed.noImpact': 'No edges recorded for this node.',
@@ -651,6 +652,7 @@ export const EN: Record<string, string> = {
   // mcp operations center (§4.3)
   'mcp.safety': 'Handshake verification is read-only — the portal never invokes MCP tools.',
   'mcp.host.unbound': 'not host-bound',
+  'mcp.host.open': 'Open this host on the Hosts page',
   'mcp.inspector': 'Inspector',
   'mcp.selectHint': 'Select a server in the registry to inspect it.',
   'mcp.detail': 'Detail',
@@ -698,6 +700,7 @@ export const EN: Record<string, string> = {
   'skills.actions': 'Install / repair',
   'skills.actionsUnverified': 'Install/repair ops are not exposed by this adapter — unverified',
   'skills.notExposed': 'Not exposed by this adapter — unverified',
+  'skills.agentsLink': 'Declaring agents',
   'skills.evidence': 'Evidence',
   'skills.dedup.title': 'Name collisions',
   'skills.dedup.hint': 'Same-name rows are flagged for review — never merged.',
@@ -720,6 +723,7 @@ export const EN: Record<string, string> = {
 
   // execution center (§5.3)
   'tasks.correlation': 'Correlation',
+  'tasks.events': 'View correlated events',
   'tasks.executing': 'Executing plan…',
   'tasks.export': 'Export receipt',
   'tasks.stale.title': 'Plan expired',
@@ -748,6 +752,7 @@ export const EN: Record<string, string> = {
     'Showing a bounded window — older events were dropped to keep the report small.',
   'observe.filter.kind': 'Kind',
   'observe.filter.status': 'Status',
+  'observe.filter.corr': 'Correlation',
   'observe.col.kind': 'Kind',
   'observe.col.at': 'At',
   'observe.col.duration': 'Duration',

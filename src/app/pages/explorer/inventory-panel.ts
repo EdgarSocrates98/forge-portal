@@ -38,7 +38,7 @@ import { CountTile, countLoader, countTiles } from './forges.data';
                 (click)="reload(t)"
                 [attr.aria-label]="'state.refresh' | t"
               >
-                <ui-icon name="refresh" [size]="12" />
+                <ui-icon name="refresh" [size]="13" />
               </button>
             </header>
             @if (t.src.loading() && t.src.data() === null) {
@@ -102,8 +102,12 @@ import { CountTile, countLoader, countTiles } from './forges.data';
       letter-spacing: 0.05em;
     }
     .tile__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
       color: inherit;
       text-decoration: none;
+      transition: color var(--motion-fast);
     }
     .tile__link:hover {
       color: var(--accent-ink);
@@ -111,12 +115,19 @@ import { CountTile, countLoader, countTiles } from './forges.data';
     }
     .tile__reload {
       display: inline-flex;
-      padding: 2px;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
       border: none;
       border-radius: var(--radius-sm);
       background: transparent;
       color: var(--fg-muted);
       cursor: pointer;
+      transition:
+        color var(--motion-fast),
+        background var(--motion-fast);
     }
     .tile__reload:hover {
       color: var(--fg);

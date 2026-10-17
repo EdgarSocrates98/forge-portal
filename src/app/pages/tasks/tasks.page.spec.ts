@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { TasksPage } from './tasks.page';
 import { PortalApi } from '../../core/api/api.client';
@@ -109,7 +110,7 @@ describe('TasksPage — Execution Center', () => {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [TasksPage],
-      providers: [{ provide: PortalApi, useValue: api }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(TasksPage);
@@ -312,7 +313,7 @@ describe('TasksPage — execution timeline (Cycle 4)', () => {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [TasksPage],
-      providers: [{ provide: PortalApi, useValue: api }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(TasksPage);
@@ -362,7 +363,7 @@ describe('TasksPage — recorded-events replay (Cycle 4)', () => {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [TasksPage],
-      providers: [{ provide: PortalApi, useValue: api }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(TasksPage);
@@ -441,5 +442,51 @@ describe('TasksPage — recorded-events replay (Cycle 4)', () => {
     fixture.detectChanges();
     expect(c.selectedId()).toBe('t1');
     expect(section(el, 'task-detail')).toBeTruthy();
+  });
+
+  it('renders history labels as real ?task= links — shareable deep links', async () => {
+    const { el } = await setup();
+    const link = el.querySelector<HTMLAnchorElement>('[data-action="inspect"]');
+    expect(link).toBeTruthy();
+    expect(link!.tagName).toBe('A');
+    expect(link!.getAttribute('href')).toContain('task=t1');
+    expect(text(link)).toContain('install apply');
+  });
+
+  it('a ?task= deep link selects the matching record — applied once per value', async () => {
+    const { fixture, c, el } = await setup();
+    fixture.componentRef.setInput('task', 't1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(c.selectedId()).toBe('t1');
+    expect(section(el, 'task-detail')).toBeTruthy();
+    expect(c.replay().state).toBe('ready');
+
+    // closing stays closed while the same param value is still bound —
+    // the effect must not re-open what the user dismissed
+    c.selectedId.set(null);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(c.selectedId()).toBeNull();
+
+    // a new value (same-page navigation) applies again
+    fixture.componentRef.setInput('task', 't2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(c.selectedId()).toBe('t2');
+  });
+
+  it('ignores a ?task= value that matches no record — nothing is fabricated', async () => {
+    const { fixture, c, el } = await setup();
+    fixture.componentRef.setInput('task', 'no-such-task');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(c.selectedId()).toBeNull();
+    expect(section(el, 'task-detail')).toBeNull();
   });
 });

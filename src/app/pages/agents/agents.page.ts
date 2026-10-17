@@ -264,7 +264,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
       }
 
       @if (selected(); as sel) {
-        <section class="card detail" data-section="agent-detail" aria-live="polite">
+        <section class="card detail fg-enter" data-section="agent-detail" aria-live="polite">
           <header class="detail__head">
             <h2><ui-icon name="agents" [size]="15" />{{ sel.name || sel.id }}</h2>
             <div class="detail__actions">
@@ -350,7 +350,15 @@ type StudioMode = 'cards' | 'table' | 'graph';
               <dt>{{ 'agents.compatibleHosts' | t }}</dt>
               <dd>
                 @if (sel.hosts.length) {
-                  {{ sel.hosts.join(', ') }}
+                  <span class="links">
+                    @for (hh of sel.hosts; track hh) {
+                      <!-- declared hosts[] — real anchor on the Hosts
+                           page (#host-<id>); absent cards just no-op. -->
+                      <a class="chip-link" [routerLink]="['/hosts']" [fragment]="'host-' + hh">{{
+                        hh
+                      }}</a>
+                    }
+                  </span>
                 } @else {
                   <ui-state-badge state="UNVERIFIED" />
                 }
@@ -477,7 +485,12 @@ type StudioMode = 'cards' | 'table' | 'graph';
                     <td>{{ a.skills.length ? a.skills.join(', ') : '—' }}</td>
                     <td>
                       @if (a.hosts.length) {
-                        {{ a.hosts.join(', ') }}
+                        @for (hh of a.hosts; track hh; let last = $last) {
+                          <a class="linklike" [routerLink]="['/hosts']" [fragment]="'host-' + hh">{{
+                            hh
+                          }}</a
+                          >{{ last ? '' : ', ' }}
+                        }
                       } @else {
                         <span class="undecl">{{ 'agents.compare.notDeclared' | t }}</span>
                       }
@@ -804,25 +817,9 @@ type StudioMode = 'cards' | 'table' | 'graph';
       flex-wrap: wrap;
       gap: 4px;
     }
-    .chip-link {
-      font-size: var(--font-xs);
-      font-weight: 600;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
-      text-decoration: none;
-    }
-    .chip-link:hover {
-      text-decoration: underline;
-    }
+    /* .chip/.chip-link consolidated into styles.css shared blocks;
+       the page only keeps its offset. */
     .chip {
-      font-size: var(--font-xs);
-      font-weight: 700;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
       margin-left: 4px;
     }
   `,

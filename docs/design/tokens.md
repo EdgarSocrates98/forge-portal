@@ -31,7 +31,7 @@ primary/default** scheme, `system` resolves via
 | `--border-strong` | `--fg-border-strong` | `#b9c0ca` | `#3d4754` |
 | `--fg`            | `--fg-text`          | `#16191d` | `#e6e9ee` |
 | `--fg-muted`      | `--fg-text-2`        | `#4b5563` | `#a9b3bf` |
-| `--fg-dim`        | `--fg-text-dim`      | `#6b7280` | `#7d8894` |
+| `--fg-dim`        | `--fg-text-dim`      | `#646c78` | `#7d8894` |
 | `--scrim`         | `--fg-scrim`         | 45% black | —         |
 | `--fg-focus`      | —                    | `#2563eb` | `#6ea8fe` |
 

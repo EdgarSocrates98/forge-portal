@@ -264,6 +264,9 @@ describe('KnowledgePage — §8 knowledge view', () => {
     // entity docs searched by the node's own label
     await fixture.whenStable();
     expect(c.entityDocs()?.[0]?.title).toBe('glue-debug guide');
+    // contextual "open in" — skill nodes deep-link into the skills catalog
+    const open = panel!.querySelector<HTMLAnchorElement>('.detail__actions a.btn--mini');
+    expect(open?.getAttribute('href')).toBe('/skills?q=glue-debug');
   });
 
   it('renders self-reported unverified nodes dashed and keeps referenced entities when a source fails', async () => {

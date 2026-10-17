@@ -1,0 +1,3743 @@
+{
+  "contrast": {
+    "base-dark": {
+      "text/surface": 14.21,
+      "text-2/surface": 8.14,
+      "text-dim/surface": 4.8,
+      "accent-ink/surface": 6.21,
+      "accent-ink/accent-bg": 5.54,
+      "info/surface": 7.3,
+      "ok/surface": 8.52,
+      "warn/surface": 9.32,
+      "error/surface": 6.34,
+      "unverified/surface": 8.1,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 7.45,
+      "error/error-bg": 5.86,
+      "info/info-bg": 6.61,
+      "ok/ok-bg": 6.83,
+      "unverified/unverified-bg": 6.8,
+      "accent-ink/bg": 6.85,
+      "text-2/bg": 8.98,
+      "text-dim/bg": 5.29
+    },
+    "base-light": {
+      "text/surface": 17.63,
+      "text-2/surface": 7.56,
+      "text-dim/surface": 5.31,
+      "accent-ink/surface": 6.05,
+      "accent-ink/accent-bg": 5.33,
+      "info/surface": 5.82,
+      "ok/surface": 5.42,
+      "warn/surface": 5.14,
+      "error/surface": 5.44,
+      "unverified/surface": 7.09,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 4.57,
+      "error/error-bg": 4.76,
+      "info/info-bg": 5.08,
+      "ok/ok-bg": 4.78,
+      "unverified/unverified-bg": 6.2,
+      "accent-ink/bg": 5.54,
+      "text-2/bg": 6.93,
+      "text-dim/bg": 4.86
+    },
+    "dense-dark": {
+      "text/surface": 14.21,
+      "text-2/surface": 8.14,
+      "text-dim/surface": 4.8,
+      "accent-ink/surface": 6.21,
+      "accent-ink/accent-bg": 5.54,
+      "info/surface": 7.3,
+      "ok/surface": 8.52,
+      "warn/surface": 9.32,
+      "error/surface": 6.34,
+      "unverified/surface": 8.1,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 7.45,
+      "error/error-bg": 5.86,
+      "info/info-bg": 6.61,
+      "ok/ok-bg": 6.83,
+      "unverified/unverified-bg": 6.8,
+      "accent-ink/bg": 6.85,
+      "text-2/bg": 8.98,
+      "text-dim/bg": 5.29
+    },
+    "dense-light": {
+      "text/surface": 17.63,
+      "text-2/surface": 7.56,
+      "text-dim/surface": 5.31,
+      "accent-ink/surface": 6.05,
+      "accent-ink/accent-bg": 5.33,
+      "info/surface": 5.82,
+      "ok/surface": 5.42,
+      "warn/surface": 5.14,
+      "error/surface": 5.44,
+      "unverified/surface": 7.09,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 4.57,
+      "error/error-bg": 4.76,
+      "info/info-bg": 5.08,
+      "ok/ok-bg": 4.78,
+      "unverified/unverified-bg": 6.2,
+      "accent-ink/bg": 5.54,
+      "text-2/bg": 6.93,
+      "text-dim/bg": 4.86
+    }
+  },
+  "routes": {
+    "base/dashboard": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"E2E Forge\" 69x16",
+        "a \"e2e-forge\" 63x16",
+        "a \"e2e-forge\" 63x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/install": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/config": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/forges": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/forges/self": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/match": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/federation": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/profiles": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/hosts": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/mcp": {
+      "clipped": [],
+      "targets": [
+        "a \"devin\" 37x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/skills": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/agents": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/tasks": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/graph": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "agents",
+          "title": "agents",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:agents",
+          "title": "capability:agents",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "federation",
+          "title": "federation",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:federation",
+          "title": "capability:federation",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "graph",
+          "title": "graph",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:graph",
+          "title": "capability:graph",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "hosts",
+          "title": "hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:hosts",
+          "title": "capability:hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "install",
+          "title": "install",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:install",
+          "title": "capability:install",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "knowledge",
+          "title": "knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:knowledge",
+          "title": "capability:knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "profiles",
+          "title": "profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:profiles",
+          "title": "capability:profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "skills",
+          "title": "skills",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:skills",
+          "title": "capability:skills",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "tasks",
+          "title": "tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:tasks",
+          "title": "capability:tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge",
+          "title": "e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "forge:e2e-forge",
+          "title": "forge:e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/observe": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/lab": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/versions": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/knowledge": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/settings": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/dashboard": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"E2E Forge\" 69x16",
+        "a \"e2e-forge\" 63x16",
+        "a \"api-forge\" 60x16",
+        "a \"spark-forge-aws\" 108x16",
+        "a \"e2e-forge\" 63x16",
+        "a \"api-forge\" 60x16",
+        "a \"spark-forge-aws\" 108x16",
+        "a \"installation status refresh with\" 554x16",
+        "a \"mcp handshake verify\" 147x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/install": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/config": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/forges": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/forges/self": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/match": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/federation": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/profiles": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/hosts": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/mcp": {
+      "clipped": [],
+      "targets": [
+        "a \"devin\" 37x16",
+        "a \"claude\" 44x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/skills": {
+      "clipped": [],
+      "targets": [
+        "a \"devin\" 37x16",
+        "a \"claude\" 44x16",
+        "a \"devin\" 37x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/agents": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/tasks": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "tl__label",
+          "text": "installation status refresh with a deliberately long lab",
+          "title": "installation status refresh with a deliberately long label to probe timeline truncation",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "tl__track",
+          "text": "",
+          "title": null,
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"mcp handshake verify\" 147x16"
+      ],
+      "axe": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "nodes": [
+            [
+              "button[aria-label=\"mcp handshake verify\"]"
+            ],
+            [
+              ".tl__row[type=\"button\"][role=\"listitem\"]:nth-child(3)"
+            ]
+          ]
+        }
+      ],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/graph": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Glue incremental performance architect",
+          "title": "Glue incremental performance architect",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "agent:glue-incremental-performance-architect",
+          "title": "agent:glue-incremental-performance-architect",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "agents",
+          "title": "agents",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:agents",
+          "title": "capability:agents",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "federation",
+          "title": "federation",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:federation",
+          "title": "capability:federation",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "graph",
+          "title": "graph",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:graph",
+          "title": "capability:graph",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "hosts",
+          "title": "hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:hosts",
+          "title": "capability:hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "install",
+          "title": "install",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:install",
+          "title": "capability:install",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "knowledge",
+          "title": "knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:knowledge",
+          "title": "capability:knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "profiles",
+          "title": "profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:profiles",
+          "title": "capability:profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "skills",
+          "title": "skills",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:skills",
+          "title": "capability:skills",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "tasks",
+          "title": "tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:tasks",
+          "title": "capability:tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge",
+          "title": "e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "forge:e2e-forge",
+          "title": "forge:e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge-mcp-secondary-with-a-very-long-server-identifi",
+          "title": "e2e-forge-mcp-secondary-with-a-very-long-server-identifier",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "mcp:e2e-forge-mcp-secondary-with-a-very-long-server-iden",
+          "title": "mcp:e2e-forge-mcp-secondary-with-a-very-long-server-identifier",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "mcp handshake verify",
+          "title": "mcp handshake verify",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "operation:task-fail",
+          "title": "operation:task-fail",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "installation status refresh with a deliberately long lab",
+          "title": "installation status refresh with a deliberately long label to probe timeline truncation",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "operation:task-running-long-label-for-timeline-overflow-",
+          "title": "operation:task-running-long-label-for-timeline-overflow-check",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Graph export",
+          "title": "Graph export",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "skill:graph-export",
+          "title": "skill:graph-export",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Spark performance tuning — advanced diagnostics",
+          "title": "Spark performance tuning — advanced diagnostics",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "skill:spark-performance-tuning-advanced-diagnostics",
+          "title": "skill:spark-performance-tuning-advanced-diagnostics",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/observe": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/lab": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/versions": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/knowledge": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "Glue incremental performance architect",
+          "title": "Glue incremental performance architect",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "agent:glue-incremental-performance-architect",
+          "title": "agent:glue-incremental-performance-architect",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "e2e-forge-mcp-secondary-with-a-very-long-server-identifi",
+          "title": "e2e-forge-mcp-secondary-with-a-very-long-server-identifier",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "mcp:e2e-forge-mcp-secondary-with-a-very-long-server-iden",
+          "title": "mcp:e2e-forge-mcp-secondary-with-a-very-long-server-identifier",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "mcp handshake verify",
+          "title": "mcp handshake verify",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "operation:task-fail",
+          "title": "operation:task-fail",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "installation status refresh with a deliberately long lab",
+          "title": "installation status refresh with a deliberately long label to probe timeline truncation",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "operation:task-running-long-label-for-timeline-overflow-",
+          "title": "operation:task-running-long-label-for-timeline-overflow-check",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "Graph export",
+          "title": "Graph export",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "skill:graph-export",
+          "title": "skill:graph-export",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "Spark performance tuning — advanced diagnostics",
+          "title": "Spark performance tuning — advanced diagnostics",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "skill:spark-performance-tuning-advanced-diagnostics",
+          "title": "skill:spark-performance-tuning-advanced-diagnostics",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/settings": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    }
+  }
+}
