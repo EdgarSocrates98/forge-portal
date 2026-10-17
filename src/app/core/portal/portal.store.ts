@@ -10,7 +10,7 @@ import {
 } from '../api/api.models';
 import { ThemeStore } from '../theme/theme.store';
 
-export type PortalStatus = 'booting' | 'ready' | 'degraded' | 'offline';
+export type PortalStatus = 'booting' | 'ready' | 'degraded' | 'offline' | 'error';
 
 /**
  * Estado central do portal — carregado uma vez no bootstrap e
@@ -50,7 +50,9 @@ export class PortalStore {
     } catch (err) {
       const apiErr = err instanceof ApiError ? err : new ApiError(0);
       this.lastError.set(apiErr);
-      this.status.set('offline');
+      // Transporte (status 0) = servidor fora do ar; erro HTTP com envelope
+      // (ex.: PORTAL-SESSION) = servidor respondeu — mostrar a causa real.
+      this.status.set(apiErr.transport ? 'offline' : 'error');
     }
   }
 

@@ -500,16 +500,23 @@ class PortalHandler(BaseHTTPRequestHandler):
 
     # -- session -----------------------------------------------------------
     def _session_ok(self) -> bool:
+        jar = dict(
+            p.strip().split("=", 1)
+            for p in (self.headers.get("Cookie") or "").split(";")
+            if "=" in p
+        )
+        cval = jar.get(SESSION_COOKIE)
         token = self.headers.get(SESSION_HEADER)
-        if not token or not hmac.compare_digest(token, self.server.session_token):
-            return False
-        cookie = self.headers.get("Cookie") or ""
-        if SESSION_COOKIE in cookie:
-            jar = dict(p.strip().split("=", 1) for p in cookie.split(";") if "=" in p)
-            cval = jar.get(SESSION_COOKIE, "")
-            if cval and not hmac.compare_digest(cval, self.server.session_token):
+        if token:
+            # Header decide; um cookie forge_session presente é bound —
+            # forjado rejeita mesmo com header válido.
+            if not hmac.compare_digest(token, self.server.session_token):
                 return False
-        return True
+            return cval is None or hmac.compare_digest(cval, self.server.session_token)
+        # Sem header: o cookie HttpOnly/SameSite=Strict emitido em
+        # GET /?forge_session=… autentica — um reload (F5) apaga o token da
+        # memória do SPA, mas o cookie sobrevive e deve sustentar a sessão.
+        return cval is not None and hmac.compare_digest(cval, self.server.session_token)
 
     def _origin_ok(self) -> bool:
         origin = self.headers.get("Origin")

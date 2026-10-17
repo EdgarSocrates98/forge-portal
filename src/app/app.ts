@@ -184,9 +184,9 @@ const NAV: NavEntry[] = [
         </header>
 
         <main class="content" id="content" tabindex="-1">
-          @if (store.status() === 'offline') {
+          @if (store.status() === 'offline' || store.status() === 'error') {
             <div class="offline-banner" role="alert">
-              <p>{{ 'error.unreachable' | t }}</p>
+              <p>{{ bannerMessageKey() | t }}</p>
               <button class="btn" (click)="store.bootstrap()">
                 {{ 'error.retry' | t }}
               </button>
@@ -236,6 +236,12 @@ export class App {
     const scheme = this.theme.scheme();
     return scheme === 'dark' ? 'moon' : scheme === 'light' ? 'sun' : 'contrast';
   });
+
+  /** Chave i18n do banner: a `message_key` real do servidor quando
+   *  presente (ex.: `error.session`), senão `error.unreachable`. */
+  readonly bannerMessageKey = computed(
+    () => this.store.lastError?.()?.body.message_key ?? 'error.unreachable',
+  );
 
   constructor() {
     void this.store.bootstrap();

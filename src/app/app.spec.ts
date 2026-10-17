@@ -23,6 +23,7 @@ class PortalStoreStub {
   readonly nav = () => [];
   readonly workspace = () => null;
   readonly health = () => null;
+  readonly lastError = () => null;
   async bootstrap(): Promise<void> {}
   async refreshHealth(): Promise<void> {}
 }
@@ -128,6 +129,30 @@ describe('App shell', () => {
     fixture.detectChanges();
     const banner = fixture.nativeElement.querySelector('.offline-banner');
     expect(banner).toBeTruthy();
+  });
+
+  it('shows the real error key (not unreachable) on session errors', async () => {
+    class SessionErrorStub extends PortalStoreStub {
+      override readonly status = () => 'error' as 'offline';
+      override readonly lastError = () =>
+        ({
+          transport: false,
+          status: 403,
+          body: { code: 'PORTAL-SESSION', message_key: 'error.session' },
+        }) as never;
+    }
+    await TestBed.resetTestingModule()
+      .configureTestingModule({
+        imports: [App],
+        providers: [provideRouter([]), { provide: PortalStore, useClass: SessionErrorStub }],
+      })
+      .compileComponents();
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const banner = fixture.nativeElement.querySelector('.offline-banner') as HTMLElement;
+    expect(banner).toBeTruthy();
+    expect(banner.textContent).toContain('error.session');
+    expect(banner.textContent).not.toContain('error.unreachable');
   });
 });
 
