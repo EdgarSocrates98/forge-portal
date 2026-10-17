@@ -136,10 +136,24 @@ export class PortalApi {
     return this.post<InstallationReceipt>('/mcp/verify', { confirm: 'verify' });
   }
   skills() {
-    return this.get<SkillDescriptor[]>('/skills');
+    /* wire tolerance: the contract types declare these arrays required, but
+     * an adapter may omit them — decode absent lists as [] so the page
+     * renders its UNVERIFIED state instead of crashing change detection. */
+    return this.get<SkillDescriptor[]>('/skills').pipe(
+      map((xs) => xs.map((s) => ({ ...s, hosts: s.hosts ?? [] }))),
+    );
   }
   agents() {
-    return this.get<AgentDescriptor[]>('/agents');
+    return this.get<AgentDescriptor[]>('/agents').pipe(
+      map((xs) =>
+        xs.map((a) => ({
+          ...a,
+          domains: a.domains ?? [],
+          skills: a.skills ?? [],
+          hosts: a.hosts ?? [],
+        })),
+      ),
+    );
   }
   tasks() {
     return this.get<TaskExecution[]>('/tasks');

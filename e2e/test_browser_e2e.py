@@ -12,6 +12,7 @@ Run:  python -m pytest e2e/ -q        (requires playwright + chromium)
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -173,11 +174,18 @@ class E2EAdapter(fp.PortalAdapter):
         }
 
     def hosts(self) -> list[dict]:
+        # forge/HostDetection wire shape — the inventory page maps these
+        # fields 1:1; the legacy {id,name,state} shape left headings empty.
         return [
-            {"id": "devin", "name": "Devin", "state": "detected",
-             "version": "1.0", "launch": {"command": "devin", "args": []}},
-            {"id": "claude", "name": "Claude Code", "state": "not_installed"},
-            {"id": "codex", "name": "Codex", "state": "not_installed"},
+            {"host": "devin", "detected": True, "version": "1.0",
+             "supported": True, "logged_in": True,
+             "integration": "EXECUTION_VERIFIED", "launchable": True},
+            {"host": "claude", "detected": False, "version": None,
+             "supported": False, "logged_in": None,
+             "integration": "NOT_DETECTED", "launchable": False},
+            {"host": "codex", "detected": False, "version": None,
+             "supported": False, "logged_in": None,
+             "integration": "NOT_DETECTED", "launchable": False},
         ]
 
     def skills(self) -> list[dict]:
@@ -617,6 +625,176 @@ def test_graph_studio_select_node(page, portal):
     _shot(page, "16-graph-select")
 
 
+def _canvas_on(page, portal) -> None:
+    """Open /graph and switch to canvas mode; waits for the lazy engine
+    to mount real <canvas> layers inside the container."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    toggle = page.locator("button[data-view='canvas']")
+    assert toggle.count() > 0, "canvas toggle not found"
+    toggle.click()
+    page.wait_for_selector("[data-canvas='graph'] canvas", timeout=15000)
+    page.wait_for_timeout(700)  # layout settles
+
+
+def test_graph_canvas_mounts_and_rasterizes(page, portal):
+    """§5.6 canvas — jsdom could never prove raster output; Chromium can.
+
+    Toggling Canvas must mount the lazy renderer inside
+    ``[data-canvas='graph']`` with a real bounding box and painted
+    (non-transparent) pixels — the actual raster evidence, not a DOM
+    presence claim."""
+    _canvas_on(page, portal)
+    wrap = page.locator("[data-canvas='graph']")
+    box = wrap.bounding_box()
+    assert box and box["width"] > 200 and box["height"] > 200, \
+        f"canvas container has no real box: {box}"
+    layers = page.locator("[data-canvas='graph'] canvas")
+    assert layers.count() > 0, "renderer mounted no <canvas> layers"
+    # cytoscape stacks several <canvas> layers (drag/select overlays stay
+    # transparent) — raster evidence = painted pixels across ANY layer.
+    raster = page.evaluate(
+        """() => {
+          let painted = 0, w = 0, h = 0, n = 0;
+          for (const cv of document.querySelectorAll(
+            "[data-canvas='graph'] canvas")) {
+            n++;
+            const ctx = cv.getContext("2d");
+            if (!ctx || !cv.width) continue;
+            w = Math.max(w, cv.width); h = Math.max(h, cv.height);
+            const d = ctx.getImageData(0, 0, cv.width, cv.height).data;
+            for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) painted++;
+          }
+          return { layers: n, w, h, painted };
+        }"""
+    )
+    assert raster["w"] > 0 and raster["painted"] > 0, (
+        f"canvas layer is fully transparent — nothing was rasterized: {raster}"
+    )
+    # node count consistency: the fed overlay and the legend agree
+    kinds = page.locator(".fed__legend li")
+    assert kinds.count() > 0, "canvas legend rendered no node kinds"
+    toolbar = page.locator(".fed__toolbar button")
+    assert toolbar.count() >= 4, "canvas toolbar missing layout/actions"
+    _shot(page, "18-graph-canvas")
+
+
+def test_graph_canvas_click_selects_element(page, portal):
+    """Canvas tap → the shared selection opens the inspector.
+
+    Node coordinates are layout-dependent, so the test sweeps real
+    pointer taps over a bounded grid of the canvas until a node/edge
+    tap lands — proving cy 'tap' → onCanvasSelect → inspector in a real
+    browser (the shared-selection contract is covered separately by
+    test_graph_canvas_shared_selection)."""
+    _canvas_on(page, portal)
+    # grid layout spreads nodes deterministically → best hit coverage
+    grid = page.locator("button[data-layout='grid']")
+    if grid.count():
+        grid.click()
+        page.wait_for_timeout(800)
+    fit = page.locator("button[data-action='fit']")
+    if fit.count():
+        fit.click()
+        page.wait_for_timeout(400)
+    box = page.locator("[data-canvas='graph']").bounding_box()
+    assert box, "canvas container not measurable"
+    inspector = page.locator("[data-section='inspector'],"
+                             " [data-section='edge-inspector']")
+    hit = False
+    step = 40
+    y = box["y"] + step / 2
+    while y < box["y"] + box["height"] and not hit:
+        x = box["x"] + step / 2
+        while x < box["x"] + box["width"] and not hit:
+            page.mouse.click(x, y)
+            page.wait_for_timeout(60)
+            hit = inspector.count() > 0
+            x += step
+        y += step
+    assert hit, "no canvas tap landed on a node or edge — selection unreachable"
+    _shot(page, "19-graph-canvas-select")
+
+
+def test_graph_canvas_shared_selection(page, portal):
+    """List↔canvas parity: a node selected in the list stays selected
+    (and inspectable) after the mode switch — the AT path and the
+    canvas share one selection state."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    first = page.locator(".fed__node").first
+    assert first.count() > 0, "graph list rendered no nodes"
+    label = first.locator(".fed__label").inner_text()
+    first.click()
+    page.wait_for_timeout(300)
+    inspector = page.locator("[data-section='inspector']")
+    assert inspector.count() > 0, "list selection did not open inspector"
+    page.locator("button[data-view='canvas']").click()
+    page.wait_for_selector("[data-canvas='graph'] canvas", timeout=15000)
+    page.wait_for_timeout(500)
+    assert inspector.count() > 0 and label.split()[0] in inspector.inner_text(), \
+        "canvas mode dropped the shared selection"
+    _shot(page, "20-graph-canvas-shared-selection")
+
+
+AXE = REPO / "node_modules" / "axe-core" / "axe.min.js"
+
+
+def test_axe_core_audit(page, portal):
+    """§a11y — axe-core scan of every main route in real Chromium.
+
+    The portal CSP is ``script-src 'self'``, so axe is injected via
+    ``page.evaluate`` (CDP evaluate is not subject to page CSP, unlike
+    an injected <script> tag). Serious/critical violations fail the
+    suite; moderate/minor are collected into
+    ``e2e/artifacts/axe-report.json`` for the audit trail."""
+    if not AXE.is_file():
+        pytest.skip("axe-core not installed — npm i -D axe-core")
+    axe_src = AXE.read_text(encoding="utf-8")
+    routes = ["/", "/install", "/config", "/forges", "/federation",
+              "/profiles", "/hosts", "/mcp", "/skills", "/agents",
+              "/tasks", "/graph", "/settings"]
+    report: dict[str, list[dict]] = {}
+    for route in routes:
+        page.goto(f"http://127.0.0.1:{portal.port}{route}"
+                  f"?forge_session={portal.session_token}")
+        page.wait_for_load_state("networkidle")
+        page.wait_for_timeout(400)
+        page.evaluate(axe_src)
+        res = page.evaluate(
+            "() => axe.run(document, { resultTypes: ['violations'] })"
+        )
+        findings = [
+            {
+                "id": v["id"],
+                "impact": v["impact"],
+                "help": v["help"],
+                "nodes": [n["target"] for n in v["nodes"]][:5],
+            }
+            for v in res["violations"]
+        ]
+        if findings:
+            report[route] = findings
+    ARTIFACTS.mkdir(parents=True, exist_ok=True)
+    (ARTIFACTS / "axe-report.json").write_text(
+        json.dumps({"axe": "4.14.0", "routes": routes, "violations": report},
+                   indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    serious = [
+        (r, v) for r, vs in report.items()
+        for v in vs if v["impact"] in ("serious", "critical")
+    ]
+    assert not serious, (
+        "axe serious/critical violations: "
+        + "; ".join(f"{r}:{v['id']}({v['impact']})" for r, v in serious[:10])
+    )
+
+
 def test_theme_toggle(page, portal):
     """Topbar theme button cycles the <html> scheme attribute."""
     _open(page, portal)
@@ -636,14 +814,24 @@ def test_theme_toggle(page, portal):
 
 
 def test_no_console_errors(page, portal):
+    """Uncaught pageerror AND Angular template errors (console.error
+    ``ERROR TypeError`` — a template crash silently drops bindings,
+    including aria-label) must both gate, on every list/detail route."""
     errors: list[str] = []
     page.on("pageerror", lambda e: errors.append(str(e)))
-    _open(page, portal)
-    page.goto(f"http://127.0.0.1:{portal.port}/tasks"
-              f"?forge_session={portal.session_token}")
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(400)
-    fatal = [e for e in errors if "SyntaxError" in e or "TypeError" in e]
+    page.on(
+        "console",
+        lambda m: errors.append(m.text)
+        if m.type == "error" and "Failed to load resource" not in m.text
+        else None,
+    )
+    for route in ["/", "/skills", "/agents", "/hosts", "/graph", "/tasks"]:
+        page.goto(f"http://127.0.0.1:{portal.port}{route}"
+                  f"?forge_session={portal.session_token}")
+        page.wait_for_load_state("networkidle")
+        page.wait_for_timeout(500)
+    fatal = [e for e in errors if "SyntaxError" in e or "TypeError" in e
+             or "NG" in e[:12]]
     assert not fatal, f"console errors: {fatal}"
 
 

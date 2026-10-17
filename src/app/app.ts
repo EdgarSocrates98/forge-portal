@@ -88,7 +88,11 @@ const NAV: NavEntry[] = [
   template: `
     <a class="skip-link" href="#content">{{ 'nav.skip' | t }}</a>
     <div class="shell">
-      <aside class="shell__side" [attr.data-collapsed]="collapsed() || null">
+      <aside
+        class="shell__side"
+        [attr.data-collapsed]="collapsed() || null"
+        [attr.aria-label]="'nav.primary' | t"
+      >
         <a class="brand" routerLink="/dashboard">
           <span class="brand__mark" aria-hidden="true"><ui-icon name="gem" [size]="18" /></span>
           <span class="brand__text">
@@ -146,11 +150,14 @@ const NAV: NavEntry[] = [
             }
           </div>
           <div class="topbar__actions">
+            <!-- WCAG 2.5.3 (label in name): the visible text must appear in
+                 the accessible name — the Ctrl K hint and the PT/EN label are
+                 rendered text even though they are aria-hidden from AT. -->
             <button
               class="icon-btn icon-btn--search"
               (click)="palette.toggle()"
-              [attr.aria-label]="'command.open' | t"
-              [title]="'command.open' | t"
+              [attr.aria-label]="('command.open' | t) + ' — Ctrl K'"
+              [title]="('command.open' | t) + ' — Ctrl K'"
             >
               <ui-icon name="search" [size]="15" />
               <kbd class="icon-btn__kbd" aria-hidden="true">Ctrl K</kbd>
@@ -158,7 +165,9 @@ const NAV: NavEntry[] = [
             <button
               class="icon-btn"
               (click)="toggleLocale()"
-              [attr.aria-label]="'settings.language' | t"
+              [attr.aria-label]="
+                (i18n.locale() === 'pt-BR' ? 'PT' : 'EN') + ' — ' + ('settings.language' | t)
+              "
               [title]="'settings.language' | t"
             >
               {{ i18n.locale() === 'pt-BR' ? 'PT' : 'EN' }}

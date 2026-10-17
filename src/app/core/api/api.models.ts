@@ -262,6 +262,11 @@ export interface TaskEvent {
   event: string;
   task_id: string;
   stage?: string;
+  /** ISO-8601 stamp recorded by the emitting adapter, when it records
+   *  one — optional because producers are not required to timestamp
+   *  (SseResult carries whatever the adapter emits). Consumers sort/
+   *  render only when present; the field is never inferred. */
+  at?: string;
   detail?: string;
   receipt?: Record<string, unknown>;
 }

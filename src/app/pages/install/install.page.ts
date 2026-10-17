@@ -269,7 +269,7 @@ interface HostChoice {
         </div>
       </section>
 
-      <aside class="card summary">
+      <aside class="card summary" [attr.aria-label]="'install.summary' | t">
         <h2>{{ 'install.summary' | t }}</h2>
         <dl class="summary__kv">
           <div>
@@ -633,6 +633,12 @@ interface HostChoice {
       }
     </section>
   `,
+  /* Styles shared with the rest of the portal (.muted, .running,
+     .raw, .actions, .ops/.op, .checks, .scopes/.scope, .comps/.comp,
+     .stepnum, .diff*, .summary__*, .discover__kv, .hostlist,
+     .op-receipt, .verify__row, .unverified, .config-grid, .mono,
+     .refusal) were consolidated into the "shared feature styles"
+     section of src/styles.css — only page-local overrides remain here. */
   styles: `
     .card {
       margin-bottom: var(--space-4);
@@ -658,214 +664,27 @@ interface HostChoice {
     .card__heading h2 {
       margin-bottom: var(--space-2);
     }
-    .stepnum {
-      display: grid;
-      place-items: center;
-      width: 22px;
-      height: 22px;
-      flex: none;
-      border-radius: 50%;
-      font-size: var(--font-xs);
-      font-weight: 700;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-    }
     .subhead {
       margin: var(--space-4) 0 var(--space-2);
       font-size: var(--font-sm);
       font-weight: 650;
       color: var(--fg-muted);
     }
-    .discover__kv {
-      display: grid;
-      gap: var(--space-2);
-      margin: 0 0 var(--space-3);
-    }
-    .discover__kv > div {
-      display: flex;
-      justify-content: space-between;
-      gap: var(--space-3);
-      font-size: var(--font-sm);
-    }
-    .discover__kv dt {
-      color: var(--fg-muted);
-    }
-    .discover__kv dd {
-      margin: 0;
-      font-weight: 600;
-      overflow-wrap: anywhere;
-    }
     .checks {
-      list-style: none;
-      padding: 0;
       margin: 0 0 var(--space-3);
-      display: grid;
-      gap: 6px;
-    }
-    .checks li {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      flex-wrap: wrap;
-    }
-    .hostlist {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 6px;
-    }
-    .hostlist li {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 6px var(--space-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-    }
-    .hostlist strong {
-      text-transform: capitalize;
-      min-width: 72px;
-    }
-    .config-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
-      gap: var(--space-4);
-      align-items: start;
     }
     .summary {
       position: sticky;
       top: calc(var(--topbar-h) + var(--space-4));
     }
-    .summary__kv {
-      display: grid;
-      gap: var(--space-2);
-      margin: 0 0 var(--space-4);
-    }
-    .summary__kv > div {
-      display: flex;
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding-bottom: var(--space-2);
-      border-bottom: 1px solid var(--border);
-      font-size: var(--font-sm);
-    }
-    .summary__kv > div:last-child {
-      border-bottom: 0;
-    }
-    .summary__kv dt {
-      color: var(--fg-muted);
-    }
-    .summary__kv dd {
-      margin: 0;
-      font-weight: 600;
-      text-align: right;
-    }
-    .summary__comps {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1);
-      justify-content: flex-end;
-    }
-    .summary__chip {
-      padding: 2px var(--space-2);
-      border-radius: var(--radius-sm);
-      background: var(--accent-bg);
-      color: var(--accent-ink);
-      font-family: var(--font-mono);
-      font-size: var(--font-xs);
-      font-weight: 600;
-    }
     .running {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
       margin-top: var(--space-3);
-    }
-    .running p {
-      margin: 0;
-    }
-    .running__spinner {
-      width: 18px;
-      height: 18px;
-      flex: none;
-      border-radius: 50%;
-      border: 2px solid var(--accent-bg);
-      border-top-color: var(--accent-ink);
-      animation: fg-spin 0.8s linear infinite;
-    }
-    @keyframes fg-spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .running__spinner {
-        animation: none;
-        border-top-color: var(--border-strong);
-      }
-    }
-    .diff {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 var(--space-3);
-      display: grid;
-      gap: 6px;
-      max-height: 320px;
-      overflow: auto;
-    }
-    .diff__row {
-      display: grid;
-      gap: 4px;
-      padding: var(--space-2) var(--space-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-    }
-    .diff__path {
-      font-weight: 650;
-      overflow-wrap: anywhere;
-    }
-    .diff__pair {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      flex-wrap: wrap;
-      font-family: var(--font-mono);
-      font-size: var(--font-xs);
-    }
-    .diff__before {
-      color: var(--error);
-      text-decoration: line-through;
-      overflow-wrap: anywhere;
-    }
-    .diff__after {
-      color: var(--ok);
-      text-decoration: none;
-      overflow-wrap: anywhere;
-    }
-    .diff-none {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      color: var(--warn);
-      font-size: var(--font-sm);
     }
     .actions {
       font-family: var(--font-mono);
       font-size: var(--font-sm);
       max-height: 240px;
       overflow: auto;
-      display: grid;
-      gap: 6px;
-      list-style: none;
-      padding: 0;
-    }
-    .actions li {
-      display: flex;
-      gap: var(--space-2);
-      overflow-wrap: anywhere;
     }
     .actions li code {
       color: var(--accent-ink);
@@ -874,153 +693,10 @@ interface HostChoice {
     .actions__status {
       color: var(--fg-muted) !important;
     }
-    .raw {
-      margin: var(--space-2) 0;
-    }
-    .raw pre {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      overflow-x: auto;
-      font-size: var(--font-xs);
-    }
-    .verify__row {
-      display: grid;
-      gap: var(--space-3);
-    }
-    .unverified {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      margin: 0;
-      color: var(--warn);
-      font-weight: 550;
-    }
     .repairable {
       color: var(--accent-ink);
       font-size: var(--font-xs);
       font-weight: 650;
-    }
-    .ops__list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: var(--space-2);
-    }
-    .op {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding: var(--space-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-    }
-    .op[data-state='unverified'] {
-      border-style: dashed;
-      opacity: 0.8;
-    }
-    .op__body {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
-    .op__body small {
-      color: var(--fg-muted);
-    }
-    .op-receipt {
-      margin-top: var(--space-3);
-      padding: var(--space-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-    }
-    .op-receipt__head {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      flex-wrap: wrap;
-      margin: 0 0 var(--space-2);
-    }
-    .scopes {
-      display: grid;
-      gap: var(--space-2);
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    .scope {
-      display: flex;
-      gap: var(--space-2);
-      align-items: flex-start;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      cursor: pointer;
-      transition:
-        border-color var(--motion-fast),
-        background var(--motion-fast),
-        box-shadow var(--motion-fast);
-    }
-    .scope:hover {
-      border-color: var(--border-strong);
-      background: var(--bg-hover);
-    }
-    .scope:focus-within {
-      border-color: var(--fg-focus);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
-    }
-    .scope[data-active] {
-      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-      background: var(--accent-bg);
-      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
-    }
-    .scope small {
-      display: block;
-      color: var(--fg-muted);
-    }
-    .scope input[type='radio'] {
-      accent-color: var(--accent-ink);
-      margin-top: 2px;
-    }
-    .scope input[disabled],
-    .comp input[disabled] {
-      cursor: not-allowed;
-    }
-    .comps {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      margin-bottom: var(--space-2);
-    }
-    .comp {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      padding: 4px var(--space-3);
-      font-size: var(--font-sm);
-      cursor: pointer;
-      transition:
-        border-color var(--motion-fast),
-        background var(--motion-fast);
-    }
-    .comp:hover {
-      border-color: var(--border-strong);
-      background: var(--bg-hover);
-    }
-    .comp:focus-within {
-      border-color: var(--fg-focus);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
-    }
-    .comp input[type='checkbox'] {
-      accent-color: var(--accent-ink);
-    }
-    .comp[data-active] {
-      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-      background: var(--accent-bg);
-      font-weight: 600;
     }
     .row {
       display: flex;
@@ -1028,19 +704,7 @@ interface HostChoice {
       gap: var(--space-2);
       margin-top: var(--space-4);
     }
-    .refusal {
-      color: var(--warn);
-    }
-    .muted {
-      color: var(--fg-muted);
-    }
-    .mono {
-      font-family: var(--font-mono);
-    }
     @media (max-width: 880px) {
-      .config-grid {
-        grid-template-columns: 1fr;
-      }
       .summary {
         position: static;
       }

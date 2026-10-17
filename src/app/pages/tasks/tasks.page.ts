@@ -549,6 +549,11 @@ interface PendingPlan {
       </section>
     }
   `,
+  /* Styles shared with the rest of the portal (.muted, .lbl, .num,
+     .running, .raw, .actions base, .ops/.op, .plan-card, .intent-*,
+     .linklike, .unv-cell, .stale, .refusal, tr[data-selected]) were
+     consolidated into the "shared feature styles" section of
+     src/styles.css — only page-local rules remain here. */
   styles: `
     .card {
       margin-bottom: var(--space-4);
@@ -558,26 +563,6 @@ interface PendingPlan {
       font-size: var(--font-lg);
       font-weight: 650;
       letter-spacing: -0.01em;
-    }
-    .lbl {
-      display: block;
-      font-weight: 600;
-      margin-bottom: var(--space-2);
-    }
-    .intent-row {
-      display: flex;
-      gap: var(--space-2);
-    }
-    .intent-field {
-      flex: 1;
-      max-width: none;
-      margin-bottom: 0;
-    }
-    .plan-card {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--space-2) var(--space-4);
-      margin: var(--space-3) 0;
     }
     .kv dt {
       font-size: var(--font-xs);
@@ -599,36 +584,9 @@ interface PendingPlan {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .num {
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-    .raw {
-      margin: var(--space-2) 0;
-    }
-    .raw pre {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: var(--space-3);
-      overflow-x: auto;
-      font-size: var(--font-xs);
-    }
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      margin-top: var(--space-3);
-    }
-    .muted {
-      color: var(--fg-muted);
-    }
     .limits {
       margin: var(--space-3) 0 0;
       font-size: var(--font-xs);
-    }
-    .refusal {
-      color: var(--warn);
     }
     .receipt__status {
       display: flex;
@@ -636,55 +594,12 @@ interface PendingPlan {
       flex-wrap: wrap;
       gap: var(--space-3);
     }
-    .running {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-    .running p {
-      margin: 0;
-    }
-    .running__spinner {
-      width: 18px;
-      height: 18px;
-      flex: none;
-      border-radius: 50%;
-      border: 2px solid var(--accent-bg);
-      border-top-color: var(--accent-ink);
-      animation: fg-spin 0.8s linear infinite;
-    }
-    @keyframes fg-spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .running__spinner {
-        animation: none;
-        border-top-color: var(--border-strong);
-      }
-    }
-    .stale {
-      border-left: 3px solid var(--warn);
-    }
-    .stale p code {
-      color: var(--warn);
-    }
     .actions {
       font-family: var(--font-mono);
       font-size: var(--font-sm);
-      list-style: none;
-      padding: 0;
       margin: 0 0 var(--space-3);
-      display: grid;
-      gap: 6px;
       max-height: 200px;
       overflow: auto;
-    }
-    .actions li {
-      display: flex;
-      gap: var(--space-2);
-      overflow-wrap: anywhere;
     }
     .actions li code {
       color: var(--accent-ink);
@@ -693,33 +608,11 @@ interface PendingPlan {
     .actions__kind {
       color: var(--fg-muted) !important;
     }
-    .ops__list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: var(--space-2);
-    }
-    .op {
+    .row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding: var(--space-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-    }
-    .op[data-state='unverified'] {
-      border-style: dashed;
-      opacity: 0.8;
-    }
-    .op__body {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
-    .op__body small {
-      color: var(--fg-muted);
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
     }
     /* -- execution timeline ------------------------------------- */
     .tl {
@@ -824,22 +717,6 @@ interface PendingPlan {
       gap: var(--space-2);
       margin-bottom: var(--space-3);
     }
-    .linklike {
-      border: 0;
-      background: none;
-      padding: 0;
-      font: inherit;
-      font-weight: 550;
-      color: var(--accent-ink);
-      cursor: pointer;
-      text-align: left;
-    }
-    .linklike:hover {
-      text-decoration: underline;
-    }
-    tr[data-selected] td {
-      background: var(--accent-bg);
-    }
     .replay {
       margin-top: var(--space-3);
       border-top: 1px solid var(--border);
@@ -902,11 +779,6 @@ interface PendingPlan {
       font-size: var(--font-sm);
       color: var(--fg-muted);
       overflow-wrap: anywhere;
-    }
-    .unv-cell {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
     }
     #tl-h,
     .detail__head h2 {

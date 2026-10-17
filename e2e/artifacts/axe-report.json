@@ -1,0 +1,19 @@
+{
+  "axe": "4.14.0",
+  "routes": [
+    "/",
+    "/install",
+    "/config",
+    "/forges",
+    "/federation",
+    "/profiles",
+    "/hosts",
+    "/mcp",
+    "/skills",
+    "/agents",
+    "/tasks",
+    "/graph",
+    "/settings"
+  ],
+  "violations": {}
+}
