@@ -1,6 +1,8 @@
 # Homologação — Forge Portal NextGen (6 ciclos)
 
-Data: 2026-10-17. Branch de encerramento: `feat/excellence`.
+Data: 2026-10-17. Branch de encerramento: `feat/excellence` → gaps do
+relatório fechados em `fix/nextgen-gaps` (ver § "Fechamento de gaps"
+abaixo).
 Status geral: **PARTIAL → PASS pendente apenas de verificação manual com
 leitor de tela** — todos os gates automatizados verdes, auditorias
 estáticas completas e documentadas.
@@ -81,13 +83,58 @@ Nenhuma dependência nova de runtime foi adicionada.
 ## Features não concluídas / gaps honestos
 
 - **Screen-reader walkthrough**: nenhum AT disponível; ordem de anúncio
-  e verbosidade ficam como pendência manual, não PASS.
+  e verbosidade ficam como pendência manual, não PASS — passos em
+  `docs/audits/a11y-manual-checklist.md`.
 - **Zoom 200%/400% e reflow**: não medidos em viewport real.
-- **`npm audit`**: não executado neste ciclo.
 - **Timeline de Agent Studio**: depende de hosts que emitem eventos —
   o E2E usa adapter, não host real.
-- **CSS budget warnings** em install/tasks/hosts pages: registrados,
-  não corrigidos (avisos de estilo, sem impacto de JS).
+
+## Fechamento de gaps — `fix/nextgen-gaps` (2026-10-17)
+
+Os cinco gaps remanescentes deste relatório foram atacados na branch
+`fix/nextgen-gaps`. Resultados honestos (evidência em
+`e2e/artifacts/` e nesta doc):
+
+| Gap | Status | Evidência |
+|---|---|---|
+| `npm audit` nunca executado | **PASS** — `found 0 vulnerabilities`; nenhum fix necessário | saida do gate |
+| CSS budget warnings (install 6.69 kB, tasks 5.63 kB, hosts 4.01 kB vs budget 4 kB) | **PASS** — os três ≤ 4 kB após dedup para `styles.css`/`tokens.css`; `ng build` sem nenhum warning | build gate |
+| Canvas Graph Studio sem cobertura real de browser | **PASS** — 3 novos testes Chromium: raster (pixels pintados), clique→inspector, seleção compartilhada lista↔canvas | `e2e/artifacts/18..20-*.png` |
+| A11y só estática/manual | **PASS parcial** — `test_axe_core_audit` injeta axe-core 4.14.0 em Chromium real nas 13 rotas; **zero** violações em qualquer severidade após correções reais; manual segue pendente | `e2e/artifacts/axe-report.json`, `docs/audits/a11y-manual-checklist.md` |
+| Timestamps em eventos persistidos | **PASS** — `MetricsEvent.at` já ordena/renderiza o replay (código pré-existente em `tasks.data.ts`); `TaskEvent` ganhou `at?` aditivo — nenhum produtor emite hoje (grep: só `SseResult` passthrough); nada inventado | `api.models.ts:261`, grep evidence abaixo |
+| Benchmark busca estruturada vs embeddings | **PASS** — p95 ≤ 16.3 µs local no corpus real (35 entradas); `/docs/search` ~1.9 ms; conclusão: busca estruturada suficiente, critérios de reavaliação registrados | `docs/knowledge/search-benchmark.md` |
+
+**Bugs reais encontrados pela varredura axe (corrigidos nesta branch):**
+
+- Templates `/skills` e `/agents` lançavam `TypeError` com adapters que
+  omitem campos (`s.hosts.length` sobre `undefined`) — o crash abortava o
+  passo de update do CD e deixava `aria-label`/`placeholder` sem bind
+  (axe `button-name` critical + `label` critical). Correção: normalização
+  defensiva no boundary (`api.client.ts` skills/agents) — arrays ausentes
+  viram `[]` e renderizam UNVERIFIED, nunca um valor inventado.
+- `label-content-name-mismatch` (WCAG 2.5.3) nos botões da topbar: o
+  texto visível (`Ctrl K`, `PT`/`EN`) não constava no nome acessível —
+  agora consta.
+- `color-contrast` serious em `/graph` (`.fed__node` sem `background` →
+  buttonface cinza do UA; `[data-unverified]` com `opacity: 0.72`) e em
+  `/hosts` (`.host[data-off]` com `opacity: 0.55`) — opacidade substituída
+  por superfície translúcida/desaturação; contraste de texto restaurado.
+- `landmark-unique` (moderate): asides do shell e das páginas install/
+  federation ganharam `aria-label` i18n.
+- Fixture e2e `hosts()` retornava o shape legado `{id,name,state}` —
+  h2s vazios (axe `empty-heading`); agora emite `HostDetection` real.
+- `test_no_console_errors` endurecido: captura `console.error` de
+  templates Angular (TypeError silencia binds) em 6 rotas, além de
+  `pageerror`.
+
+**Grep evidence — timestamps**: `MetricsEvent.at` já existe e ordena o
+replay (`tasks.data.ts:143-152`); `TaskExecution.started_at/finished_at`
+dirigem a timeline (`tasks.data.ts:72-103`); para `TaskEvent` (SSE), o
+único produtor em `portal_core/forge_portal.py` é `SseResult`
+(passthrough de dicts do adapter, linha ~102/675-702) e nenhum adapter/
+fixture emite `at` — o campo opcional `TaskEvent.at` (`api.models.ts`)
+está pronto para quando um adapter passar a carimbar; consumidores nunca
+inferem o valor.
 
 ## Recomendações futuras
 

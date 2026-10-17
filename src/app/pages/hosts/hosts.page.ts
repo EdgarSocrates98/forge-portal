@@ -316,6 +316,9 @@ interface HostCheck {
       </section>
     }
   `,
+  /* .muted, .refusal color, .capability/.capability__body were
+     consolidated into the "shared feature styles" section of
+     src/styles.css — only host-specific rules remain here. */
   styles: `
     .card {
       margin-bottom: var(--space-4);
@@ -366,8 +369,10 @@ interface HostCheck {
       margin-bottom: var(--space-4);
     }
     .host[data-off] {
-      opacity: 0.55;
+      /* "off" cue without opacity: an alpha < 1 blend drops badge text below
+         WCAG AA (axe §1.4.3) — desaturate + dashed border instead */
       filter: grayscale(0.6);
+      border-style: dashed;
     }
     .card__head,
     .outcome__head {
@@ -490,9 +495,6 @@ interface HostCheck {
       font-size: var(--font-xs);
       overflow-wrap: anywhere;
     }
-    .muted {
-      color: var(--fg-muted);
-    }
     .checked {
       display: flex;
       align-items: center;
@@ -547,30 +549,10 @@ interface HostCheck {
     }
     .refusal {
       margin: 0;
-      color: var(--warn);
     }
     .unverified-panel {
       display: flex;
       gap: var(--space-3);
-    }
-    .capability {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: var(--space-2);
-    }
-    .capability li {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-3);
-      border: 1px dashed var(--border);
-      border-radius: var(--radius-md);
-    }
-    .capability__body {
-      display: grid;
-      gap: 2px;
     }
   `,
 })

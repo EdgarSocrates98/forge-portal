@@ -176,7 +176,7 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
           </div>
         </section>
 
-        <aside class="card specialist-card">
+        <aside class="card specialist-card" [attr.aria-label]="'federation.specialists' | t">
           <div class="card__heading">
             <div>
               <h2>{{ 'federation.specialists' | t }}</h2>

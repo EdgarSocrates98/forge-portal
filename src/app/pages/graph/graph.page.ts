@@ -523,6 +523,9 @@ const norm = (s: string): string =>
       gap: var(--space-2);
       padding: var(--space-2);
       border: 1px solid var(--border);
+      /* buttons inherit the UA buttonface gray — paint the token surface or
+         the label/id text loses AA contrast in dark schemes (axe §1.4.3) */
+      background: var(--bg-elevated);
       border-radius: var(--radius-md);
       color: var(--fg);
       font: inherit;
@@ -534,7 +537,9 @@ const norm = (s: string): string =>
     }
     .fed__node[data-unverified] {
       border-style: dashed;
-      opacity: 0.72;
+      /* no opacity here: alpha < 1 dims the kind chip/badge text below AA —
+         a translucent surface keeps the "not yet observed" cue legally */
+      background: color-mix(in srgb, var(--bg-elevated) 55%, transparent);
     }
     .fed__node[data-selected] {
       border-color: var(--accent-ink);
