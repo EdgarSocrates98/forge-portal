@@ -40,7 +40,10 @@ Gates de qualidade deste repo:
 | `npm run build`                   | Antes de commitar — prova que compila e gera o bundle a ser vendored.              |
 | `npm test`                        | Sempre — unidade de stores, i18n, api client e páginas.                            |
 | `npx prettier --check "src/**/*"` | Antes de commitar — estilo canônico (`.prettierrc`).                               |
-| `python -m pytest tests/`         | Quando `server/` existir (FASE 2) — testes do backend stdlib.                      |
+| `python -m pytest tests/`         | Testes do backend stdlib (`portal_core/`).                                         |
+| `python -m pytest e2e/`           | E2E em Chromium real contra o bundle (`playwright` em `requirements-dev.txt`).     |
+| `python3 scripts/check_i18n.py`   | Paridade de chaves pt-BR/en — trava drift de i18n.                                 |
+| `ruff check portal_core tests scripts e2e` | Lint Python.                                                              |
 | `python scripts/vendor.py`        | Após um build de release — propaga o bundle + `_forge_portal.py` para as 7 Forjas. |
 
 ## Princípios

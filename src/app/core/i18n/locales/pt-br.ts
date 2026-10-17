@@ -21,6 +21,7 @@ export const PT_BR: Record<string, string> = {
   'nav.section.operate': 'Operar',
   'nav.section.analyze': 'Analisar',
   'nav.section.settings': 'Configurações',
+  'nav.primary': 'Navegação principal',
   'nav.collapse': 'Recolher menu',
   'nav.skip': 'Pular para o conteúdo',
   'nav.expand': 'Expandir menu',

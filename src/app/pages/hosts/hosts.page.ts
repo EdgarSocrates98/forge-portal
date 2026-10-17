@@ -386,7 +386,7 @@ interface HostCheck {
       gap: var(--space-2);
     }
     .card__head ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     /* vertical mini stepper — one row per lifecycle stage */
     .lc {
@@ -441,7 +441,7 @@ interface HostCheck {
       font-weight: 650;
     }
     .lc li[data-state='active'] .dot {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
     }
     .lc li[data-state='warn'],
@@ -531,7 +531,7 @@ interface HostCheck {
       margin: 0;
       font-size: var(--font-xs);
       font-weight: 600;
-      color: var(--accent);
+      color: var(--accent-ink);
       display: inline-flex;
       align-items: center;
       gap: 6px;

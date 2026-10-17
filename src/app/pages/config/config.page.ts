@@ -77,12 +77,12 @@ import { ToastService } from '../../shared/toast';
           <table class="table env-table">
             <thead>
               <tr>
-                <th>{{ 'config.col.name' | t }}</th>
-                <th>{{ 'config.col.required' | t }}</th>
-                <th>{{ 'config.col.present' | t }}</th>
-                <th>{{ 'config.col.valid' | t }}</th>
-                <th>{{ 'config.col.kind' | t }}</th>
-                <th>{{ 'config.col.path' | t }}</th>
+                <th scope="col">{{ 'config.col.name' | t }}</th>
+                <th scope="col">{{ 'config.col.required' | t }}</th>
+                <th scope="col">{{ 'config.col.present' | t }}</th>
+                <th scope="col">{{ 'config.col.valid' | t }}</th>
+                <th scope="col">{{ 'config.col.kind' | t }}</th>
+                <th scope="col">{{ 'config.col.path' | t }}</th>
               </tr>
             </thead>
             <tbody>

@@ -216,9 +216,9 @@ import { Source, stamp } from '../explorer/forges.data';
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'versions.receipts.file' | t }}</th>
-                  <th>{{ 'versions.receipts.operation' | t }}</th>
-                  <th>{{ 'versions.receipts.status' | t }}</th>
+                  <th scope="col">{{ 'versions.receipts.file' | t }}</th>
+                  <th scope="col">{{ 'versions.receipts.operation' | t }}</th>
+                  <th scope="col">{{ 'versions.receipts.status' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -263,9 +263,9 @@ import { Source, stamp } from '../explorer/forges.data';
             <table class="table">
               <thead>
                 <tr>
-                  <th>{{ 'versions.history.version' | t }}</th>
-                  <th>{{ 'versions.history.at' | t }}</th>
-                  <th>{{ 'versions.history.detail' | t }}</th>
+                  <th scope="col">{{ 'versions.history.version' | t }}</th>
+                  <th scope="col">{{ 'versions.history.at' | t }}</th>
+                  <th scope="col">{{ 'versions.history.detail' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -339,7 +339,7 @@ import { Source, stamp } from '../explorer/forges.data';
       gap: var(--space-2);
     }
     .sec__head h2 ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .src {
       margin: 4px 0 0;

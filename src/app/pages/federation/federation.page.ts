@@ -328,7 +328,7 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
       color: var(--fg-muted);
     }
     .eyebrow {
-      color: var(--accent-strong);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 4px 9px;
@@ -358,13 +358,13 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
     .component:hover,
     .choice[data-active],
     .component[data-active] {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
       background: var(--accent-bg);
     }
     .choice input,
     .component input {
       margin-top: 3px;
-      accent-color: var(--accent);
+      accent-color: var(--accent-ink);
       flex: none;
     }
     .choice span,
@@ -490,7 +490,7 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
       overflow-wrap: anywhere;
     }
     .actions code {
-      color: var(--accent-strong);
+      color: var(--accent-ink);
       flex: none;
     }
     .running,

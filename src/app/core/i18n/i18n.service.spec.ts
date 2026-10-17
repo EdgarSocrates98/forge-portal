@@ -27,6 +27,14 @@ describe('I18nService', () => {
     expect(i18n.t('nav.dashboard')).toBe('Painel');
   });
 
+  it('keeps <html lang> in sync with the rendered locale (WCAG 3.1.1)', async () => {
+    const i18n = TestBed.inject(I18nService);
+    await i18n.applyPreference('en');
+    expect(document.documentElement.getAttribute('lang')).toBe('en');
+    await i18n.applyPreference('pt-BR');
+    expect(document.documentElement.getAttribute('lang')).toBe('pt-BR');
+  });
+
   it('marks missing keys visibly instead of crashing', async () => {
     const i18n = TestBed.inject(I18nService);
     await i18n.applyPreference('en');

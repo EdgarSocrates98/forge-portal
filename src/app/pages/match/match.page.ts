@@ -147,7 +147,7 @@ type Filter = MatchKind | 'all';
       gap: var(--space-2);
     }
     .group__title ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .hits {
       display: grid;
@@ -170,7 +170,7 @@ type Filter = MatchKind | 'all';
       text-decoration: none;
     }
     .hit__label:hover {
-      color: var(--accent);
+      color: var(--accent-ink);
       text-decoration: underline;
     }
     .ev {
@@ -189,7 +189,7 @@ type Filter = MatchKind | 'all';
     }
     .ev__field {
       flex: none;
-      color: var(--accent);
+      color: var(--accent-ink);
       font-weight: 600;
     }
     .ev__value {

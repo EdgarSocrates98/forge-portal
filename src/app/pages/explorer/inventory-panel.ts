@@ -106,7 +106,7 @@ import { CountTile, countLoader, countTiles } from './forges.data';
       text-decoration: none;
     }
     .tile__link:hover {
-      color: var(--accent-strong);
+      color: var(--accent-ink);
       text-decoration: underline;
     }
     .tile__reload {

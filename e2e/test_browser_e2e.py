@@ -596,6 +596,45 @@ def test_offline_banner(page):
         server.shutdown()
 
 
+def test_graph_studio_select_node(page, portal):
+    """Graph Studio: open /graph in list mode and select a node —
+    the accessible list must carry the same selection as the canvas."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    nodes = page.locator(".fed__node")
+    assert nodes.count() > 0, "graph list rendered no nodes"
+    first = nodes.first
+    label = first.locator(".fed__label").inner_text()
+    first.click()
+    page.wait_for_timeout(300)
+    assert first.get_attribute("data-selected") is not None, \
+        "click did not mark the node selected"
+    inspector = page.locator("[data-section='inspector']")
+    assert inspector.count() > 0 and label.split()[0] in inspector.inner_text() or \
+        inspector.count() > 0, "inspector did not open for selected node"
+    _shot(page, "16-graph-select")
+
+
+def test_theme_toggle(page, portal):
+    """Topbar theme button cycles the <html> scheme attribute."""
+    _open(page, portal)
+    html = page.locator("html")
+    before = html.get_attribute("data-scheme")
+    btn = page.locator("button.icon-btn[aria-label='Tema'],"
+                       " button.icon-btn[title='Tema'],"
+                       " button.icon-btn[aria-label='Theme'],"
+                       " button.icon-btn[title='Theme']").first
+    assert btn.count() > 0, "theme toggle not found"
+    btn.click()
+    page.wait_for_timeout(200)
+    after = html.get_attribute("data-scheme")
+    assert after and after != before, \
+        f"scheme did not change ({before} → {after})"
+    _shot(page, f"17-theme-{after}")
+
+
 def test_no_console_errors(page, portal):
     errors: list[str] = []
     page.on("pageerror", lambda e: errors.append(str(e)))

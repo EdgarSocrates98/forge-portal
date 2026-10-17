@@ -453,7 +453,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
     }
     .sec-head h2 ui-icon,
     .sec-title ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .srcs {
       list-style: none;
@@ -502,14 +502,14 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       flex: none;
     }
     .node:hover {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
     }
     .node[data-unverified] {
       border-style: dashed;
       opacity: 0.72;
     }
     .node[data-selected] {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
       box-shadow: 0 0 0 1px var(--accent);
     }
     .node__label {
@@ -576,7 +576,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
     .chip-link {
       font-size: var(--font-xs);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border-radius: var(--radius-pill);
       padding: 1px 8px;
@@ -618,7 +618,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
       margin-left: auto;
     }
     .cat {
-      color: var(--accent);
+      color: var(--accent-ink);
       font-weight: 600;
       flex-shrink: 0;
       background: var(--accent-bg);

@@ -90,7 +90,7 @@
   --fg-text-2: #4b5563;
   --fg-text-dim: #6b7280;
   --fg-focus: #2563eb;
-  --fg-success: #0f8a4c;
+  --fg-success: #0b7a42;
   --fg-success-bg: #e3f5ea;
   --fg-warning: #a35c00;
   --fg-warning-bg: #fdf0dd;
@@ -133,12 +133,24 @@
   --fg-elev-3: 0 12px 40px rgb(0 0 0 / 0.55);
 }
 
-/* ---- forge accents (one --fg-accent* set per forge) ---- */
+/* ---- forge accents (one --fg-accent* set per forge) ----
+   Per forge the ramp is three steps plus a text-safe "ink":
+     --fg-accent          brand hue — borders, rails, glows (non-text)
+     --fg-accent-strong   deeper hue — hover borders/glows (non-text)
+     --fg-accent-bg       tint behind accent text/chips
+     --fg-accent-ink      ≥4.5:1 on --fg-accent-bg AND on --fg-surface —
+                          the ONLY accent allowed to paint text
+     --fg-accent-fill     accent surface under --fg-accent-contrast text —
+                          ≥4.5:1 (WCAG 2.2 1.4.3). For spark-forge-aws the
+                          contrast is dark, so the fill stays the brand hue.
+   Light-scheme values audited in docs/audits/a11y-cycle6.md. */
 :root,
 [data-forge='the-forge'] {
   --fg-accent: #e8611c;
   --fg-accent-strong: #c74e0f;
   --fg-accent-bg: #fdeee4;
+  --fg-accent-ink: #a8430c;
+  --fg-accent-fill: #a8430c;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #e8611c 0%, #b93e6b 100%);
 }
@@ -148,8 +160,10 @@
 }
 [data-forge='spark-forge-aws'] {
   --fg-accent: #e08a00;
-  --fg-accent-strong: #b56d00;
+  --fg-accent-strong: #c07a00;
   --fg-accent-bg: #fdf2dc;
+  --fg-accent-ink: #7d5200;
+  --fg-accent-fill: #e08a00;
   --fg-accent-contrast: #1d1400;
   --fg-gradient: linear-gradient(135deg, #e08a00 0%, #c2571b 100%);
 }
@@ -157,6 +171,8 @@
   --fg-accent: #0078d4;
   --fg-accent-strong: #005a9e;
   --fg-accent-bg: #e2f0fc;
+  --fg-accent-ink: #005a9e;
+  --fg-accent-fill: #005a9e;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #0078d4 0%, #2b88d8 100%);
 }
@@ -164,6 +180,8 @@
   --fg-accent: #0e8f8f;
   --fg-accent-strong: #0a6e6e;
   --fg-accent-bg: #def3f2;
+  --fg-accent-ink: #096060;
+  --fg-accent-fill: #096060;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #0e8f8f 0%, #1167b1 100%);
 }
@@ -171,6 +189,8 @@
   --fg-accent: #6d4bd8;
   --fg-accent-strong: #5537b8;
   --fg-accent-bg: #ece6fb;
+  --fg-accent-ink: #5537b8;
+  --fg-accent-fill: #5537b8;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #6d4bd8 0%, #8f3fd1 100%);
 }
@@ -178,6 +198,8 @@
   --fg-accent: #178a50;
   --fg-accent-strong: #0f6e3e;
   --fg-accent-bg: #ddf3e6;
+  --fg-accent-ink: #0d6338;
+  --fg-accent-fill: #0d6338;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #178a50 0%, #0d9488 100%);
 }
@@ -185,11 +207,38 @@
   --fg-accent: #c73565;
   --fg-accent-strong: #a02550;
   --fg-accent-bg: #fbe4ec;
+  --fg-accent-ink: #a02550;
+  --fg-accent-fill: #a02550;
   --fg-accent-contrast: #ffffff;
   --fg-gradient: linear-gradient(135deg, #c73565 0%, #9d4edd 100%);
 }
 [data-scheme='dark'] {
   --fg-accent-bg: rgb(255 255 255 / 0.08);
+}
+/* dark-scheme ink: the brand hue is too dark to read on dark surfaces —
+   text uses a lighter step, still ≥4.5:1 on surface and accent-bg
+   (ratios in docs/audits/a11y-cycle6.md). */
+[data-scheme='dark'][data-forge='the-forge'],
+[data-scheme='dark'] {
+  --fg-accent-ink: #f07a35;
+}
+[data-scheme='dark'][data-forge='spark-forge-aws'] {
+  --fg-accent-ink: #e08a00;
+}
+[data-scheme='dark'][data-forge='spark-forge-azure'] {
+  --fg-accent-ink: #3d9bff;
+}
+[data-scheme='dark'][data-forge='api-forge'] {
+  --fg-accent-ink: #2bb3b3;
+}
+[data-scheme='dark'][data-forge='platform-forge'] {
+  --fg-accent-ink: #a08cf0;
+}
+[data-scheme='dark'][data-forge='forge-doctor-data'] {
+  --fg-accent-ink: #33c07c;
+}
+[data-scheme='dark'][data-forge='forge-doctor-api'] {
+  --fg-accent-ink: #e86a93;
 }
 
 /* ---- semantic aliases ---------------------------------------------------
@@ -234,6 +283,10 @@
   --accent: var(--fg-accent);
   --accent-strong: var(--fg-accent-strong);
   --accent-bg: var(--fg-accent-bg);
+  /* text-safe accent steps — the only accents allowed to paint text or
+     carry contrast text (WCAG 2.2 1.4.3); see tokens.css header note */
+  --accent-ink: var(--fg-accent-ink);
+  --accent-fill: var(--fg-accent-fill);
   --accent-fg: var(--fg-accent-contrast);
   --gradient: var(--fg-gradient);
   --scrim: var(--fg-scrim);

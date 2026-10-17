@@ -45,6 +45,9 @@ export class I18nService {
     const locale = pref === 'automatic' ? this.detectLocale() : pref;
     this.locale.set(locale);
     try {
+      // WCAG 3.1.1 — the document language must track the rendered locale
+      // or assistive tech keeps announcing in the <html lang> language.
+      globalThis.document?.documentElement.setAttribute('lang', locale);
       globalThis.localStorage?.setItem(STORAGE_KEY, pref);
     } catch {
       // non-fatal

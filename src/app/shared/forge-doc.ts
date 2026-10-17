@@ -274,7 +274,7 @@ export interface ForgeFile {
       color: var(--fg-muted);
     }
     .repairable {
-      color: var(--accent);
+      color: var(--accent-ink);
       font-size: var(--font-xs);
       font-weight: 650;
     }
@@ -315,13 +315,13 @@ export interface ForgeFile {
       color: var(--bad);
     }
     .fdoc__refusal .unlock {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .fdoc__repair {
       display: flex;
       align-items: center;
       gap: var(--space-2);
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .fdoc__raw {
       margin-top: var(--space-4);

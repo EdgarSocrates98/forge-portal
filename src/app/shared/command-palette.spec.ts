@@ -167,6 +167,71 @@ describe('CommandPalette', () => {
     expect(el.querySelector('.cp__panel')).toBeNull();
   });
 
+  it('restores focus to the invoking element on close', async () => {
+    const invoker = document.createElement('button');
+    document.body.appendChild(invoker);
+    invoker.focus();
+    try {
+      await open();
+      expect(document.activeElement).toBe(el.querySelector('.cp__input'));
+      const input = el.querySelector<HTMLElement>('.cp__input');
+      if (!input) throw new Error('no input');
+      keydown(input, 'Escape');
+      await vi.advanceTimersByTimeAsync(0);
+      expect(document.activeElement).toBe(invoker);
+    } finally {
+      invoker.remove();
+    }
+  });
+
+  it('traps Tab inside the modal panel (first ↔ last)', async () => {
+    await open();
+    const panel = el.querySelector<HTMLElement>('.cp__panel');
+    const input = el.querySelector<HTMLElement>('.cp__input');
+    const activeChip = chips().find((c) => c.tabIndex === 0);
+    if (!panel || !input || !activeChip) throw new Error('panel wiring missing');
+    // last focusable → Tab wraps to the input
+    activeChip.focus();
+    activeChip.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(input);
+    // first focusable → Shift+Tab wraps back to the chip
+    input.focus();
+    input.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }),
+    );
+    fixture.detectChanges();
+    expect(document.activeElement).toBe(activeChip);
+  });
+
+  it('opens doc URLs only for web-safe schemes', async () => {
+    await open();
+    const win = vi.spyOn(window, 'open').mockImplementation(() => null);
+    comp.run({
+      id: 'd1',
+      kind: 'doc',
+      label: 'evil',
+      icon: 'knowledge',
+      url: 'javascript:alert(1)',
+    });
+    comp.run({
+      id: 'd2',
+      kind: 'doc',
+      label: 'data',
+      icon: 'knowledge',
+      url: 'data:text/html,<b>x</b>',
+    });
+    expect(win).not.toHaveBeenCalled();
+    comp.run({
+      id: 'd3',
+      kind: 'doc',
+      label: 'ok',
+      icon: 'knowledge',
+      url: 'https://example.com/doc',
+    });
+    expect(win).toHaveBeenCalledWith('https://example.com/doc', '_blank', 'noopener');
+  });
+
   it('clicking a result runs it', async () => {
     await open();
     const router = TestBed.inject(Router);

@@ -37,7 +37,7 @@ import { UiIcon } from './icon';
       height: 52px;
       border-radius: 50%;
       margin-bottom: var(--space-1);
-      color: var(--accent);
+      color: var(--accent-ink);
       background: var(--accent-bg);
       border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     }

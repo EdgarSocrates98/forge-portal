@@ -100,13 +100,13 @@ interface ScenarioRow extends LabScenarioResult {
           <table class="tbl">
             <thead>
               <tr>
-                <th>{{ 'lab.col.file' | t }}</th>
-                <th>{{ 'lab.col.forges' | t }}</th>
-                <th>{{ 'lab.col.scenarios' | t }}</th>
-                <th>{{ 'lab.col.pass' | t }}</th>
-                <th>{{ 'lab.col.fail' | t }}</th>
-                <th>{{ 'lab.col.skipped' | t }}</th>
-                <th></th>
+                <th scope="col">{{ 'lab.col.file' | t }}</th>
+                <th scope="col">{{ 'lab.col.forges' | t }}</th>
+                <th scope="col">{{ 'lab.col.scenarios' | t }}</th>
+                <th scope="col">{{ 'lab.col.pass' | t }}</th>
+                <th scope="col">{{ 'lab.col.fail' | t }}</th>
+                <th scope="col">{{ 'lab.col.skipped' | t }}</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
@@ -149,12 +149,12 @@ interface ScenarioRow extends LabScenarioResult {
           <table class="tbl" data-table="scenarios">
             <thead>
               <tr>
-                <th>{{ 'lab.col.forge' | t }}</th>
-                <th>{{ 'lab.col.scenario' | t }}</th>
-                <th>{{ 'lab.col.verdict' | t }}</th>
-                <th>{{ 'lab.col.duration' | t }}</th>
-                <th>{{ 'lab.col.metrics' | t }}</th>
-                <th>{{ 'lab.col.detail' | t }}</th>
+                <th scope="col">{{ 'lab.col.forge' | t }}</th>
+                <th scope="col">{{ 'lab.col.scenario' | t }}</th>
+                <th scope="col">{{ 'lab.col.verdict' | t }}</th>
+                <th scope="col">{{ 'lab.col.duration' | t }}</th>
+                <th scope="col">{{ 'lab.col.metrics' | t }}</th>
+                <th scope="col">{{ 'lab.col.detail' | t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -191,9 +191,9 @@ interface ScenarioRow extends LabScenarioResult {
             <table class="tbl">
               <thead>
                 <tr>
-                  <th>{{ 'lab.col.scenario' | t }}</th>
-                  <th>{{ runA() }}</th>
-                  <th>{{ runB() }}</th>
+                  <th scope="col">{{ 'lab.col.scenario' | t }}</th>
+                  <th scope="col">{{ runA() }}</th>
+                  <th scope="col">{{ runB() }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -279,7 +279,7 @@ interface ScenarioRow extends LabScenarioResult {
       cursor: pointer;
     }
     .chip.on {
-      background: var(--accent);
+      background: var(--accent-fill);
       color: var(--accent-fg);
     }
     .tbl {

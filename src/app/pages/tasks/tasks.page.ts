@@ -358,14 +358,14 @@ interface PendingPlan {
         <table class="table">
           <thead>
             <tr>
-              <th>
+              <th scope="col">
                 <span class="sr-only">{{ 'table.task' | t }}</span>
               </th>
-              <th>{{ 'table.verb' | t }}</th>
-              <th>{{ 'table.stage' | t }}</th>
-              <th>{{ 'table.correlation' | t }}</th>
-              <th>{{ 'table.duration' | t }}</th>
-              <th>{{ 'table.exit' | t }}</th>
+              <th scope="col">{{ 'table.verb' | t }}</th>
+              <th scope="col">{{ 'table.stage' | t }}</th>
+              <th scope="col">{{ 'table.correlation' | t }}</th>
+              <th scope="col">{{ 'table.duration' | t }}</th>
+              <th scope="col">{{ 'table.exit' | t }}</th>
             </tr>
           </thead>
           <tbody>
@@ -650,7 +650,7 @@ interface PendingPlan {
       flex: none;
       border-radius: 50%;
       border: 2px solid var(--accent-bg);
-      border-top-color: var(--accent);
+      border-top-color: var(--accent-ink);
       animation: fg-spin 0.8s linear infinite;
     }
     @keyframes fg-spin {
@@ -687,7 +687,7 @@ interface PendingPlan {
       overflow-wrap: anywhere;
     }
     .actions li code {
-      color: var(--accent);
+      color: var(--accent-ink);
       flex: none;
     }
     .actions__kind {
@@ -754,7 +754,7 @@ interface PendingPlan {
       background: var(--bg-hover);
     }
     .tl__row[data-selected] {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
       background: var(--accent-bg);
     }
     .tl__label {
@@ -830,7 +830,7 @@ interface PendingPlan {
       padding: 0;
       font: inherit;
       font-weight: 550;
-      color: var(--accent);
+      color: var(--accent-ink);
       cursor: pointer;
       text-align: left;
     }
@@ -853,7 +853,7 @@ interface PendingPlan {
       font-size: var(--font-md);
     }
     .replay__title ui-icon {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .replay__controls {
       display: flex;
@@ -885,14 +885,14 @@ interface PendingPlan {
     }
     .replay__step:hover,
     .replay__step[data-current] {
-      border-color: var(--accent);
+      border-color: var(--accent-ink);
     }
     .replay__step[data-current] {
       box-shadow: 0 0 0 1px var(--accent);
       background: var(--accent-bg);
     }
     .replay__kind {
-      color: var(--accent);
+      color: var(--accent-ink);
     }
     .replay__at {
       font-variant-numeric: tabular-nums;

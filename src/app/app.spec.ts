@@ -1,7 +1,17 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { App } from './app';
 import { PortalStore } from './core/portal/portal.store';
+
+@Component({ standalone: true, template: '<p>stub</p>' })
+class StubPage {}
+
+const STUB_ROUTES = [
+  { path: 'dashboard', component: StubPage },
+  { path: 'agents', component: StubPage },
+  { path: '**', redirectTo: 'dashboard' },
+];
 
 class PortalStoreStub {
   readonly status = () => 'offline' as const;
@@ -118,5 +128,45 @@ describe('App shell', () => {
     fixture.detectChanges();
     const banner = fixture.nativeElement.querySelector('.offline-banner');
     expect(banner).toBeTruthy();
+  });
+});
+
+describe('App shell — a11y chrome', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter(STUB_ROUTES), { provide: PortalStore, useClass: PortalStoreStub }],
+    }).compileComponents();
+  });
+
+  it('marks the active nav link aria-current="page"', async () => {
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    fixture.detectChanges();
+    await router.navigateByUrl('/dashboard');
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const active = el.querySelector<HTMLAnchorElement>('.nav__item--active');
+    expect(active?.getAttribute('href')).toBe('/dashboard');
+    expect(active?.getAttribute('aria-current')).toBe('page');
+    const others = [...el.querySelectorAll<HTMLAnchorElement>('.nav__item')].filter(
+      (a) => a !== active,
+    );
+    expect(others.every((a) => !a.hasAttribute('aria-current'))).toBe(true);
+  });
+
+  it('moves focus into <main> on later navigations, not the first', async () => {
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    fixture.detectChanges();
+    await router.navigateByUrl('/dashboard');
+    await fixture.whenStable();
+    const main = document.getElementById('content');
+    expect(main).toBeTruthy();
+    expect(document.activeElement).not.toBe(main);
+    await router.navigateByUrl('/agents');
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(main);
   });
 });
