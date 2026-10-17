@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { McpPage } from './mcp.page';
 import { PortalApi } from '../../core/api/api.client';
@@ -70,7 +71,7 @@ describe('McpPage', () => {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [McpPage],
-      providers: [{ provide: PortalApi, useValue: api }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(McpPage);
@@ -212,5 +213,56 @@ describe('McpPage', () => {
 
     expect(registry?.querySelector('ui-empty')).toBeTruthy();
     expect(text(registry)).toContain('Nothing to show yet.');
+  });
+
+  it('links a declared host to /hosts#host-<id> — unbound stays unlinked', async () => {
+    const { el } = await setup();
+    const api = row(el, 'api-forge-mcp');
+    const hostLink = api?.querySelector<HTMLAnchorElement>('a.linklike');
+    expect(hostLink).toBeTruthy();
+    expect(hostLink!.getAttribute('href')).toContain('host-claude');
+    expect(text(hostLink)).toContain('claude');
+
+    // doctor-mcp has host: null — rendered as unbound text, never a link
+    const doctor = row(el, 'doctor-mcp');
+    expect(doctor?.querySelector('[data-unbound]')).toBeTruthy();
+    expect(doctor?.querySelector('a')).toBeNull();
+  });
+
+  it('a ?server= deep link selects the matching server — applied once', async () => {
+    const { el, fixture } = await setup();
+    fixture.componentRef.setInput('server', 'api-forge-mcp');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const inspector = section(el, 'inspector');
+    expect(text(inspector?.querySelector('.insp__head'))).toContain('api-forge-mcp');
+    // the inspector host link lands on the real #host- anchor too
+    const hostLink = inspector?.querySelector<HTMLAnchorElement>('dd a.linklike');
+    expect(hostLink?.getAttribute('href')).toContain('host-claude');
+
+    // closing stays closed while the same param is still bound
+    inspector?.querySelector<HTMLElement>('.sec__head button')?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(text(inspector?.querySelector('.insp__head'))).not.toContain('api-forge-mcp');
+
+    // a new value applies again
+    fixture.componentRef.setInput('server', 'stale-mcp');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(text(inspector?.querySelector('.insp__head'))).toContain('stale-mcp');
+  });
+
+  it('ignores a ?server= value that matches no record — nothing is fabricated', async () => {
+    const { el, fixture } = await setup();
+    fixture.componentRef.setInput('server', 'no-such-server');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(text(section(el, 'inspector')?.querySelector('.insp__head'))).toBe('');
   });
 });

@@ -60,7 +60,10 @@ function setFilter(el: HTMLElement, name: string, value: string): void {
 }
 
 describe('ObservePage', () => {
-  async function setup(overrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
+  async function setup(
+    overrides: Partial<Record<keyof PortalApi, unknown>> = {},
+    inputs: Record<string, unknown> = {},
+  ) {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [ObservePage],
@@ -68,6 +71,7 @@ describe('ObservePage', () => {
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(ObservePage);
+    for (const [k, v] of Object.entries(inputs)) fixture.componentRef.setInput(k, v);
     await fixture.whenStable();
     fixture.detectChanges();
     await fixture.whenStable();
@@ -154,6 +158,17 @@ describe('ObservePage', () => {
     setFilter(events, 'status', '');
     fixture.detectChanges();
     expect(rows(events).length).toBe(3);
+  });
+
+  it('seeds the correlation filter from the ?cid= route input', async () => {
+    const { el, fixture } = await setup({}, { cid: 'corr-abc123def456' });
+    expect(fixture.componentInstance.corrFilter()).toBe('corr-abc123def456');
+    const trs = rows(section(el, 'events')!);
+    expect(trs.length).toBe(1);
+    expect(text(trs[0])).toContain('completed');
+    // the filter input visibly reflects the seeded value
+    const input = el.querySelector<HTMLInputElement>('input[data-filter="correlation"]');
+    expect(input?.value).toBe('corr-abc123def456');
   });
 
   it('shows the bounded-window note when the report is truncated', async () => {

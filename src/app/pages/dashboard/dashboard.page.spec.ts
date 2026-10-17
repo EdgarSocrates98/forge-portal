@@ -200,6 +200,20 @@ describe('DashboardPage', () => {
     expect(tasks?.querySelector('[data-failures]')?.getAttribute('data-failures')).toBe('1');
   });
 
+  it('links each recent task row to its /tasks?task=<id> detail deep link', async () => {
+    const el = (await setup()).nativeElement as HTMLElement;
+    const tasks = section(el, 'tasks')!;
+    const links = [...tasks.querySelectorAll<HTMLAnchorElement>('tbody tr a.linklike')];
+    expect(links.length).toBe(3);
+    // newest first — t3, t2, t1 — each href carries its own task id
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/tasks?task=t3',
+      '/tasks?task=t2',
+      '/tasks?task=t1',
+    ]);
+    expect(text(links[0])).toContain('Scan apis');
+  });
+
   it('marks a missing federation source UNVERIFIED without crashing other sections', async () => {
     const el = (
       await setup({

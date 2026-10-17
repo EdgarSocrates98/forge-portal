@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
 import { PortalApi } from '../../core/api/api.client';
 import { MetricsReport } from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
@@ -133,6 +133,17 @@ import { Source, stamp } from '../explorer/forges.data';
                   <option [value]="s" [selected]="statusFilter() === s">{{ s }}</option>
                 }
               </select>
+            </label>
+            <label class="filter">
+              <span class="filter__lbl">{{ 'observe.filter.corr' | t }}</span>
+              <input
+                class="input"
+                type="search"
+                data-filter="correlation"
+                [value]="corrFilter()"
+                (input)="setCorr($event)"
+                [attr.aria-label]="'observe.filter.corr' | t"
+              />
             </label>
           </div>
         }
@@ -301,6 +312,9 @@ import { Source, stamp } from '../explorer/forges.data';
       gap: 4px;
       min-width: 160px;
     }
+    .filter .input {
+      min-width: 200px;
+    }
     .filter__lbl {
       font-size: var(--font-xs);
       color: var(--fg-muted);
@@ -321,8 +335,13 @@ import { Source, stamp } from '../explorer/forges.data';
     }
   `,
 })
-export class ObservePage {
+export class ObservePage implements OnInit {
   private readonly api = inject(PortalApi);
+
+  /** Route `?cid=` deep-link (withComponentInputBinding) — the task
+   *  detail's "correlated events" link lands here. Seeds the visible
+   *  correlation filter; clearing it edits the field, never hidden state. */
+  readonly cid = input('');
 
   /** Single source — 404/PORTAL-NOT-FOUND → UNVERIFIED capability. */
   readonly src = new Source<MetricsReport>();
@@ -330,6 +349,7 @@ export class ObservePage {
 
   readonly kindFilter = signal<string | null>(null);
   readonly statusFilter = signal<string | null>(null);
+  readonly corrFilter = signal('');
 
   /** Counter entries sorted by key — the map order is never trusted. */
   readonly counters = computed(() =>
@@ -358,8 +378,14 @@ export class ObservePage {
   readonly events = computed(() => {
     const kind = this.kindFilter();
     const status = this.statusFilter();
+    const corr = this.corrFilter().trim();
     return (this.report()?.events ?? [])
-      .filter((e) => (kind === null || e.kind === kind) && (status === null || e.status === status))
+      .filter(
+        (e) =>
+          (kind === null || e.kind === kind) &&
+          (status === null || e.status === status) &&
+          (corr === '' || (e.correlation_id ?? '').includes(corr)),
+      )
       .slice()
       .sort((a, b) => this.timeOf(b.at) - this.timeOf(a.at));
   });
@@ -368,6 +394,11 @@ export class ObservePage {
 
   constructor() {
     void this.load();
+  }
+
+  ngOnInit(): void {
+    const seed = this.cid();
+    if (seed) this.corrFilter.set(seed);
   }
 
   async load(): Promise<void> {
@@ -382,6 +413,10 @@ export class ObservePage {
   setStatus(e: Event): void {
     const v = (e.target as HTMLSelectElement).value;
     this.statusFilter.set(v === '' ? null : v);
+  }
+
+  setCorr(e: Event): void {
+    this.corrFilter.set((e.target as HTMLInputElement).value);
   }
 
   /** Badge tone for a free-form adapter status — label stays verbatim. */

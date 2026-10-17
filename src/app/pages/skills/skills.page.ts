@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { SkillDescriptor } from '../../core/api/api.models';
@@ -36,7 +37,17 @@ const norm = (s: string): string =>
 @Component({
   selector: 'page-skills',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, UiFilterBar],
+  imports: [
+    RouterLink,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiSkeleton,
+    UiFilterBar,
+  ],
   template: `
     <ui-page-header [title]="'skills.title' | t" [subtitle]="'skills.subtitle' | t">
       <button class="btn" (click)="load()">
@@ -119,16 +130,29 @@ const norm = (s: string): string =>
       }
 
       @if (selected(); as sel) {
-        <section class="card detail" data-section="skill-detail" aria-live="polite">
+        <section class="card detail fg-enter" data-section="skill-detail" aria-live="polite">
           <header class="detail__head">
             <h2><ui-icon name="skills" [size]="15" />{{ sel.name || sel.id }}</h2>
-            <button
-              class="icon-btn"
-              (click)="selected.set(null)"
-              [attr.aria-label]="'state.close' | t"
-            >
-              <ui-icon name="chevron-right" [size]="14" />
-            </button>
+            <span class="detail__actions">
+              <!-- Agents whose descriptor declares this skill — the agents
+                   page's ?q= filter matches the declared skills[] list. -->
+              <a
+                class="btn btn--mini"
+                data-action="declaring-agents"
+                [routerLink]="['/agents']"
+                [queryParams]="{ q: sel.name || sel.id }"
+              >
+                {{ 'skills.agentsLink' | t }}
+                <ui-icon name="chevron-right" [size]="13" />
+              </a>
+              <button
+                class="icon-btn"
+                (click)="selected.set(null)"
+                [attr.aria-label]="'state.close' | t"
+              >
+                <ui-icon name="chevron-right" [size]="14" />
+              </button>
+            </span>
           </header>
           <dl class="kv">
             <div>
@@ -164,7 +188,13 @@ const norm = (s: string): string =>
               <dt>{{ 'skills.compatibility' | t }}</dt>
               <dd>
                 @if (sel.hosts.length) {
-                  {{ sel.hosts.join(', ') }}
+                  <span class="links">
+                    @for (hh of sel.hosts; track hh) {
+                      <a class="chip-link" [routerLink]="['/hosts']" [fragment]="'host-' + hh">{{
+                        hh
+                      }}</a>
+                    }
+                  </span>
                 } @else {
                   <ui-state-badge state="UNVERIFIED" />
                 }
@@ -243,7 +273,12 @@ const norm = (s: string): string =>
                 <td><ui-state-badge [state]="mapState(s.state)" [labelOverride]="s.state" /></td>
                 <td>
                   @if (s.hosts.length) {
-                    {{ s.hosts.join(', ') }}
+                    @for (hh of s.hosts; track hh; let last = $last) {
+                      <a class="linklike" [routerLink]="['/hosts']" [fragment]="'host-' + hh">{{
+                        hh
+                      }}</a
+                      >{{ last ? '' : ', ' }}
+                    }
                   } @else {
                     <ui-state-badge state="UNVERIFIED" />
                   }
@@ -362,6 +397,16 @@ const norm = (s: string): string =>
     .detail__head h2 ui-icon {
       color: var(--accent-ink);
     }
+    .detail__actions,
+    .links {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .detail__actions .btn {
+      text-decoration: none;
+    }
     .kv {
       display: grid;
       gap: var(--space-2);
@@ -387,23 +432,9 @@ const norm = (s: string): string =>
       align-items: center;
       gap: var(--space-2);
     }
-    .chip-link {
-      font-size: var(--font-xs);
-      font-weight: 600;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
-      border: 0;
-      cursor: pointer;
-    }
+    /* .chip/.chip-link consolidated into styles.css shared blocks;
+       the page only keeps its offset. */
     .chip {
-      font-size: var(--font-xs);
-      font-weight: 700;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
       margin-left: 4px;
     }
   `,

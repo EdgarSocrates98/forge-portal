@@ -202,6 +202,25 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     // neighbors highlighted in the list
     expect(el.querySelectorAll('.fed__node[data-neighbor]').length).toBeGreaterThanOrEqual(4);
     expect(el.querySelectorAll('.fed__node[data-selected]').length).toBe(1);
+    // contextual "open in" — forge nodes own a real detail route
+    const open = panel!.querySelector<HTMLAnchorElement>('a.fed__open');
+    expect(open?.getAttribute('href')).toBe('/forges/the-forge');
+  });
+
+  it('shows no "open in" link for capability nodes — no owning page exists', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const cap = c.fed()!.nodes.find((n) => n.id === 'capability:graph')!;
+    c.select(cap);
+    fixture.detectChanges();
+    const panel = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-section="inspector"]',
+    );
+    expect(panel).toBeTruthy();
+    expect(panel!.querySelector('a.fed__open')).toBeNull();
+    // the id is still shown honestly — just without pretend navigation
+    expect(panel!.textContent).toContain('capability:graph');
   });
 
   it('export downloads the FedGraph JSON document', async () => {

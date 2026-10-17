@@ -9,6 +9,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import {
@@ -39,6 +40,7 @@ import {
   GraphSelection,
 } from '../../core/graph/renderer';
 import { KIND_STYLE, toViewModel } from '../../core/graph/view-model';
+import { EntityLink, entityLink } from '../../core/graph/entity-link';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -87,7 +89,17 @@ const norm = (s: string): string =>
 @Component({
   selector: 'page-graph',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, UiFilterBar],
+  imports: [
+    RouterLink,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiSkeleton,
+    UiFilterBar,
+  ],
   template: `
     <ui-page-header [title]="'graph.title' | t" [subtitle]="'graph.subtitle' | t">
       <button class="btn" (click)="load()">
@@ -218,7 +230,7 @@ const norm = (s: string): string =>
         }
 
         @if (selected(); as sel) {
-          <section class="card fed__detail" data-section="inspector" aria-live="polite">
+          <section class="card fed__detail fg-enter" data-section="inspector" aria-live="polite">
             <header class="fed__detail-head">
               <h2>
                 <ui-icon name="graph" [size]="15" />{{ sel.label }}
@@ -226,13 +238,29 @@ const norm = (s: string): string =>
                   <ui-state-badge state="unverified" />
                 }
               </h2>
-              <button
-                class="icon-btn"
-                (click)="selected.set(null)"
-                [attr.aria-label]="'state.close' | t"
-              >
-                <ui-icon name="chevron-right" [size]="14" />
-              </button>
+              <span class="fed__detail-actions">
+                <!-- Contextual navigation — only when the entity kind has a
+                     real owning page (entity-link.ts); capability nodes
+                     show no link rather than a pretend one. -->
+                @if (openLink(sel); as link) {
+                  <a
+                    class="btn btn--mini fed__open"
+                    [routerLink]="link.commands"
+                    [queryParams]="link.queryParams ?? null"
+                    [fragment]="link.fragment"
+                  >
+                    {{ 'entity.openIn' | t }} {{ link.navKey | t }}
+                    <ui-icon name="chevron-right" [size]="13" />
+                  </a>
+                }
+                <button
+                  class="icon-btn"
+                  (click)="selected.set(null)"
+                  [attr.aria-label]="'state.close' | t"
+                >
+                  <ui-icon name="chevron-right" [size]="14" />
+                </button>
+              </span>
             </header>
             <dl class="kv">
               <div>
@@ -288,7 +316,11 @@ const norm = (s: string): string =>
         }
 
         @if (selectedEdge(); as se) {
-          <section class="card fed__detail" data-section="edge-inspector" aria-live="polite">
+          <section
+            class="card fed__detail fg-enter"
+            data-section="edge-inspector"
+            aria-live="polite"
+          >
             <header class="fed__detail-head">
               <h2><ui-icon name="network" [size]="15" />{{ 'graph.edge.title' | t }}</h2>
               <button
@@ -408,8 +440,8 @@ const norm = (s: string): string =>
                   (click)="select(n)"
                 >
                   <span class="fed__kind">{{ n.kind }}</span>
-                  <span class="fed__label">{{ n.label }}</span>
-                  <code class="fed__id">{{ n.id }}</code>
+                  <span class="fed__label" [attr.title]="n.label">{{ n.label }}</span>
+                  <code class="fed__id" [attr.title]="n.id">{{ n.id }}</code>
                   @if (n.unverified) {
                     <ui-state-badge state="unverified" />
                   }
@@ -480,9 +512,8 @@ const norm = (s: string): string =>
     .fed__detail-head ui-icon {
       color: var(--accent-ink);
     }
-    .chip,
-    .fed__kind,
-    .chip-link {
+    /* .chip/.chip-link consolidated into styles.css shared blocks */
+    .fed__kind {
       font-size: var(--font-xs);
       font-weight: 700;
       color: var(--accent-ink);
@@ -490,10 +521,6 @@ const norm = (s: string): string =>
       border-radius: var(--radius-pill);
       padding: 1px 8px;
       flex: none;
-    }
-    .chip-link {
-      border: 0;
-      cursor: pointer;
     }
     .fed__sources {
       list-style: none;
@@ -531,9 +558,14 @@ const norm = (s: string): string =>
       font: inherit;
       text-align: left;
       cursor: pointer;
+      transition:
+        border-color var(--motion-fast),
+        box-shadow var(--motion-fast),
+        background var(--motion-fast);
     }
     .fed__node:hover {
       border-color: var(--accent-ink);
+      background: var(--bg-hover);
     }
     .fed__node[data-unverified] {
       border-style: dashed;
@@ -567,6 +599,14 @@ const norm = (s: string): string =>
     .fed__detail {
       margin: var(--space-4) 0;
       border-left: 3px solid var(--accent);
+    }
+    .fed__detail-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .fed__open {
+      text-decoration: none;
     }
     .kv {
       display: grid;
@@ -969,6 +1009,12 @@ export class GraphPage {
 
   label(id: string): string {
     return this.nodeById().get(id)?.label ?? id;
+  }
+
+  /** Deep link into the page that owns this entity — null for kinds
+   *  with no dedicated surface (capability), never a pretend link. */
+  openLink(n: FedNode): EntityLink | null {
+    return entityLink(n);
   }
 
   endpointFor(src: FedSource): string {

@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
@@ -57,6 +58,7 @@ interface PendingPlan {
   standalone: true,
   imports: [
     FormsModule,
+    RouterLink,
     TPipe,
     PageHeader,
     StateBadge,
@@ -322,7 +324,9 @@ interface PendingPlan {
                   [attr.aria-label]="r.task.label || r.task.verb"
                   (click)="selectTask(r.task)"
                 >
-                  <span class="tl__label">{{ r.task.label || r.task.verb }}</span>
+                  <span class="tl__label" [attr.title]="r.task.label || r.task.verb">{{
+                    r.task.label || r.task.verb
+                  }}</span>
                   <span class="tl__track">
                     <span
                       class="tl__bar"
@@ -372,14 +376,16 @@ interface PendingPlan {
             @for (t of tasks(); track t.id) {
               <tr [attr.data-selected]="selectedId() === t.id || null">
                 <td>
-                  <button
+                  <!-- Real link, not a fake button: /tasks?task=<id> is
+                       shareable and the route input selects the record. -->
+                  <a
                     class="linklike"
-                    type="button"
                     data-action="inspect"
-                    (click)="selectTask(t)"
+                    [routerLink]="['/tasks']"
+                    [queryParams]="{ task: t.id }"
                   >
                     {{ t.label }}
-                  </button>
+                  </a>
                 </td>
                 <td>
                   <code>{{ t.verb }}</code>
@@ -404,7 +410,7 @@ interface PendingPlan {
     <!-- Task detail + recorded-events replay — opened from the timeline
          or the history table; every field comes from the task record. -->
     @if (selectedTask(); as t) {
-      <section class="card detail" data-section="task-detail" aria-live="polite">
+      <section class="card detail fg-enter" data-section="task-detail" aria-live="polite">
         <header class="detail__head">
           <h2><ui-icon name="tasks" [size]="15" />{{ t.label || t.verb }}</h2>
           <button
@@ -454,6 +460,18 @@ interface PendingPlan {
             <dt>{{ 'tasks.correlation' | t }}</dt>
             <dd class="corr" [attr.title]="t.correlation_id ?? null">
               <code>{{ t.correlation_id ?? '—' }}</code>
+              <!-- /observe?cid= is a real filter binding — only linked
+                   when the record actually carries a correlation_id. -->
+              @if (t.correlation_id; as cid) {
+                <a
+                  class="linklike corr__events"
+                  data-action="correlated"
+                  [routerLink]="['/observe']"
+                  [queryParams]="{ cid }"
+                >
+                  {{ 'tasks.events' | t }}
+                </a>
+              }
             </dd>
           </div>
           @if (t.refusal) {
@@ -584,6 +602,9 @@ interface PendingPlan {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .corr__events {
+      font-size: var(--font-xs);
+    }
     .limits {
       margin: var(--space-3) 0 0;
       font-size: var(--font-xs);
@@ -642,6 +663,9 @@ interface PendingPlan {
       padding: 3px var(--space-2);
       cursor: pointer;
       width: 100%;
+      transition:
+        background var(--motion-fast),
+        border-color var(--motion-fast);
     }
     .tl__row:hover {
       background: var(--bg-hover);
@@ -759,6 +783,10 @@ interface PendingPlan {
       text-align: left;
       padding: var(--space-2) var(--space-3);
       cursor: pointer;
+      transition:
+        border-color var(--motion-fast),
+        box-shadow var(--motion-fast),
+        background var(--motion-fast);
     }
     .replay__step:hover,
     .replay__step[data-current] {
@@ -803,6 +831,14 @@ interface PendingPlan {
 })
 export class TasksPage {
   private readonly api = inject(PortalApi);
+
+  /** Route `?task=` deep-link (withComponentInputBinding) — dashboard
+   *  rows, graph/knowledge inspectors and the history row links all
+   *  land here. Applied once per distinct value so closing the detail
+   *  card is never undone by a background refresh; an id that no
+   *  record matches is consumed silently — never a fake selection. */
+  readonly task = input('');
+
   readonly intent = signal('');
   readonly pending = signal<PendingPlan | null>(null);
   readonly receipt = signal<InstallationReceipt | null>(null);
@@ -823,6 +859,9 @@ export class TasksPage {
   readonly metricsSrc = new Source<MetricsReport>();
   readonly selectedId = signal<string | null>(null);
   readonly replayIdx = signal(0);
+  /** Last ?task= value already applied — prevents the effect from
+   *  re-opening a detail the user closed while the param stays put. */
+  private readonly deepApplied = signal<string | null>(null);
 
   readonly timeline = computed(() => buildTimeline(this.tasks()));
   readonly selectedTask = computed(
@@ -831,6 +870,17 @@ export class TasksPage {
   readonly replay = computed(() => buildReplay(this.metricsSrc.data(), this.selectedTask()));
 
   constructor() {
+    // Deep link: once the records answer, a new ?task= value selects its
+    // row (same path as a row click — detail + replay reset together).
+    effect(() => {
+      const id = this.task();
+      if (!id || id === this.deepApplied() || this.loading()) return;
+      this.deepApplied.set(id);
+      if (this.tasks().some((t) => t.id === id)) {
+        this.selectedId.set(id);
+        this.replayIdx.set(0);
+      }
+    });
     void this.load();
   }
 

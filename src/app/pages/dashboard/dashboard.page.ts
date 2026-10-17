@@ -259,7 +259,7 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
                 @for (row of forgesRows(); track row.id) {
                   <tr [attr.data-serving]="row.serving || null">
                     <td>
-                      <a class="link" [routerLink]="['/forges', row.id]">{{
+                      <a class="linklike" [routerLink]="['/forges', row.id]">{{
                         row.name ?? row.id
                       }}</a>
                       @if (row.serving) {
@@ -382,7 +382,7 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
                 @for (row of versionRows(); track row.id) {
                   <tr [attr.data-serving]="row.serving || null">
                     <td>
-                      <a class="link" [routerLink]="['/forges', row.id]">{{ row.id }}</a>
+                      <a class="linklike" [routerLink]="['/forges', row.id]">{{ row.id }}</a>
                       @if (row.serving) {
                         <span class="chip">{{ 'explorer.serving' | t }}</span>
                       }
@@ -480,7 +480,17 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
               <tbody>
                 @for (task of recentTasks(); track task.id) {
                   <tr [attr.data-fail]="taskFailed(task) || null">
-                    <td>{{ task.label }}</td>
+                    <td>
+                      <!-- actionable row: opens the task detail card on
+                           /tasks — the id is a real record id, not a
+                           fabricated route segment -->
+                      <a
+                        class="linklike"
+                        [routerLink]="['/tasks']"
+                        [queryParams]="{ task: task.id }"
+                        >{{ task.label }}</a
+                      >
+                    </td>
                     <td>
                       <code>{{ task.verb }}</code>
                     </td>
@@ -631,14 +641,10 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       white-space: nowrap;
       vertical-align: bottom;
     }
+    /* .chip consolidated into styles.css shared blocks; the page keeps
+       its offset and the update tone. */
     .chip {
       margin-left: 6px;
-      font-size: var(--font-xs);
-      font-weight: 700;
-      color: var(--accent-ink);
-      background: var(--accent-bg);
-      border-radius: var(--radius-pill);
-      padding: 1px 8px;
     }
     .chip--update {
       color: var(--info);
@@ -648,14 +654,21 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       font-size: var(--font-xs);
       color: var(--fg-muted);
     }
+    /* in-table links use the shared .linklike affordance */
     .more {
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      min-height: 24px;
       margin-top: var(--space-3);
+      padding-block: 2px;
       font-size: var(--font-sm);
       font-weight: 600;
       text-decoration: none;
+      transition: color var(--motion-fast);
+    }
+    .more:hover {
+      color: var(--accent-ink);
     }
     .failn {
       display: inline-grid;
@@ -730,6 +743,8 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
       align-items: center;
       gap: 4px;
       flex-shrink: 0;
+      min-height: 24px;
+      padding-block: 1px;
       font-weight: 600;
       text-decoration: none;
       white-space: nowrap;

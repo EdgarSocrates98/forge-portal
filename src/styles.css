@@ -136,6 +136,36 @@ button {
   color: var(--fg-text-2);
   white-space: nowrap;
 }
+/* interactive pills (filter chips, view toggles, toolbar actions) get
+   the same hover/press/focus vocabulary as .btn — a bare .fg-pill span
+   stays inert */
+button.fg-pill,
+a.fg-pill {
+  cursor: pointer;
+  transition:
+    color var(--fg-motion-fast) var(--fg-motion-ease),
+    background var(--fg-motion-fast) var(--fg-motion-ease),
+    border-color var(--fg-motion-fast) var(--fg-motion-ease),
+    transform var(--fg-motion-press) var(--fg-ease-out);
+}
+button.fg-pill:not([data-tone]):hover:not(:disabled),
+a.fg-pill:not([data-tone]):hover {
+  color: var(--fg-text);
+  background: var(--fg-surface);
+  border-color: var(--fg-border-strong);
+}
+button.fg-pill:active:not(:disabled),
+a.fg-pill:active {
+  transform: scale(0.97);
+}
+button.fg-pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+button.fg-pill[data-tone='accent']:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--fg-accent-fill) 86%, black);
+  color: var(--fg-accent-contrast);
+}
 .fg-pill[data-tone='success'] {
   color: var(--fg-success);
   background: var(--fg-success-bg);
@@ -665,9 +695,15 @@ page-settings {
 .stagger > *:nth-child(n + 5) {
   animation-delay: 160ms;
 }
+/* detail/inspector panels: quiet enter so conditional cards don't pop in
+   without context — reuses fg-page-in, disabled under reduced-motion */
+.fg-enter {
+  animation: fg-page-in var(--fg-motion-med) var(--fg-ease-out) both;
+}
 @media (prefers-reduced-motion: reduce) {
   .stagger > *,
-  .fg-pop {
+  .fg-pop,
+  .fg-enter {
     animation: none;
   }
 }
@@ -1397,9 +1433,42 @@ details > summary::marker {
   color: var(--accent-ink);
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
 }
 .linklike:hover {
   text-decoration: underline;
+}
+/* entity chips — static tag + clickable/jump link share one look.
+   (previously copy-pasted per page with diverging hover states) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent-bg);
+  border-radius: var(--radius-pill);
+  padding: 1px 8px;
+  flex: none;
+}
+.chip-link {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent-bg);
+  border-radius: var(--radius-pill);
+  padding: 1px 8px;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  flex: none;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast);
+}
+.chip-link:hover {
+  text-decoration: underline;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .unv-cell {
   display: flex;
