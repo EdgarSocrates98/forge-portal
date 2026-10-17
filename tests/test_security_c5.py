@@ -245,13 +245,24 @@ class TestSessionToken:
         )
         assert status == 403
         assert env["error"]["code"] == "PORTAL-SESSION"
-        # Correct cookie but no header → still reject: header is required.
+        # Correct cookie but no header → accept: the HttpOnly/SameSite=Strict
+        # cookie is itself a credential (keeps the session alive across SPA
+        # reloads, where the in-memory header token is lost).
         status, env, _ = call(
             server,
             "GET",
             "/api/v1/health",
             session=False,
             headers={"Cookie": f"{fp.SESSION_COOKIE}={server.session_token}"},
+        )
+        assert status == 200
+        # Forged cookie and no header → reject.
+        status, env, _ = call(
+            server,
+            "GET",
+            "/api/v1/health",
+            session=False,
+            headers={"Cookie": f"{fp.SESSION_COOKIE}=forged-cookie-value"},
         )
         assert status == 403
 

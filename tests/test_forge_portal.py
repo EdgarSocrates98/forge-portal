@@ -152,6 +152,33 @@ class TestEnvelopeAndSession:
         status, _, _ = call(server, "GET", "/api/v1/health", headers={fp.SESSION_HEADER: "wrong"})
         assert status == 403
 
+    def test_cookie_alone_authenticates_api(self, server):
+        """Reload do SPA: sem header, o cookie HttpOnly sustenta a sessão."""
+        status, env, _ = call(
+            server, "GET", "/api/v1/health",
+            session=False, headers={"Cookie": f"forge_session={server.session_token}"},
+        )
+        assert status == 200
+        assert "data" in env
+
+    def test_wrong_cookie_is_403(self, server):
+        status, _, _ = call(
+            server, "GET", "/api/v1/health",
+            session=False, headers={"Cookie": "forge_session=forged"},
+        )
+        assert status == 403
+
+    def test_bad_header_beats_good_cookie(self, server):
+        """Header presente é autoridade — cookie válido não salva header errado."""
+        status, _, _ = call(
+            server, "GET", "/api/v1/health",
+            headers={
+                fp.SESSION_HEADER: "wrong",
+                "Cookie": f"forge_session={server.session_token}",
+            },
+        )
+        assert status == 403
+
     def test_unknown_op_404_named(self, server):
         status, env, _ = call(server, "GET", "/api/v1/definitely-not-an-op")
         assert status == 404

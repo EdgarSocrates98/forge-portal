@@ -978,10 +978,28 @@ def test_registry_plan_is_side_effect_free(ops_server, ops_home):
 
 
 def test_registry_session_in_browser(page, ops_server):
-    """From the real SPA origin, a POST without the session header is a
-    403 — Chromium cannot mint or guess the per-boot token."""
+    """From the real SPA origin, a POST with no credential at all is a
+    403 — Chromium cannot mint or guess the per-boot token. credentials:
+    'omit' also withholds the forge_session cookie (itself a credential
+    since the reload fix)."""
     page.goto(ops_server.url)
     page.wait_for_load_state("networkidle")
+    res = page.evaluate(
+        """async () => {
+          const r = await fetch('/api/v1/registry/plan', {
+            method: 'POST',
+            credentials: 'omit',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({action: 'pin', forge: 'e2e-forge'}),
+          });
+          return {status: r.status, env: await r.json()};
+        }"""
+    )
+    assert res["status"] == 403
+    assert res["env"]["error"]["code"] == "PORTAL-SESSION"
+
+    # Same-origin fetch WITH credentials carries the HttpOnly cookie issued
+    # at page load → session is valid even without the header (SPA reload).
     res = page.evaluate(
         """async () => {
           const r = await fetch('/api/v1/registry/plan', {
@@ -992,8 +1010,7 @@ def test_registry_session_in_browser(page, ops_server):
           return {status: r.status, env: await r.json()};
         }"""
     )
-    assert res["status"] == 403
-    assert res["env"]["error"]["code"] == "PORTAL-SESSION"
+    assert res["status"] != 403
 
 
 def test_registry_browser_flow_real_cli(page, ops_server, ops_home):
