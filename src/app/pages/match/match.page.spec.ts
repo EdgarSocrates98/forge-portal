@@ -94,11 +94,11 @@ describe('MatchPage — capability matching', () => {
     const ev = el.querySelector('.ev');
     expect(ev?.textContent).toContain('glue');
     expect(el.querySelectorAll('.ev__field').length).toBeGreaterThan(0);
-    // every hit carries a warn-kind limitations badge (runtime unverified)
+    // every hit carries an unverified-kind limitations badge (runtime unverified)
     const hits = el.querySelectorAll('article.hit');
     expect(hits.length).toBeGreaterThanOrEqual(2);
     for (const h of hits) {
-      expect(h.querySelector('.badge[data-kind="warn"]')).toBeTruthy();
+      expect(h.querySelector('.badge[data-kind="unv"]')).toBeTruthy();
     }
   });
 

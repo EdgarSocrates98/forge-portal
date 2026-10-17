@@ -1,0 +1,294 @@
+/* Forge UI System — design tokens (Cycle 1)
+   Layered model:
+     1. primitives  --fg-*        (scale values + neutral/state ramps)
+     2. scheme       [data-scheme] (light = :root default, dark override)
+     3. accents      [data-forge]  (one --fg-accent* set per Forja)
+     4. aliases      --space-*, --bg, --accent, --ok … (component-facing)
+   Components consume aliases (or --fg-* primitives); never raw colors.
+   Reference: docs/design/tokens.md */
+
+/* ---- scale primitives (scheme-independent) ---- */
+:root {
+  /* spacing — 4px base */
+  --fg-space-1: 0.25rem;
+  --fg-space-2: 0.5rem;
+  --fg-space-3: 0.75rem;
+  --fg-space-4: 1rem;
+  --fg-space-5: 1.5rem;
+  --fg-space-6: 2rem;
+  --fg-space-7: 3rem;
+
+  /* radii */
+  --fg-radius-sm: 0.375rem;
+  --fg-radius-md: 0.625rem;
+  --fg-radius-lg: 0.875rem;
+  --fg-radius-pill: 999px;
+
+  /* motion — zeroed under prefers-reduced-motion (see bottom) */
+  --fg-motion-fast: 120ms;
+  --fg-motion-press: 140ms;
+  --fg-motion-med: 220ms;
+  --fg-motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* design-engineering easings: strong out for enters/presses,
+     in-out only for on-screen movement */
+  --fg-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --fg-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* elevation — dark overrides below */
+  --fg-elev-1: 0 1px 2px rgb(0 0 0 / 0.12);
+  --fg-elev-2: 0 4px 16px rgb(0 0 0 / 0.16);
+  --fg-elev-3: 0 12px 40px rgb(0 0 0 / 0.24);
+
+  /* typography */
+  --fg-font: 'Segoe UI', system-ui, -apple-system, 'Inter', 'Roboto', sans-serif;
+  --fg-font-mono: 'Cascadia Code', ui-monospace, 'SF Mono', Consolas, monospace;
+  --fg-text-xs: 0.75rem;
+  --fg-text-sm: 0.8125rem;
+  --fg-text-md: 0.9375rem;
+  --fg-text-lg: 1.125rem;
+  --fg-text-xl: 1.25rem;
+  --fg-text-2xl: 1.375rem;
+  --fg-weight-regular: 400;
+  --fg-weight-medium: 500;
+  --fg-weight-semibold: 650;
+  --fg-weight-bold: 700;
+  --fg-leading-tight: 1.25;
+  --fg-leading-base: 1.5;
+
+  /* layout */
+  --fg-topbar-h: 3.25rem;
+  --fg-sidebar-w: 15.5rem;
+  --fg-sidebar-w-collapsed: 3.75rem;
+
+  /* focus ring — single source for :focus-visible and focus-within rings */
+  --fg-focus-width: 2px;
+  --fg-focus-offset: 2px;
+  --fg-focus-ring: 0 0 0 3px color-mix(in srgb, var(--fg-focus) 22%, transparent);
+
+  /* z-index rungs — floating UI uses these names, never magic numbers */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-overlay: 90;
+  --z-dialog: 100;
+  --z-toast: 120;
+
+  /* text painted on saturated fills (badges, dots, danger buttons) */
+  --fg-on-color: #ffffff;
+
+  color-scheme: light;
+}
+
+/* ---- neutral + state ramps (light default) ---- */
+:root {
+  --fg-bg: #f4f5f7;
+  --fg-bg-raised: #ffffff;
+  --fg-surface: #ffffff;
+  --fg-surface-2: #eef0f3;
+  --fg-border: #d9dde3;
+  --fg-border-strong: #b9c0ca;
+  --fg-text: #16191d;
+  --fg-text-2: #4b5563;
+  --fg-text-dim: #6b7280;
+  --fg-focus: #2563eb;
+  --fg-success: #0f8a4c;
+  --fg-success-bg: #e3f5ea;
+  --fg-warning: #a35c00;
+  --fg-warning-bg: #fdf0dd;
+  --fg-error: #c0392b;
+  --fg-error-bg: #fdeceb;
+  --fg-info: #1d5fd1;
+  --fg-info-bg: #e8f0fe;
+  /* unverified = "not yet observed" — neutral slate, distinct from warn */
+  --fg-unverified: #4b5a68;
+  --fg-unverified-bg: #edf0f4;
+  --fg-scrim: rgb(10 12 16 / 0.45);
+  /* static skeleton fill — shimmer-free by design */
+  --skeleton: color-mix(in srgb, var(--fg-text) 10%, transparent);
+}
+
+[data-scheme='dark'] {
+  color-scheme: dark;
+  --fg-bg: #0d1014;
+  --fg-bg-raised: #13171d;
+  --fg-surface: #161b22;
+  --fg-surface-2: #1d232c;
+  --fg-border: #2b333d;
+  --fg-border-strong: #3d4754;
+  --fg-text: #e6e9ee;
+  --fg-text-2: #a9b3bf;
+  --fg-text-dim: #7d8894;
+  --fg-focus: #6ea8fe;
+  --fg-success: #3fce7f;
+  --fg-success-bg: #10331f;
+  --fg-warning: #f0b35e;
+  --fg-warning-bg: #3a2a10;
+  --fg-error: #ff6f61;
+  --fg-error-bg: #3d1512;
+  --fg-info: #79a8ff;
+  --fg-info-bg: #15233d;
+  --fg-unverified: #9fb4c7;
+  --fg-unverified-bg: #202a36;
+  --fg-elev-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --fg-elev-2: 0 4px 16px rgb(0 0 0 / 0.45);
+  --fg-elev-3: 0 12px 40px rgb(0 0 0 / 0.55);
+}
+
+/* ---- forge accents (one --fg-accent* set per forge) ---- */
+:root,
+[data-forge='the-forge'] {
+  --fg-accent: #e8611c;
+  --fg-accent-strong: #c74e0f;
+  --fg-accent-bg: #fdeee4;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #e8611c 0%, #b93e6b 100%);
+}
+[data-scheme='dark'][data-forge='the-forge'],
+[data-scheme='dark'] :root[data-forge='the-forge'] {
+  --fg-accent-bg: #3a1d0c;
+}
+[data-forge='spark-forge-aws'] {
+  --fg-accent: #e08a00;
+  --fg-accent-strong: #b56d00;
+  --fg-accent-bg: #fdf2dc;
+  --fg-accent-contrast: #1d1400;
+  --fg-gradient: linear-gradient(135deg, #e08a00 0%, #c2571b 100%);
+}
+[data-forge='spark-forge-azure'] {
+  --fg-accent: #0078d4;
+  --fg-accent-strong: #005a9e;
+  --fg-accent-bg: #e2f0fc;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #0078d4 0%, #2b88d8 100%);
+}
+[data-forge='api-forge'] {
+  --fg-accent: #0e8f8f;
+  --fg-accent-strong: #0a6e6e;
+  --fg-accent-bg: #def3f2;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #0e8f8f 0%, #1167b1 100%);
+}
+[data-forge='platform-forge'] {
+  --fg-accent: #6d4bd8;
+  --fg-accent-strong: #5537b8;
+  --fg-accent-bg: #ece6fb;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #6d4bd8 0%, #8f3fd1 100%);
+}
+[data-forge='forge-doctor-data'] {
+  --fg-accent: #178a50;
+  --fg-accent-strong: #0f6e3e;
+  --fg-accent-bg: #ddf3e6;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #178a50 0%, #0d9488 100%);
+}
+[data-forge='forge-doctor-api'] {
+  --fg-accent: #c73565;
+  --fg-accent-strong: #a02550;
+  --fg-accent-bg: #fbe4ec;
+  --fg-accent-contrast: #ffffff;
+  --fg-gradient: linear-gradient(135deg, #c73565 0%, #9d4edd 100%);
+}
+[data-scheme='dark'] {
+  --fg-accent-bg: rgb(255 255 255 / 0.08);
+}
+
+/* ---- semantic aliases ---------------------------------------------------
+   Component-facing names resolved onto the --fg-* token set. Components
+   must use THESE names (never raw --fg-* and never raw colors) so the
+   theme can be swapped by changing one layer. */
+:root {
+  --space-1: var(--fg-space-1);
+  --space-2: var(--fg-space-2);
+  --space-3: var(--fg-space-3);
+  --space-4: var(--fg-space-4);
+  --space-5: var(--fg-space-5);
+  --space-6: var(--fg-space-6);
+  --space-8: var(--fg-space-7);
+
+  --radius-sm: var(--fg-radius-sm);
+  --radius-md: var(--fg-radius-md);
+  --radius-lg: var(--fg-radius-lg);
+  --radius-pill: var(--fg-radius-pill);
+
+  --font-xs: var(--fg-text-xs);
+  --font-sm: var(--fg-text-sm);
+  --font-md: var(--fg-text-md);
+  --font-lg: var(--fg-text-lg);
+  --font-xl: var(--fg-text-xl);
+  --font-2xl: var(--fg-text-2xl);
+  --font-mono: var(--fg-font-mono);
+  --font-weight-regular: var(--fg-weight-regular);
+  --font-weight-medium: var(--fg-weight-medium);
+  --font-weight-semibold: var(--fg-weight-semibold);
+  --font-weight-bold: var(--fg-weight-bold);
+
+  --fg: var(--fg-text);
+  --fg-muted: var(--fg-text-2);
+  --fg-dim: var(--fg-text-dim);
+  --bg: var(--fg-bg);
+  --bg-elevated: var(--fg-surface);
+  --bg-hover: var(--fg-surface-2);
+  --border: var(--fg-border);
+  --border-strong: var(--fg-border-strong);
+
+  --accent: var(--fg-accent);
+  --accent-strong: var(--fg-accent-strong);
+  --accent-bg: var(--fg-accent-bg);
+  --accent-fg: var(--fg-accent-contrast);
+  --gradient: var(--fg-gradient);
+  --scrim: var(--fg-scrim);
+  --on-color: var(--fg-on-color);
+
+  --ok: var(--fg-success);
+  --ok-bg: var(--fg-success-bg);
+  --warn: var(--fg-warning);
+  --warn-bg: var(--fg-warning-bg);
+  --error: var(--fg-error);
+  --error-bg: var(--fg-error-bg);
+  --info: var(--fg-info);
+  --info-bg: var(--fg-info-bg);
+  --unverified: var(--fg-unverified);
+  --unverified-bg: var(--fg-unverified-bg);
+
+  --topbar-h: var(--fg-topbar-h);
+  --motion: var(--fg-motion-med) var(--fg-motion-ease);
+  --motion-fast: var(--fg-motion-fast) var(--fg-motion-ease);
+  --ease-out: var(--fg-ease-out);
+  --ease-in-out: var(--fg-ease-in-out);
+  --press: var(--fg-motion-press) var(--fg-ease-out);
+
+  --elev-card: var(--fg-elev-1);
+  --elev-hover: var(--fg-elev-2);
+  --elev-pop: var(--fg-elev-3);
+
+  --focus-ring: var(--fg-focus-ring);
+}
+
+/* ---- user-agent preferences ---------------------------------------------
+   High contrast: stronger borders, dim text lifted toward --fg-text, a
+   thicker focus ring. Reduced motion: every duration token collapses to
+   0ms — component rules keep referencing the same token names. */
+@media (prefers-contrast: more) {
+  :root {
+    --fg-border: #9aa3ad;
+    --fg-border-strong: #6b7280;
+    --fg-text-2: #374151;
+    --fg-text-dim: #4b5563;
+    --fg-focus-width: 3px;
+  }
+  [data-scheme='dark'] {
+    --fg-border: #4a5563;
+    --fg-border-strong: #6b7885;
+    --fg-text-2: #c6cfd9;
+    --fg-text-dim: #9aa7b4;
+    --fg-focus-width: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fg-motion-fast: 0ms;
+    --fg-motion-press: 0ms;
+    --fg-motion-med: 0ms;
+  }
+}

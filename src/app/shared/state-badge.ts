@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { I18nService } from '../core/i18n/i18n.service';
 
-type BadgeKind = 'ok' | 'warn' | 'error' | 'info' | 'muted';
+type BadgeKind = 'ok' | 'warn' | 'error' | 'info' | 'unv' | 'muted';
 
 const STATE_KIND: Record<string, BadgeKind> = {
   // install states
@@ -25,13 +25,13 @@ const STATE_KIND: Record<string, BadgeKind> = {
   NOT_CONFIGURED: 'muted',
   // capability states
   supported: 'ok',
-  unverified: 'warn',
+  unverified: 'unv',
   unsupported: 'error',
   not_applicable: 'muted',
   // doctor check states
   PASS: 'ok',
   FAIL: 'error',
-  UNVERIFIED: 'warn',
+  UNVERIFIED: 'unv',
   NOT_APPLICABLE: 'muted',
   READY: 'ok',
   PARTIAL: 'warn',
@@ -118,6 +118,10 @@ const I18N_PREFIX: Record<string, string> = {
     .badge[data-kind='info'] {
       --badge-fg: var(--info);
       --badge-bg: var(--info-bg);
+    }
+    .badge[data-kind='unv'] {
+      --badge-fg: var(--unverified);
+      --badge-bg: var(--unverified-bg);
     }
   `,
 })

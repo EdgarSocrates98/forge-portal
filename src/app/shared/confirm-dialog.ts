@@ -139,7 +139,7 @@ const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabi
     .cd__danger {
       background: var(--error);
       border-color: var(--error);
-      color: #fff;
+      color: var(--on-color);
     }
     .cd__danger:hover {
       background: color-mix(in srgb, var(--error) 86%, black);

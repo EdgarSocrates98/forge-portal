@@ -432,7 +432,7 @@ interface HostCheck {
     .lc li[data-state='done'] .dot {
       background: var(--ok);
       border-color: var(--ok);
-      color: #fff;
+      color: var(--on-color);
     }
     .lc li[data-state='done']:not(:last-child)::after {
       background: var(--ok);
@@ -457,7 +457,7 @@ interface HostCheck {
     }
     .lc li[data-state='warn'] .dot,
     .lc li[data-state='error'] .dot {
-      color: #fff;
+      color: var(--on-color);
     }
     .lc li[data-state='warn'] .dot {
       background: var(--warn);

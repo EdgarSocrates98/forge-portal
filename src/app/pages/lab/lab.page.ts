@@ -251,8 +251,8 @@ interface ScenarioRow extends LabScenarioResult {
       align-items: center;
     }
     .src {
-      color: var(--muted, #888);
-      font-size: 12px;
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
     }
     .sec__head {
       display: flex;
@@ -274,33 +274,33 @@ interface ScenarioRow extends LabScenarioResult {
     .chip {
       padding: 3px 10px;
       border-radius: 99px;
-      border: 1px solid var(--line, #444);
+      border: 1px solid var(--border);
       background: none;
       cursor: pointer;
     }
     .chip.on {
-      background: var(--accent, #4f8cff);
-      color: #fff;
+      background: var(--accent);
+      color: var(--accent-fg);
     }
     .tbl {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: var(--font-sm);
     }
     .tbl th,
     .tbl td {
       text-align: left;
       padding: 6px 8px;
-      border-bottom: 1px solid var(--line, #333);
+      border-bottom: 1px solid var(--border);
     }
     .ok {
-      color: var(--ok, #4caf50);
+      color: var(--ok);
     }
     .bad {
-      color: var(--bad, #f44336);
+      color: var(--error);
     }
     .sel {
-      background: color-mix(in srgb, var(--accent, #4f8cff) 10%, transparent);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
     }
     .metrics {
       display: flex;
@@ -309,22 +309,22 @@ interface ScenarioRow extends LabScenarioResult {
       max-width: 420px;
     }
     .metric {
-      font-size: 11px;
+      font-size: var(--font-xs);
       padding: 1px 6px;
-      border: 1px solid var(--line, #444);
+      border: 1px solid var(--border);
       border-radius: 4px;
     }
     .rep__body {
       max-height: 340px;
       overflow: auto;
-      font-size: 12px;
+      font-size: var(--font-xs);
       white-space: pre-wrap;
     }
     select {
       margin-left: 6px;
     }
     .muted {
-      color: var(--muted, #888);
+      color: var(--fg-muted);
     }
   `,
 })

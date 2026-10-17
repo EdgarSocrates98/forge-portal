@@ -11,6 +11,7 @@ import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { ForgeDoc, UiForgeDoc } from '../../shared/forge-doc';
+import { UiSkeleton } from '../../shared/skeleton';
 
 interface PendingPlan {
   plan_token: string;
@@ -40,7 +41,17 @@ interface PendingPlan {
 @Component({
   selector: 'page-tasks',
   standalone: true,
-  imports: [FormsModule, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiForgeDoc],
+  imports: [
+    FormsModule,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiForgeDoc,
+    UiSkeleton,
+  ],
   template: `
     <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t">
       <button class="btn" [disabled]="busy()" (click)="load()">
@@ -271,7 +282,7 @@ interface PendingPlan {
     <section class="card" data-section="history">
       <h2>{{ 'tasks.recent' | t }}</h2>
       @if (loading()) {
-        <div class="skeleton skeleton--block"></div>
+        <ui-skeleton kind="card" />
       }
       @if (tasks().length) {
         <table class="table">

@@ -30,13 +30,86 @@ describe('App shell', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('renders the sidebar with all three nav sections', async () => {
+  it('renders the five journey nav groups in order', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    const items = el.querySelectorAll('.nav__item');
-    expect(items.length).toBe(18);
+    const groups = [...el.querySelectorAll<HTMLElement>('.nav__group')];
+    expect(groups.length).toBe(5);
+    const labelledBy = groups.map((g) => g.getAttribute('aria-labelledby'));
+    expect(labelledBy).toEqual([
+      'nav-h-overview',
+      'nav-h-explore',
+      'nav-h-operate',
+      'nav-h-analyze',
+      'nav-h-settings',
+    ]);
+    const sectionIds = [...el.querySelectorAll<HTMLElement>('.nav__section')].map((s) => s.id);
+    expect(sectionIds).toEqual(labelledBy);
+  });
+
+  it('keeps every route item inside its journey group', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const routes = [...el.querySelectorAll<HTMLAnchorElement>('.nav__item')].map((a) =>
+      a.getAttribute('href'),
+    );
+    expect(routes).toEqual([
+      '/dashboard',
+      '/federation',
+      '/forges',
+      '/agents',
+      '/skills',
+      '/mcp',
+      '/knowledge',
+      '/match',
+      '/tasks',
+      '/install',
+      '/profiles',
+      '/hosts',
+      '/config',
+      '/graph',
+      '/observe',
+      '/lab',
+      '/versions',
+      '/settings',
+    ]);
+  });
+
+  it('collapses the sidebar via the button and the [ key', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const side = el.querySelector<HTMLElement>('.shell__side')!;
+    const btn = el.querySelector<HTMLButtonElement>('.nav__collapse')!;
+    expect(side.hasAttribute('data-collapsed')).toBe(false);
+    expect(btn.getAttribute('aria-expanded')).toBe('true');
+
+    btn.click();
+    fixture.detectChanges();
+    expect(side.hasAttribute('data-collapsed')).toBe(true);
+    expect(btn.getAttribute('aria-expanded')).toBe('false');
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: '[', bubbles: true }));
+    fixture.detectChanges();
+    expect(side.hasAttribute('data-collapsed')).toBe(false);
+  });
+
+  it('ignores the [ shortcut while typing in an input', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: '[', bubbles: true }));
+    fixture.detectChanges();
+    const side = fixture.nativeElement.querySelector('.shell__side') as HTMLElement;
+    expect(side.hasAttribute('data-collapsed')).toBe(false);
+    input.remove();
   });
 
   it('shows the offline banner when the server is unreachable', async () => {
