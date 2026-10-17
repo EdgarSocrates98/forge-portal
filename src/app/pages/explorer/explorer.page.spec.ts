@@ -51,6 +51,14 @@ function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
     bootstrap: () => of({ descriptor: DESCRIPTOR, health: HEALTH }),
     installationStatus: () => of(HEALTH),
     federation: () => of(SNAPSHOT),
+    // the registry ops panel is part of the page — absent state, not a crash
+    registryState: () =>
+      of({
+        schema: 'forge-cli/RegistryState/v1' as const,
+        state_path: '/t/.forge-cli/forges/state.json',
+        present: false,
+        forges: {},
+      }),
     ...overrides,
   } as unknown as PortalApi;
 }

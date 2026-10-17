@@ -11,6 +11,7 @@ import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
 import { Source, buildForgeRows, stamp } from './forges.data';
+import { RegistryOpsPanel } from './registry-ops-panel';
 
 /**
  * Forja explorer — every Forja the workspace can verify: the Forja
@@ -22,7 +23,17 @@ import { Source, buildForgeRows, stamp } from './forges.data';
 @Component({
   selector: 'page-explorer',
   standalone: true,
-  imports: [RouterLink, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [
+    RouterLink,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiSkeleton,
+    RegistryOpsPanel,
+  ],
   template: `
     <ui-page-header [title]="'explorer.title' | t" [subtitle]="'explorer.subtitle' | t">
       <button class="btn" (click)="load()">
@@ -136,6 +147,8 @@ import { Source, buildForgeRows, stamp } from './forges.data';
         <ui-empty icon="network" [title]="'explorer.empty' | t" />
       }
     </section>
+
+    <registry-ops-panel />
   `,
   styles: `
     .card {

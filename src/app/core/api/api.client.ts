@@ -19,6 +19,9 @@ import {
   PortalCapability,
   PortalHealth,
   ProfileDescriptor,
+  RegistryAction,
+  RegistryExecuteResponse,
+  RegistryPlanResponse,
   RegistryState,
   SkillDescriptor,
   TaskExecution,
@@ -103,6 +106,23 @@ export class PortalApi {
   }
   registryState() {
     return this.get<RegistryState>('/registry/state');
+  }
+  registryPlan(input: { action: RegistryAction; forge: string }) {
+    return this.post<RegistryPlanResponse>('/registry/plan', input);
+  }
+  registryExecute(input: {
+    action: RegistryAction;
+    forge: string;
+    plan: Record<string, unknown>;
+    planToken: string;
+  }) {
+    return this.post<RegistryExecuteResponse>('/registry/execute', {
+      action: input.action,
+      forge: input.forge,
+      plan: input.plan,
+      plan_token: input.planToken,
+      confirm: 'execute',
+    });
   }
   federationPlan(input: FederationSelection) {
     return this.post<FederationPlanResponse>('/federation/plan', input);
