@@ -99,7 +99,7 @@ class EventRecorder:
         etype = event.get("event_type")
         if not isinstance(etype, str) or not etype:
             return None
-        clean = _scalarish(event)
+        clean: dict[str, Any] = _scalarish(event)
         with self._lock:
             self._seq += 1
             clean.setdefault("event_id", f"evt-{self._seq}")
@@ -135,7 +135,8 @@ class EventRecorder:
         No task_id/correlation match is ever inferred from timing."""
         out: list[dict[str, Any]] = []
         for e in self.snapshot():
-            meta = e.get("metadata") if isinstance(e.get("metadata"), dict) else {}
+            raw_meta: Any = e.get("metadata")
+            meta: dict[str, Any] = raw_meta if isinstance(raw_meta, dict) else {}
             if meta.get("task_id") == task_id:
                 out.append(e)
                 continue
@@ -173,7 +174,8 @@ class EventRecorder:
 
     @staticmethod
     def _to_metrics_event(e: dict[str, Any]) -> dict[str, Any]:
-        meta = e.get("metadata") if isinstance(e.get("metadata"), dict) else {}
+        raw_meta: Any = e.get("metadata")
+        meta: dict[str, Any] = raw_meta if isinstance(raw_meta, dict) else {}
         return {
             "kind": e.get("event_type"),
             "at": e.get("timestamp"),
@@ -190,7 +192,9 @@ class EventRecorder:
 # ---------------------------------------------------------------------------
 
 
-def _events_op(recorder: EventRecorder, adapter: fp.PortalAdapter):
+def _events_op(
+    recorder: EventRecorder, adapter: fp.PortalAdapter
+) -> Callable[[fp.RequestContext], Any]:
     def h(ctx: fp.RequestContext) -> Any:
         report = recorder.report(forge_id=adapter.forge_id)
         # read-only filters over the recorded window only — the adapter
