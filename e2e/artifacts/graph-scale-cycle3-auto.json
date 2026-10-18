@@ -1,0 +1,2254 @@
+{
+  "env": {
+    "node": "v22.23.2",
+    "cytoscape": "3.34.3",
+    "host": "headless (jsdom — no rasterizer; FPS/raster UNTESTED)",
+    "policy": "auto",
+    "layoutTimeoutMs": 90000,
+    "samples": 9
+  },
+  "runs": [
+    {
+      "nodes": 50,
+      "edges": 150,
+      "nodesReal": 50,
+      "edgesReal": 145,
+      "stats": {
+        "nodes": 50,
+        "edges": 145,
+        "density": 5.8,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 0.68,
+      "synthMs": 0.68,
+      "toViewModelMs": 0.62,
+      "structuredCloneMs": 0.58,
+      "cyAddIsolatedMs": 7.95,
+      "mountMs": 4.91,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 755,
+      "setDataRefreshMs": 5,
+      "layoutsMs": {
+        "cose": 721,
+        "circle": 9,
+        "concentric": 17,
+        "grid": 8,
+        "breadthfirst": 29
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "superseded",
+          "layout": "cose",
+          "elapsedMs": 178
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 726
+        },
+        {
+          "type": "skipped",
+          "layout": "cose"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 713
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 8
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 25
+        }
+      ],
+      "analysisMs": 4.78,
+      "impactDepth3": {
+        "uses": 28,
+        "usedBy": 25
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.09,
+          "p50": 0.15,
+          "p95": 0.97,
+          "max": 0.97
+        },
+        "highlight": {
+          "n": 9,
+          "min": 1.31,
+          "p50": 1.81,
+          "p95": 4.34,
+          "max": 4.34
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 1.03,
+          "p50": 1.85,
+          "p95": 7.99,
+          "max": 7.99
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.09,
+          "p50": 0.83,
+          "p95": 2.08,
+          "max": 2.08
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.03,
+          "p50": 0.08,
+          "p95": 1.04,
+          "max": 1.04
+        },
+        "search": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.01,
+          "p95": 0.17,
+          "max": 0.17
+        }
+      },
+      "exportSvgMs": 3,
+      "exportSvgKb": 26,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 1.14,
+      "heapUsedMb": 67,
+      "rssMb": 184,
+      "peakRssMb": 184,
+      "elements": 195
+    },
+    {
+      "nodes": 100,
+      "edges": 300,
+      "nodesReal": 100,
+      "edgesReal": 286,
+      "stats": {
+        "nodes": 100,
+        "edges": 286,
+        "density": 5.72,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 0.5,
+      "synthMs": 0.85,
+      "toViewModelMs": 0.72,
+      "structuredCloneMs": 0.97,
+      "cyAddIsolatedMs": 12.52,
+      "mountMs": 1.72,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 1171,
+      "setDataRefreshMs": 7,
+      "layoutsMs": {
+        "cose": 1091,
+        "circle": 12,
+        "concentric": 13,
+        "grid": 5,
+        "breadthfirst": 41
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "superseded",
+          "layout": "cose",
+          "elapsedMs": 26
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 1130
+        },
+        {
+          "type": "skipped",
+          "layout": "cose"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 1077
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 5
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 1
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 38
+        }
+      ],
+      "analysisMs": 1.81,
+      "impactDepth3": {
+        "uses": 18,
+        "usedBy": 38
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.1,
+          "p50": 0.16,
+          "p95": 0.45,
+          "max": 0.45
+        },
+        "highlight": {
+          "n": 9,
+          "min": 2.46,
+          "p50": 3.15,
+          "p95": 6.72,
+          "max": 6.72
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 1.78,
+          "p50": 2.14,
+          "p95": 4.61,
+          "max": 4.61
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.9,
+          "p95": 1.69,
+          "max": 1.69
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.19,
+          "max": 0.19
+        },
+        "search": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.01,
+          "p95": 0.03,
+          "max": 0.03
+        }
+      },
+      "exportSvgMs": 2,
+      "exportSvgKb": 52,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 0.23,
+      "heapUsedMb": 64,
+      "rssMb": 183,
+      "peakRssMb": 183,
+      "elements": 386
+    },
+    {
+      "nodes": 200,
+      "edges": 800,
+      "nodesReal": 200,
+      "edgesReal": 786,
+      "stats": {
+        "nodes": 200,
+        "edges": 786,
+        "density": 7.86,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 1.24,
+      "synthMs": 0.9,
+      "toViewModelMs": 0.71,
+      "structuredCloneMs": 3.13,
+      "cyAddIsolatedMs": 26.01,
+      "mountMs": 0.67,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 2518,
+      "setDataRefreshMs": 14,
+      "layoutsMs": {
+        "cose": 2432,
+        "circle": 15,
+        "concentric": 23,
+        "grid": 14,
+        "breadthfirst": 125
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "superseded",
+          "layout": "cose",
+          "elapsedMs": 44
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 2437
+        },
+        {
+          "type": "skipped",
+          "layout": "cose"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 2399
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 9
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 4
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 114
+        }
+      ],
+      "analysisMs": 5.05,
+      "impactDepth3": {
+        "uses": 67,
+        "usedBy": 89
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.12,
+          "p50": 0.13,
+          "p95": 0.53,
+          "max": 0.53
+        },
+        "highlight": {
+          "n": 9,
+          "min": 6.56,
+          "p50": 7.69,
+          "p95": 9.85,
+          "max": 9.85
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 7.03,
+          "p50": 7.81,
+          "p95": 10.56,
+          "max": 10.56
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.06,
+          "p50": 2.82,
+          "p95": 4.39,
+          "max": 4.39
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.01,
+          "p95": 0.13,
+          "max": 0.13
+        },
+        "search": {
+          "n": 9,
+          "min": 0.03,
+          "p50": 0.03,
+          "p95": 0.1,
+          "max": 0.1
+        }
+      },
+      "exportSvgMs": 6,
+      "exportSvgKb": 125,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 0.58,
+      "heapUsedMb": 73,
+      "rssMb": 187,
+      "peakRssMb": 187,
+      "elements": 986
+    },
+    {
+      "nodes": 500,
+      "edges": 2000,
+      "nodesReal": 500,
+      "edgesReal": 1989,
+      "stats": {
+        "nodes": 500,
+        "edges": 1989,
+        "density": 7.956,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "medium",
+        "layout": "concentric",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 300
+      },
+      "policyEvalMs": 2.82,
+      "synthMs": 2.36,
+      "toViewModelMs": 2.2,
+      "structuredCloneMs": 5.12,
+      "cyAddIsolatedMs": 50.59,
+      "mountMs": 0.76,
+      "firstLayout": "concentric",
+      "setDataFirstLayoutMs": 132,
+      "setDataRefreshMs": 30,
+      "layoutsMs": {
+        "cose": 5934,
+        "circle": 26,
+        "concentric": 40,
+        "grid": 34,
+        "breadthfirst": 261
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 25
+        },
+        {
+          "type": "skipped",
+          "layout": "concentric"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 5796
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 6
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 19
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 7
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 235
+        }
+      ],
+      "analysisMs": 9.22,
+      "impactDepth3": {
+        "uses": 124,
+        "usedBy": 66
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.23,
+          "p50": 0.27,
+          "p95": 0.81,
+          "max": 0.81
+        },
+        "highlight": {
+          "n": 9,
+          "min": 19.17,
+          "p50": 20.39,
+          "p95": 31.89,
+          "max": 31.89
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 17.71,
+          "p50": 20.33,
+          "p95": 24.3,
+          "max": 24.3
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.1,
+          "p50": 7.9,
+          "p95": 15.7,
+          "max": 15.7
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.18,
+          "max": 0.18
+        },
+        "search": {
+          "n": 9,
+          "min": 0.07,
+          "p50": 0.07,
+          "p95": 0.28,
+          "max": 0.28
+        }
+      },
+      "exportSvgMs": 18,
+      "exportSvgKb": 314,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 0.87,
+      "heapUsedMb": 115,
+      "rssMb": 223,
+      "peakRssMb": 223,
+      "elements": 2489
+    },
+    {
+      "nodes": 1000,
+      "edges": 5000,
+      "nodesReal": 1000,
+      "edgesReal": 4982,
+      "stats": {
+        "nodes": 1000,
+        "edges": 4982,
+        "density": 9.964,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "medium",
+        "layout": "concentric",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 300
+      },
+      "policyEvalMs": 6.07,
+      "synthMs": 7.88,
+      "toViewModelMs": 4.04,
+      "structuredCloneMs": 14.44,
+      "cyAddIsolatedMs": 152.64,
+      "mountMs": 1.11,
+      "firstLayout": "concentric",
+      "setDataFirstLayoutMs": 311,
+      "setDataRefreshMs": 70,
+      "layoutsMs": {
+        "cose": 20210,
+        "circle": 66,
+        "concentric": 88,
+        "grid": 70,
+        "breadthfirst": 632
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 3
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 51
+        },
+        {
+          "type": "skipped",
+          "layout": "concentric"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "done",
+          "layout": "cose",
+          "elapsedMs": 19481
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 18
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 43
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 13
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 558
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 585
+        }
+      ],
+      "analysisMs": 48.62,
+      "impactDepth3": {
+        "uses": 129,
+        "usedBy": 218
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 1.95,
+          "p50": 2.1,
+          "p95": 4.03,
+          "max": 4.03
+        },
+        "highlight": {
+          "n": 9,
+          "min": 37.51,
+          "p50": 47.42,
+          "p95": 57.7,
+          "max": 57.7
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 39.57,
+          "p50": 42.51,
+          "p95": 59.88,
+          "max": 59.88
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.09,
+          "p50": 17.57,
+          "p95": 27.87,
+          "max": 27.87
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.02,
+          "p95": 0.16,
+          "max": 0.16
+        },
+        "search": {
+          "n": 9,
+          "min": 0.14,
+          "p50": 0.16,
+          "p95": 0.48,
+          "max": 0.48
+        }
+      },
+      "exportSvgMs": 36,
+      "exportSvgKb": 728,
+      "groupingLayoutMs": 946,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 92.83,
+          "p50": 106.3,
+          "p95": 120.91,
+          "max": 120.91
+        },
+        "expand": {
+          "n": 7,
+          "min": 84.65,
+          "p50": 85.53,
+          "p95": 86.93,
+          "max": 86.93
+        }
+      },
+      "destroyMs": 8.34,
+      "heapUsedMb": 222,
+      "rssMb": 339,
+      "peakRssMb": 339,
+      "elements": 5982
+    },
+    {
+      "nodes": 2000,
+      "edges": 9000,
+      "nodesReal": 2000,
+      "edgesReal": 8987,
+      "stats": {
+        "nodes": 2000,
+        "edges": 8987,
+        "density": 8.987,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "large",
+        "layout": "grid",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 150
+      },
+      "policyEvalMs": 9.32,
+      "synthMs": 13.75,
+      "toViewModelMs": 6.84,
+      "structuredCloneMs": 27.64,
+      "cyAddIsolatedMs": 229.5,
+      "mountMs": 1.33,
+      "firstLayout": "grid",
+      "setDataFirstLayoutMs": 462,
+      "setDataRefreshMs": 119,
+      "layoutsMs": {
+        "cose": 32807,
+        "circle": 130,
+        "concentric": 183,
+        "grid": 126,
+        "breadthfirst": 1254
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 3
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 2000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 4000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 6000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 8000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 10000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 10987,
+          "total": 10987
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 33
+        },
+        {
+          "type": "skipped",
+          "layout": "grid"
+        },
+        {
+          "type": "started",
+          "layout": "cose"
+        },
+        {
+          "type": "timeout",
+          "layout": "cose",
+          "elapsedMs": 30104,
+          "fallback": "grid"
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 24
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 26
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 77
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 25
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 1142
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 2000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 4000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 6000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 8000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 10000,
+          "total": 10987
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 10987,
+          "total": 10987
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 1030
+        }
+      ],
+      "analysisMs": 34.04,
+      "impactDepth3": {
+        "uses": 111,
+        "usedBy": 103
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 3.44,
+          "p50": 3.79,
+          "p95": 8.04,
+          "max": 8.04
+        },
+        "highlight": {
+          "n": 9,
+          "min": 76.99,
+          "p50": 82.8,
+          "p95": 89.46,
+          "max": 89.46
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 78.84,
+          "p50": 90.16,
+          "p95": 118.25,
+          "max": 118.25
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.08,
+          "p50": 31.76,
+          "p95": 33.03,
+          "max": 33.03
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.14,
+          "max": 0.14
+        },
+        "search": {
+          "n": 9,
+          "min": 0.13,
+          "p50": 0.13,
+          "p95": 0.91,
+          "max": 0.91
+        }
+      },
+      "exportSvgMs": 63,
+      "exportSvgKb": 1375,
+      "groupingLayoutMs": 4427,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 208.35,
+          "p50": 259.52,
+          "p95": 325.29,
+          "max": 325.29
+        },
+        "expand": {
+          "n": 7,
+          "min": 164.83,
+          "p50": 178.44,
+          "p95": 182.25,
+          "max": 182.25
+        }
+      },
+      "destroyMs": 4.63,
+      "heapUsedMb": 254,
+      "rssMb": 446,
+      "peakRssMb": 446,
+      "elements": 10987
+    },
+    {
+      "nodes": 5000,
+      "edges": 20000,
+      "nodesReal": 5000,
+      "edgesReal": 19992,
+      "stats": {
+        "nodes": 5000,
+        "edges": 19992,
+        "density": 7.9968,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "large",
+        "layout": "grid",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 150
+      },
+      "policyEvalMs": 22.03,
+      "synthMs": 28.91,
+      "toViewModelMs": 9.3,
+      "structuredCloneMs": 69.24,
+      "cyAddIsolatedMs": 523.1,
+      "mountMs": 0.65,
+      "firstLayout": "grid",
+      "setDataFirstLayoutMs": 963,
+      "setDataRefreshMs": 244,
+      "layoutsMs": {
+        "circle": 330,
+        "concentric": 441,
+        "grid": 318,
+        "breadthfirst": 2837
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 2
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 2000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 4000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 5000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 7000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 9000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 11000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 13000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 15000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 17000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 19000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 21000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 23000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 24992,
+          "total": 24992
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 71
+        },
+        {
+          "type": "skipped",
+          "layout": "grid"
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 70
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 195
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 66
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 2574
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 2000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 4000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 5000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 7000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 9000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 11000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 13000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 15000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 17000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 19000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 21000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 23000,
+          "total": 24992
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 24992,
+          "total": 24992
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 2364
+        }
+      ],
+      "analysisMs": 80.95,
+      "impactDepth3": {
+        "uses": 66,
+        "usedBy": 44
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 7.82,
+          "p50": 9.38,
+          "p95": 14.23,
+          "max": 14.23
+        },
+        "highlight": {
+          "n": 9,
+          "min": 162.19,
+          "p50": 177.77,
+          "p95": 188.28,
+          "max": 188.28
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 179.18,
+          "p50": 197.68,
+          "p95": 219.92,
+          "max": 219.92
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.06,
+          "p50": 5.36,
+          "p95": 8.97,
+          "max": 8.97
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.03,
+          "p95": 0.16,
+          "max": 0.16
+        },
+        "search": {
+          "n": 9,
+          "min": 0.69,
+          "p50": 0.97,
+          "p95": 1.93,
+          "max": 1.93
+        }
+      },
+      "exportSvgMs": 179,
+      "exportSvgKb": 3211,
+      "groupingLayoutMs": 21046,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 428.59,
+          "p50": 647.3,
+          "p95": 761.8,
+          "max": 761.8
+        },
+        "expand": {
+          "n": 7,
+          "min": 395.76,
+          "p50": 414.63,
+          "p95": 420.96,
+          "max": 420.96
+        }
+      },
+      "destroyMs": 8.46,
+      "heapUsedMb": 519,
+      "rssMb": 935,
+      "peakRssMb": 935,
+      "elements": 24992
+    },
+    {
+      "nodes": 10000,
+      "edges": 50000,
+      "nodesReal": 10000,
+      "edgesReal": 49983,
+      "stats": {
+        "nodes": 10000,
+        "edges": 49983,
+        "density": 9.9966,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "very-large",
+        "layout": "grid",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": true,
+        "cluster": true,
+        "coseNumIter": 100
+      },
+      "policyEvalMs": 43.98,
+      "synthMs": 69.48,
+      "toViewModelMs": 42.39,
+      "structuredCloneMs": 181.78,
+      "cyAddIsolatedMs": 1377.85,
+      "mountMs": 0.49,
+      "firstLayout": "grid",
+      "setDataFirstLayoutMs": 2437,
+      "setDataRefreshMs": 591,
+      "layoutsMs": {
+        "circle": 786,
+        "concentric": 1474,
+        "grid": 797,
+        "breadthfirst": 6759
+      },
+      "guardEvents": [
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 2
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 2000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 4000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 6000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 8000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 10000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 12000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 14000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 16000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 18000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 20000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 22000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 24000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 26000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 28000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 30000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 32000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 34000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 36000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 38000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 40000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 42000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 44000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 46000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 48000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 50000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 52000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 54000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 56000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 58000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "grid",
+          "done": 59983,
+          "total": 59983
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 138
+        },
+        {
+          "type": "skipped",
+          "layout": "grid"
+        },
+        {
+          "type": "started",
+          "layout": "circle"
+        },
+        {
+          "type": "done",
+          "layout": "circle",
+          "elapsedMs": 153
+        },
+        {
+          "type": "started",
+          "layout": "concentric"
+        },
+        {
+          "type": "done",
+          "layout": "concentric",
+          "elapsedMs": 464
+        },
+        {
+          "type": "started",
+          "layout": "grid"
+        },
+        {
+          "type": "done",
+          "layout": "grid",
+          "elapsedMs": 143
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 6085
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "skipped",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 2000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 4000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 6000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 8000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 10000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 12000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 14000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 16000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 18000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 20000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 22000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 24000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 26000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 28000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 30000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 32000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 34000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 36000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 38000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 40000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 42000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 44000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 46000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 48000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 50000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 52000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 54000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 56000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 58000,
+          "total": 59983
+        },
+        {
+          "type": "progress",
+          "layout": "breadthfirst",
+          "done": 59983,
+          "total": 59983
+        },
+        {
+          "type": "started",
+          "layout": "breadthfirst"
+        },
+        {
+          "type": "done",
+          "layout": "breadthfirst",
+          "elapsedMs": 6477
+        }
+      ],
+      "analysisMs": 227.28,
+      "impactDepth3": {
+        "uses": 204,
+        "usedBy": 166
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 19.92,
+          "p50": 23.66,
+          "p95": 27.17,
+          "max": 27.17
+        },
+        "highlight": {
+          "n": 9,
+          "min": 440.39,
+          "p50": 471.91,
+          "p95": 494.49,
+          "max": 494.49
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 479.63,
+          "p50": 530.97,
+          "p95": 557.74,
+          "max": 557.74
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.08,
+          "p50": 9.54,
+          "p95": 15.69,
+          "max": 15.69
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.02,
+          "p95": 0.17,
+          "max": 0.17
+        },
+        "search": {
+          "n": 9,
+          "min": 1.86,
+          "p50": 2.07,
+          "p95": 2.98,
+          "max": 2.98
+        }
+      },
+      "exportSvgMs": 375,
+      "exportSvgKb": 7438,
+      "groupingLayoutMs": 105507,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 1071.04,
+          "p50": 1119.57,
+          "p95": 2002.82,
+          "max": 2002.82
+        },
+        "expand": {
+          "n": 7,
+          "min": 921.58,
+          "p50": 1015.9,
+          "p95": 1056.7,
+          "max": 1056.7
+        }
+      },
+      "destroyMs": 17.29,
+      "heapUsedMb": 1323,
+      "rssMb": 1667,
+      "peakRssMb": 1667,
+      "elements": 59983
+    }
+  ]
+}
