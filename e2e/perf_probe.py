@@ -238,6 +238,27 @@ def main() -> int:
 
             interact("graph-canvas-toggle", "/graph", graph_canvas, settle_ms=600)
 
+            def graph_adaptive():
+                """Cycle 3 — resolve the adaptive pick + a safe layout
+                switch on the canvas, bracketed by CDP deltas."""
+                btn = page.locator("button[data-view='canvas']")
+                if not btn.count():
+                    return
+                if not page.locator("[data-canvas='graph']").count():
+                    btn.click()
+                    page.wait_for_timeout(600)
+                auto = page.locator("button[data-layout='auto']")
+                if not auto.count():
+                    return
+                result.setdefault("graph_adaptive", {})["resolved"] = \
+                    auto.inner_text().strip()
+                grid = page.locator("button[data-layout='grid']")
+                if grid.count():
+                    grid.click()
+                    page.wait_for_timeout(400)
+
+            interact("graph-adaptive-layout", "/graph", graph_adaptive, settle_ms=500)
+
             def theme_toggle():
                 btn = page.locator(
                     "button.icon-btn[aria-label='Tema'],"

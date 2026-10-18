@@ -322,16 +322,18 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
   });
 });
 
-describe('GraphPage — §5.6 canvas surface', () => {
-  async function mountCanvas(fixture: Awaited<ReturnType<typeof make>>) {
-    const c = fixture.componentInstance;
-    c.setMode('canvas');
-    fixture.detectChanges();
-    await vi.waitFor(() => expect(c.canvasRenderer()).toBeTruthy());
-    fixture.detectChanges();
-    return c.canvasRenderer()!.nativeHandle() as cytoscape.Core;
-  }
+/** Mount the canvas on a made fixture — shared by the canvas-surface
+ *  and cycle-3 guard suites below. */
+async function mountCanvas(fixture: Awaited<ReturnType<typeof make>>) {
+  const c = fixture.componentInstance;
+  c.setMode('canvas');
+  fixture.detectChanges();
+  await vi.waitFor(() => expect(c.canvasRenderer()).toBeTruthy());
+  fixture.detectChanges();
+  return c.canvasRenderer()!.nativeHandle() as cytoscape.Core;
+}
 
+describe('GraphPage — §5.6 canvas surface', () => {
   it('toggles list↔canvas preserving selection and mounts the renderer', async () => {
     setup();
     const fixture = await make();
@@ -634,5 +636,84 @@ describe('GraphPage — 2.1 advanced inspector, impact, snapshot, saved view', (
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe('GraphPage — 2.2 cycle 3 adaptive layout + safety guard', () => {
+  it('auto mode is the default and names the resolved layout', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    fixture.detectChanges();
+    const auto = el.querySelector('[data-layout="auto"]') as HTMLButtonElement;
+    expect(auto).toBeTruthy();
+    // the small fixture graph resolves to the small-class auto pick
+    expect(c.effectiveLayout()).toBe('cose');
+    expect(c.layoutAuto()).toBe(true);
+    expect(auto.textContent).toContain('cose');
+    // explicit pick turns auto off; auto pill turns it back on
+    c.setLayout('grid');
+    fixture.detectChanges();
+    expect(c.layoutAuto()).toBe(false);
+    expect(auto.getAttribute('aria-pressed')).toBe('false');
+    c.setAutoLayout();
+    fixture.detectChanges();
+    expect(c.layoutAuto()).toBe(true);
+    expect(auto.getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('a pending expensive pick shows the warn strip and confirm runs it', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    // simulate the guard's pending state (a measured-expensive pick at
+    // scale — the fixture graph itself is small)
+    c.pendingLayout.set('cose');
+    fixture.detectChanges();
+    const warn = el.querySelector('[data-section="layout-warn"]');
+    expect(warn).toBeTruthy();
+    expect(warn!.textContent).toContain(c.layoutChoice().recommended);
+    // "run anyway" applies the pick and leaves auto mode
+    (el.querySelector('[data-action="layout-confirm"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.pendingLayout()).toBeNull();
+    expect(c.layoutAuto()).toBe(false);
+    expect(c.layoutName()).toBe('cose');
+    expect(el.querySelector('[data-section="layout-warn"]')).toBeNull();
+  });
+
+  it('useRecommended returns to auto instead of running the expensive pick', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    c.pendingLayout.set('breadthfirst');
+    fixture.detectChanges();
+    (el.querySelector('[data-action="layout-use-rec"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.pendingLayout()).toBeNull();
+    expect(c.layoutAuto()).toBe(true);
+  });
+
+  it('layout events drive the status strip; cancel reaches the adapter', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    // run cose (async) then cancel through the page handler
+    c.setLayout('cose');
+    c.cancelLayout();
+    await vi.waitFor(() => expect(c.layoutStatus()?.type).toBe('cancelled'));
+    expect(c.layoutBusy()).toBe(false);
+    fixture.detectChanges();
+    const strip = el.querySelector('[data-status="layout"]');
+    expect(strip).toBeTruthy();
+    expect(strip!.textContent).toContain('cancelled');
   });
 });
