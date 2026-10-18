@@ -115,6 +115,37 @@ export interface GraphDiffMarks {
 }
 
 /**
+ * Portal 2.2 Cycle 3 §6.3 — layout lifecycle events.
+ *
+ * The renderer reports every layout state transition so callers can
+ * drive progress UI, cancellation affordances and watchdog notices:
+ *
+ * - `started`    — a layout began running (async or synchronous).
+ * - `done`       — it finished normally; `elapsedMs` is wall time.
+ * - `skipped`    — a data refresh needed no layout: kept elements
+ *                  already hold positions and newcomers were seeded
+ *                  deterministically (reported, never silent).
+ * - `cancelled`  — `cancelLayout()` stopped it; the canvas keeps the
+ *                  last stable positions (a still frame, not a blank).
+ * - `superseded` — a newer layout call replaced it mid-flight.
+ * - `timeout`    — the watchdog killed a stuck run; `fallback` names
+ *                  the safe layout that started in its place.
+ * - `error`      — the layout threw before it could start; `fallback`
+ *                  names the safe layout that started in its place.
+ * - `progress`   — progressive element creation advanced; `done`/`total`
+ *                  are element counts, not percentages.
+ */
+export interface GraphLayoutEvent {
+  type:
+    'started' | 'done' | 'skipped' | 'cancelled' | 'superseded' | 'timeout' | 'error' | 'progress';
+  layout: GraphLayoutName;
+  elapsedMs?: number;
+  fallback?: GraphLayoutName;
+  done?: number;
+  total?: number;
+}
+
+/**
  * A pluggable canvas engine. `exportPng`/`exportSvg` return `null`
  * when the running host cannot rasterize (e.g. headless test envs) —
  * callers must treat `null` as "export unavailable", never as data.
@@ -122,8 +153,11 @@ export interface GraphDiffMarks {
 export interface GraphRenderer {
   /** Attach to a container. Called once per mount. */
   mount(container: HTMLElement): void;
-  /** Replace the whole dataset (already sorted/deduped upstream). */
-  setData(view: GraphViewModel): void;
+  /** Replace the whole dataset (already sorted/deduped upstream).
+   *  `opts.layout` pre-selects the layout the render pass will run —
+   *  the way a policy decision reaches the adapter without forcing an
+   *  extra layout on the outgoing element set. */
+  setData(view: GraphViewModel, opts?: { layout?: GraphLayoutName }): void;
   /** Visually select one element (node or edge id); null clears. */
   select(id: string | null): void;
   /** Neighborhood emphasis: keep these ids lit, dim the rest. */
@@ -132,6 +166,12 @@ export interface GraphRenderer {
   dimExcept(nodeIds: ReadonlySet<string> | null): void;
   /** Re-run a named layout. Selection is preserved. */
   layout(name: GraphLayoutName): void;
+  /** Stop the in-flight layout. The canvas keeps the last stable
+   *  positions — cancelling never blanks or freezes the view. */
+  cancelLayout(): void;
+  /** Subscribe to layout lifecycle events (progress, done, cancelled,
+   *  timeout+fallback) — the guard's reporting surface. */
+  onLayoutStatus(cb: (e: GraphLayoutEvent) => void): void;
   /** Fit the whole graph into the viewport. */
   fit(): void;
   /** Center + zoom on one element. */

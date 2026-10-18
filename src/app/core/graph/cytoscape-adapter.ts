@@ -1,10 +1,18 @@
 import cytoscape from 'cytoscape';
 import { iconPath } from '../../shared/icon-paths';
+import {
+  FALLBACK_LAYOUT,
+  GraphStats,
+  boundedIterations,
+  graphStats,
+  layoutTimeoutMs,
+} from './layout-policy';
 import { EDGE_LINE, EDGE_STYLE, KIND_ICON, KIND_STYLE, tierLabel } from './view-model';
 import {
   GraphDetailTier,
   GraphDiffMarks,
   GraphGrouping,
+  GraphLayoutEvent,
   GraphLayoutName,
   GraphNodeShape,
   GraphRenderer,
@@ -42,6 +50,13 @@ export interface CytoscapeRendererOptions {
    *  moves). Default true — raster-only, honest: no data is dropped,
    *  edges reappear the moment the camera settles. */
   perfHints?: boolean;
+  /** Layout watchdog (§6.3). Default on; benchmarks measuring the
+   *  UNguarded baseline pass `guard: false` — the page never does. */
+  guard?: boolean;
+  /** Incremental reconcile on setData (default true — §6.4). `false`
+   *  restores the pre-cycle-3 full wipe + unconditional relayout; the
+   *  benchmark's baseline mode uses it, the page never does. */
+  incremental?: boolean;
 }
 
 const NODE_SIZE = 46;
@@ -52,6 +67,30 @@ const TIER_NEAR = 1.35;
 /** Per-zoom class churn is skipped past this size — far-tier labels
  *  stay (documented in the benchmark doc). */
 const TIER_MAX_NODES = 4000;
+/** Element count above which the initial render chunks `cy.add` across
+ *  event-loop turns — measured ~0.4 s per 25 k elements, so past 8 k
+ *  the single-call add becomes a visible freeze (§6.4). */
+const PROGRESSIVE_MIN = 8000;
+const PROGRESSIVE_CHUNK = 2000;
+/** A refresh relayouts only when the share of never-positioned nodes
+ *  exceeds this — below it, deterministic seeding keeps the canvas
+ *  stable instead of re-running a (possibly expensive) layout. */
+const RELAYOUT_FRACTION = 0.1;
+const RELAYOUT_MIN = 8;
+
+/** Why a running layout ended — the terminal event the guard emits. */
+type Halt = 'natural' | 'cancel' | 'superseded' | 'timeout';
+
+interface ActiveLayout {
+  layout: cytoscape.Layouts;
+  name: GraphLayoutName;
+  t0: number;
+  halt: Halt;
+  timer: ReturnType<typeof setTimeout> | null;
+}
+
+const monotime = (): number =>
+  typeof performance !== 'undefined' ? performance.now() : Date.now();
 
 function canRaster(): boolean {
   if (typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)) return false;
@@ -121,9 +160,12 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
   // refresh loop dereferences the absent renderer) — force instant.
   const animate = (opts.animate ?? true) && !headless;
   const perfHints = opts.perfHints ?? true;
+  const guard = opts.guard !== false;
+  const incremental = opts.incremental !== false;
   const listeners: ((sel: GraphSelection | null) => void)[] = [];
   const hoverListeners: ((sel: GraphSelection | null) => void)[] = [];
   const viewportListeners: ((v: GraphViewport) => void)[] = [];
+  const layoutListeners: ((e: GraphLayoutEvent) => void)[] = [];
 
   let cy: cytoscape.Core | null = null;
   // Honesty/emphasis state survives setData rebuilds.
@@ -140,12 +182,16 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
   let vpTimer: ReturnType<typeof setTimeout> | null = null;
   let viewNodes = new Map<string, GraphViewModel['nodes'][number]>();
   /** The in-flight layout — superseded runs are stopped, never stacked. */
-  let runningLayout: cytoscape.Layouts | null = null;
+  let activeLayout: ActiveLayout | null = null;
   /** Stopped continuous layouts that still owe one final frame. Cose
    *  keeps a queued frame past stop(); that frame runs done()→refresh()
    *  on the next tick, so the engine may only be torn down after every
    *  stopped layout has emitted its last layoutstop (see destroy). */
   let inFlightLayoutFrames = 0;
+  /** Invalidates an async progressive render when a newer one starts. */
+  let renderSeq = 0;
+  /** Model stats of the last setData — feeds the layout watchdog. */
+  let lastStats: GraphStats | null = null;
 
   function stopLayout(layout: cytoscape.Layouts): void {
     inFlightLayoutFrames++;
@@ -162,6 +208,18 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
   const emitHover = (sel: GraphSelection | null): void => {
     for (const cb of hoverListeners) cb(sel);
   };
+  const emitLayout = (e: GraphLayoutEvent): void => {
+    for (const cb of layoutListeners) cb(e);
+  };
+
+  /** Stop the in-flight layout with a reason — its layoutstop handler
+   *  emits the matching terminal event (never silently dropped). */
+  function haltLayout(reason: Halt): void {
+    const a = activeLayout;
+    if (!a) return;
+    a.halt = reason;
+    stopLayout(a.layout);
+  }
 
   function currentViewport(): GraphViewport | null {
     if (!cy) return null;
@@ -380,10 +438,22 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     if (selectedId) cy.getElementById(selectedId).select();
   }
 
-  function runLayout(name: GraphLayoutName): void {
+  /**
+   * Run a layout under the safety guard (§6.3):
+   * - a still-running layout is stopped first ('superseded') — layouts
+   *   never stack;
+   * - async layouts (cose) run under a watchdog sized by the measured
+   *   scale — `layout-policy.ts` owns the budget; on expiry the run is
+   *   stopped ('timeout') and the safe FALLBACK_LAYOUT runs instead;
+   * - every terminal state emits a GraphLayoutEvent so callers can
+   *   render progress + honesty notices;
+   * - positions fit() only on a natural finish — a cancelled or killed
+   *   run leaves the last stable camera alone.
+   */
+  function runLayout(name: GraphLayoutName, opts: { guarded?: boolean } = {}): void {
     if (!cy) return;
-    // never stack layouts — a timed-out or superseded run stops here
-    if (runningLayout) stopLayout(runningLayout);
+    if (activeLayout) haltLayout('superseded');
+    currentLayout = name;
     const options: cytoscape.LayoutOptions = {
       name,
       animate,
@@ -396,7 +466,7 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       (options as cytoscape.ConcentricLayoutOptions).concentric = (n) => n.degree(false);
       (options as cytoscape.ConcentricLayoutOptions).levelWidth = () => 2;
     }
-    if (name === 'cose' && !animate) {
+    if (name === 'cose') {
       // cytoscape cose runs its whole simulation in ONE synchronous
       // while-loop whenever animate !== true — uncancellable, timers
       // starve, and a big graph freezes the tab for minutes (measured:
@@ -408,80 +478,329 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       const coseOpts = options as cytoscape.CoseLayoutOptions;
       coseOpts.animate = true;
       coseOpts.animationThreshold = Number.MAX_SAFE_INTEGER;
+      // bounded iteration budget at scale — the policy's measured
+      // cap; small graphs keep the engine default (real convergence).
+      // Guarded only: bench 'off' mode reproduces the 2.1 baseline.
+      const it = boundedIterations(stats());
+      if (guard && it > 0) coseOpts.numIter = it;
     }
+    emitLayout({ type: 'started', layout: name });
     const layout = cy.layout(options);
-    runningLayout = layout;
+    const rec: ActiveLayout = { layout, name, t0: monotime(), halt: 'natural', timer: null };
+    activeLayout = rec;
     layout.one('layoutstop', () => {
-      if (runningLayout === layout) runningLayout = null;
-      cy?.fit(undefined, 36);
+      if (rec.timer) {
+        clearTimeout(rec.timer);
+        rec.timer = null;
+      }
+      if (activeLayout === rec) activeLayout = null;
+      const elapsedMs = Math.round(monotime() - rec.t0);
+      if (rec.halt === 'natural') {
+        emitLayout({ type: 'done', layout: name, elapsedMs });
+        cy?.fit(undefined, 36);
+      } else if (rec.halt === 'cancel') {
+        emitLayout({ type: 'cancelled', layout: name, elapsedMs });
+      } else if (rec.halt === 'superseded') {
+        emitLayout({ type: 'superseded', layout: name, elapsedMs });
+      } else {
+        emitLayout({ type: 'timeout', layout: name, elapsedMs, fallback: FALLBACK_LAYOUT });
+      }
       applyTier();
     });
-    layout.run();
+    // the watchdog only guards async layouts — synchronous ones can't
+    // be interrupted mid-block anyway, so no timer is armed for them
+    const budget = !guard || opts.guarded === false ? 0 : layoutTimeoutMs(name, stats());
+    if (budget > 0) {
+      rec.timer = setTimeout(() => {
+        rec.timer = null;
+        if (activeLayout !== rec) return;
+        haltLayout('timeout');
+        runLayout(FALLBACK_LAYOUT, { guarded: false });
+      }, budget);
+    }
+    try {
+      layout.run();
+    } catch {
+      // a layout that throws before starting must not wedge the guard —
+      // fall back to the safe layout and report HONESTLY (an error is
+      // not a timeout — different cause, same safe recovery)
+      if (activeLayout === rec) {
+        if (rec.timer) {
+          clearTimeout(rec.timer);
+          rec.timer = null;
+        }
+        activeLayout = null;
+        emitLayout({ type: 'error', layout: name, elapsedMs: 0, fallback: FALLBACK_LAYOUT });
+        runLayout(FALLBACK_LAYOUT, { guarded: false });
+      }
+    }
   }
 
-  /** Rebuild all elements from the stored view + grouping spec. */
+  /** Stats of the current model — the watchdog's scale input. */
+  function stats(): GraphStats {
+    if (lastStats) return lastStats;
+    const nodes = cy?.nodes().length ?? 0;
+    const edges = cy?.edges().length ?? 0;
+    return {
+      nodes,
+      edges,
+      density: nodes ? (2 * edges) / nodes : 0,
+      components: 0,
+      largestShare: 1,
+    };
+  }
+
+  // -- element construction -------------------------------------------
+
+  type EleDef = { data: Record<string, unknown>; classes?: string };
+
+  function groupDefs(): EleDef[] {
+    const spec = grouping;
+    if (!spec) return [];
+    return spec.groups.map((g) => ({
+      data: {
+        id: g.id,
+        label: g.label,
+        kind: 'group',
+        dlabel: spec.collapsed.has(g.id) ? `${g.label} (${g.members.length})` : g.label,
+        members: g.members.length,
+      },
+      classes: 'grp',
+    }));
+  }
+
+  function nodeDefs(memberOf: Map<string, string>): EleDef[] {
+    return lastView!.nodes.map((n) => ({
+      data: {
+        id: n.id,
+        label: n.label,
+        dlabel: tierLabel(n, tier),
+        kind: n.kind,
+        color: KIND_STYLE[n.kind].color,
+        icon: KIND_ICON_URI[n.kind] ?? '',
+        unverified: n.unverified,
+        absent: n.absent,
+        failed: n.failed,
+        degree: n.degree,
+        state: n.state,
+        category: n.category,
+        origin: n.origin,
+        version: n.version,
+        ...(memberOf.has(n.id) ? { parent: memberOf.get(n.id) } : {}),
+      },
+      classes:
+        `${n.unverified ? 'unverified' : ''}${n.absent ? ' absent' : ''}` +
+        `${n.failed ? ' failed' : ''}`,
+    }));
+  }
+
+  function edgeDefs(): EleDef[] {
+    return lastView!.edges.map((e) => ({
+      data: {
+        id: e.id,
+        source: e.source,
+        target: e.target,
+        kind: e.kind,
+        evidence: e.evidence,
+        evidenceState: e.evidenceState,
+        endpoint: e.evidenceEndpoint,
+        line: EDGE_LINE[e.evidenceState] ?? 'solid',
+        elabel: tier === 'far' ? '' : e.kind,
+      },
+    }));
+  }
+
+  /** Sync mutable fields on a kept element — refresh honesty: labels,
+   *  flags and line styles track the newest model without a rebuild.
+   *  `id`/`source`/`target` are engine-immutable; `parent` moves via
+   *  `ele.move()`, never `data()`. The shallow diff skips the write
+   *  when nothing changed — a collapse toggle must not dirty 60 k
+   *  elements' styles for nothing. */
+  function refreshElement(d: EleDef): void {
+    const el = cy!.getElementById(d.data['id'] as string);
+    if (el.empty()) return;
+    const { id: _id, source: _s, target: _t, parent: _p, ...fields } = d.data;
+    let dirty = false;
+    for (const k of Object.keys(fields)) {
+      if (el.data(k) !== fields[k]) {
+        dirty = true;
+        break;
+      }
+    }
+    if (dirty) el.data(fields);
+    if (el.isNode()) {
+      const want = (d.data['parent'] as string | undefined) ?? null;
+      if ((el.data('parent') ?? null) !== want) el.move({ parent: want });
+      if ('unverified' in d.data) {
+        el.toggleClass('unverified', !!d.data['unverified']);
+        el.toggleClass('absent', !!d.data['absent']);
+        el.toggleClass('failed', !!d.data['failed']);
+      }
+    }
+  }
+
+  /**
+   * Deterministic position for a node the canvas has never placed:
+   * the centroid of its already-positioned neighbours, or a golden-angle
+   * ring around the placed centroid when no neighbour is placed yet.
+   * Refresh keeps the canvas stable — a new node lands near its
+   * relations instead of re-shuffling the whole picture (§6.4).
+   */
+  function seedPositions(ids: string[]): void {
+    if (!ids.length || !cy || !lastView) return;
+    const fresh = new Set(ids);
+    const placed = new Map<string, { x: number; y: number }>();
+    let cx = 0,
+      cyy = 0,
+      pn = 0;
+    cy.nodes().forEach((n) => {
+      const id = n.id();
+      if (isGroupId(id) || fresh.has(id)) return;
+      const p = n.position();
+      if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+      placed.set(id, p);
+      cx += p.x;
+      cyy += p.y;
+      pn++;
+    });
+    const center = pn ? { x: cx / pn, y: cyy / pn } : { x: 0, y: 0 };
+    const radius = Math.max(240, Math.sqrt(Math.max(1, lastView.nodes.length)) * 30);
+    const adj = new Map<string, string[]>();
+    for (const e of lastView.edges) {
+      (adj.get(e.source) ?? adj.set(e.source, []).get(e.source)!).push(e.target);
+      (adj.get(e.target) ?? adj.set(e.target, []).get(e.target)!).push(e.source);
+    }
+    const seeded = new Map<string, { x: number; y: number }>();
+    let i = 0;
+    for (const id of ids) {
+      const el = cy.getElementById(id);
+      if (el.empty()) continue;
+      const nb = (adj.get(id) ?? [])
+        .map((x) => placed.get(x) ?? seeded.get(x))
+        .filter((p): p is { x: number; y: number } => p !== undefined);
+      let p: { x: number; y: number };
+      if (nb.length) {
+        p = {
+          x: nb.reduce((a, b) => a + b.x, 0) / nb.length,
+          y: nb.reduce((a, b) => a + b.y, 0) / nb.length,
+        };
+      } else {
+        const a = i * 2.399963229728653; // golden angle — even scatter
+        p = { x: center.x + radius * Math.cos(a), y: center.y + radius * Math.sin(a) };
+      }
+      i++;
+      el.position(p);
+      seeded.set(id, p);
+    }
+  }
+
+  const tick = (): Promise<void> => new Promise((r) => setTimeout(r, 0));
+
+  /** Chunked element creation for very large graphs: the event loop
+   *  breathes between chunks, progress is reported honestly, and a
+   *  superseding render aborts the walk (the newer diff reconciles). */
+  async function progressiveAdd(lists: EleDef[][], seq: number, total: number): Promise<void> {
+    let done = 0;
+    for (const list of lists) {
+      for (let i = 0; i < list.length; i += PROGRESSIVE_CHUNK) {
+        if (seq !== renderSeq || !cy) return;
+        cy.add(list.slice(i, i + PROGRESSIVE_CHUNK));
+        done += Math.min(PROGRESSIVE_CHUNK, list.length - i);
+        emitLayout({ type: 'progress', layout: currentLayout, done, total });
+        await tick();
+      }
+    }
+  }
+
+  /** End of a render pass: seed newcomers, restyle, then layout only
+   *  when the canvas genuinely needs one — a refresh that kept ≥90% of
+   *  positions skips it entirely (the measured cost driver). */
+  function finishRender(addedNodeIds: string[], seq: number, firstRender: boolean): void {
+    if (seq !== renderSeq || !cy) return;
+    seedPositions(addedNodeIds);
+    applyStates();
+    const needLayout =
+      firstRender ||
+      addedNodeIds.length >
+        Math.max(RELAYOUT_MIN, Math.ceil(lastView!.nodes.length * RELAYOUT_FRACTION));
+    if (needLayout) {
+      runLayout(currentLayout);
+    } else {
+      emitLayout({ type: 'skipped', layout: currentLayout });
+      applyTier();
+    }
+  }
+
+  /** Reconcile the canvas with the stored view + grouping spec —
+   *  incremental: kept elements hold position and are field-synced,
+   *  removals/inserts are minimal, and a full element wipe only ever
+   *  happens on the very first render (§6.4 measured optimisation). */
   function render(): void {
     if (!cy || !lastView) return;
+    const seq = ++renderSeq;
     viewNodes = new Map(lastView.nodes.map((n) => [n.id, n]));
+    lastStats = graphStats(lastView.nodes, lastView.edges);
     const memberOf = new Map<string, string>();
     if (grouping) {
       for (const g of grouping.groups) for (const m of g.members) memberOf.set(m, g.id);
     }
-    cy.elements().remove();
-    if (grouping) {
-      for (const g of grouping.groups) {
-        const collapsed = grouping.collapsed.has(g.id);
-        cy.add({
-          data: {
-            id: g.id,
-            label: g.label,
-            kind: 'group',
-            dlabel: collapsed ? `${g.label} (${g.members.length})` : g.label,
-            members: g.members.length,
-          },
-          classes: 'grp',
-        });
-      }
+    const groups = groupDefs();
+    const nodes = nodeDefs(memberOf);
+    const edges = edgeDefs();
+    if (!incremental) {
+      // pre-cycle-3 path — full wipe + bulk add + unconditional
+      // relayout; kept so the benchmark's baseline mode measures the
+      // real 2.1 cost, not a re-implementation of it.
+      cy.elements().remove();
+      const all = [...groups, ...nodes, ...edges];
+      if (all.length) cy.add(all);
+      applyStates();
+      runLayout(currentLayout);
+      return;
     }
-    cy.add([
-      ...lastView.nodes.map((n) => ({
-        data: {
-          id: n.id,
-          label: n.label,
-          dlabel: tierLabel(n, tier),
-          kind: n.kind,
-          color: KIND_STYLE[n.kind].color,
-          icon: KIND_ICON_URI[n.kind] ?? '',
-          unverified: n.unverified,
-          absent: n.absent,
-          failed: n.failed,
-          degree: n.degree,
-          state: n.state,
-          category: n.category,
-          origin: n.origin,
-          version: n.version,
-          ...(memberOf.has(n.id) ? { parent: memberOf.get(n.id) } : {}),
-        },
-        classes:
-          `${n.unverified ? 'unverified' : ''}${n.absent ? ' absent' : ''}` +
-          `${n.failed ? ' failed' : ''}`,
-      })),
-      ...lastView.edges.map((e) => ({
-        data: {
-          id: e.id,
-          source: e.source,
-          target: e.target,
-          kind: e.kind,
-          evidence: e.evidence,
-          evidenceState: e.evidenceState,
-          endpoint: e.evidenceEndpoint,
-          line: EDGE_LINE[e.evidenceState] ?? 'solid',
-          elabel: tier === 'far' ? '' : e.kind,
-        },
-      })),
+    const wanted = new Set<string>([
+      ...groups.map((d) => d.data['id'] as string),
+      ...nodes.map((d) => d.data['id'] as string),
+      ...edges.map((d) => d.data['id'] as string),
     ]);
-    applyStates();
-    runLayout(currentLayout);
+    const firstRender = cy.elements().empty();
+    if (!firstRender) {
+      // removals first — incident edges of removed nodes go with them
+      cy.elements()
+        .filter((el) => !wanted.has(el.id()))
+        .remove();
+    }
+    const missing = (d: EleDef) => cy!.getElementById(d.data['id'] as string).empty();
+    const addG = groups.filter(missing);
+    const addN = nodes.filter(missing);
+    const addE = edges.filter(missing);
+    // group containers land first so `move({parent})` below always finds
+    // its target
+    if (addG.length) cy.add(addG);
+    if (!firstRender) {
+      // field-sync what stays — cheap vs a rebuild and keeps honesty
+      for (const d of groups) refreshElement(d);
+      for (const d of nodes) refreshElement(d);
+      for (const d of edges) refreshElement(d);
+    }
+    const addTotal = addG.length + addN.length + addE.length;
+    if (addTotal > PROGRESSIVE_MIN) {
+      void progressiveAdd([addN, addE], seq, addTotal).then(() =>
+        finishRender(
+          addN.map((d) => d.data['id'] as string),
+          seq,
+          firstRender,
+        ),
+      );
+      return;
+    }
+    if (addN.length) cy.add(addN);
+    if (addE.length) cy.add(addE);
+    finishRender(
+      addN.map((d) => d.data['id'] as string),
+      seq,
+      firstRender,
+    );
   }
 
   /** Deterministic SVG projection of node positions — not a raster
@@ -605,8 +924,11 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       cy.on('viewport', () => onViewport());
     },
 
-    setData(view: GraphViewModel): void {
+    setData(view: GraphViewModel, opts?: { layout?: GraphLayoutName }): void {
       lastView = view;
+      // a policy decision can ride with the data — the upcoming render
+      // runs it directly instead of re-laying out the outgoing set
+      if (opts?.layout) currentLayout = opts.layout;
       render();
     },
 
@@ -630,8 +952,15 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     },
 
     layout(name: GraphLayoutName): void {
-      currentLayout = name;
       runLayout(name);
+    },
+
+    cancelLayout(): void {
+      haltLayout('cancel');
+    },
+
+    onLayoutStatus(cb: (e: GraphLayoutEvent) => void): void {
+      layoutListeners.push(cb);
     },
 
     fit(): void {
@@ -704,11 +1033,16 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     destroy(): void {
       if (vpTimer) clearTimeout(vpTimer);
       vpTimer = null;
+      renderSeq++;
       const engine = cy;
       cy = null;
-      if (runningLayout) {
-        stopLayout(runningLayout);
-        runningLayout = null;
+      if (activeLayout) {
+        if (activeLayout.timer) {
+          clearTimeout(activeLayout.timer);
+          activeLayout.timer = null;
+        }
+        stopLayout(activeLayout.layout);
+        activeLayout = null;
       }
       // A stopped layout's queued frame still calls cy methods on its
       // last tick — cy.destroy() before that lands crashes endBatch on
@@ -731,12 +1065,14 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       listeners.length = 0;
       hoverListeners.length = 0;
       viewportListeners.length = 0;
+      layoutListeners.length = 0;
       fadedOn = false;
       fadedNodes = new Set();
       fadedEdges = new Set();
       dimSet = null;
       selectedId = null;
       lastView = null;
+      lastStats = null;
       viewNodes = new Map();
       grouping = null;
       diff = null;

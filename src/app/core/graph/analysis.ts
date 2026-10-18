@@ -36,7 +36,14 @@ interface Adj {
   degree: Map<string, number>;
 }
 
+/** Adjacency memoized per graph instance — a rebuilt FedGraph (new
+ *  identity) invalidates naturally; the page may chain several
+ *  analyses over the same model and only pays the O(E) index once. */
+const adjCache = new WeakMap<FedGraph, Adj>();
+
 function adjacency(g: FedGraph): Adj {
+  const cached = adjCache.get(g);
+  if (cached) return cached;
   const out = new Map<string, FedEdge[]>();
   const into = new Map<string, FedEdge[]>();
   const degree = new Map<string, number>();
@@ -51,7 +58,9 @@ function adjacency(g: FedGraph): Adj {
     degree.set(e.source, (degree.get(e.source) ?? 0) + 1);
     degree.set(e.target, (degree.get(e.target) ?? 0) + 1);
   }
-  return { out, in: into, degree };
+  const adj = { out, in: into, degree };
+  adjCache.set(g, adj);
+  return adj;
 }
 
 const next = (a: Adj, dir: WalkDirection, id: string): FedEdge[] =>

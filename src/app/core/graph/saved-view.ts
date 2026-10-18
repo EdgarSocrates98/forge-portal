@@ -21,6 +21,9 @@ export interface GraphViewState {
   schema: typeof GRAPH_VIEW_SCHEMA;
   mode: 'list' | 'canvas';
   layout: GraphLayoutName;
+  /** Cycle 3: adaptive-layout mode — optional; absent ⇒ auto, the
+   *  honest default for records written before the policy shipped. */
+  layoutAuto?: boolean;
   query: string;
   kind: FedNodeKind | null;
   selectedNode: string | null;
@@ -61,6 +64,7 @@ export function parseViewState(raw: unknown): GraphViewState | null {
     schema: GRAPH_VIEW_SCHEMA,
     mode,
     layout,
+    layoutAuto: o['layoutAuto'] === false ? false : true,
     query: str(o['query']) ?? '',
     kind: KINDS.has(o['kind'] as string) ? (o['kind'] as FedNodeKind) : null,
     selectedNode: str(o['selectedNode']),

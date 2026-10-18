@@ -348,3 +348,97 @@ describe('cytoscape adapter — 2.1 detail tiers, groups, diff, viewport', () =>
     expect(cy.destroyed()).toBe(true);
   });
 });
+
+describe('cytoscape adapter — 2.2 cycle 3 layout guard + incremental render', () => {
+  it('emits started→done for a synchronous layout and skipped on a no-op refresh', async () => {
+    const { r } = make();
+    const events: string[] = [];
+    r.onLayoutStatus((e) => events.push(`${e.type}:${e.layout}`));
+    r.layout('grid');
+    // sync layout finishes inside the call
+    expect(events).toContain('started:grid');
+    expect(events).toContain('done:grid');
+    // second setData of the SAME view — positions kept, layout skipped
+    events.length = 0;
+    r.setData(VM);
+    expect(events).toEqual(['skipped:grid']);
+  });
+
+  it('kept elements hold position across setData; newcomers are seeded', () => {
+    const { r, cy } = make();
+    r.layout('grid'); // deterministic positions
+    const before = { ...cy.getElementById('forge:f1').position() };
+    const bigger: GraphViewModel = {
+      nodes: [
+        ...VM.nodes,
+        {
+          id: 'skill:new',
+          label: 'new',
+          kind: 'skill',
+          unverified: false,
+          absent: false,
+          failed: false,
+          degree: 1,
+        },
+      ],
+      edges: [
+        ...VM.edges,
+        {
+          id: 'e-new',
+          source: 'skill:new',
+          target: 'forge:f1',
+          kind: 'associated',
+          evidence: 'skills',
+          evidenceState: 'loaded',
+          evidenceEndpoint: 'GET /api/v1/skills',
+        },
+      ],
+    };
+    r.setData(bigger); // 1 of 6 nodes fresh — below the relayout fraction
+    const after = cy.getElementById('forge:f1').position();
+    expect(after.x).toBe(before.x);
+    expect(after.y).toBe(before.y);
+    const seeded = cy.getElementById('skill:new').position();
+    expect(Number.isFinite(seeded.x)).toBe(true);
+    expect(Number.isFinite(seeded.y)).toBe(true);
+    // seeded next to its positioned neighbour, not the origin
+    expect(Math.hypot(seeded.x - before.x, seeded.y - before.y)).toBeLessThan(400);
+  });
+
+  it('cancelLayout() stops an in-flight cose and reports cancelled — canvas keeps positions', async () => {
+    const { r, cy } = make();
+    const events: string[] = [];
+    r.onLayoutStatus((e) => events.push(`${e.type}:${e.layout}`));
+    r.layout('cose'); // async — stays in flight at least one frame
+    r.cancelLayout();
+    await new Promise((res) => setTimeout(res, 60));
+    expect(events).toContain('cancelled:cose');
+    // positions are still finite — cancelling never blanks the view
+    const p = cy.getElementById('forge:f1').position();
+    expect(Number.isFinite(p.x)).toBe(true);
+    // a second cancel with nothing running is a no-op, not an error
+    r.cancelLayout();
+    expect(events.filter((e) => e === 'cancelled:cose')).toHaveLength(1);
+    r.destroy();
+    await new Promise((res) => setTimeout(res, 700));
+  });
+
+  it('supersedes a running layout instead of stacking it', async () => {
+    const { r } = make();
+    const events: string[] = [];
+    r.onLayoutStatus((e) => events.push(`${e.type}:${e.layout}`));
+    r.layout('cose');
+    r.layout('grid');
+    await new Promise((res) => setTimeout(res, 60));
+    // ≥1 superseded: the make() setData cose may already have finished;
+    // each killed run emits exactly one superseded, the newest wins
+    const superseded = events.filter((e) => e.startsWith('superseded'));
+    expect(superseded.length).toBeGreaterThanOrEqual(1);
+    expect(events).toContain('done:grid');
+    // no cose ever finishes after being superseded — stacking prevented
+    const lastSup = events.lastIndexOf(superseded[superseded.length - 1]);
+    expect(events.indexOf('done:cose')).toBeLessThan(lastSup);
+    r.destroy();
+    await new Promise((res) => setTimeout(res, 700));
+  });
+});

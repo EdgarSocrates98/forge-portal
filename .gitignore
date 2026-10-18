@@ -53,6 +53,7 @@ __pycache__/
 .env.*
 graphify-out/
 
-# Python virtualenv (dev env, not vendored)
+# Python virtualenv (dev env, not vendored) — also matches a symlink
+.venv
 .venv/
 scripts/.graph-bench.cjs

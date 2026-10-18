@@ -24,6 +24,7 @@ const STATE: GraphViewState = {
   schema: GRAPH_VIEW_SCHEMA,
   mode: 'canvas',
   layout: 'breadthfirst',
+  layoutAuto: false,
   query: 'kiro',
   kind: 'skill',
   selectedNode: 'skill:kiro-spec',
@@ -61,6 +62,10 @@ describe('saved view state — forge-portal/graph-view/v1', () => {
     expect(min!.collapsedGroups).toEqual([]);
     // malformed viewport → null field, not a crash
     expect(parseViewState({ ...STATE, viewport: { zoom: 'x' } })!.viewport).toBeNull();
+    // pre-cycle-3 records carry no layoutAuto → auto is the default
+    const legacy = { ...STATE } as Record<string, unknown>;
+    delete legacy['layoutAuto'];
+    expect(parseViewState(legacy)!.layoutAuto).toBe(true);
   });
 
   it('clearViewState removes the record', () => {

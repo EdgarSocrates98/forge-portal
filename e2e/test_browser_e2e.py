@@ -1091,6 +1091,41 @@ def test_graph_layout_count(page, portal):
     _shot(page, "28-graph-layouts")
 
 
+def test_graph_adaptive_layout_and_guard(page, portal):
+    """2.2 cycle 3 — the adaptive layout surface in real Chromium.
+
+    The fixture graph is small, so the measured policy resolves `cose`
+    (auto mode is the default). Asserts the auto pill is pressed and
+    names the resolved layout, the status strip reports lifecycle
+    events, an explicit pill pick leaves auto mode, and a safe pick
+    raises no warning strip — the warn/confirm path is unit-tested at
+    scale (graph.page.spec.ts) and measured headless in the bench."""
+    _canvas_on(page, portal)
+    auto = page.locator("button[data-layout='auto']")
+    assert auto.count() > 0, "adaptive auto pill missing from the toolbar"
+    assert auto.get_attribute("aria-pressed") == "true", \
+        "auto mode is not the default press state"
+    resolved = auto.inner_text()
+    assert any(
+        name in resolved
+        for name in ("cose", "concentric", "grid", "breadthfirst", "circle")
+    ), f"auto pill names no resolved layout: {resolved!r}"
+    # the guard's status stream settles — no layout is left running
+    page.wait_for_timeout(800)
+    strip = page.locator("[data-status='layout']")
+    if strip.count():
+        assert strip.locator("[data-action='cancel-layout']").count() == 0, \
+            "a layout is still in flight after settle — stacking leak?"
+    # a safe explicit pick leaves auto mode and raises no warning
+    page.locator("button[data-layout='grid']").click()
+    page.wait_for_timeout(500)
+    assert auto.get_attribute("aria-pressed") == "false", \
+        "explicit pick did not leave auto mode"
+    assert page.locator("[data-section='layout-warn']").count() == 0, \
+        "a measured-safe layout pick raised an expensive-layout warning"
+    _shot(page, "29-graph-adaptive")
+
+
 AXE = REPO / "node_modules" / "axe-core" / "axe.min.js"
 
 
