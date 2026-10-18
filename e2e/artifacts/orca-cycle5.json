@@ -1,0 +1,2963 @@
+{
+  "probe": "orca-cycle5",
+  "orca_version": "46.1",
+  "display": ":0",
+  "session_type": "wayland",
+  "attach": {
+    "orca_binary": "/usr/bin/orca",
+    "chromium_script_loaded": true,
+    "speech_initialized": true,
+    "speech_dispatch_lines": 295,
+    "not_tested": false,
+    "notes": []
+  },
+  "steps": [
+    {
+      "id": "dashboard-load",
+      "action": "goto /",
+      "keys": [],
+      "url": "http://127.0.0.1:44567/dashboard",
+      "focused": {
+        "tag": "body",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "",
+        "text": "Pular para o conteúdoE2E Forgeengenharia agentic, simplificadaVisão geralPainelGuiaFamília de ForjasExplorarForjasAgents",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": true
+      },
+      "announcements": [
+        "ForgePortalApp: Google Chrome for Testing frame.",
+        "Carregamento de ForgePortalApp concluído.",
+        "Página tem 5 marcos, 22 links não visitados.",
+        "Ativo"
+      ]
+    },
+    {
+      "id": "sidebar-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "#content",
+        "cls": "skip-link",
+        "text": "Pular para o conteúdo",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Pular para o conteúdo link."
+      ]
+    },
+    {
+      "id": "skip-link-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "PainelVisão real da sua Forja neste workspace. Atualizar Painel operacional: cada seção indica a fonte real dos dados e ",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "Carregamento de ForgePortalApp concluído.",
+        "Página tem 5 marcos, 8 títulos, 2 tabelas, 41 links não visitados."
+      ]
+    },
+    {
+      "id": "sidebar-tab1b",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "sidebar-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#start",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Saiba mais link."
+      ]
+    },
+    {
+      "id": "sidebar-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Dispensar dica",
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "hint__x",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Dispensar dica push button."
+      ]
+    },
+    {
+      "id": "sidebar-tab4",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "sidebar-tab5",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/dashboard%23content",
+        "cls": "linklike",
+        "text": "Painel",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Painel link."
+      ]
+    },
+    {
+      "id": "sidebar-tab6",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "sidebar-tab7",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/config",
+        "cls": "alert__go",
+        "text": "Ir para Configuração",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Ir para Configuração link."
+      ]
+    },
+    {
+      "id": "sidebar-tab8",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "sidebar-tab9",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges/e2e-forge",
+        "cls": "linklike",
+        "text": "E2E Forge",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "E2E Forge link."
+      ]
+    },
+    {
+      "id": "sidebar-tab10",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges/e2e-forge",
+        "cls": "linklike",
+        "text": "e2e-forge",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "e2e-forge link."
+      ]
+    },
+    {
+      "id": "sidebar-tab11",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges",
+        "cls": "more",
+        "text": "Ver detalhes",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Ver detalhes link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/skills",
+        "cls": "tile__label tile__link",
+        "text": "Skills",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "SKILLS link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab4",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "tile__reload",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab5",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/agents",
+        "cls": "tile__label tile__link",
+        "text": "Agents",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "AGENTS link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab6",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "tile__reload",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab7",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/mcp",
+        "cls": "tile__label tile__link",
+        "text": "MCP",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "MCP link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab8",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "tile__reload",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab9",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/hosts",
+        "cls": "tile__label tile__link",
+        "text": "Hosts de IA",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "HOSTS DE IA link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab10",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "tile__reload",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab11",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab12",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges/e2e-forge",
+        "cls": "linklike",
+        "text": "e2e-forge",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "e2e-forge link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab13",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/versions",
+        "cls": "more",
+        "text": "Ver detalhes",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Ver detalhes link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab14",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Atualizar",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab15",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/tasks",
+        "cls": "more",
+        "text": "Ver detalhes",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Ver detalhes link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab16",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/hosts",
+        "cls": "shortcut",
+        "text": "Hosts de IA",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Hosts de IA link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab17",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/observe",
+        "cls": "shortcut",
+        "text": "Observabilidade",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Observabilidade link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab18",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/config",
+        "cls": "shortcut",
+        "text": "Configuração",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Configuração link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab19",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/versions",
+        "cls": "shortcut",
+        "text": "Versões",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Versões link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab20",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/mcp",
+        "cls": "shortcut",
+        "text": "MCP",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "MCP link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab21",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/tasks",
+        "cls": "shortcut",
+        "text": "Tarefas",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Tarefas link."
+      ]
+    },
+    {
+      "id": "nav-forges-tab22",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "body",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "",
+        "text": "Pular para o conteúdoE2E Forgeengenharia agentic, simplificadaVisão geralPainelGuiaFamília de ForjasExplorarForjasAgents",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": true
+      },
+      "announcements": [
+        "Ver informações do site push button."
+      ]
+    },
+    {
+      "id": "nav-forges-tab23",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "#content",
+        "cls": "skip-link",
+        "text": "Pular para o conteúdo",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-tab24",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/dashboard",
+        "cls": "brand",
+        "text": "E2E Forgeengenharia agentic, simplificada",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-tab25",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/dashboard",
+        "cls": "nav__item nav__item--active",
+        "text": "Painel",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": true,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-tab26",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide",
+        "cls": "nav__item",
+        "text": "Guia",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": true,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-tab27",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/federation",
+        "cls": "nav__item",
+        "text": "Família de Forjas",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": true,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-tab28",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/dashboard#content",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges",
+        "cls": "nav__item",
+        "text": "Forjas",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": true,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "nav-forges-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/forges",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "Explorador de ForjasTodas as Forjas que este workspace consegue verificar — a servidora mais os especialistas federados.",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "UNVERIFIED",
+        "Ativo",
+        "UNVERIFIED"
+      ]
+    },
+    {
+      "id": "forge-row-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/forges",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "forge-row-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/forges",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#forge",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "forge-row-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/forges",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Dispensar dica",
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "hint__x",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "forge-row-tab4",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/forges",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Ver detalhes",
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/forges/e2e-forge",
+        "cls": "icon-btn",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "forge-row-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/forges/e2e-forge",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "Todas as Forjas E2E ForgeCampos verificados pelo portal e pelo registry federado — dados ausentes são marcados, nunca pr",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "ledger",
+        "UNVERIFIED"
+      ]
+    },
+    {
+      "id": "route-agents-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/forges/e2e-forge",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal."
+      ]
+    },
+    {
+      "id": "route-agents-palette-query",
+      "action": "type \"agents\"",
+      "keys": [
+        "type:agents"
+      ],
+      "url": "http://127.0.0.1:44567/forges/e2e-forge",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Buscar ações e páginas… dialog",
+        "Lista com 30 itens",
+        "Agents /agents.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-agents-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "AgentsAgents, subagents e coordenadores com autoridade declarada. Cards Tabela Grafo Atualizar Agents são perfis especia",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "Modo de navegação",
+        "available"
+      ]
+    },
+    {
+      "id": "agents-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Cards",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Visualização panel.",
+        "Cards toggle button pressionado."
+      ]
+    },
+    {
+      "id": "agents-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Tabela",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Tabela toggle button não pressionado."
+      ]
+    },
+    {
+      "id": "agents-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Grafo",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Grafo toggle button não pressionado."
+      ]
+    },
+    {
+      "id": "route-skills-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-skills-palette-query",
+      "action": "type \"skills\"",
+      "keys": [
+        "type:skills"
+      ],
+      "url": "http://127.0.0.1:44567/agents",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Skills /skills."
+      ]
+    },
+    {
+      "id": "route-skills-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "SkillsCatálogo real de skills desta Forja. Atualizar Skills são capacidades reutilizáveis publicadas pelas Forjas — o ca",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "Modo de navegação",
+        "UNVERIFIED",
+        "available"
+      ]
+    },
+    {
+      "id": "skills-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "skills-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#skill",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Saiba mais link."
+      ]
+    },
+    {
+      "id": "skills-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Dispensar dica",
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "hint__x",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Dispensar dica push button."
+      ]
+    },
+    {
+      "id": "route-mcp-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-mcp-palette-query",
+      "action": "type \"mcp\"",
+      "keys": [
+        "type:mcp"
+      ],
+      "url": "http://127.0.0.1:44567/skills",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "MCP /mcp."
+      ]
+    },
+    {
+      "id": "route-mcp-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "MCPServidores MCP e verificação real de handshake. Verificar handshake Atualizar MCP é o protocolo que liga as Forjas ao",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "Modo de navegação",
+        "Tools descobertas"
+      ]
+    },
+    {
+      "id": "mcp-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn btn--primary",
+        "text": "Verificar handshake",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Verificar handshake push button."
+      ]
+    },
+    {
+      "id": "mcp-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "mcp-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#mcp",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Saiba mais link."
+      ]
+    },
+    {
+      "id": "route-graph-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-graph-palette-query",
+      "action": "type \"graph\"",
+      "keys": [
+        "type:graph"
+      ],
+      "url": "http://127.0.0.1:44567/mcp",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Graph Studio /graph."
+      ]
+    },
+    {
+      "id": "route-graph-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "Graph StudioGrafo real da Forja — nós, arestas, evidência e impacto. Atualizar O grafo mostra entidades e relações obser",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "PORTAL-NOT-FOUND",
+        "carregado",
+        "Não verificado",
+        "carregado",
+        "Algo deu errado",
+        "O recurso pedido não existe neste portal — volte ao painel e navegue pelo menu. Ir para o painel",
+        "carregado",
+        "no such operation: /graphs",
+        "Ir para o painel"
+      ]
+    },
+    {
+      "id": "graph-list-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "graph-list-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#graph",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Saiba mais link."
+      ]
+    },
+    {
+      "id": "graph-list-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Dispensar dica",
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "hint__x",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Dispensar dica push button."
+      ]
+    },
+    {
+      "id": "graph-list-tab4",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/dashboard",
+        "cls": "err__go",
+        "text": "Ir para o painel",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Ir para o painel link."
+      ]
+    },
+    {
+      "id": "graph-list-tab5",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Lista",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Visualização do grafo panel.",
+        "Lista toggle button pressionado."
+      ]
+    },
+    {
+      "id": "graph-list-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Lista",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "graph-list-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "fg-pill",
+        "text": "Canvas",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Canvas toggle button não pressionado."
+      ]
+    },
+    {
+      "id": "graph-list-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Capturar snapshot",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "deixando o painel.",
+        "Capturar snapshot push button."
+      ]
+    },
+    {
+      "id": "graph-list-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Exportar grafo",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Exportar grafo push button."
+      ]
+    },
+    {
+      "id": "graph-list-tab4",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Buscar nós por nome ou id…",
+        "labelledby": null,
+        "name": null,
+        "type": "search",
+        "checked": false,
+        "href": null,
+        "cls": "input fb__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Buscar nós por nome ou id… entry.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-tasks-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents."
+      ]
+    },
+    {
+      "id": "route-tasks-palette-query",
+      "action": "type \"tasks\"",
+      "keys": [
+        "type:tasks"
+      ],
+      "url": "http://127.0.0.1:44567/graph",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Tarefas /tasks."
+      ]
+    },
+    {
+      "id": "route-tasks-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "TarefasDiga o que você quer fazer — o portal monta o plano na Forja real. Atualizar Tarefas registradas mostram estágio,",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Suportado",
+        "conteúdo principal.",
+        "Modo de navegação",
+        "Não verificado",
+        "Suportado"
+      ]
+    },
+    {
+      "id": "tasks-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "tasks-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "a",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": "/guide#diagnose",
+        "cls": "hint__more",
+        "text": "Saiba mais",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Saiba mais link."
+      ]
+    },
+    {
+      "id": "tasks-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": "Dispensar dica",
+        "labelledby": null,
+        "name": null,
+        "type": "button",
+        "checked": null,
+        "href": null,
+        "cls": "hint__x",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Dispensar dica push button."
+      ]
+    },
+    {
+      "id": "route-observe-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents.",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "route-observe-palette-query",
+      "action": "type \"observe\"",
+      "keys": [
+        "type:observe"
+      ],
+      "url": "http://127.0.0.1:44567/tasks",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Observabilidade /observe."
+      ]
+    },
+    {
+      "id": "route-observe-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "ObservabilidadeMétricas locais registradas por esta Forja — sem telemetria remota. Atualizar Métricas somente locais — n",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal.",
+        "Modo de navegação"
+      ]
+    },
+    {
+      "id": "observe-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "button",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "btn",
+        "text": "Atualizar",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Atualizar push button."
+      ]
+    },
+    {
+      "id": "observe-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "select",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "select",
+        "text": "Todos operation.endoperation.startrequest.rejected",
+        "label": "Tipo Todos operation.endoperation.startrequest.rejected",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "TIPO combo box.",
+        "Todos.",
+        "abre menu",
+        "Modo de foco"
+      ]
+    },
+    {
+      "id": "observe-tab3",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "select",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "select",
+        "text": "Todos okrefusedstarted",
+        "label": "Status Todos okrefusedstarted",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "STATUS combo box.",
+        "Todos.",
+        "abre menu"
+      ]
+    },
+    {
+      "id": "route-settings-palette-open",
+      "action": "keys Control+k",
+      "keys": [
+        "Control+k"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Agents /agents."
+      ]
+    },
+    {
+      "id": "route-settings-palette-query",
+      "action": "type \"settings\"",
+      "keys": [
+        "type:settings"
+      ],
+      "url": "http://127.0.0.1:44567/observe",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": "combobox",
+        "ariaLabel": "Buscar ações e páginas…",
+        "labelledby": null,
+        "name": null,
+        "type": "text",
+        "checked": false,
+        "href": null,
+        "cls": "cp__input",
+        "text": "",
+        "label": null,
+        "visible": true,
+        "inMain": false,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Configurações /settings."
+      ]
+    },
+    {
+      "id": "route-settings-palette-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "main",
+        "id": "content",
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": null,
+        "type": null,
+        "checked": null,
+        "href": null,
+        "cls": "content",
+        "text": "ConfiguraçõesIdioma, tema e preferências do portal.IdiomaAutomáticoPortuguês (Brasil)EnglishTemaSistemaClaroEscuroDensid",
+        "label": null,
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "conteúdo principal."
+      ]
+    },
+    {
+      "id": "settings-scheme-tab1",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "locale",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Automático",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Idioma panel.",
+        "Automático.",
+        "selecionado radio button"
+      ]
+    },
+    {
+      "id": "settings-scheme-tab2",
+      "action": "keys Tab",
+      "keys": [
+        "Tab"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "scheme",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Escuro",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "deixando o painel.",
+        "Tema panel.",
+        "Escuro.",
+        "selecionado radio button"
+      ]
+    },
+    {
+      "id": "settings-scheme-enter",
+      "action": "keys Enter",
+      "keys": [
+        "Enter"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "scheme",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Escuro",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    },
+    {
+      "id": "settings-scheme-arrow",
+      "action": "keys ArrowDown",
+      "keys": [
+        "ArrowDown"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "scheme",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Sistema",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Sistema.",
+        "selecionado radio button"
+      ]
+    },
+    {
+      "id": "settings-scheme-arrow2",
+      "action": "keys ArrowDown",
+      "keys": [
+        "ArrowDown"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "scheme",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Claro",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": [
+        "Claro.",
+        "selecionado radio button"
+      ]
+    },
+    {
+      "id": "escape-hatch",
+      "action": "keys Escape",
+      "keys": [
+        "Escape"
+      ],
+      "url": "http://127.0.0.1:44567/settings",
+      "focused": {
+        "tag": "input",
+        "id": null,
+        "role": null,
+        "ariaLabel": null,
+        "labelledby": null,
+        "name": "scheme",
+        "type": "radio",
+        "checked": true,
+        "href": null,
+        "cls": "",
+        "text": "",
+        "label": "Claro",
+        "visible": true,
+        "inMain": true,
+        "inNav": false,
+        "isBody": false
+      },
+      "announcements": []
+    }
+  ],
+  "orca_log": "/tmp/orca-portal.log",
+  "summary": {
+    "steps": 100,
+    "steps_with_speech": 87,
+    "speech_utterances": 139,
+    "silent_steps": [
+      "nav-forges-tab23",
+      "nav-forges-tab24",
+      "nav-forges-tab25",
+      "nav-forges-tab26",
+      "nav-forges-tab27",
+      "nav-forges-tab28",
+      "forge-row-tab1",
+      "forge-row-tab2",
+      "forge-row-tab3",
+      "forge-row-tab4",
+      "graph-list-enter",
+      "settings-scheme-enter",
+      "escape-hatch"
+    ],
+    "steps_where_orca_presented_other_apps": [],
+    "verdict": "REAL"
+  }
+}

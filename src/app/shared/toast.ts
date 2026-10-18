@@ -209,7 +209,8 @@ function coerceParams(
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      .toast {
+      /* data-motion='full' is the user's explicit opt-out (tokens.css) */
+      :host-context(html:not([data-motion='full'])) .toast {
         animation: none;
       }
     }

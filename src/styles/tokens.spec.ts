@@ -49,6 +49,19 @@ describe('design tokens (tokens.css)', () => {
     expect(block).toContain('--fg-motion-med: 0ms');
   });
 
+  it("every UA reduced-motion reset honors the data-motion='full' opt-out", () => {
+    // tokens.css documents 'full' as the user's explicit opt-out of the
+    // OS reduce; a reset that ignores data-motion silently vetoes it.
+    // Contract (Cycle 5 / 2.2): every prefers-reduced-motion block in
+    // the global sheet scopes its selectors with :not([data-motion='full']).
+    const blocks = styles.split('@media (prefers-reduced-motion: reduce)').slice(1);
+    expect(blocks.length).toBeGreaterThan(0);
+    for (const b of blocks) {
+      const rules = b.slice(0, b.indexOf('}'));
+      expect(rules).toContain("data-motion='full'");
+    }
+  });
+
   it('strengthens borders and the focus ring under prefers-contrast: more', () => {
     const block = tokens.slice(tokens.indexOf('prefers-contrast: more'));
     expect(block).toContain('--fg-focus-width: 3px');

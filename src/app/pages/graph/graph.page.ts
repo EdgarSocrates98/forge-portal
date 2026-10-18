@@ -1578,8 +1578,14 @@ export class GraphPage {
     try {
       const { createCytoscapeRenderer } = await import('../../core/graph/cytoscape-adapter');
       if (this.canvasEl()?.nativeElement !== el || this.renderer) return; // stale toggle
+      // same resolution as tokens.css: 'reduced' forces, 'full' opts
+      // out of the UA reduce, 'system' defers to the media query
+      const motionPref = document.documentElement.dataset['motion'];
       const reduced =
-        typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+        motionPref === 'reduced' ||
+        (motionPref !== 'full' &&
+          typeof matchMedia !== 'undefined' &&
+          matchMedia('(prefers-reduced-motion: reduce)').matches);
       const r = createCytoscapeRenderer({ animate: !reduced });
       r.mount(el);
       r.onSelect((s) => this.onCanvasSelect(s));

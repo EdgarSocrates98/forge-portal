@@ -146,4 +146,31 @@ describe('a11y contract (static template audit)', () => {
     expect(confirm?.tpl).toContain('(keydown)="onKeydown($event)"');
     expect(palette?.tpl).toContain('(keydown)="onPanelKey($event)"');
   });
+
+  it('clickable non-button elements stay keyboard-activatable', () => {
+    // Cycle 5 (2.2): a <tr (click)> was the only path into the
+    // /execution inspector — unreachable by keyboard (WCAG 2.1.1).
+    // Any native-static element carrying (click) must also be
+    // focusable and Enter-activatable. Backdrop clicks on dialog
+    // overlays and role="option" rows are exempt: Esc / the palette's
+    // input-driven roving selection already cover them.
+    const exempt = new Set([
+      'src/app/shared/confirm-dialog.ts',
+      'src/app/shared/command-palette.ts',
+    ]);
+    const bad: string[] = [];
+    for (const { path, tpl } of withTemplates) {
+      if (exempt.has(path)) continue;
+      for (const m of tpl.matchAll(
+        /<(tr|td|li|div|span|section|article|header)\b[^>]*\(click\)[^>]*>/g,
+      )) {
+        const tag = m[0];
+        if (/role="option"/.test(tag)) continue;
+        if (!/tabindex/.test(tag) || !/\(keydown\.(enter|space)\)/.test(tag)) {
+          bad.push(`${path}: ${tag.slice(0, 90)}`);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
+  });
 });

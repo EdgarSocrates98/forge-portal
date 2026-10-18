@@ -530,8 +530,9 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      .choice,
-      .component {
+      /* data-motion='full' is the user's explicit opt-out (tokens.css) */
+      :host-context(html:not([data-motion='full'])) .choice,
+      :host-context(html:not([data-motion='full'])) .component {
         transition: none;
       }
     }
