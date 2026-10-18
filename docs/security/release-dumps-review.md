@@ -29,7 +29,7 @@ Generated artifacts committed as the cycle's minimal dump: `docs/audits/forge-2.
 
 | # | Gap | Sev |
 |---|---|---|
-| D-1 | `SECRET_RES` misses AWS **secret-access-key** shape (non-AKIA 40-char), `-----BEGIN … PRIVATE KEY-----` blocks, `npm_`/`pypi-`/`gcp-` token prefixes, Azure client secrets. An unrecognized secret embedded in a scanned field would survive redaction. | P1 |
+| D-1 | `SECRET_RES` missed AWS `aws_secret_access_key`/`aws_session_token` k=v, `-----BEGIN … PRIVATE KEY-----` blocks, `npm_`/`pypi-`/`AIza`/`ya29.` token shapes, `client_secret`/`webhook_secret` k=v. **Fixed in this PR** (patterns added + verified: each synthetic redacts; `version = 0.5.2` unaffected; `--check` still clean on real output). Standalone unlabeled 40-char AWS secrets remain uncovered by design (key-name match only — a bare-entropy matcher would false-positive on hashes; recorded as accepted residual). | ~~P1~~ FIXED |
 | D-2 | No post-write self-scan of emitted files — every write funnels through `sanitize`, so residual risk is pattern coverage only, but a second net would catch miss-pattern leaks. | P2 |
 | D-3 | `forge-doctor-data/tools/env_manifest.py` writes raw `sys.executable` (absolute path with username) into `dist/env-manifest.json` which ships in RC artifacts. Minor path/PII leak. | P2 |
 | D-4 | `the-forge/scripts/reality/collect.py` records interpreter paths into `specialist-reality.json`; no redaction (but `_MINIMAL_ENV` allowlist for subprocesses is good). | P3 |
@@ -37,4 +37,4 @@ Generated artifacts committed as the cycle's minimal dump: `docs/audits/forge-2.
 
 ## Verdict
 
-**PASS with P1 follow-up** — the dump pipeline is structurally safe (no raw contents, sanitize-everything, exclusion lists, `--check` gate, clean live run). D-1 extends the secret-pattern table; recommend a small PR adding those regexes + optional post-write scan. No secrets were exposed by this cycle's dump.
+**PASS** — the dump pipeline is structurally safe (no raw contents, sanitize-everything, exclusion lists, `--check` gate, clean live run) and D-1 is fixed in this PR. Optional D-2 post-write self-scan remains a defense-in-depth suggestion (P2). No secrets were exposed by this cycle's dump.
