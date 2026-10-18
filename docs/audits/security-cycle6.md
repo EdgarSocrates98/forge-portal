@@ -13,7 +13,7 @@ Escopo: `portal_core/forge_portal.py` (servidor stdlib-only) + superfície
 | Guarda anti-DNS-rebinding | PASS | `_host_ok()` L522–530 rejeita `Host` não-loopback em GET e POST (403 `PORTAL-HOST`) |
 | CSP | PASS | L46 + `send_header("Content-Security-Policy", CSP)` L465: `default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'` — sem CDN, sem `unsafe-eval` |
 | `X-Content-Type-Options: nosniff` | PASS | L463 |
-| Sessão | PASS | token 128-bit; `X-Forge-Session` header ou cookie `forge_session` comparado com `hmac.compare_digest` (L510–511) |
+| Sessão | PASS | token 192-bit (`secrets.token_urlsafe(24)`); `X-Forge-Session` header ou cookie `forge_session` comparado com `hmac.compare_digest` (L510–511) |
 | CSRF/Origin em mutação | PASS | `_origin_ok()` L514–519: se `Origin` presente, host deve ser loopback; ausente = cliente não-browser (header de sessão ainda obrigatório) |
 | Content-Type em POST | PASS | L586–591: exige `application/json` senão 415 `PORTAL-CONTENT-TYPE` |
 | Rate limit em mutação | PASS | L593: `operation.mutating` → `rate_limiter.allow()` senão 429 `PORTAL-RATE-LIMITED` |
