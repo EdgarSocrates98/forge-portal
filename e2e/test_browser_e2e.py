@@ -783,6 +783,62 @@ def test_execution_unlinked_and_honest_gaps(page, portal):
     assert unlinked.count() == (1 if uncorrelated else 0)
 
 
+def test_route_changes_do_not_retain_dom_or_listeners(page, portal):
+    """§7.4 lifecycle — in-app router cycles must release the page.
+
+    The Angular router destroys and recreates the route component on
+    each navigation; subscriptions, listeners and DOM owned by the page
+    have to be collected. We measure Nodes / JSEventListeners / heap
+    through CDP Performance.getMetrics with forced GC between cycles —
+    first↔last deltas must stay bounded (real retention), not grow
+    linearly with the cycle count (a leak)."""
+    url = f"http://127.0.0.1:{portal.port}"
+    page.goto(f"{url}/execution?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    cdp = page.context.new_cdp_session(page)
+    cdp.send("Performance.enable")
+
+    def metrics():
+        out = cdp.send("Performance.getMetrics")["metrics"]
+        return {m["name"]: m["value"] for m in out}
+
+    nodes, listeners, heap = [], [], []
+    for _ in range(4):
+        page.click('.nav__item[href="/dashboard"]')
+        page.wait_for_timeout(350)
+        page.click('.nav__item[href="/execution"]')
+        page.wait_for_timeout(450)
+        # GC before sampling — otherwise we measure GC lag, not retention
+        cdp.send("HeapProfiler.enable")
+        cdp.send("HeapProfiler.collectGarbage")
+        page.wait_for_timeout(150)
+        m = metrics()
+        nodes.append(m.get("Nodes", 0))
+        listeners.append(m.get("JSEventListeners", 0))
+        heap.append(m.get("JSHeapUsedSize", 0))
+
+    # Per-cycle slope (cycle 2→4) is the leak signal: retained page
+    # objects would add a roughly constant block each cycle. First
+    # cycle absorbs lazy-chunk + cache warm-up, so it stays out of the
+    # slope. Bounds are loose on purpose — the assertion is "flat",
+    # not a byte budget.
+    node_slope = (nodes[-1] - nodes[1]) / 2
+    listener_slope = (listeners[-1] - listeners[1]) / 2
+    assert node_slope < 500, (
+        f"Nodes retained per route cycle: {node_slope:.0f} "
+        f"(sequence {nodes})"
+    )
+    assert listener_slope < 200, (
+        f"JSEventListeners retained per route cycle: {listener_slope:.0f} "
+        f"(sequence {listeners})"
+    )
+    # heap may legitimately oscillate; flag only a steep upward trend
+    assert heap[-1] - heap[1] < 8 * 1024 * 1024, (
+        f"JS heap grew {heap[-1] - heap[1]} bytes across route cycles"
+    )
+
+
 def test_mobile_viewport(page, portal):
     page.set_viewport_size({"width": 390, "height": 844})
     _open(page, portal)

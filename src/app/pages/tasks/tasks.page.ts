@@ -4,7 +4,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { InstallationReceipt, MetricsReport, TaskExecution } from '../../core/api/api.models';
+import {
+  InstallationReceipt,
+  MetricsEvent,
+  MetricsReport,
+  TaskExecution,
+} from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -13,6 +18,7 @@ import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { ForgeDoc, UiForgeDoc } from '../../shared/forge-doc';
 import { UiSkeleton } from '../../shared/skeleton';
+import { UiPager, pageSlice } from '../../shared/pager';
 import { Source } from '../explorer/forges.data';
 import { buildReplay, buildTimeline, fmtTaskDuration } from './tasks.data';
 
@@ -67,6 +73,7 @@ interface PendingPlan {
     UiIcon,
     UiForgeDoc,
     UiSkeleton,
+    UiPager,
   ],
   template: `
     <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t" hintId="diagnose">
@@ -315,10 +322,15 @@ interface PendingPlan {
                 <span>{{ fmtAt(tl.windowStart) }}</span>
                 <span>{{ fmtAt(tl.windowEnd) }}</span>
               </div>
-              @for (r of tl.rows; track r.task.id) {
+              @for (r of pagedTlRows(); track r.task.id) {
                 <!-- listitem wraps the button — <button> cannot carry
                      role="listitem" itself (axe aria-allowed-role) -->
-                <div class="tl__item" role="listitem">
+                <div
+                  class="tl__item"
+                  role="listitem"
+                  [attr.aria-setsize]="tl.rows.length"
+                  [attr.aria-posinset]="tlSlice().start + $index + 1"
+                >
                   <!-- no aria-label: accessible name = visible content
                        (axe label-content-name-mismatch) -->
                   <button
@@ -345,6 +357,13 @@ interface PendingPlan {
                 </div>
               }
             </div>
+            <ui-pager
+              [total]="tl.rows.length"
+              [pageSize]="LIST_PAGE"
+              [page]="tlSlice().page"
+              [label]="'tasks.timeline.title' | t"
+              (pageChange)="tlPage.set($event)"
+            />
             @if (tl.unplaced.length) {
               <p class="muted tl__unplaced" data-note="unplaced">
                 {{ 'tasks.timeline.unplaced' | t: { count: tl.unplaced.length } }}
@@ -363,7 +382,7 @@ interface PendingPlan {
         <ui-skeleton kind="card" />
       }
       @if (tasks().length) {
-        <table class="table">
+        <table class="table" [attr.aria-rowcount]="tasks().length + 1">
           <thead>
             <tr>
               <th scope="col">
@@ -377,8 +396,11 @@ interface PendingPlan {
             </tr>
           </thead>
           <tbody>
-            @for (t of tasks(); track t.id) {
-              <tr [attr.data-selected]="selectedId() === t.id || null">
+            @for (t of pagedTasks(); track t.id) {
+              <tr
+                [attr.data-selected]="selectedId() === t.id || null"
+                [attr.aria-rowindex]="histSlice().start + $index + 2"
+              >
                 <td>
                   <!-- Real link, not a fake button: /tasks?task=<id> is
                        shareable and the route input selects the record. -->
@@ -404,6 +426,13 @@ interface PendingPlan {
             }
           </tbody>
         </table>
+        <ui-pager
+          [total]="tasks().length"
+          [pageSize]="LIST_PAGE"
+          [page]="histSlice().page"
+          [label]="'tasks.recent' | t"
+          (pageChange)="histPage.set($event)"
+        />
       } @else {
         @if (!loading()) {
           <ui-empty icon="tasks" [title]="'tasks.empty' | t" />
@@ -506,7 +535,7 @@ interface PendingPlan {
                     class="btn btn--mini"
                     data-action="prev"
                     [disabled]="replayIdx() <= 0"
-                    (click)="replayIdx.set(replayIdx() - 1)"
+                    (click)="stepReplay(-1)"
                   >
                     {{ 'tasks.replay.prev' | t }}
                   </button>
@@ -519,37 +548,49 @@ interface PendingPlan {
                     class="btn btn--mini"
                     data-action="next"
                     [disabled]="replayIdx() >= rep.steps.length - 1"
-                    (click)="replayIdx.set(replayIdx() + 1)"
+                    (click)="stepReplay(1)"
                   >
                     {{ 'tasks.replay.next' | t }}
                   </button>
                 </div>
                 <ol class="replay__steps">
-                  @for (e of rep.steps; track $index) {
+                  @for (e of pagedReplaySteps(rep.steps); track e.i) {
                     <li
-                      [attr.data-current]="$index === replayIdx() || null"
-                      [attr.data-kind-tone]="statusKind(e.status)"
+                      [attr.data-current]="e.i === replayIdx() || null"
+                      [attr.data-kind-tone]="statusKind(e.step.status)"
+                      [attr.aria-setsize]="rep.steps.length"
+                      [attr.aria-posinset]="e.i + 1"
                     >
                       <button
                         class="replay__step"
                         type="button"
-                        [attr.data-current]="$index === replayIdx() || null"
-                        (click)="replayIdx.set($index)"
+                        [attr.data-current]="e.i === replayIdx() || null"
+                        (click)="replayIdx.set(e.i)"
                       >
-                        <code class="replay__kind">{{ e.kind }}</code>
-                        <span class="replay__at">{{ fmtEventAt(e.at) }}</span>
-                        <ui-state-badge [state]="statusKind(e.status)" [labelOverride]="e.status" />
-                        @if (e.duration_ms !== null) {
-                          <span class="num">{{ e.duration_ms }} ms</span>
+                        <code class="replay__kind">{{ e.step.kind }}</code>
+                        <span class="replay__at">{{ e.at }}</span>
+                        <ui-state-badge
+                          [state]="statusKind(e.step.status)"
+                          [labelOverride]="e.step.status"
+                        />
+                        @if (e.step.duration_ms !== null) {
+                          <span class="num">{{ e.step.duration_ms }} ms</span>
                         }
-                        <span class="replay__origin">{{ e.origin }}</span>
-                        @if (e.detail) {
-                          <span class="replay__detail">{{ e.detail }}</span>
+                        <span class="replay__origin">{{ e.step.origin }}</span>
+                        @if (e.step.detail) {
+                          <span class="replay__detail">{{ e.step.detail }}</span>
                         }
                       </button>
                     </li>
                   }
                 </ol>
+                <ui-pager
+                  [total]="rep.steps.length"
+                  [pageSize]="LIST_PAGE"
+                  [page]="replaySlice(rep.steps.length).page"
+                  [label]="'tasks.replay.title' | t"
+                  (pageChange)="replayManual.set($event)"
+                />
               }
               @case ('empty') {
                 <p class="muted" data-state="empty">{{ 'tasks.replay.empty' | t }}</p>
@@ -867,11 +908,66 @@ export class TasksPage {
    *  re-opening a detail the user closed while the param stays put. */
   private readonly deepApplied = signal<string | null>(null);
 
+  /** Cycle 4 §7 paging — history table, timeline rows and detail replay
+   *  steps render page-size slices so a growing task_log stays bounded
+   *  in the DOM. `replayManual` holds a user-picked replay page; unset,
+   *  the page follows replayIdx so transport keeps the step in view. */
+  readonly histPage = signal(0);
+  readonly tlPage = signal(0);
+  readonly replayManual = signal<number | null>(null);
+  readonly LIST_PAGE = 50;
+
   readonly timeline = computed(() => buildTimeline(this.tasks()));
   readonly selectedTask = computed(
     () => this.tasks().find((t) => t.id === this.selectedId()) ?? null,
   );
   readonly replay = computed(() => buildReplay(this.metricsSrc.data(), this.selectedTask()));
+
+  /** History-table slice. */
+  readonly histSlice = computed(() =>
+    pageSlice(this.tasks().length, this.LIST_PAGE, this.histPage()),
+  );
+  readonly pagedTasks = computed(() =>
+    this.tasks().slice(this.histSlice().start, this.histSlice().end),
+  );
+
+  /** Timeline slice — group rows stay bounded at any record count. */
+  readonly tlSlice = computed(() =>
+    pageSlice(this.timeline().rows.length, this.LIST_PAGE, this.tlPage()),
+  );
+  readonly pagedTlRows = computed(() =>
+    this.timeline().rows.slice(this.tlSlice().start, this.tlSlice().end),
+  );
+
+  /** Replay-step slice — the page follows replayIdx unless the user
+   *  paged away manually. */
+  replaySlice(total: number) {
+    const manual = this.replayManual();
+    const page = manual ?? Math.floor(this.replayIdx() / this.LIST_PAGE);
+    return pageSlice(total, this.LIST_PAGE, page);
+  }
+
+  /** Replay transport — a manual page pick yields to the step so the
+   *  current marker is never paged out of view. */
+  stepReplay(delta: number): void {
+    this.replayManual.set(null);
+    const steps = this.replay()?.steps ?? [];
+    const next = this.replayIdx() + delta;
+    this.replayIdx.set(Math.max(0, Math.min(next, steps.length - 1)));
+  }
+
+  /** The visible replay steps tagged with their real global index —
+   *  `data-current` and step numbering stay honest across pages. */
+  pagedReplaySteps(
+    steps: readonly MetricsEvent[],
+  ): { step: MetricsEvent; i: number; at: string }[] {
+    const s = this.replaySlice(steps.length);
+    return steps.slice(s.start, s.end).map((step, i) => ({
+      step,
+      i: s.start + i,
+      at: this.fmtEventAt(step.at),
+    }));
+  }
 
   constructor() {
     // Deep link: once the records answer, a new ?task= value selects its
@@ -884,6 +980,17 @@ export class TasksPage {
         this.selectedId.set(id);
         this.replayIdx.set(0);
       }
+    });
+    // Data changes re-slice the windows — reset every pager so a stale
+    // offset can never render an empty view.
+    effect(() => {
+      this.tasks();
+      this.histPage.set(0);
+      this.tlPage.set(0);
+    });
+    effect(() => {
+      this.replay();
+      this.replayManual.set(null);
     });
     void this.load();
   }

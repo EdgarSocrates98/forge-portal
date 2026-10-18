@@ -1,6 +1,6 @@
-import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, input, signal } from '@angular/core';
 import { PortalApi } from '../../core/api/api.client';
-import { MetricsReport } from '../../core/api/api.models';
+import { MetricsEvent, MetricsReport } from '../../core/api/api.models';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -8,7 +8,21 @@ import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
+import { UiPager, pageSlice } from '../../shared/pager';
 import { Source, stamp } from '../explorer/forges.data';
+
+/** A table row with display strings resolved once per slice — the
+ *  template interpolates, it never reformats per change-detection. */
+interface ObserveRow {
+  e: MetricsEvent;
+  /** 1-based position in the filtered window — aria-rowindex. */
+  position: number;
+  at: string;
+  tone: string;
+  dur: string | null;
+  cid: string | null;
+  cidFull: string | null;
+}
 
 /**
  * Observability (spec §5.4) — local-only metrics exactly as the adapter
@@ -29,7 +43,7 @@ import { Source, stamp } from '../explorer/forges.data';
 @Component({
   selector: 'page-observe',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, UiPager],
   template: `
     <ui-page-header [title]="'observe.title' | t" [subtitle]="'observe.subtitle' | t">
       <button class="btn" [disabled]="src.loading()" (click)="load()">
@@ -150,7 +164,7 @@ import { Source, stamp } from '../explorer/forges.data';
 
         @if (events().length) {
           <div class="table-wrap">
-            <table class="table">
+            <table class="table" [attr.aria-rowcount]="events().length + 1">
               <thead>
                 <tr>
                   <th scope="col">{{ 'observe.col.kind' | t }}</th>
@@ -163,33 +177,33 @@ import { Source, stamp } from '../explorer/forges.data';
                 </tr>
               </thead>
               <tbody>
-                @for (e of events(); track $index) {
-                  <tr>
+                @for (r of pagedRows(); track r.position) {
+                  <tr [attr.aria-rowindex]="r.position + 1">
                     <td>
-                      <code>{{ e.kind }}</code>
+                      <code>{{ r.e.kind }}</code>
                     </td>
-                    <td class="nowrap">{{ fmt(e.at) }}</td>
+                    <td class="nowrap">{{ r.at }}</td>
                     <td class="nowrap">
-                      @if (e.duration_ms !== null) {
-                        {{ e.duration_ms }} ms
+                      @if (r.dur) {
+                        {{ r.dur }}
                       } @else {
                         <span class="muted">—</span>
                       }
                     </td>
                     <td>
-                      <ui-state-badge [state]="statusKind(e.status)" [labelOverride]="e.status" />
+                      <ui-state-badge [state]="r.tone" [labelOverride]="r.e.status" />
                     </td>
-                    <td>{{ e.origin }}</td>
+                    <td>{{ r.e.origin }}</td>
                     <td>
-                      @if (e.correlation_id; as cid) {
-                        <code class="corr" [attr.title]="cid">{{ short(cid) }}</code>
+                      @if (r.cidFull; as cid) {
+                        <code class="corr" [attr.title]="cid">{{ r.cid }}</code>
                       } @else {
                         <span class="muted">—</span>
                       }
                     </td>
                     <td>
-                      @if (e.detail) {
-                        {{ e.detail }}
+                      @if (r.e.detail) {
+                        {{ r.e.detail }}
                       } @else {
                         <span class="muted">—</span>
                       }
@@ -199,6 +213,13 @@ import { Source, stamp } from '../explorer/forges.data';
               </tbody>
             </table>
           </div>
+          <ui-pager
+            [total]="events().length"
+            [pageSize]="EVENTS_PAGE"
+            [page]="slice().page"
+            [label]="'observe.events' | t"
+            (pageChange)="eventsPage.set($event)"
+          />
         } @else {
           <!-- Empty ≠ unverified: the endpoint answered, it just has
                no events (or the filters exclude all of them). -->
@@ -351,6 +372,12 @@ export class ObservePage implements OnInit {
   readonly statusFilter = signal<string | null>(null);
   readonly corrFilter = signal('');
 
+  /** Cycle 4 §7 — the events table renders a page-size slice so the DOM
+   *  stays bounded at any buffer depth; the range text keeps the slice
+   *  honest (never mistaken for the whole window). */
+  readonly eventsPage = signal(0);
+  readonly EVENTS_PAGE = 100;
+
   /** Counter entries sorted by key — the map order is never trusted. */
   readonly counters = computed(() =>
     Object.entries(this.report()?.counters ?? {})
@@ -390,9 +417,34 @@ export class ObservePage implements OnInit {
       .sort((a, b) => this.timeOf(b.at) - this.timeOf(a.at));
   });
 
+  /** Page slice + view-model rows — formatting resolved once per
+   *  rendered row, not per change-detection pass. */
+  readonly slice = computed(() =>
+    pageSlice(this.events().length, this.EVENTS_PAGE, this.eventsPage()),
+  );
+  readonly pagedRows = computed<ObserveRow[]>(() =>
+    this.events()
+      .slice(this.slice().start, this.slice().end)
+      .map((e, i) => ({
+        e,
+        position: this.slice().start + i + 1,
+        at: this.fmt(e.at),
+        tone: this.statusKind(e.status),
+        dur: e.duration_ms !== null ? `${e.duration_ms} ms` : null,
+        cid: e.correlation_id ? this.short(e.correlation_id) : null,
+        cidFull: e.correlation_id,
+      })),
+  );
+
   readonly stamp = stamp;
 
   constructor() {
+    // Data/filter changes re-slice the window — back to page 1 so a
+    // stale offset can never render an empty view.
+    effect(() => {
+      this.events();
+      this.eventsPage.set(0);
+    });
     void this.load();
   }
 

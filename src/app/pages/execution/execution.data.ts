@@ -73,6 +73,8 @@ export interface ExecutionGroup {
   correlationId: string | null;
   /** Ordered events — placed first, unplaced trailing (real order kept). */
   events: PlacedEvent[];
+  /** Events with a parseable timestamp — the drawn subset of `events`. */
+  placed: PlacedEvent[];
   unplaced: PlacedEvent[];
   /** First/last recorded timestamps — null when nothing was placeable. */
   startMs: number | null;
@@ -87,6 +89,10 @@ export interface ExecutionGroup {
   /** Waterfall position — filled by `buildExecutions`. */
   leftPct: number;
   widthPct: number;
+  /** Every placed event as one CSS background layer on the track — the
+   *  same position/tone data the old per-tick spans drew, at zero DOM
+   *  cost per event. '' when nothing is placed. */
+  tickGradient: string;
   /** True when the group holds undrawn (timestamp-less) events. */
   partial: boolean;
 }
@@ -143,6 +149,7 @@ export function buildExecutions(events: readonly PortalEvent[]): {
       key: cid ?? '',
       correlationId: cid,
       events: [...placed, ...unplaced],
+      placed,
       unplaced,
       startMs,
       endMs,
@@ -151,6 +158,7 @@ export function buildExecutions(events: readonly PortalEvent[]): {
       spans: buildSpans(placed),
       leftPct: 0,
       widthPct: 0,
+      tickGradient: buildTickGradient(placed, startMs, endMs),
       partial: unplaced.length > 0,
     };
   };
@@ -234,6 +242,68 @@ function buildSpans(placed: PlacedEvent[]): ExecSpan[] {
   return out.sort((a, b) => a.startMs - b.startMs || (a.spanId < b.spanId ? -1 : 1));
 }
 
+/**
+ * Status tone → the same theme token the old `.tl__tick[data-status]`
+ * elements resolved — colours still come from the design tokens so
+ * themes/high-contrast keep working.
+ */
+const TICK_COLOR: Record<string, string> = {
+  supported: 'var(--ok)',
+  error: 'var(--error)',
+  warn: 'var(--warn)',
+  info: 'var(--info)',
+  muted: 'var(--fg-muted)',
+};
+
+/** Track-width fraction a single tick occupies — small but always
+ *  visible regardless of the window span. */
+const TICK_WIDTH_PCT = 0.8;
+
+/**
+ * Encode every placed event of a group as color stops of ONE
+ * `linear-gradient` drawn on the track element: stop positions are the
+ * same group-relative percentages the DOM ticks used, stops for
+ * overlapping ticks resolve later-on-top (the same paint order the old
+ * absolutely-positioned spans had). Rendering a dense execution then
+ * costs zero elements per event instead of one <span> per tick.
+ */
+export function buildTickGradient(
+  placed: readonly PlacedEvent[],
+  startMs: number | null,
+  endMs: number | null,
+): string {
+  if (!placed.length || startMs === null || endMs === null) return '';
+  const span = endMs - startMs;
+  const pct = (v: number) => +v.toFixed(3);
+  // A group with a single point in time still draws its tick — stacked
+  // at the left edge, last status on top (the old DOM behaviour).
+  if (span <= 0) {
+    const last = placed[placed.length - 1];
+    const c = TICK_COLOR[statusKind(last.event.status)] ?? TICK_COLOR['muted'];
+    return `linear-gradient(90deg, ${c} 0%, ${c} ${TICK_WIDTH_PCT}%, transparent ${TICK_WIDTH_PCT}%)`;
+  }
+  // clamped left edge per tick — non-decreasing because `placed` is
+  // already sorted by recorded timestamp
+  const ls = placed.map((p) =>
+    Math.max(0, Math.min(((p.timeMs! - startMs) / span) * 100, 100 - TICK_WIDTH_PCT)),
+  );
+  const stops: string[] = ['transparent 0%'];
+  for (let i = 0; i < placed.length; i++) {
+    const l = ls[i];
+    // last-wins for overlaps: the next tick's left edge caps this tick
+    const r = Math.min(l + TICK_WIDTH_PCT, i + 1 < ls.length ? ls[i + 1] : 100);
+    const c = TICK_COLOR[statusKind(placed[i].event.status)] ?? TICK_COLOR['muted'];
+    stops.push(
+      `transparent ${pct(l)}%`,
+      `${c} ${pct(l)}%`,
+      `${c} ${pct(r)}%`,
+      `transparent ${pct(r)}%`,
+    );
+  }
+  stops.push('transparent 100%');
+  return `linear-gradient(90deg, ${stops.join(', ')})`;
+}
+
 // ------------------------------------------------------------------
 // replay — playback of the recorded order with real gaps
 // ------------------------------------------------------------------
@@ -288,7 +358,36 @@ export interface EventFilter {
   q: string;
 }
 
-export function filterEvents(events: readonly PortalEvent[], f: EventFilter): PortalEvent[] {
+/** Normalized searchable text for one event — built once, reused by
+ *  every keystroke of the free-text filter. */
+function haystack(e: PortalEvent): string {
+  return [
+    e.event_type,
+    e.source ?? '',
+    e.target ?? '',
+    e.correlation_id ?? '',
+    e.span_id ?? '',
+    e.status ?? '',
+    JSON.stringify(e.metadata ?? {}),
+    JSON.stringify(e.evidence ?? {}),
+  ]
+    .map(norm)
+    .join(' ');
+}
+
+/** event → normalized haystack. Build once per data change so a filter
+ *  keystroke is `includes` over real fields, not JSON.stringify×N. */
+export type EventSearchIndex = ReadonlyMap<PortalEvent, string>;
+
+export function buildSearchIndex(events: readonly PortalEvent[]): EventSearchIndex {
+  return new Map(events.map((e) => [e, haystack(e)]));
+}
+
+export function filterEvents(
+  events: readonly PortalEvent[],
+  f: EventFilter,
+  index?: EventSearchIndex,
+): PortalEvent[] {
   const corr = f.correlation.trim();
   const q = norm(f.q);
   return events.filter((e) => {
@@ -296,20 +395,62 @@ export function filterEvents(events: readonly PortalEvent[], f: EventFilter): Po
     if (f.status !== null && e.status !== f.status) return false;
     if (corr && !(e.correlation_id ?? '').includes(corr)) return false;
     if (!q) return true;
-    const hay = [
-      e.event_type,
-      e.source ?? '',
-      e.target ?? '',
-      e.correlation_id ?? '',
-      e.span_id ?? '',
-      e.status ?? '',
-      JSON.stringify(e.metadata ?? {}),
-      JSON.stringify(e.evidence ?? {}),
-    ]
-      .map(norm)
-      .join(' ');
-    return hay.includes(q);
+    return (index?.get(e) ?? haystack(e)).includes(q);
   });
+}
+
+/**
+ * Lookup tables over the recorded window — built once per data change.
+ * The inspector's "related"/"caused by" then cost a map hit instead of
+ * a full-window scan on every render.
+ */
+export interface RelationIndex {
+  byCorrelation: Map<string, PortalEvent[]>;
+  /** Every event carrying a span_id, per span — window order kept. */
+  bySpan: Map<string, PortalEvent[]>;
+  /** Position of each event in the recorded window — lets merged
+   *  relation sets restore the original order. */
+  pos: Map<PortalEvent, number>;
+}
+
+export function buildRelationIndex(events: readonly PortalEvent[]): RelationIndex {
+  const byCorrelation = new Map<string, PortalEvent[]>();
+  const bySpan = new Map<string, PortalEvent[]>();
+  const pos = new Map<PortalEvent, number>();
+  events.forEach((e, i) => {
+    pos.set(e, i);
+    if (e.correlation_id) {
+      const list = byCorrelation.get(e.correlation_id);
+      if (list) list.push(e);
+      else byCorrelation.set(e.correlation_id, [e]);
+    }
+    if (e.span_id) {
+      const list = bySpan.get(e.span_id);
+      if (list) list.push(e);
+      else bySpan.set(e.span_id, [e]);
+    }
+  });
+  return { byCorrelation, bySpan, pos };
+}
+
+/** Observed relations of one event — same correlation or same span
+ *  only, in recorded-window order; nothing is linked by timing. */
+export function relatedIn(e: PortalEvent, idx: RelationIndex): PortalEvent[] {
+  const out = new Set<PortalEvent>();
+  for (const x of idx.byCorrelation.get(e.correlation_id ?? '') ?? []) {
+    if (x !== e) out.add(x);
+  }
+  for (const x of idx.bySpan.get(e.span_id ?? '') ?? []) {
+    if (x !== e) out.add(x);
+  }
+  return [...out].sort((a, b) => (idx.pos.get(a) ?? 0) - (idx.pos.get(b) ?? 0));
+}
+
+/** The event whose `span_id` this one names as `parent_span_id` —
+ *  a real declared parent link, or null. */
+export function causedByIn(e: PortalEvent, idx: RelationIndex): PortalEvent | null {
+  if (!e.parent_span_id) return null;
+  return idx.bySpan.get(e.parent_span_id)?.[0] ?? null;
 }
 
 /** Observed relations of one event inside the recorded window — same
@@ -361,4 +502,72 @@ export function fmtAt(iso: string | null | undefined): string {
 export function fmtGap(ms: number | null): string {
   if (ms === null) return '—';
   return `+${fmtDurationMs(ms)}`;
+}
+
+// ------------------------------------------------------------------
+// view-models — formatting resolved once per data change, not per
+// change-detection pass (Cycle 4 §7)
+// ------------------------------------------------------------------
+
+/** A table row over a recorded event — every display string resolved
+ *  up-front so the template is pure interpolation. `null` fields mean
+ *  "render the honest '—' placeholder". */
+export interface EventRow {
+  e: PortalEvent;
+  /** 1-based position in the full filtered window — aria-rowindex. */
+  position: number;
+  at: string;
+  kind: string;
+  label: string;
+  dur: string | null;
+  flow: string | null;
+  cidShort: string | null;
+  cidFull: string | null;
+}
+
+export function buildEventRows(events: readonly PortalEvent[], offset = 0): EventRow[] {
+  return events.map((e, i) => ({
+    e,
+    position: offset + i + 1,
+    at: fmtAt(e.timestamp),
+    kind: statusKind(e.status),
+    label: e.status ?? '—',
+    dur: e.duration_ms !== undefined ? `${e.duration_ms} ms` : null,
+    flow: e.source || e.target ? `${e.source ?? '—'} → ${e.target ?? '—'}` : null,
+    cidShort: e.correlation_id ? shortId(e.correlation_id) : null,
+    cidFull: e.correlation_id ?? null,
+  }));
+}
+
+/** A replay step ready to render — `index` is the step's position in
+ *  the FULL step list so a paged slice keeps honest numbering. */
+export interface StepRow {
+  step: ReplayStep;
+  index: number;
+  gap: string;
+  at: string;
+  kind: string;
+  label: string;
+  dur: string | null;
+  flow: string | null;
+  /** No parseable recorded timestamp — the step is real but undrawn. */
+  unplaced: boolean;
+}
+
+export function buildStepRows(steps: readonly ReplayStep[], offset = 0): StepRow[] {
+  return steps.map((step, i) => {
+    const index = offset + i;
+    const e = step.event.event;
+    return {
+      step,
+      index,
+      gap: fmtGap(step.gapMs),
+      at: fmtAt(e.timestamp),
+      kind: statusKind(e.status),
+      label: e.status ?? '—',
+      dur: e.duration_ms !== undefined ? `${e.duration_ms} ms` : null,
+      flow: e.source || e.target ? `${e.source ?? '—'} → ${e.target ?? '—'}` : null,
+      unplaced: step.event.timeMs === null,
+    };
+  });
 }
