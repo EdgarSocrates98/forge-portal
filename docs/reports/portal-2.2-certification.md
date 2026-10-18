@@ -44,16 +44,23 @@ unknown-op refusals → task plan journey.
 ## Gates on final main
 
 - `scripts/vendor.py --check`: 7/7 byte-parity — server `_forge_portal.py`
-  + `_portal_telemetry.py` + 42 asset files, per-asset hashes and
+  (gen `a6bbc5f5…`) + `_portal_telemetry.py` (`0d7ce7ad…`) + **44** asset
+  files (`052a06e2…`, Cycle 3–5 frontend generation), per-asset hashes and
   `server_generation`/`telemetry_generation` recorded in manifests.
+  The Cycle 3–5 asset re-vendor to the siblings went out as
+  the-forge#97 / api-forge#93 / platform-forge#67 / spark-aws#181 /
+  spark-azure#73 / forge-doctor-data#58 / forge-doctor-api#73.
 - Backend tests: **165 passed** (`tests/`, incl. compat generations,
   telemetry, security-cycle6, independence).
 - Frontend: `npm test` + production build — see CI artifacts.
 - `npm audit --omit=dev`: **0 vulnerabilities**; the Python backend is
   stdlib-only (`forge_portal.py`, `registry_ops.py`, `telemetry.py`) —
   zero runtime dependency surface.
-- Python compatibility: `datetime.UTC` regression fixed (#47); CI matrix
-  covers 3.10–3.13 across sibling repos.
+- Python compatibility: `datetime.UTC` regression fixed (#47). CI covers
+  py3.10 via sibling matrices (platform-forge 3.10–3.13, spark-aws/
+  spark-azure 3.10+, the-forge 3.11–3.14, api-forge 3.12+, doctors
+  3.11–3.13); forge-portal's own job pins a single 3.12 — the 3.10 path
+  is exercised through the vendored copies on sibling CI.
 
 ## Verdicts by surface
 
@@ -74,6 +81,27 @@ unknown-op refusals → task plan journey.
 | Moderated usability study | NOT_TESTED | scripted journeys only; 1 friction logged (≈58 keys through dense execution timeline) |
 | Hosted/remote deployment | UNSUPPORTED | Portal is local-first by design |
 
+## Independent review & rectifications
+
+An independent reviewer reproduced the gates (pytest 165, E2E 147/147,
+npm 542, audit 0) and flagged four issues, all rectified:
+
+1. 🔴→fixed `vendor.py --check` was red at review time: the canonical
+   `dist/` had been rebuilt (44 files, Cycle 3–5 frontend) after the
+   first re-vendor. Re-vendored ×7 and pushed as the asset PRs listed
+   above; `--check` is green again.
+2. 🔴→fixed Vendored portals were serving the 2.1 bundle — the same
+   re-vendor now ships the Cycle 3–5 UI (adaptive layout, pagination,
+   WCAG keyboard rows) to all seven forges.
+3. 🟡→fixed E2E telemetry checks accepted 404/409 as "recusa", which
+   could not detect an unmount regression. The checks now require 200 +
+   `forge/PortalEventReport/1` (all seven adapters opt in, so strict is
+   correct), and `/tasks/{id}/events` is probed with a real task id when
+   the tasks surface returns one.
+4. 🟡→fixed Doc drift: this report, the vendor matrix date, and the
+   py-version matrix wording were stale relative to the branch — all
+   corrected in the follow-up commit.
+
 ## Known limitations (carried honestly)
 
 1. Orca coalesced identical rows on 13/100 keyboard steps — speech
@@ -81,12 +109,19 @@ unknown-op refusals → task plan journey.
 2. Watchdog cannot preempt a synchronous layout engine block
    (`graph-scale-report.md` §watchdog).
 3. Telemetry is opt-in per adapter generation; older vendored servers
-   degrade silently (no fabricated UNSUPPORTED).
+   degrade silently (no fabricated UNSUPPORTED). The E2E's strict-200
+   telemetry checks now detect that degradation on these seven forges.
 4. E2E honest states reflect a scratch root; installed-state journeys are
    covered by per-repo unit/integration tests, not by this harness.
-5. Cycle 6 ran against sibling checkouts with merged telemetry code;
-   frozen `site-packages` installs need `theforge install <forge>` to
-   pick up the new generation.
+5. `HONEST_STATES` in the harness enumerates plausible states rather
+   than asserting a specific one — a fabricated-but-plausible state
+   would still pass; the observed `NOT_INSTALLED` ×7 is recorded above.
+6. Frozen `site-packages` installs need `theforge install <forge>` (or a
+   package update) to pick up the new vendored generation. The wheels
+   published on 2026-10-18 (theforge-core 0.5.1 etc.) predate this
+   re-vendor and ship the 2.1-generation frontend — the 2.2 generation
+   reaches package installs with the next releases; checkouts on `main`
+   already carry it.
 
 ## Verdict
 
