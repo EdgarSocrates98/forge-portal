@@ -1,0 +1,122 @@
+[
+  {
+    "pkg": "theforge-core",
+    "ver": "0.5.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-theforge-core/venv/lib/python3.12/site-packages/theforge",
+    "module_version": "0.5.2",
+    "dist_version": "0.5.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "forge",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      ",specialists,hosts,task,provider,ask,plan,workspace,explain,replay,resume,decisions,trace,memory,targets,lab,remote}",
+      "                ...",
+      ""
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "theforge 0.5.2"
+  },
+  {
+    "pkg": "apiforge-af",
+    "ver": "0.1.2",
+    "install_rc": 1,
+    "install_err": "ERROR: Could not find a version that satisfies the requirement cryptography<51,>=50 (from apiforge-af) (from versions: none)\nERROR: No matching distribution found for cryptography<51,>=50\n"
+  },
+  {
+    "pkg": "sparkforge-aws",
+    "ver": "0.5.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-sparkforge-aws/venv/lib/python3.12/site-packages/sparkforge_aws",
+    "module_version": "0.5.2",
+    "dist_version": "0.5.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "sparkforge-aws",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      "nowledge, indice de codigo,",
+      "                        artefatos, credencial AWS e a integracao de usuario de",
+      "                        cada host. Sai 1 com alguma falha."
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "sparkforge-aws 0.5.2"
+  },
+  {
+    "pkg": "sparkforge-azure",
+    "ver": "0.1.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-sparkforge-azure/venv/lib/python3.12/site-packages/sparkforge_azure",
+    "module_version": "0.1.2",
+    "dist_version": "0.1.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "sparkforge-azure",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      "usage: sparkforge-azure [-h] [--version] [--format {json,text}] <command> ...",
+      "",
+      "Spark Forge Azure - Agentic Engineering OS for Azure Data Engineering."
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "sparkforge-azure 0.1.2"
+  },
+  {
+    "pkg": "platformforge",
+    "ver": "0.1.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-platformforge/venv/lib/python3.12/site-packages/platformforge",
+    "module_version": "0.1.2",
+    "dist_version": "0.1.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "platformforge",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      "apply rule catalog to facts",
+      "    knowledge           knowledge freshness/drift check",
+      "    tokens              tokensave: index/search/pack/delta/stats/ledger"
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "platformforge 0.1.2"
+  },
+  {
+    "pkg": "forge-doctor-data",
+    "ver": "1.0.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-forge-doctor-data/venv/lib/python3.12/site-packages/forge_doctor_data",
+    "module_version": "1.0.2",
+    "dist_version": "1.0.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "forge-doctor-data",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      "│",
+      "│ search         Search platforms: OpenSearch/Elasticsearch indices, policies, │",
+      "│                domains.                                                      │"
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "forge-doctor-data 1.0.2"
+  },
+  {
+    "pkg": "forge-doctor-api",
+    "ver": "0.2.2",
+    "install_rc": 0,
+    "module_path": "/tmp/forge-222/env-forge-doctor-api/venv/lib/python3.12/site-packages/forge_doctor_api",
+    "module_version": "0.2.2",
+    "dist_version": "0.2.2",
+    "in_checkout": false,
+    "import_rc": 0,
+    "cli": "forge-doctor-api",
+    "cli_help_rc": 0,
+    "cli_help_head": [
+      "Usage: forge-doctor-api [OPTIONS] COMMAND [ARGS]...                            ",
+      "                                                                                ",
+      " Deterministic, offline-first API architecture intelligence.                    "
+    ],
+    "cli_version_rc": 0,
+    "cli_version_out": "forge-doctor-api 0.2.2"
+  }
+]

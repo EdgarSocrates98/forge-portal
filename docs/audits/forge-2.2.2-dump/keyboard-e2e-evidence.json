@@ -1,0 +1,1442 @@
+{
+  "keys": [
+    {
+      "key": "Tab",
+      "ms": 15,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "skip-link",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Pular para o conteúdo",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 5,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "brand",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "E2E Forge\nengenharia agentic, simplificada",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 9,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Painel",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 9,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Guia",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Família de Forjas",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 6,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Forjas",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Agents",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 9,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Skills",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "MCP",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 10,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Conhecimento",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Capacidades",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Tarefas",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Instalação",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Perfis",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Hosts de IA",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Configuração",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Graph Studio",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 9,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Observabilidade",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 6,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item nav__item--active",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Execução",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Lab",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Versões",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "nav__item",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Configurações",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 3,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "nav__collapse",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 8,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "icon-btn icon-btn--search",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Ctrl K",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "icon-btn",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "PT",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "icon-btn",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "btn",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Atualizar",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "hint__more",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Saiba mais",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 6,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "hint__x",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 9,
+      "focus": {
+        "tag": "A",
+        "role": null,
+        "cls": "kb-skip sr-only",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Pular para a lista de eventos",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 12,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "03b34a74…\n3\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowDown",
+      "ms": 5,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "b046da34…\n5\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowDown",
+      "ms": 5,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "ui-mve0z…\n2\n0 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowUp",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "b046da34…\n5\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "End",
+      "ms": 3,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "ui-mve0z…\n1\n0 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Home",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "03b34a74…\n3\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "PageDown",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "ui-mve0z…\n1\n0 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "PageUp",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "03b34a74…\n3\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 0,
+      "inspector": 0
+    },
+    {
+      "key": "Enter",
+      "ms": 18,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "tl__row",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "03b34a74…\n3\n1 ms",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "btn btn--mini",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Reproduzir",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 5,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "btn btn--mini",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Próximo",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 6,
+      "focus": {
+        "tag": "SELECT",
+        "role": null,
+        "cls": "select",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "×1\n×4\n×16\n×64",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 4,
+      "focus": {
+        "tag": "BUTTON",
+        "role": null,
+        "cls": "rp__step",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "—\noperation.start\n18/10/2026, 13:14:03\nstarted\nportal_core →",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 4,
+      "focus": {
+        "tag": "SELECT",
+        "role": null,
+        "cls": "select",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Todos\noperation.end\noperation.start\nreceipt.issued\nrequest.r",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 7,
+      "focus": {
+        "tag": "SELECT",
+        "role": null,
+        "cls": "select",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "Todos\ncompleted\nok\nplanned\nrefused\nstarted",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 6,
+      "focus": {
+        "tag": "INPUT",
+        "role": null,
+        "cls": "input",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 4,
+      "focus": {
+        "tag": "INPUT",
+        "role": null,
+        "cls": "input",
+        "tabindex": null,
+        "id": null,
+        "rowindex": null,
+        "posinset": null,
+        "text": "",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Tab",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "2",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowDown",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "3",
+        "posinset": null,
+        "text": "task.planned\t18/10/2026, 13:14:03\tplanned\tforge:e2e-forge → ",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowDown",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "4",
+        "posinset": null,
+        "text": "operation.end\t18/10/2026, 13:14:03\tok\tportal_core → POST /ta",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "ArrowUp",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "3",
+        "posinset": null,
+        "text": "task.planned\t18/10/2026, 13:14:03\tplanned\tforge:e2e-forge → ",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "End",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "36",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:05\tstarted\tportal_core → G",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Home",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "2",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "PageDown",
+      "ms": 4,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "36",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:05\tstarted\tportal_core → G",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "PageUp",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "2",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    },
+    {
+      "key": "Enter",
+      "ms": 27,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "2",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+        "visible": true
+      },
+      "sel_rows": 2,
+      "inspector": 1
+    },
+    {
+      "key": "Escape",
+      "ms": 3,
+      "focus": {
+        "tag": "TR",
+        "role": null,
+        "cls": "",
+        "tabindex": "0",
+        "id": null,
+        "rowindex": "2",
+        "posinset": null,
+        "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+        "visible": true
+      },
+      "sel_rows": 1,
+      "inspector": 0
+    }
+  ],
+  "focus_order": [
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "skip-link",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Pular para o conteúdo",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "brand",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "E2E Forge\nengenharia agentic, simplificada",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Painel",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Guia",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Família de Forjas",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Forjas",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Agents",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Skills",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "MCP",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Conhecimento",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Capacidades",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Tarefas",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Instalação",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Perfis",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Hosts de IA",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Configuração",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Graph Studio",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Observabilidade",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item nav__item--active",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Execução",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Lab",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Versões",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "nav__item",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Configurações",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "nav__collapse",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "icon-btn icon-btn--search",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Ctrl K",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "icon-btn",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "PT",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "icon-btn",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "btn",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Atualizar",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "hint__more",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Saiba mais",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "hint__x",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "",
+      "visible": true
+    },
+    {
+      "tag": "A",
+      "role": null,
+      "cls": "kb-skip sr-only",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Pular para a lista de eventos",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "tl__row",
+      "tabindex": "0",
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "03b34a74…\n3\n1 ms",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "btn btn--mini",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Reproduzir",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "btn btn--mini",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Próximo",
+      "visible": true
+    },
+    {
+      "tag": "SELECT",
+      "role": null,
+      "cls": "select",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "×1\n×4\n×16\n×64",
+      "visible": true
+    },
+    {
+      "tag": "BUTTON",
+      "role": null,
+      "cls": "rp__step",
+      "tabindex": "0",
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "—\noperation.start\n18/10/2026, 13:14:03\nstarted\nportal_core →",
+      "visible": true
+    },
+    {
+      "tag": "SELECT",
+      "role": null,
+      "cls": "select",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Todos\noperation.end\noperation.start\nreceipt.issued\nrequest.r",
+      "visible": true
+    },
+    {
+      "tag": "SELECT",
+      "role": null,
+      "cls": "select",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "Todos\ncompleted\nok\nplanned\nrefused\nstarted",
+      "visible": true
+    },
+    {
+      "tag": "INPUT",
+      "role": null,
+      "cls": "input",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "",
+      "visible": true
+    },
+    {
+      "tag": "INPUT",
+      "role": null,
+      "cls": "input",
+      "tabindex": null,
+      "id": null,
+      "rowindex": null,
+      "posinset": null,
+      "text": "",
+      "visible": true
+    },
+    {
+      "tag": "TR",
+      "role": null,
+      "cls": "",
+      "tabindex": "0",
+      "id": null,
+      "rowindex": "2",
+      "posinset": null,
+      "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+      "visible": true
+    }
+  ],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "steps": {
+    "load_ms": 2547,
+    "timeline_rows": 17,
+    "tabs_to_reach_row": 31,
+    "execution_selected": true,
+    "tabs_timeline_to_table": 9,
+    "inspector_open": 1,
+    "inspector_text": "operation.start\nevt-1\nSCHEMA\nforge/PortalEvent/1\nREGISTRADO EM\n18/10/2026, 13:14:03\nSTATUS\nstarted\nDURAÇÃO\n—\nCORRELAÇÃO\n03b34a74dc06\nSPAN\n446a64f00a8a7727\nSPAN PAI\n—\nTRACE\n—\nORIGEM\nportal_core\nDESTINO\nPOST /tasks/plan\nMetadados\n{\n  \"mutating\": true\n}\nEventos relacionados\ntask.planned\n18/10/2026, 13:14:03\noperation.end\n18/10/2026, 13:14:03",
+    "inspector_closed": true,
+    "focus_after_esc": {
+      "tag": "TR",
+      "role": null,
+      "cls": "",
+      "tabindex": "0",
+      "id": null,
+      "rowindex": "2",
+      "posinset": null,
+      "text": "operation.start\t18/10/2026, 13:14:03\tstarted\tportal_core → P",
+      "visible": true
+    },
+    "focus_returned": true
+  },
+  "correlation_id": "b046da344982"
+}
