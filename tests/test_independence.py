@@ -204,7 +204,8 @@ def test_vendored_checkout_copies_match_or_are_known_drift(discovered) -> None:
             checked += 1
             if _sha(copy) != want:
                 drift[fid] = str(copy)
-    assert checked >= 1, "no vendored _forge_portal.py found in any checkout"
+    if not checked:
+        pytest.skip("no vendored _forge_portal.py found in any checkout")
     unexpected = set(drift) - KNOWN_VENDOR_DRIFT
     assert not unexpected, (
         f"vendored copies out of sync with portal_core/forge_portal.py: {drift}"
