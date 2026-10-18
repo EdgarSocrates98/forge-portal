@@ -238,6 +238,43 @@ def run_forge(forge: str, repo: str, argv: list[str]) -> bool:
         code, _ = request(base, token, "/api/v1/graphs")
         ok &= check("GET graphs -> 200/404/409", code in (200, 404, 409), f"{code}")
 
+        # --- telemetria (opt-in): report real ou recusa nomeada ----------
+        code, body = request(base, token, "/api/v1/events")
+        rep = body.get("data") or {}
+        events_ok = (
+            code == 200
+            and rep.get("schema") == "forge/PortalEventReport/1"
+            and isinstance(rep.get("events"), list)
+            and isinstance(rep.get("dropped"), int)
+        )
+        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
+        ok &= check(
+            "events -> PortalEventReport/1 ou recusa",
+            events_ok or refused, f"{code}",
+        )
+
+        code, body = request(base, token, "/api/v1/metrics")
+        met = body.get("data") or {}
+        metrics_ok = (
+            code == 200
+            and isinstance(met.get("counters"), dict)
+            and isinstance(met.get("events"), list)
+        )
+        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
+        ok &= check(
+            "metrics -> projecao ou recusa",
+            metrics_ok or refused, f"{code}",
+        )
+
+        code, body = request(base, token, "/api/v1/tasks/nope/events")
+        te = body.get("data") or {}
+        task_ev_ok = code == 200 and isinstance(te.get("events"), list)
+        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
+        ok &= check(
+            "task events -> janela vazia honesta ou recusa",
+            task_ev_ok or refused, f"{code}",
+        )
+
         # --- traversal / SPA ---------------------------------------------
         code, _ = request(base, token, "/../pyproject.toml")
         ok &= check("traversal -> 404", code == 404, f"got {code}")

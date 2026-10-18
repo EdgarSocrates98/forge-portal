@@ -20,9 +20,14 @@ wiring below was verified over real HTTP in each repo's test suite
 | api-forge | ✅ | ✅ `portal_adapter.py` | VERIFIED | VERIFIED | VERIFIED | `tests/test_portal_adapter.py::test_telemetria_events_e_metrics_via_http`, PR #91 |
 | spark-forge-aws | ✅ | ✅ `portal_adapter.py` | VERIFIED | VERIFIED | VERIFIED | same test name, PR #180 |
 | spark-forge-azure | ✅ | ✅ `portal_adapter.py` | VERIFIED | VERIFIED | VERIFIED | same test name, PR #72 |
-| platform-forge | ✅ | pending (worker) | UNTESTED | UNTESTED | UNTESTED | — |
-| forge-doctor-data | ✅ | pending (worker) | UNTESTED | UNTESTED | UNTESTED | — |
-| forge-doctor-api | ✅ | pending (worker) | UNTESTED | UNTESTED | UNTESTED | — |
+| platform-forge | ✅ | ✅ `portal_adapter.py` | VERIFIED | VERIFIED | VERIFIED | `tests/test_portal.py::test_telemetry_*`, PR #66, E2E 2026-10-18 |
+| forge-doctor-data | ✅ | ✅ `portal_adapter.py` | VERIFIED | VERIFIED | VERIFIED | `tests/test_portal.py::test_telemetry_*`, PR #58, E2E 2026-10-18 |
+| forge-doctor-api | ✅ | ✅ `scripts/_forge_portal.py` (flat) | VERIFIED | VERIFIED | VERIFIED | `tests/test_forge_portal.py::test_telemetry_*`, PR #72, E2E 2026-10-18 |
+
+Cross-forge E2E (`scripts/portal_e2e.py`, 2026-10-18): 7/7 PASS,
+`GET /api/v1/events` → `forge/PortalEventReport/1` real, `/metrics` →
+§5.4 projection, `/tasks/{id}/events` → honest empty window on all seven
+forges over authenticated real HTTP.
 
 ## Honest degradation
 
