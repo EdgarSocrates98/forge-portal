@@ -64,6 +64,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/observe/observe.page').then((m) => m.ObservePage),
   },
   {
+    path: 'execution',
+    loadComponent: () => import('./pages/execution/execution.page').then((m) => m.ExecutionPage),
+  },
+  {
     path: 'lab',
     loadComponent: () => import('./pages/lab/lab.page').then((m) => m.LabPage),
   },

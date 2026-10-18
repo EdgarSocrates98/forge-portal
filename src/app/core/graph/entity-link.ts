@@ -6,9 +6,11 @@ import { FedNode, FedNodeKind } from './federated';
  *
  * Every mapping here is backed by a real route plus a real binding —
  * `?q=`/`?task=`/`?server=` route inputs (withComponentInputBinding)
- * or a `#host-*` fragment rendered by the Hosts page. Kinds with no
- * owning surface (today: `capability`, whose catalog already lives
- * under its declaring forge) return null rather than a pretend link.
+ * or a `#host-*` fragment rendered by the Hosts page. `tool` refs land
+ * on the Execution page's free-text filter (the only surface listing
+ * recorded tool/MCP invocations). Kinds with no owning surface (today:
+ * `capability`, whose catalog already lives under its declaring forge)
+ * return null rather than a pretend link.
  *
  * Nothing is inferred: the link target names the entity id exactly as
  * the source descriptor reported it — filtering/scrolling resolves it
@@ -37,6 +39,7 @@ const LINKS: Record<FedNodeKind, (id: string) => EntityLink | null> = {
     queryParams: { task: id },
     navKey: 'nav.tasks',
   }),
+  tool: (id) => ({ commands: ['/execution'], queryParams: { q: id }, navKey: 'nav.execution' }),
 };
 
 /** Deep link for a raw `kind:entityId` node id — splits on the first

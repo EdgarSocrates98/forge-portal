@@ -1848,3 +1848,100 @@ tr[data-selected] td {
 .fed__toponote {
   font-style: italic;
 }
+
+/* ---- Execution observability replay ------------------------------------
+   .rp__* replay transport + step list — moved here like .fed__* to keep
+   the execution page style block inside the 4 kB budget. */
+.rp__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: 0;
+  font-size: var(--font-lg);
+  font-weight: 650;
+}
+.rp__title ui-icon {
+  color: var(--accent-ink);
+}
+.rp__scope,
+.rp__gap,
+.rp__at,
+.rp__flow,
+.rp__unplaced {
+  font-size: var(--font-xs);
+  color: var(--fg-muted);
+}
+.rp__scope {
+  font-weight: 400;
+}
+.rp__gap,
+.rp__at {
+  font-variant-numeric: tabular-nums;
+}
+.rp__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+.rp__speed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-sm);
+}
+.rp__speed .select {
+  padding: 2px var(--space-2);
+  font-size: var(--font-sm);
+}
+.rp__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  max-height: 340px;
+  overflow: auto;
+}
+.rp__step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition:
+    box-shadow var(--motion-fast),
+    border-color var(--motion-fast),
+    background var(--motion-fast);
+}
+.rp__step:hover,
+.rp__step[data-current] {
+  border-color: var(--accent-ink);
+}
+.rp__step[data-current] {
+  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--accent-bg);
+}
+.rp__gap {
+  min-width: 4.5rem;
+  font-family: var(--font-mono);
+}
+.rp__compressed {
+  color: var(--warn);
+}
+.rp__kind {
+  color: var(--accent-ink);
+}
+.rp__flow {
+  overflow-wrap: anywhere;
+}

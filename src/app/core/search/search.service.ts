@@ -85,6 +85,7 @@ const STATIC_PAGES: { route: string; labelKey: string; icon: string; capability?
   { route: '/tasks', labelKey: 'nav.tasks', icon: 'tasks', capability: 'tasks' },
   { route: '/graph', labelKey: 'nav.graph', icon: 'graph', capability: 'graph' },
   { route: '/observe', labelKey: 'nav.observe', icon: 'pulse' },
+  { route: '/execution', labelKey: 'nav.execution', icon: 'execution' },
   { route: '/lab', labelKey: 'nav.lab', icon: 'diff' },
   { route: '/versions', labelKey: 'nav.versions', icon: 'history' },
   { route: '/knowledge', labelKey: 'nav.knowledge', icon: 'knowledge' },

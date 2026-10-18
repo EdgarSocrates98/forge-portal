@@ -15,5 +15,18 @@
     "/graph",
     "/settings"
   ],
-  "violations": {}
+  "violations": {
+    "/tasks": [
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "help": "ARIA role should be appropriate for the element",
+        "nodes": [
+          [
+            ".tl__row"
+          ]
+        ]
+      }
+    ]
+  }
 }

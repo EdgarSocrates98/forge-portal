@@ -30,7 +30,14 @@ export const GRAPH_LAYOUTS: readonly GraphLayoutName[] = [
 
 /** Geometry vocab shared with adapters — engine-agnostic shape names. */
 export type GraphNodeShape =
-  'round-rectangle' | 'ellipse' | 'diamond' | 'hexagon' | 'triangle' | 'rectangle' | 'star';
+  | 'round-rectangle'
+  | 'ellipse'
+  | 'diamond'
+  | 'hexagon'
+  | 'triangle'
+  | 'rectangle'
+  | 'star'
+  | 'pentagon';
 
 /** Zoom-driven detail tiers: far = icon+label, mid = +state,
  *  near = +category/origin/degree. Adapters switch on zoom level. */

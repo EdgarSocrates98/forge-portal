@@ -47,6 +47,7 @@ function graph(nodes: string[], edges: [string, string][]): FedGraph {
       mcp: { state: 'loaded', endpoint: 'GET /api/v1/mcp/servers' },
       hosts: { state: 'loaded', endpoint: 'GET /api/v1/hosts' },
       tasks: { state: 'loaded', endpoint: 'GET /api/v1/tasks' },
+      events: { state: 'loaded', endpoint: 'GET /api/v1/events' },
     },
   };
 }
@@ -143,7 +144,7 @@ describe('graph analysis — impactReport', () => {
     expect(r.usedBy.map((h) => h.id)).toEqual(['a']);
     expect(r.componentSize).toBe(4);
     expect(r.orphan).toBe(false);
-    expect(r.coverage).toEqual({ loaded: 8, total: 8 });
+    expect(r.coverage).toEqual({ loaded: 9, total: 9 });
     expect(r.missingSources).toEqual([]);
     expect(r.cycles).toEqual([]);
   });
@@ -159,7 +160,7 @@ describe('graph analysis — impactReport', () => {
     expect(r.unverifiedNodes).toEqual(['b']);
     expect(r.unverifiedEdges.map((e) => e.id)).toEqual(['a|associated|b']);
     expect(r.missingSources).toEqual(['tasks']);
-    expect(r.coverage).toEqual({ loaded: 7, total: 8 });
+    expect(r.coverage).toEqual({ loaded: 8, total: 9 });
   });
 
   it('marks orphans and edges with unverified evidence honestly', () => {

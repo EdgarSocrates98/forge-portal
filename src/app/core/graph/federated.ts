@@ -3,6 +3,7 @@ import {
   HostDetection,
   McpServerDescriptor,
   PortalCapability,
+  PortalEvent,
   SkillDescriptor,
   TaskExecution,
 } from '../api/api.models';
@@ -22,6 +23,10 @@ import {
  *   agent → skill        `associated` (agent's declared skills list)
  *   mcp → host           `bound_to`   (server's host binding)
  *   task → forge         `origin`     (descriptor-carried origin only)
+ *   entity → entity      `observed`   (forge/PortalEvent/1 source→target
+ *                                      or source→metadata.task_id — a
+ *                                      recorded execution relation;
+ *                                      `detail` keeps the event type)
  *
  * Forge nodes are mined from the graph views themselves — each view's
  * `descriptor.provider_id` and every node's `source_provider` name a
@@ -42,7 +47,8 @@ import {
 
 export const FED_GRAPH_SCHEMA = 'forge/FederatedGraph/v1';
 
-export type FedNodeKind = 'forge' | 'capability' | 'skill' | 'agent' | 'mcp' | 'host' | 'operation';
+export type FedNodeKind =
+  'forge' | 'capability' | 'skill' | 'agent' | 'mcp' | 'host' | 'operation' | 'tool';
 
 /** Canonical display/order for kinds — fixed, not alphabetical. */
 export const FED_NODE_KINDS: readonly FedNodeKind[] = [
@@ -53,12 +59,21 @@ export const FED_NODE_KINDS: readonly FedNodeKind[] = [
   'mcp',
   'host',
   'operation',
+  'tool',
 ];
 
 /** One builder input field (and one adapter op) per source. `bootstrap`
  *  covers the serving-Forja descriptor the store already loaded. */
 export type FedSource =
-  'bootstrap' | 'graphs' | 'capabilities' | 'skills' | 'agents' | 'mcp' | 'hosts' | 'tasks';
+  | 'bootstrap'
+  | 'graphs'
+  | 'capabilities'
+  | 'skills'
+  | 'agents'
+  | 'mcp'
+  | 'hosts'
+  | 'tasks'
+  | 'events';
 
 export const FED_SOURCES: readonly FedSource[] = [
   'bootstrap',
@@ -69,6 +84,7 @@ export const FED_SOURCES: readonly FedSource[] = [
   'mcp',
   'hosts',
   'tasks',
+  'events',
 ];
 
 export const SOURCE_ENDPOINT: Record<FedSource, string> = {
@@ -80,6 +96,7 @@ export const SOURCE_ENDPOINT: Record<FedSource, string> = {
   mcp: 'GET /api/v1/mcp/servers',
   hosts: 'GET /api/v1/hosts',
   tasks: 'GET /api/v1/tasks',
+  events: 'GET /api/v1/events',
 };
 
 export type SourceAvailability = 'loaded' | 'unverified' | 'unavailable';
@@ -113,16 +130,22 @@ export interface FedNode {
   meta?: Record<string, string | number | boolean | null>;
 }
 
-export type FedEdgeKind = 'declares' | 'origin' | 'associated' | 'bound_to';
+export type FedEdgeKind = 'declares' | 'origin' | 'associated' | 'bound_to' | 'observed';
 
 export interface FedEdge {
-  /** `${source}|${kind}|${target}` — same shape as ForgeGraphView edges. */
+  /** `${source}|${kind}|${target}` — same shape as ForgeGraphView edges;
+   *  `observed` edges append `|{event_type}` so distinct recorded
+   *  relation types stay distinct. */
   id: string;
   source: string;
   target: string;
   kind: FedEdgeKind;
   /** The single endpoint that declared this relation. */
   evidence: FedSource;
+  /** `observed` edges only: the verbatim `event_type` that recorded
+   *  the relation (e.g. `tool.invocation`) — the graph never upgrades
+   *  it into a semantic kind the producer did not declare. */
+  detail?: string;
 }
 
 export interface FedSourceInfo {
@@ -145,6 +168,10 @@ export interface FederatedInput {
   mcp?: readonly McpServerDescriptor[] | null;
   hosts?: readonly HostDetection[] | null;
   tasks?: readonly TaskExecution[] | null;
+  /** forge/PortalEvent/1 records from `GET /api/v1/events` — only
+   *  `source`/`target`/`metadata.task_id` entity refs become graph
+   *  elements; the events themselves are not nodes. */
+  events?: readonly PortalEvent[] | null;
   /** `ForgeGraphView/v1` documents from `GET /api/v1/graphs`. */
   graphViews?: readonly Record<string, unknown>[] | null;
   /** `descriptor.forge_id` of the serving Forja (bootstrap payload). */
@@ -194,6 +221,23 @@ const ORIGIN_KEYS = ['origin', 'forge', 'forge_id', 'provider', 'source_provider
 
 function text(v: unknown): string | null {
   return typeof v === 'string' && v.trim() ? v.trim() : null;
+}
+
+/** Kinds an event `source`/`target` may reference — `kind:id` refs
+ *  carrying an unknown kind are real data but not graphable entities:
+ *  they stay in the event stream, never remapped into a nearby kind. */
+const EVENT_REF_KINDS: ReadonlySet<FedNodeKind> = new Set(FED_NODE_KINDS);
+
+/** Parse an event endpoint as a `kind:id` entity ref → the canonical
+ *  node id, or null. Split on the first colon so ids may carry ':'. */
+function entityRef(v: unknown): string | null {
+  const s = text(v);
+  if (!s) return null;
+  const cut = s.indexOf(':');
+  if (cut <= 0 || cut === s.length - 1) return null;
+  const kind = s.slice(0, cut) as FedNodeKind;
+  const id = s.slice(cut + 1).trim();
+  return EVENT_REF_KINDS.has(kind) && id ? `${kind}:${id}` : null;
 }
 
 /** The descriptor's declared origin Forja — or null. `source:` is only
@@ -254,7 +298,9 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
                   ? input.hosts
                   : s === 'tasks'
                     ? input.tasks
-                    : input.graphViews;
+                    : s === 'events'
+                      ? input.events
+                      : input.graphViews;
       availability[s] = data != null ? 'loaded' : 'unavailable';
     }
   }
@@ -309,11 +355,23 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
     addNode(kind, id.slice(cut + 1), id.slice(cut + 1), evidence);
   }
 
-  function addEdge(source: string, target: string, kind: FedEdgeKind, evidence: FedSource): void {
+  function addEdge(
+    source: string,
+    target: string,
+    kind: FedEdgeKind,
+    evidence: FedSource,
+    detail?: string,
+  ): void {
     ensureNode(source, evidence);
     ensureNode(target, evidence);
-    const id = `${source}|${kind}|${target}`;
-    if (!edges.has(id)) edges.set(id, { id, source, target, kind, evidence });
+    // observed edges disambiguate by the recorded event type so two
+    // different relations between the same endpoints never collapse.
+    const id = detail ? `${source}|${kind}|${target}|${detail}` : `${source}|${kind}|${target}`;
+    if (!edges.has(id)) {
+      const e: FedEdge = { id, source, target, kind, evidence };
+      if (detail) e.detail = detail;
+      edges.set(id, e);
+    }
   }
 
   const cleanMeta = (
@@ -479,6 +537,27 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
       }),
     });
     if (origin) addEdge(`operation:${id}`, `forge:${origin}`, 'origin', 'tasks');
+  }
+
+  // -- events (Cycle 3): recorded relations only. An event contributes
+  //    an edge iff an endpoint names a `kind:id` entity ref the model
+  //    can hold — bare labels ('portal_core', 'GET /tasks') are NOT
+  //    entities and stay out of the graph (they remain visible in the
+  //    event stream). `metadata.task_id` links the emitting source to
+  //    the real task record. Nothing is inferred from timing/order.
+  for (const e of input.events ?? []) {
+    if (!e || typeof e !== 'object') continue;
+    const et = text(e.event_type) ?? 'event';
+    const src = entityRef(e.source);
+    const tgt = entityRef(e.target);
+    const meta = e.metadata && typeof e.metadata === 'object' ? e.metadata : null;
+    const taskId = meta ? text(meta['task_id']) : null;
+
+    if (src) ensureNode(src, 'events');
+    if (tgt) ensureNode(tgt, 'events');
+    if (src && tgt) addEdge(src, tgt, 'observed', 'events', et);
+    if (src && taskId) addEdge(src, `operation:${taskId}`, 'observed', 'events', et);
+    else if (taskId) ensureNode(`operation:${taskId}`, 'events');
   }
 
   // -- finalize: sorted, deduped, unverified resolved from evidence.

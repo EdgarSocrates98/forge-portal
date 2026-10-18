@@ -29,6 +29,7 @@ export const KIND_STYLE: Record<FedNodeKind, { color: string; shape: GraphNodeSh
   mcp: { color: '#c026d3', shape: 'triangle' },
   host: { color: '#64748b', shape: 'rectangle' },
   operation: { color: '#b45309', shape: 'star' },
+  tool: { color: '#0e7490', shape: 'pentagon' },
 };
 
 /** Per-kind icon names — resolved through `iconPath` (icon.ts), the
@@ -41,6 +42,7 @@ export const KIND_ICON: Record<FedNodeKind, string> = {
   mcp: 'mcp',
   host: 'hosts',
   operation: 'tasks',
+  tool: 'terminal',
 };
 
 export const EDGE_STYLE: Record<FedEdgeKind, { color: string }> = {
@@ -48,6 +50,7 @@ export const EDGE_STYLE: Record<FedEdgeKind, { color: string }> = {
   origin: { color: '#1d5fd1' },
   associated: { color: '#7c3aed' },
   bound_to: { color: '#0f8a4c' },
+  observed: { color: '#0e7490' },
 };
 
 /** Relation confidence → line style. The model only carries declared

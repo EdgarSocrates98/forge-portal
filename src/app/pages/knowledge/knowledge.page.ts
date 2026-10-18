@@ -12,6 +12,7 @@ import {
   HostDetection,
   McpServerDescriptor,
   PortalCapability,
+  PortalEventReport,
   RegistryState,
   SkillDescriptor,
   TaskExecution,
@@ -49,7 +50,7 @@ import { UiSkeleton } from '../../shared/skeleton';
 import { Source, toApiError } from '../explorer/forges.data';
 
 type KnowledgeSource =
-  'federation' | 'registry' | 'skills' | 'agents' | 'mcp' | 'hosts' | 'tasks' | 'graphs';
+  'federation' | 'registry' | 'skills' | 'agents' | 'mcp' | 'hosts' | 'tasks' | 'events' | 'graphs';
 
 const KNOWLEDGE_SOURCES: readonly KnowledgeSource[] = [
   'federation',
@@ -59,6 +60,7 @@ const KNOWLEDGE_SOURCES: readonly KnowledgeSource[] = [
   'mcp',
   'hosts',
   'tasks',
+  'events',
   'graphs',
 ];
 
@@ -70,6 +72,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
   mcp: 'mcp',
   host: 'hosts',
   operation: 'tasks',
+  tool: 'terminal',
 };
 
 /**
@@ -758,6 +761,8 @@ export class KnowledgePage {
         return this.api.hosts();
       case 'tasks':
         return this.api.tasks();
+      case 'events':
+        return this.api.events();
       case 'graphs':
         return this.api.graphs();
     }
@@ -798,6 +803,7 @@ export class KnowledgePage {
     availability['mcp'] = this.srcState('mcp');
     availability['hosts'] = this.srcState('hosts');
     availability['tasks'] = this.srcState('tasks');
+    availability['events'] = this.srcState('events');
     this.fed.set(
       buildFederatedGraph({
         capabilities: this.store.capabilities() as PortalCapability[],
@@ -806,6 +812,7 @@ export class KnowledgePage {
         mcp: this.data<McpServerDescriptor[]>('mcp'),
         hosts: this.data<HostDetection[]>('hosts'),
         tasks: this.data<TaskExecution[]>('tasks'),
+        events: this.data<PortalEventReport>('events')?.events ?? null,
         graphViews: b?.views ?? null,
         servingForge: descriptor?.forge_id ?? null,
         availability,
@@ -926,6 +933,7 @@ export class KnowledgePage {
       mcp: 'GET /api/v1/mcp/servers',
       hosts: 'GET /api/v1/hosts',
       tasks: 'GET /api/v1/tasks',
+      events: 'GET /api/v1/events',
       graphs: 'GET /api/v1/graphs',
     };
     return KNOWLEDGE_SOURCES.map((id) => ({

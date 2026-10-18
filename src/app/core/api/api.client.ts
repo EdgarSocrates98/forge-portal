@@ -17,6 +17,7 @@ import {
   McpServerDescriptor,
   MetricsReport,
   PortalCapability,
+  PortalEventReport,
   PortalHealth,
   ProfileDescriptor,
   RegistryAction,
@@ -24,6 +25,7 @@ import {
   RegistryPlanResponse,
   RegistryState,
   SkillDescriptor,
+  TaskEventReport,
   TaskExecution,
   VersionInfo,
   LabData,
@@ -180,6 +182,21 @@ export class PortalApi {
   }
   metrics() {
     return this.get<MetricsReport>('/metrics');
+  }
+  /** forge/PortalEvent/1 window — read-only over the recorded buffer.
+   *  Filters stay server-side so `count`/`truncated` describe the REAL
+   *  remaining window, not a client-side projection of it. */
+  events(filter?: { correlationId?: string; type?: string; status?: string; limit?: number }) {
+    const q = new URLSearchParams();
+    if (filter?.correlationId) q.set('correlation_id', filter.correlationId);
+    if (filter?.type) q.set('type', filter.type);
+    if (filter?.status) q.set('status', filter.status);
+    if (filter?.limit && filter.limit > 0) q.set('limit', String(filter.limit));
+    const suffix = q.size ? `?${q.toString()}` : '';
+    return this.get<PortalEventReport>(`/events${suffix}`);
+  }
+  taskEvents(taskId: string) {
+    return this.get<TaskEventReport>(`/tasks/${encodeURIComponent(taskId)}/events`);
   }
   versions() {
     return this.get<VersionInfo>('/versions');

@@ -18,6 +18,7 @@ import {
   HostDetection,
   McpServerDescriptor,
   PortalCapability,
+  PortalEventReport,
   SkillDescriptor,
   TaskExecution,
 } from '../../core/api/api.models';
@@ -1208,6 +1209,7 @@ export class GraphPage {
     { id: 'mcp', src: new Source<unknown>() },
     { id: 'hosts', src: new Source<unknown>() },
     { id: 'tasks', src: new Source<unknown>() },
+    { id: 'events', src: new Source<unknown>() },
   ];
 
   readonly nodeById = computed(() => {
@@ -1674,6 +1676,8 @@ export class GraphPage {
         return this.api.hosts();
       case 'tasks':
         return this.api.tasks();
+      case 'events':
+        return this.api.events();
     }
   }
 
@@ -1704,6 +1708,7 @@ export class GraphPage {
         mcp: this.data<McpServerDescriptor[]>('mcp'),
         hosts: this.data<HostDetection[]>('hosts'),
         tasks: this.data<TaskExecution[]>('tasks'),
+        events: this.data<PortalEventReport>('events')?.events ?? null,
         graphViews: this.bundle()?.views ?? null,
         servingForge: descriptor?.forge_id ?? null,
         servingVersion: descriptor?.forge_version ?? null,

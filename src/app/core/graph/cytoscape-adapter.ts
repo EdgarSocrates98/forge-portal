@@ -547,7 +547,14 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       } else if (shape === 'star') {
         parts.push(`<polygon points="${starPoints(cx, cyv, r)}" ${attrs}/>`);
       } else {
-        const sides = shape === 'triangle' ? 3 : shape === 'diamond' || shape === 'hexagon' ? 0 : 6;
+        const sides =
+          shape === 'triangle'
+            ? 3
+            : shape === 'pentagon'
+              ? 5
+              : shape === 'diamond' || shape === 'hexagon'
+                ? 0
+                : 6;
         const pts =
           shape === 'diamond'
             ? `${cx.toFixed(1)},${(cyv - r).toFixed(1)} ${(cx + r).toFixed(1)},${cyv.toFixed(1)} ${cx.toFixed(1)},${(cyv + r).toFixed(1)} ${(cx - r).toFixed(1)},${cyv.toFixed(1)}`
