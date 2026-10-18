@@ -112,9 +112,11 @@ export interface LayoutChoice {
   /** `auto` = picked by policy; `user` = explicit toolbar choice. */
   source: 'auto' | 'user';
   /** Cost class of the chosen layout at this scale: `ok` runs quietly;
-   *  `warn` runs but the page surfaces a cheaper recommendation;
-   *  `blocked` requires explicit confirmation before it runs — never
-   *  silently refused, never silently allowed to freeze. */
+   *  `warn` runs after an explicit confirm (watchdog armed) while the
+   *  page surfaces the cheaper recommendation; `blocked` is above the
+   *  measured safe limit — direct execution is refused and the caller
+   *  substitutes `recommended` (never silently refused, never silently
+   *  allowed to freeze: the block notice explains why). */
   cost: 'ok' | 'warn' | 'blocked';
   /** Measured-expensive at this scale (cost !== 'ok'). */
   expensive: boolean;
@@ -138,9 +140,11 @@ export interface LayoutChoice {
 
 /**
  * Measured cost class per layout at each scale — see the report table.
- * `ok` = auto-eligible; `warn` = allowed but flagged expensive;
- * `blocked` = auto never picks it and the guard requires confirm +
- * watchdog (it still runs — the user's choice is respected).
+ * `ok` = auto-eligible; `warn` = runs with explicit confirm + watchdog
+ * while flagged expensive; `blocked` = auto never picks it and the
+ * page refuses direct execution (§2.2.1: a timer cannot interrupt a
+ * synchronous frame block, so above this bound the only honest guard
+ * is not running it — the caller substitutes `recommended`).
  */
 type Cost = 'ok' | 'warn' | 'blocked';
 
@@ -233,7 +237,9 @@ export function chooseLayout(
 }
 
 /** Cost class of `layout` at `stats` — what the page's guard consults
- *  before running an explicit user pick. */
+ *  before running an explicit user pick (`blocked` ⇒ never run it:
+ *  show the block strip and keep the recommended layout on the
+ *  canvas). */
 export function effectiveCost(layout: GraphLayoutName, stats: GraphStats): Cost {
   return COST[scaleClass(stats)][layout];
 }

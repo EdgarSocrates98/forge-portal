@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import cytoscape from 'cytoscape';
 import { GraphPage } from './graph.page';
+import { FED_GRAPH_SCHEMA, FedGraph } from '../../core/graph/federated';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { PortalStore } from '../../core/portal/portal.store';
@@ -715,5 +716,121 @@ describe('GraphPage — 2.2 cycle 3 adaptive layout + safety guard', () => {
     const strip = el.querySelector('[data-status="layout"]');
     expect(strip).toBeTruthy();
     expect(strip!.textContent).toContain('cancelled');
+  });
+});
+
+/** A synthetic federated graph of `n` nodes — enough for the layout
+ *  policy's measured scale classes (medium ≤ 1200, large ≤ 6000). */
+const fedOf = (n: number): FedGraph => ({
+  schema: FED_GRAPH_SCHEMA,
+  nodes: Array.from({ length: n }, (_, i) => ({
+    id: `tool:n${i}`,
+    kind: 'tool' as const,
+    label: `n${i}`,
+    evidence: ['graphs' as const],
+    unverified: false,
+  })),
+  edges: [],
+  counts: { tool: n } as FedGraph['counts'],
+  sources: {} as FedGraph['sources'],
+});
+
+describe('GraphPage — 2.2.1 cycle 7 manual layout hard guard', () => {
+  it('a blocked pick never reaches the engine — strip explains + offers the adaptive layout', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    // grow into the `large` class where cose is measured non-viable
+    c.fed.set(fedOf(2000));
+    fixture.detectChanges();
+    const layoutSpy = vi.spyOn(c.canvasRenderer()!, 'layout');
+    c.setLayout('cose');
+    fixture.detectChanges();
+    // the pick is recorded honestly, but NOTHING ran — direct
+    // execution above the measured safe limit is refused
+    expect(layoutSpy).not.toHaveBeenCalled();
+    expect(c.layoutAuto()).toBe(false);
+    expect(c.layoutName()).toBe('cose');
+    expect(c.pendingLayout()).toBeNull();
+    expect(c.blockedLayout()).toBe('cose');
+    expect(c.effectiveLayout()).toBe('grid'); // recommended substituted
+    const strip = el.querySelector('[data-section="layout-block"]');
+    expect(strip).toBeTruthy();
+    expect(strip!.textContent).toContain('cose');
+    expect(strip!.textContent).toContain('grid');
+    // hard tier offers the adaptive alternative — no "run anyway"
+    expect(strip!.querySelector('[data-action="layout-confirm"]')).toBeNull();
+    const use = strip!.querySelector<HTMLButtonElement>('[data-action="layout-use-rec"]')!;
+    use.click();
+    fixture.detectChanges();
+    expect(c.layoutAuto()).toBe(true);
+    expect(c.blockedLayout()).toBeNull();
+    expect(layoutSpy).toHaveBeenCalledWith('grid');
+    expect(el.querySelector('[data-section="layout-block"]')).toBeNull();
+  });
+
+  it('a warned pick at medium scale still asks for confirmation and runs it', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    c.fed.set(fedOf(900)); // medium class — cose viable but expensive
+    fixture.detectChanges();
+    const layoutSpy = vi.spyOn(c.canvasRenderer()!, 'layout');
+    c.setLayout('cose');
+    fixture.detectChanges();
+    expect(c.pendingLayout()).toBe('cose');
+    expect(c.blockedLayout()).toBeNull();
+    expect(el.querySelector('[data-section="layout-warn"]')).toBeTruthy();
+    expect(el.querySelector('[data-section="layout-block"]')).toBeNull();
+    expect(layoutSpy).not.toHaveBeenCalled();
+    (el.querySelector('[data-action="layout-confirm"]') as HTMLButtonElement).click();
+    expect(layoutSpy).toHaveBeenCalledWith('cose');
+    expect(c.layoutName()).toBe('cose');
+    expect(c.layoutAuto()).toBe(false);
+  });
+
+  it('a recorded/ restored pick that is blocked at the current scale degrades honestly', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    // simulate the saved-view/restore or graph-growth case: a user pick
+    // whose measured cost is 'blocked' at the CURRENT scale
+    c.fed.set(fedOf(2000));
+    c.layoutAuto.set(false);
+    c.layoutName.set('cose');
+    fixture.detectChanges();
+    expect(c.blockedLayout()).toBe('cose');
+    expect(c.effectiveLayout()).toBe('grid');
+    expect(el.querySelector('[data-section="layout-block"]')).toBeTruthy();
+    // a data refresh pushes the SAFE pick to the engine — the blocked
+    // name never crosses the adapter boundary
+    const setDataSpy = vi.spyOn(c.canvasRenderer()!, 'setData');
+    c.fed.set(fedOf(2001));
+    fixture.detectChanges();
+    expect(setDataSpy).toHaveBeenCalled();
+    const lastCall = setDataSpy.mock.calls.at(-1);
+    expect(lastCall?.[1]?.layout).toBe('grid');
+  });
+
+  it('small graphs are unaffected — picks still run directly', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    await mountCanvas(fixture);
+    const layoutSpy = vi.spyOn(c.canvasRenderer()!, 'layout');
+    c.setLayout('cose');
+    fixture.detectChanges();
+    expect(layoutSpy).toHaveBeenCalledWith('cose');
+    expect(c.pendingLayout()).toBeNull();
+    expect(c.blockedLayout()).toBeNull();
+    expect(el.querySelector('[data-section="layout-block"]')).toBeNull();
+    expect(el.querySelector('[data-section="layout-warn"]')).toBeNull();
   });
 });

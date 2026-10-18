@@ -872,6 +872,26 @@ const storage = (): Storage | null => {
                 </button>
               </div>
             }
+            <!-- §2.2.1 hard tier — the measured-unsafe pick is recorded
+                 but never runs: the strip says why and offers only the
+                 adaptive alternative (no "run anyway" — a watchdog
+                 cannot interrupt a synchronous frame block). -->
+            @if (blockedLayout(); as bl) {
+              <div class="fed__warn" data-section="layout-block" role="alert">
+                <span>
+                  {{ 'graph.layout.blocked' | t: { layout: bl } }}
+                  {{ 'graph.layout.recommended' | t: { layout: layoutChoice().recommended } }}
+                </span>
+                <button
+                  class="fg-pill fg-pill--mini"
+                  type="button"
+                  data-action="layout-use-rec"
+                  (click)="useRecommended()"
+                >
+                  {{ 'graph.layout.useRecommended' | t: { layout: layoutChoice().recommended } }}
+                </button>
+              </div>
+            }
             @if (layoutBusy() || layoutStatus()) {
               <p class="muted fed__layoutstatus" data-status="layout" role="status">
                 @if (layoutBusy()) {
@@ -1411,8 +1431,24 @@ export class GraphPage {
     }),
   );
 
-  /** The layout that actually runs (or would run) on the canvas. */
-  readonly effectiveLayout = computed<GraphLayoutName>(() => this.layoutChoice().layout);
+  /** The layout that actually runs (or would run) on the canvas: the
+   *  policy pick — or the RECOMMENDED layout when the user's explicit
+   *  pick is 'blocked' at the current scale. `layoutName()` keeps the
+   *  asked-for truth; the block strip explains the substitution. */
+  readonly effectiveLayout = computed<GraphLayoutName>(() => {
+    const c = this.layoutChoice();
+    return c.cost === 'blocked' ? c.recommended : c.layout;
+  });
+
+  /** An explicit pick whose measured cost is 'blocked' at this scale —
+   *  non-null means a recorded layout choice cannot safely run (cose at
+   *  large+: a single synchronous frame outlasts the watchdog — 73 s
+   *  wall @5 k, >330 s @10 k, docs/perf/graph-scale-report.md). The
+   *  strip blocks direct execution and offers the adaptive pick. */
+  readonly blockedLayout = computed<GraphLayoutName | null>(() => {
+    const c = this.layoutChoice();
+    return c.source === 'user' && c.cost === 'blocked' ? c.layout : null;
+  });
 
   /** True when the policy grouped the graph on its own — very-large
    *  scale, auto mode, and the user never touched the group select. */
@@ -1645,26 +1681,52 @@ export class GraphPage {
   setLayout(name: GraphLayoutName): void {
     this.pendingLayout.set(null);
     const s = this.stats();
-    // §6.3 guard: a measured-expensive pick asks for confirmation and
-    // names the recommended alternative instead of silently freezing.
-    if (s && effectiveCost(name, s) !== 'ok') {
+    const cost = s ? effectiveCost(name, s) : 'ok';
+    // §6.3 warn tier: a measured-expensive pick asks for confirmation
+    // and names the recommended alternative instead of silently
+    // freezing.
+    if (cost === 'warn') {
       this.pendingLayout.set(name);
+      return;
+    }
+    // §2.2.1 hard tier: above the measured safe limit the pick cannot
+    // run at all — a timer cannot interrupt cose's synchronous frames
+    // (the watchdog's honest bound is budget + an unbounded in-flight
+    // block). The pick is recorded honestly and the block strip
+    // explains why + offers the adaptive pick; NOTHING runs, so the
+    // viewport and selection stay exactly as they were.
+    if (cost === 'blocked') {
+      this.layoutAuto.set(false);
+      this.layoutName.set(name);
       return;
     }
     this.applyLayout(name);
   }
 
-  /** The confirmed/allowed explicit pick — auto mode turns off. */
+  /** The confirmed/allowed explicit pick — auto mode turns off. The
+   *  run goes through `effectiveLayout` so a pick that crossed into
+   *  'blocked' between click and confirm still degrades to the
+   *  recommended layout instead of freezing. */
   private applyLayout(name: GraphLayoutName): void {
     this.layoutAuto.set(false);
     this.layoutName.set(name);
     this.pendingLayout.set(null);
-    this.renderer?.layout(name);
+    this.renderer?.layout(this.effectiveLayout());
   }
 
   confirmLayout(): void {
     const p = this.pendingLayout();
-    if (p) this.applyLayout(p);
+    if (!p) return;
+    const s = this.stats();
+    // Re-price at confirm time: if the scale moved the pick into the
+    // blocked tier, it never runs — the strip takes over.
+    if (s && effectiveCost(p, s) === 'blocked') {
+      this.pendingLayout.set(null);
+      this.layoutAuto.set(false);
+      this.layoutName.set(p);
+      return;
+    }
+    this.applyLayout(p);
   }
 
   useRecommended(): void {

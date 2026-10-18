@@ -1,4 +1,13 @@
-import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { PortalEvent, PortalEventReport } from '../../core/api/api.models';
@@ -27,6 +36,14 @@ import {
   shortId,
   statusKind,
 } from './execution.data';
+
+/** Cycle 6 — clamp a whole-list cursor into the rendered slice so
+ *  exactly one rendered row owns the tab stop; -1 when the page is
+ *  empty (nothing to tab into). */
+function clampInto(cursor: number, slice: { start: number; end: number }): number {
+  if (slice.end <= slice.start) return -1;
+  return Math.min(Math.max(cursor, slice.start), slice.end - 1);
+}
 
 /**
  * Execução — Cycle 3 observability over `forge/PortalEvent/1`
@@ -137,6 +154,20 @@ import {
         }
       </section>
 
+      <!-- Cycle 6: bypass-block link — the timeline/replay lists and
+           filter bar sit between the page top and the events table;
+           one activation lands focus on the table's tab row instead of
+           walking every control (WCAG 2.4.1). -->
+      @if (filteredEvents().length) {
+        <a
+          class="kb-skip sr-only"
+          href="#ex-ev"
+          data-action="skip-events"
+          (click)="skipToEvents($event)"
+          >{{ 'execution.skipToEvents' | t }}</a
+        >
+      }
+
       <!-- Waterfall — one row per execution (correlation group). Bars
            cover first→last recorded timestamp; ticks are the placed
            events; span underlays derive from recorded duration only.
@@ -151,7 +182,15 @@ import {
           </h2>
           <p class="muted">{{ 'execution.timeline.hint' | t }}</p>
           @if (executions().windowStart !== null) {
-            <div class="tl" role="list" [attr.aria-label]="'execution.timeline.title' | t">
+            <!-- Cycle 6: one tab stop into the list — roving tabindex,
+                 ↑/↓ walk groups across pages, Home/End/PageUp/PageDown
+                 jump; Enter/Space activate the focused row natively. -->
+            <div
+              class="tl"
+              role="list"
+              [attr.aria-label]="'execution.timeline.title' | t"
+              (keydown)="onTlKeys($event)"
+            >
               <div class="tl__axis" aria-hidden="true">
                 <span>{{ fmtMs(executions().windowStart) }}</span>
                 <span>{{ fmtMs(executions().windowEnd) }}</span>
@@ -172,8 +211,10 @@ import {
                     class="tl__row"
                     type="button"
                     [attr.data-execution]="g.correlationId ?? 'unlinked'"
+                    [attr.data-idx]="tlSlice().start + $index"
                     [attr.data-selected]="selectedCid() === g.correlationId || null"
                     [attr.data-errors]="g.errorCount || null"
+                    [attr.tabindex]="tlSlice().start + $index === tlTabIdx() ? 0 : -1"
                     (click)="selectExecution(g)"
                   >
                     <span class="tl__label" [attr.title]="g.correlationId">
@@ -289,7 +330,9 @@ import {
               }}
             </span>
           </div>
-          <ol class="rp__steps">
+          <!-- Cycle 6: same roving-tabindex contract as the timeline —
+               the step list costs one tab stop; arrows walk steps. -->
+          <ol class="rp__steps" (keydown)="onStepKeys($event)">
             @for (r of pagedStepRows(); track r.step.event.idx) {
               <li
                 [attr.data-current]="r.index === replayIdx() || null"
@@ -300,7 +343,9 @@ import {
                   class="rp__step"
                   type="button"
                   data-action="inspect"
+                  [attr.data-idx]="r.index"
                   [attr.data-current]="r.index === replayIdx() || null"
+                  [attr.tabindex]="r.index === stepTabIdx() ? 0 : -1"
                   (click)="inspect(r.step.event.event); replayIdx.set(r.index)"
                 >
                   <span class="rp__gap" [attr.title]="'execution.replay.gap' | t">{{ r.gap }}</span>
@@ -391,7 +436,16 @@ import {
 
         @if (filteredEvents().length) {
           <div class="table-wrap">
-            <table class="table" [attr.aria-rowcount]="filteredEvents().length + 1">
+            <!-- Cycle 6: the table keeps its native semantics (rows are
+                 rows, not role="grid") — one row is tabbable at a time
+                 (roving tabindex), arrows/Home/End/PageUp/PageDown walk
+                 the whole filtered window across pages, Enter/Space
+                 opens the inspector, Esc closes it. -->
+            <table
+              class="table"
+              [attr.aria-rowcount]="filteredEvents().length + 1"
+              aria-keyshortcuts="ArrowUp ArrowDown Home End PageUp PageDown Enter Escape"
+            >
               <thead>
                 <tr>
                   <th scope="col">{{ 'execution.col.type' | t }}</th>
@@ -402,16 +456,17 @@ import {
                   <th scope="col">{{ 'execution.col.correlation' | t }}</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody (keydown)="onEventKeys($event)">
                 @for (r of pagedEventRows(); track r.e.event_id ?? r.position) {
                   <!-- tabindex + Enter/Space: the row is the inspector
                        trigger — a row carrying only a click handler is
                        unreachable by keyboard (WCAG 2.1.1) -->
                   <tr
                     data-action="inspect"
+                    [attr.data-idx]="r.position - 1"
                     [attr.data-selected]="inspected() === r.e || null"
                     [attr.aria-rowindex]="r.position + 1"
-                    tabindex="0"
+                    [tabindex]="r.position - 1 === evTabIdx() ? 0 : -1"
                     (click)="inspect(r.e)"
                     (keydown.enter)="inspect(r.e)"
                     (keydown.space)="inspect(r.e); $event.preventDefault()"
@@ -470,9 +525,16 @@ import {
         }
       </section>
 
-      <!-- Inspector — every recorded field verbatim + observed links. -->
+      <!-- Inspector — every recorded field verbatim + observed links.
+           Esc anywhere inside closes it and focus returns to the row
+           that opened it. -->
       @if (inspected(); as e) {
-        <section class="card detail fg-enter" data-section="inspector" aria-live="polite">
+        <section
+          class="card detail fg-enter"
+          data-section="inspector"
+          aria-live="polite"
+          (keydown.escape)="closeInspector()"
+        >
           <header class="detail__head">
             <h2>
               <ui-icon name="execution" [size]="15" /><code>{{ e.event_type }}</code>
@@ -482,7 +544,7 @@ import {
             </h2>
             <button
               class="icon-btn"
-              (click)="inspected.set(null)"
+              (click)="closeInspector()"
               [attr.aria-label]="'state.close' | t"
             >
               <ui-icon name="chevron-right" [size]="14" />
@@ -793,6 +855,21 @@ import {
     .filter .input {
       min-width: 190px;
     }
+    /* hidden by the global .sr-only until focused — mirrors the shell
+       .skip-link contract; the :focus-visible rule un-hides it. */
+    .kb-skip:focus-visible {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0 0 var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+    }
     .table-wrap {
       overflow-x: auto;
     }
@@ -865,6 +942,7 @@ import {
 export class ExecutionPage {
   private readonly api = inject(PortalApi);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
 
   /** Route `?cid=` / `?q=` deep links — a correlation id selects its
    *  execution; `q` seeds the free-text filter. Applied once per value
@@ -898,6 +976,15 @@ export class ExecutionPage {
   readonly EVENTS_PAGE = 100;
   readonly TL_PAGE = 50;
   readonly STEPS_PAGE = 100;
+
+  /** Cycle 6 — roving-tabindex cursors: the ABSOLUTE index (inside its
+   *  whole list, not the rendered page) of the row that owns the tab
+   *  stop. Arrow keys move the cursor and the page follows, so the
+   *  keyboard reaches every row while Tab costs exactly one stop per
+   *  list — the fix for the ~58-keypress inspector journey. */
+  readonly evCursor = signal(0);
+  readonly tlCursor = signal(0);
+  readonly stepCursor = signal(0);
 
   private replayTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly deepApplied = signal<string | null>(null);
@@ -951,6 +1038,11 @@ export class ExecutionPage {
     this.executions().groups.slice(this.tlSlice().start, this.tlSlice().end),
   );
 
+  /** The timeline row owning the tab stop — the cursor clamped into
+   *  the rendered slice, so exactly one rendered row is tabbable even
+   *  when the cursor sits on another page (pager-driven nav). */
+  readonly tlTabIdx = computed(() => clampInto(this.tlCursor(), this.tlSlice()));
+
   /** Events-table slice — view-model rows are built only for the
    *  visible page so formatting cost scales with the page, not the
    *  buffer. `aria-rowcount`/`aria-rowindex` keep the table's real size
@@ -964,6 +1056,9 @@ export class ExecutionPage {
       this.eventSlice().start,
     ),
   );
+
+  /** The events row owning the tab stop — see `tlTabIdx`. */
+  readonly evTabIdx = computed(() => clampInto(this.evCursor(), this.eventSlice()));
 
   readonly selectedGroup = computed<ExecutionGroup | null>(() => {
     const cid = this.selectedCid();
@@ -997,6 +1092,9 @@ export class ExecutionPage {
       this.stepSlice().start,
     ),
   );
+
+  /** The replay-step row owning the tab stop — see `tlTabIdx`. */
+  readonly stepTabIdx = computed(() => clampInto(this.stepCursor(), this.stepSlice()));
 
   readonly stamp = stamp;
   readonly fmtAt = fmtAt;
@@ -1047,6 +1145,115 @@ export class ExecutionPage {
 
   inspect(e: PortalEvent): void {
     this.inspected.set(e);
+  }
+
+  /** Close the inspector and return focus to the row that opened it —
+   *  a control that disappears must not drop focus on <body> (WCAG
+   *  focus-order). Falls back to the list's current tab row when the
+   *  event left the filtered window. */
+  closeInspector(): void {
+    const e = this.inspected();
+    this.inspected.set(null);
+    if (!e) return;
+    const i = this.filteredEvents().indexOf(e);
+    const target = i >= 0 ? i : this.evTabIdx();
+    if (target < 0) return;
+    if (i >= 0) {
+      this.evCursor.set(i);
+      this.eventsPage.set(Math.floor(i / this.EVENTS_PAGE));
+    }
+    this.focusIdx('.table tbody', target);
+  }
+
+  /** The bypass-block link — lands focus on the table's current tab
+   *  row so the first event is one Enter away. */
+  skipToEvents(e: Event): void {
+    e.preventDefault();
+    const i = this.evTabIdx();
+    if (i >= 0) this.focusIdx('.table tbody', i);
+  }
+
+  /** Shared list keyboard contract (Cycle 6): ↑/↓ step one row,
+   *  Home/End jump to the list bounds, PageUp/PageDown move one page
+   *  size — all in WHOLE-LIST coordinates; `go` receives the absolute
+   *  index and owns cursor+page+focus. Any other key passes through
+   *  (Tab keeps its plain role: leaves the widget). */
+  private listKeyNav(
+    e: KeyboardEvent,
+    total: number,
+    pageSize: number,
+    go: (absIdx: number) => void,
+  ): void {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const row = (e.target as HTMLElement).closest('[data-idx]') as HTMLElement | null;
+    if (!row) return;
+    const idx = Number(row.dataset['idx']);
+    let next: number;
+    switch (e.key) {
+      case 'ArrowDown':
+        next = idx + 1;
+        break;
+      case 'ArrowUp':
+        next = idx - 1;
+        break;
+      case 'Home':
+        next = 0;
+        break;
+      case 'End':
+        next = total - 1;
+        break;
+      case 'PageDown':
+        next = idx + pageSize;
+        break;
+      case 'PageUp':
+        next = idx - pageSize;
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    if (total <= 0 || !Number.isFinite(idx)) return;
+    go(Math.min(Math.max(next, 0), total - 1));
+  }
+
+  onTlKeys(e: KeyboardEvent): void {
+    this.listKeyNav(e, this.executions().groups.length, this.TL_PAGE, (n) => {
+      this.tlCursor.set(n);
+      this.tlPage.set(Math.floor(n / this.TL_PAGE));
+      this.focusIdx('.tl', n);
+    });
+  }
+
+  onStepKeys(e: KeyboardEvent): void {
+    this.listKeyNav(e, this.replaySteps().length, this.STEPS_PAGE, (n) => {
+      this.stepCursor.set(n);
+      this.stepManual.set(Math.floor(n / this.STEPS_PAGE));
+      this.focusIdx('.rp__steps', n);
+    });
+  }
+
+  onEventKeys(e: KeyboardEvent): void {
+    if (e.key === 'Escape') {
+      this.closeInspector();
+      return;
+    }
+    this.listKeyNav(e, this.filteredEvents().length, this.EVENTS_PAGE, (n) => {
+      this.evCursor.set(n);
+      this.eventsPage.set(Math.floor(n / this.EVENTS_PAGE));
+      this.focusIdx('.table tbody', n);
+    });
+  }
+
+  /** Move DOM focus onto the row the cursor landed on — deferred past
+   *  the render pass because a page crossing swaps the rendered rows
+   *  (same settle→focus pattern as the confirm dialog). */
+  private focusIdx(scope: string, idx: number): void {
+    setTimeout(() => {
+      const row = this.host.nativeElement.querySelector<HTMLElement>(
+        `${scope} [data-idx="${idx}"]`,
+      );
+      row?.focus();
+    });
   }
 
   fmtMs(ms: number | null): string {
