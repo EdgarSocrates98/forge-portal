@@ -144,7 +144,10 @@ const NAV: NavEntry[] = [
               [title]="store.status()"
               aria-hidden="true"
             ></span>
-            <span class="topbar__workspace" [attr.title]="store.workspace()?.root ?? null">
+            <span
+              class="topbar__workspace"
+              [attr.title]="store.workspace()?.root ?? ('dashboard.noWorkspace' | t)"
+            >
               <ui-icon name="folder" [size]="14" />
               {{ store.workspace()?.name ?? ('dashboard.noWorkspace' | t) }}
             </span>

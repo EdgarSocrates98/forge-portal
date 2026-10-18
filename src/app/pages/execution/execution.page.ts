@@ -404,11 +404,17 @@ import {
               </thead>
               <tbody>
                 @for (r of pagedEventRows(); track r.e.event_id ?? r.position) {
+                  <!-- tabindex + Enter/Space: the row is the inspector
+                       trigger — a row carrying only a click handler is
+                       unreachable by keyboard (WCAG 2.1.1) -->
                   <tr
                     data-action="inspect"
                     [attr.data-selected]="inspected() === r.e || null"
                     [attr.aria-rowindex]="r.position + 1"
+                    tabindex="0"
                     (click)="inspect(r.e)"
+                    (keydown.enter)="inspect(r.e)"
+                    (keydown.space)="inspect(r.e); $event.preventDefault()"
                   >
                     <td>
                       <code>{{ r.e.event_type }}</code>

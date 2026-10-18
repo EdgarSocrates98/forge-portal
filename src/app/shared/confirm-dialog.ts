@@ -157,7 +157,8 @@ const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabi
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      .cd__panel {
+      /* data-motion='full' is the user's explicit opt-out (tokens.css) */
+      :host-context(html:not([data-motion='full'])) .cd__panel {
         animation: none;
       }
     }

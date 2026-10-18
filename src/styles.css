@@ -95,10 +95,13 @@ button {
   border: 0;
 }
 
+/* Scoped to :not([data-motion='full']): PrefsStore's explicit 'full'
+   opt-out must actually restore motion — an unconditional reset would
+   silently veto the user's own recorded choice (tokens.css contract). */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  :root:not([data-motion='full']) *,
+  :root:not([data-motion='full']) *::before,
+  :root:not([data-motion='full']) *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -643,23 +646,21 @@ page-settings {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
-    animation: none;
-  }
-  page-dashboard,
-  page-install,
-  page-config,
-  page-explorer,
-  page-forge-detail,
-  page-profiles,
-  page-hosts,
-  page-mcp,
-  page-skills,
-  page-agents,
-  page-tasks,
-  page-graph,
-  page-knowledge,
-  page-settings {
+  :root:not([data-motion='full']) .skeleton,
+  :root:not([data-motion='full']) page-dashboard,
+  :root:not([data-motion='full']) page-install,
+  :root:not([data-motion='full']) page-config,
+  :root:not([data-motion='full']) page-explorer,
+  :root:not([data-motion='full']) page-forge-detail,
+  :root:not([data-motion='full']) page-profiles,
+  :root:not([data-motion='full']) page-hosts,
+  :root:not([data-motion='full']) page-mcp,
+  :root:not([data-motion='full']) page-skills,
+  :root:not([data-motion='full']) page-agents,
+  :root:not([data-motion='full']) page-tasks,
+  :root:not([data-motion='full']) page-graph,
+  :root:not([data-motion='full']) page-knowledge,
+  :root:not([data-motion='full']) page-settings {
     animation: none;
   }
 }
@@ -701,9 +702,9 @@ page-settings {
   animation: fg-page-in var(--fg-motion-med) var(--fg-ease-out) both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .stagger > *,
-  .fg-pop,
-  .fg-enter {
+  :root:not([data-motion='full']) .stagger > *,
+  :root:not([data-motion='full']) .fg-pop,
+  :root:not([data-motion='full']) .fg-enter {
     animation: none;
   }
 }
@@ -777,7 +778,7 @@ page-settings {
   color: var(--on-color);
 }
 @media (prefers-reduced-motion: reduce) {
-  .stepper__step[data-state='done'] .stepper__dot {
+  :root:not([data-motion='full']) .stepper__step[data-state='done'] .stepper__dot {
     animation: none;
   }
 }
@@ -1223,12 +1224,12 @@ details > summary::marker {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dot[data-state='booting'] {
+  :root:not([data-motion='full']) .dot[data-state='booting'] {
     animation: none;
   }
-  .nav__item,
-  .nav__collapse,
-  .icon-btn {
+  :root:not([data-motion='full']) .nav__item,
+  :root:not([data-motion='full']) .nav__collapse,
+  :root:not([data-motion='full']) .icon-btn {
     transition: none;
   }
 }
@@ -1319,7 +1320,7 @@ details > summary::marker {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .running__spinner {
+  :root:not([data-motion='full']) .running__spinner {
     animation: none;
     border-top-color: var(--border-strong);
   }

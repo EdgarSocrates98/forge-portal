@@ -1,0 +1,1199 @@
+{
+  "probe": "usability-cycle5",
+  "method": "scripted keyboard-only heuristic — NO human participants",
+  "steps": [
+    {
+      "step": "1-discover-forge",
+      "goal": "forge detail via sidebar nav",
+      "url": "e2e-forge",
+      "keystrokes": 12,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "goto",
+          "to": "/"
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "skip-link",
+            "role": null,
+            "href": "#content",
+            "name": null,
+            "text": "Pular para o conteúdo",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "brand",
+            "role": null,
+            "href": "/dashboard",
+            "name": null,
+            "text": "E2E Forgeengenharia agentic, simplificada",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "nav__item nav__item--active",
+            "role": null,
+            "href": "/dashboard",
+            "name": null,
+            "text": "Painel",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "nav__item",
+            "role": null,
+            "href": "/guide",
+            "name": null,
+            "text": "Guia",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "nav__item",
+            "role": null,
+            "href": "/federation",
+            "name": null,
+            "text": "Família de Forjas",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "nav__item",
+            "role": null,
+            "href": "/forges",
+            "name": null,
+            "text": "Forjas",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Explorador de ForjasTodas as Forjas que este workspace consegue verifi",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "hint__more",
+            "role": null,
+            "href": "/guide#forge",
+            "name": null,
+            "text": "Saiba mais",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "hint__x",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "icon-btn",
+            "role": null,
+            "href": "/forges/e2e-forge",
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Todas as Forjas E2E ForgeCampos verificados pelo portal e pelo registr",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "2-agent",
+      "goal": "agents list, first interactive",
+      "url": "agents",
+      "keystrokes": 15,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "type:agents",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "AgentsAgents, subagents e coordenadores com autoridade declarada. Card",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Cards",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Tabela",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Grafo",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "hint__more",
+            "role": null,
+            "href": "/guide#agent",
+            "name": null,
+            "text": "Saiba mais",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "hint__x",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "input",
+            "cls": "input fb__input",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Todos",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "code",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "glue",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "performance",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "select",
+            "cls": "input sel",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Skills: TodosAnalyzeSpark performance tuning — advanced diagnostics",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "3-skills",
+      "goal": "skills list reach",
+      "url": "skills",
+      "keystrokes": 12,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "Control+k",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "type:skills",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "SkillsCatálogo real de skills desta Forja. Atualizar Skills são capaci",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "hint__more",
+            "role": null,
+            "href": "/guide#skill",
+            "name": null,
+            "text": "Saiba mais",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "hint__x",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "input",
+            "cls": "input fb__input",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Todos",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "core",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "graph",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "performance",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "linklike",
+            "role": null,
+            "href": "/hosts#host-devin",
+            "name": null,
+            "text": "devin",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "4-mcp",
+      "goal": "handshake verify button reachable",
+      "url": "mcp",
+      "keystrokes": 4,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "Control+k",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "type:mcp",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "MCPServidores MCP e verificação real de handshake. Verificar handshake",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn btn--primary",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Verificar handshake",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "5-diagnose-host",
+      "goal": "host diagnostic state visible+reachable",
+      "url": "hosts",
+      "keystrokes": 5,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "Control+k",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "type:hosts",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Hosts de IAEstado real de cada host — detectado, autenticado e integra",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn btn--primary",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Solicitar integração",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "6-graph-relationships",
+      "goal": "node inspector via list fallback",
+      "url": "graph",
+      "keystrokes": 23,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Canvas",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Capturar snapshot",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Exportar grafo",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "input",
+            "cls": "input fb__input",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Todos · 23",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "forge · 1",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "capability · 10",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "skill · 3",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "agent · 2",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "mcp · 2",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "host · 3",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fg-pill",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "operation · 2",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "fed__node",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "agentGlue incremental performance architectavailableagent:glue-increme",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "button",
+            "cls": "fed__node",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "agentGlue incremental performance architectavailableagent:glue-increme",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "7-dependencies",
+      "goal": "impact uses/usedBy rendered",
+      "url": "graph",
+      "keystrokes": 0,
+      "goal_reached": true,
+      "friction": [],
+      "trail": []
+    },
+    {
+      "step": "8-inspect-execution",
+      "goal": "execution row activates detail",
+      "url": "execution",
+      "keystrokes": 58,
+      "goal_reached": true,
+      "friction": [
+        "deep tab order: 58 keystrokes"
+      ],
+      "trail": [
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…21 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…23 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…21 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…21 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…22 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…20 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqw…21 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqx…20 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "ui-mvdqx…10 ms",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn btn--mini",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Reproduzir",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn btn--mini",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Próximo",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "select",
+            "cls": "select",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "×1×4×16×64",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "rp__step",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "—operation.start18/10/2026, 08:31:49startedportal_core → GET /bootstra",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "button",
+            "cls": "rp__step",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "—operation.start18/10/2026, 08:31:49startedportal_core → GET /bootstra",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    },
+    {
+      "step": "9-interpret-error",
+      "goal": "refusal code visible+reachable",
+      "url": "tasks",
+      "keystrokes": 9,
+      "goal_reached": true,
+      "friction": [],
+      "trail": [
+        {
+          "key": "Control+k",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "type:tasks",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "TarefasDiga o que você quer fazer — o portal monta o plano na Forja re",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "hint__more",
+            "role": null,
+            "href": "/guide#diagnose",
+            "name": null,
+            "text": "Saiba mais",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "hint__x",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "input",
+            "cls": "input ng-untouched ng-pristine ng-valid",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "mcp handshake verify5 s",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "button",
+            "cls": "tl__row",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "mcp handshake verify5 s",
+            "visible": true,
+            "inMain": true
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "steps_ok": 9,
+    "total": 9,
+    "total_keystrokes": 138,
+    "frictions": 1
+  }
+}
