@@ -26,6 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 WORKSPACE = ROOT.parent
 SERVER_SRC = ROOT / "portal_core" / "forge_portal.py"
+TELEMETRY_SRC = ROOT / "portal_core" / "telemetry.py"
 ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
 PORTAL_VERSION = "1.0.0"
 
@@ -45,7 +46,8 @@ FORGES: dict[str, str | dict[str, str]] = {
     },
     # doctor-api package boundary bans network imports in src/ — the portal
     # is a checkout-level host surface like forge_install.py → scripts/.
-    "forge-doctor-api": "scripts",
+    # "flat": modules in that dir import siblings by bare module name.
+    "forge-doctor-api": {"pkg": "scripts", "flat": "1"},
 }
 
 
@@ -53,13 +55,43 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def manifest_for(assets_dir: Path) -> dict:
+def manifest_for(
+    assets_dir: Path,
+    server_path: Path = SERVER_SRC,
+    telemetry_hash: str | None = None,
+) -> dict:
     files = {}
     for p in sorted(assets_dir.rglob("*")):
         if p.is_file():
             rel = p.relative_to(assets_dir).as_posix()
             files[rel] = {"sha256": sha256(p), "bytes": p.stat().st_size}
-    return {"schema": "forge/PortalAssets/1", "portal_version": PORTAL_VERSION, "files": files}
+    server_hash = sha256(server_path)
+    manifest = {
+        "schema": "forge/PortalAssets/1",
+        "portal_version": PORTAL_VERSION,
+        "server_generation": server_hash[:16],
+        "server_sha256": server_hash,
+        "files": files,
+    }
+    if telemetry_hash is not None:
+        manifest["telemetry_generation"] = telemetry_hash[:16]
+        manifest["telemetry_sha256"] = telemetry_hash
+    return manifest
+
+
+def telemetry_source(target: dict[str, str]) -> bytes:
+    """`_portal_telemetry.py` content for a target. The canonical module
+    does `import forge_portal as fp` (portal_core flat layout); vendored
+    copies must reference the vendored `_forge_portal` instead — package
+    targets use `from <pkg> import _forge_portal`, flat dirs (scripts/)
+    use `import _forge_portal`."""
+    text = TELEMETRY_SRC.read_text(encoding="utf-8")
+    if target.get("flat"):
+        line = "import _forge_portal as fp"
+    else:
+        pkg = Path(target["pkg"]).name
+        line = f"from {pkg} import _forge_portal as fp"
+    return text.replace("import forge_portal as fp", line, 1).encode("utf-8")
 
 
 def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[str]:
@@ -71,8 +103,14 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
     if isinstance(target, str):
         target = {"pkg": target}
     server_dst = repo / target["pkg"] / "_forge_portal.py"
+    telemetry_dst = repo / target["pkg"] / "_portal_telemetry.py"
     assets_dst = repo / target.get("assets", "portal/assets")
     manifest_dst = repo / target.get("manifest", "portal/manifest.json")
+
+    telemetry_bytes = telemetry_source(target) if TELEMETRY_SRC.is_file() else None
+    telemetry_hash = (
+        hashlib.sha256(telemetry_bytes).hexdigest() if telemetry_bytes else None
+    )
 
     diffs: list[Path] = []
     if server_dst.is_file() and sha256(server_dst) == sha256(SERVER_SRC):
@@ -80,8 +118,14 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
     else:
         diffs.append(server_dst)
 
+    if telemetry_bytes is not None:
+        if telemetry_dst.is_file() and telemetry_dst.read_bytes() == telemetry_bytes:
+            notes.append(f"  telemetry: parity ok ({telemetry_dst.name})")
+        else:
+            diffs.append(telemetry_dst)
+
     if ASSETS_SRC.is_dir():
-        new_manifest = manifest_for(ASSETS_SRC)
+        new_manifest = manifest_for(ASSETS_SRC, telemetry_hash=telemetry_hash)
         old_manifest = {}
         if manifest_dst.is_file():
             try:
@@ -104,13 +148,22 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
     shutil.copyfile(SERVER_SRC, server_dst)
     notes.append(f"  wrote {server_dst.relative_to(repo)}")
 
+    if telemetry_bytes is not None:
+        telemetry_dst.write_bytes(telemetry_bytes)
+        notes.append(f"  wrote {telemetry_dst.relative_to(repo)}")
+
     if ASSETS_SRC.is_dir():
         if assets_dst.is_dir():
             shutil.rmtree(assets_dst)
         shutil.copytree(ASSETS_SRC, assets_dst)
         manifest_dst.parent.mkdir(parents=True, exist_ok=True)
         manifest_dst.write_text(
-            json.dumps(manifest_for(assets_dst), indent=2, sort_keys=True) + "\n",
+            json.dumps(
+                manifest_for(assets_dst, server_dst, telemetry_hash=telemetry_hash),
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
             encoding="utf-8",
         )
         notes.append(f"  wrote {assets_dst.relative_to(repo)}/ + manifest.json")
