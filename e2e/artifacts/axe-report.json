@@ -5,6 +5,8 @@
     "/install",
     "/config",
     "/forges",
+    "/forges/self",
+    "/match",
     "/federation",
     "/profiles",
     "/hosts",
@@ -13,20 +15,13 @@
     "/agents",
     "/tasks",
     "/graph",
+    "/observe",
+    "/execution",
+    "/lab",
+    "/versions",
+    "/knowledge",
+    "/guide",
     "/settings"
   ],
-  "violations": {
-    "/tasks": [
-      {
-        "id": "aria-allowed-role",
-        "impact": "minor",
-        "help": "ARIA role should be appropriate for the element",
-        "nodes": [
-          [
-            ".tl__row"
-          ]
-        ]
-      }
-    ]
-  }
+  "violations": {}
 }

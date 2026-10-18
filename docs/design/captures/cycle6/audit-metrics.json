@@ -1,0 +1,1702 @@
+[
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/forges",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\"",
+      "code \"host:codex\"",
+      "span \"devin\""
+    ],
+    "route": "/graph",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/execution",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/forges",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\""
+    ],
+    "route": "/graph",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/execution",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=938",
+      "thead. right=938",
+      "tr. right=938",
+      "th. right=805",
+      "th. right=938",
+      "tbody. right=938",
+      "tr. right=938",
+      "td. right=805",
+      "td. right=938",
+      "ui-state-badge. right=926",
+      "span.badge right=926",
+      "tr. right=938",
+      "td. right=805",
+      "code.path right=793",
+      "td. right=938",
+      "span.muted right=913",
+      "table.table right=780",
+      "thead. right=780",
+      "tr. right=780",
+      "th. right=780",
+      "tbody. right=780",
+      "tr. right=780",
+      "td. right=780"
+    ],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1006",
+      "thead. right=1006",
+      "tr. right=1006",
+      "th. right=843",
+      "th. right=921",
+      "th. right=1006",
+      "tbody. right=1006",
+      "tr. right=1006",
+      "td. right=843",
+      "ui-state-badge. right=831",
+      "span.badge right=831",
+      "td. right=921",
+      "td. right=1006",
+      "span.muted right=982",
+      "tr. right=1006",
+      "td. right=843",
+      "ui-state-badge. right=831",
+      "span.badge right=831",
+      "td. right=921",
+      "td. right=1006",
+      "span.muted right=982",
+      "tr. right=1006",
+      "td. right=843",
+      "ui-state-badge. right=831",
+      "span.badge right=831"
+    ],
+    "clipped": [],
+    "route": "/config",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1154",
+      "thead. right=1154",
+      "tr. right=1154",
+      "th. right=963",
+      "th. right=1097",
+      "th. right=1154",
+      "span.sr-only right=1109",
+      "tbody. right=1154",
+      "tr. right=1154",
+      "td. right=963",
+      "ui-state-badge. right=789",
+      "span.badge right=789",
+      "td. right=1097",
+      "ui-state-badge. right=1085",
+      "span.badge right=1085",
+      "td. right=1154",
+      "a.icon-btn right=1142",
+      "ui-icon. right=1133",
+      "svg. right=1133",
+      "path. right=1127",
+      "tr. right=1154",
+      "td. right=963",
+      "code.path right=951",
+      "td. right=1097",
+      "span.muted right=1072"
+    ],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/forges",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1025",
+      "thead. right=1025",
+      "tr. right=1025",
+      "th. right=865",
+      "th. right=968",
+      "th. right=1025",
+      "span.sr-only right=980",
+      "tbody. right=1025",
+      "tr. right=1025",
+      "td. right=865",
+      "td. right=968",
+      "td. right=1025",
+      "button.icon-btn right=1013",
+      "ui-icon. right=1004",
+      "svg. right=1004",
+      "path. right=998",
+      "table.table right=1187",
+      "thead. right=1187",
+      "tr. right=1187",
+      "th. right=858",
+      "th. right=980",
+      "th. right=1084",
+      "th. right=1187",
+      "tbody. right=1187",
+      "tr. right=1187"
+    ],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=853",
+      "thead. right=853",
+      "tr. right=853",
+      "th. right=783",
+      "th. right=853",
+      "span.sr-only right=795",
+      "tbody. right=853",
+      "tr. right=853",
+      "td. right=783",
+      "td. right=853",
+      "button.icon-btn right=828",
+      "ui-icon. right=819",
+      "svg. right=819",
+      "path. right=814"
+    ],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"graph\"",
+      "code \"capability:graph\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"EXECUTION_VERIFIED\"",
+      "span \"e2e-forge-mcp\"",
+      "span \"TOOLS_DISCOVERED\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/graph",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1125",
+      "thead. right=1125",
+      "tr. right=1125",
+      "th. right=816",
+      "th. right=915",
+      "th. right=1037",
+      "th. right=1125",
+      "tbody. right=1125",
+      "tr. right=1125",
+      "td. right=816",
+      "ui-state-badge. right=796",
+      "span.badge right=796",
+      "td. right=915",
+      "td. right=1037",
+      "code.corr right=992",
+      "td. right=1125",
+      "span.muted right=1063",
+      "tr. right=1125",
+      "td. right=816",
+      "td. right=915",
+      "td. right=1037",
+      "code.corr right=992",
+      "td. right=1125",
+      "span.muted right=1063",
+      "tr. right=1125"
+    ],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1145",
+      "thead. right=1145",
+      "tr. right=1145",
+      "th. right=937",
+      "th. right=1027",
+      "th. right=1145",
+      "tbody. right=1145",
+      "tr. right=1145",
+      "td.flow right=937",
+      "td.num right=1027",
+      "span.muted right=963",
+      "td. right=1145",
+      "code.corr right=1104",
+      "tr. right=1145",
+      "td.flow right=937",
+      "td.num right=1027",
+      "td. right=1145",
+      "code.corr right=1104",
+      "tr. right=1145",
+      "td.flow right=937",
+      "td.num right=1027",
+      "span.muted right=963",
+      "td. right=1145",
+      "code.corr right=1104",
+      "tr. right=1145"
+    ],
+    "clipped": [],
+    "route": "/execution",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/knowledge",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=750",
+      "thead. right=750",
+      "tr. right=750",
+      "th. right=617",
+      "th. right=750",
+      "tbody. right=750",
+      "tr. right=750",
+      "td. right=617",
+      "ui-state-badge. right=471",
+      "span.badge right=471",
+      "td. right=750",
+      "ui-state-badge. right=738",
+      "span.badge right=738",
+      "tr. right=750",
+      "td. right=617",
+      "code.path right=605",
+      "td. right=750",
+      "span.muted right=725",
+      "table.table right=592",
+      "thead. right=592",
+      "tr. right=592",
+      "th. right=423",
+      "th. right=503",
+      "th. right=592",
+      "tbody. right=592"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "li. right=453",
+      "span.muted right=440",
+      "li. right=453",
+      "span.muted right=435",
+      "li. right=453",
+      "span.muted right=435"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/install",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=818",
+      "thead. right=818",
+      "tr. right=818",
+      "th. right=417",
+      "th. right=511",
+      "th. right=655",
+      "th. right=733",
+      "th. right=818",
+      "tbody. right=818",
+      "tr. right=818",
+      "td. right=417",
+      "td. right=511",
+      "td. right=655",
+      "ui-state-badge. right=643",
+      "span.badge right=643",
+      "td. right=733",
+      "td. right=818",
+      "span.muted right=794",
+      "tr. right=818",
+      "td. right=417",
+      "td. right=511",
+      "td. right=655",
+      "ui-state-badge. right=643",
+      "span.badge right=643",
+      "td. right=733"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/config",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=966",
+      "thead. right=966",
+      "tr. right=966",
+      "th. right=402",
+      "th. right=480",
+      "th. right=775",
+      "th. right=909",
+      "th. right=966",
+      "span.sr-only right=921",
+      "tbody. right=966",
+      "tr. right=966",
+      "td. right=402",
+      "td. right=480",
+      "td. right=775",
+      "ui-state-badge. right=601",
+      "span.badge right=601",
+      "td. right=909",
+      "ui-state-badge. right=897",
+      "span.badge right=897",
+      "td. right=966",
+      "a.icon-btn right=954",
+      "ui-icon. right=945",
+      "svg. right=945",
+      "path. right=939",
+      "tr. right=966"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/forges",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/forges/self",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/match",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/federation",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/profiles",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "article.card right=392",
+      "article.card right=392",
+      "article.card right=392"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/hosts",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "div.ph__actions right=499",
+      "button.btn right=499",
+      "ui-icon. right=415",
+      "svg. right=415",
+      "path. right=413",
+      "path. right=413",
+      "table.table right=837",
+      "thead. right=837",
+      "tr. right=837",
+      "th. right=438",
+      "th. right=560",
+      "th. right=677",
+      "th. right=780",
+      "th. right=837",
+      "span.sr-only right=792",
+      "tbody. right=837",
+      "tr. right=837",
+      "td. right=438",
+      "a.linklike right=426",
+      "td. right=560",
+      "td. right=677",
+      "td. right=780",
+      "td. right=837",
+      "button.icon-btn right=825",
+      "ui-icon. right=816"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=665",
+      "thead. right=665",
+      "tr. right=665",
+      "th. right=433",
+      "th. right=595",
+      "th. right=665",
+      "span.sr-only right=607",
+      "tbody. right=665",
+      "tr. right=665",
+      "td. right=433",
+      "ui-state-badge. right=396",
+      "span.badge right=396",
+      "td. right=595",
+      "ui-state-badge. right=554",
+      "span.badge right=554",
+      "td. right=665",
+      "button.icon-btn right=640",
+      "ui-icon. right=631",
+      "svg. right=631",
+      "path. right=626"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "div.ph__actions right=521",
+      "button.btn right=521",
+      "ui-icon. right=437",
+      "svg. right=437",
+      "path. right=435",
+      "path. right=435",
+      "article.card right=392"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/agents",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/tasks",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "ui-state-badge. right=415",
+      "span.badge right=415"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\"",
+      "code \"host:claude\""
+    ],
+    "route": "/graph",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=937",
+      "thead. right=937",
+      "tr. right=937",
+      "th. right=426",
+      "th. right=520",
+      "th. right=628",
+      "th. right=727",
+      "th. right=849",
+      "th. right=937",
+      "tbody. right=937",
+      "tr. right=937",
+      "td.nowrap right=426",
+      "td.nowrap right=520",
+      "span.muted right=452",
+      "td. right=628",
+      "ui-state-badge. right=608",
+      "span.badge right=608",
+      "td. right=727",
+      "td. right=849",
+      "code.corr right=804",
+      "td. right=937",
+      "span.muted right=875",
+      "tr. right=937",
+      "td.nowrap right=426",
+      "td.nowrap right=520"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/observe",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=957",
+      "thead. right=957",
+      "tr. right=957",
+      "th. right=415",
+      "th. right=520",
+      "th. right=749",
+      "th. right=839",
+      "th. right=957",
+      "tbody. right=957",
+      "tr. right=957",
+      "td.num right=415",
+      "td. right=520",
+      "ui-state-badge. right=503",
+      "span.badge right=503",
+      "td.flow right=749",
+      "td.num right=839",
+      "span.muted right=775",
+      "td. right=957",
+      "code.corr right=916",
+      "tr. right=957",
+      "td.num right=415",
+      "td. right=520",
+      "ui-state-badge. right=503",
+      "span.badge right=503",
+      "td.flow right=749"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/execution",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/lab",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/versions",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "li.rec right=426",
+      "header. right=413",
+      "p.rec__reason right=413",
+      "ul.rec__refs right=413",
+      "footer. right=413",
+      "code.rec__src right=413",
+      "a.btn right=413",
+      "li.rec right=426",
+      "header. right=413",
+      "p.rec__reason right=413",
+      "ul.rec__refs right=413",
+      "footer. right=413",
+      "code.rec__src right=413",
+      "a.btn right=413",
+      "li.rec right=426",
+      "header. right=413",
+      "p.rec__reason right=413",
+      "ul.rec__refs right=413",
+      "footer. right=413",
+      "code.rec__src right=413",
+      "a.btn right=413",
+      "li.rec right=426",
+      "header. right=413",
+      "p.rec__reason right=413",
+      "ul.rec__refs right=413"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/guide",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/settings",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/forges",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\""
+    ],
+    "route": "/graph",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/execution",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "zoom200-1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "code \"/home/edgar/Documentos/projetos/forjas/forge-por\""
+    ],
+    "route": "/dashboard",
+    "tag": "zoom400-1366",
+    "variant": "base"
+  }
+]

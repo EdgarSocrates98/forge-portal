@@ -1,0 +1,2030 @@
+{
+  "contrast": {
+    "base-dark": {
+      "text/surface": 14.21,
+      "text-2/surface": 8.14,
+      "text-dim/surface": 4.8,
+      "accent-ink/surface": 6.21,
+      "accent-ink/accent-bg": 5.54,
+      "info/surface": 7.3,
+      "ok/surface": 8.52,
+      "warn/surface": 9.32,
+      "error/surface": 6.34,
+      "unverified/surface": 8.1,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 7.45,
+      "error/error-bg": 5.86,
+      "info/info-bg": 6.61,
+      "ok/ok-bg": 6.83,
+      "unverified/unverified-bg": 6.8,
+      "accent-ink/bg": 6.85,
+      "text-2/bg": 8.98,
+      "text-dim/bg": 5.29
+    },
+    "base-light": {
+      "text/surface": 17.63,
+      "text-2/surface": 7.56,
+      "text-dim/surface": 5.31,
+      "accent-ink/surface": 6.05,
+      "accent-ink/accent-bg": 5.33,
+      "info/surface": 5.82,
+      "ok/surface": 5.42,
+      "warn/surface": 5.14,
+      "error/surface": 5.44,
+      "unverified/surface": 7.09,
+      "accent-contrast/accent-fill": 6.05,
+      "warn/warn-bg": 4.57,
+      "error/error-bg": 4.76,
+      "info/info-bg": 5.08,
+      "ok/ok-bg": 4.78,
+      "unverified/unverified-bg": 6.2,
+      "accent-ink/bg": 5.54,
+      "text-2/bg": 6.93,
+      "text-dim/bg": 4.86
+    }
+  },
+  "routes": {
+    "base/dashboard": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"Saiba mais\" 68x15",
+        "a \"E2E Forge\" 69x16",
+        "a \"e2e-forge\" 63x16",
+        "a \"e2e-forge\" 63x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/install": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/config": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/forges": {
+      "clipped": [
+        {
+          "tag": "code",
+          "cls": "path",
+          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/forges/self": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/match": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/federation": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/profiles": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/hosts": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/mcp": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15",
+        "a \"devin\" 37x16"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/skills": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/agents": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/tasks": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/graph": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Reviewer",
+          "title": "Reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "agent:reviewer",
+          "title": "agent:reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "agents",
+          "title": "agents",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:agents",
+          "title": "capability:agents",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "federation",
+          "title": "federation",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:federation",
+          "title": "capability:federation",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "hosts",
+          "title": "hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:hosts",
+          "title": "capability:hosts",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "install",
+          "title": "install",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:install",
+          "title": "capability:install",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "knowledge",
+          "title": "knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:knowledge",
+          "title": "capability:knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "mcp",
+          "title": "mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:mcp",
+          "title": "capability:mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "profiles",
+          "title": "profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:profiles",
+          "title": "capability:profiles",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "skills",
+          "title": "skills",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:skills",
+          "title": "capability:skills",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "tasks",
+          "title": "tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:tasks",
+          "title": "capability:tasks",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge",
+          "title": "e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "forge:e2e-forge",
+          "title": "forge:e2e-forge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "claude",
+          "title": "claude",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:claude",
+          "title": "host:claude",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "codex",
+          "title": "codex",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:codex",
+          "title": "host:codex",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "devin",
+          "title": "devin",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__state",
+          "text": "EXECUTION_VERIFIED",
+          "title": "EXECUTION_VERIFIED",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:devin",
+          "title": "host:devin",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__state",
+          "text": "TOOLS_DISCOVERED",
+          "title": "TOOLS_DISCOVERED",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Analyze",
+          "title": "Analyze",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "skill:analyze",
+          "title": "skill:analyze",
+          "inScroller": false
+        }
+      ],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/observe": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/execution": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 68x15"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/lab": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/versions": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/knowledge": {
+      "clipped": [
+        {
+          "tag": "span",
+          "cls": "node__label",
+          "text": "e2e-forge-mcp",
+          "title": "e2e-forge-mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "node__id",
+          "text": "mcp:e2e-forge-mcp",
+          "title": "mcp:e2e-forge-mcp",
+          "inScroller": false
+        }
+      ],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/guide": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/settings": {
+      "clipped": [],
+      "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13"
+      ],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    }
+  }
+}

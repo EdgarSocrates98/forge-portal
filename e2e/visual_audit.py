@@ -48,9 +48,11 @@ ROUTES = [
     "/tasks",
     "/graph",
     "/observe",
+    "/execution",
     "/lab",
     "/versions",
     "/knowledge",
+    "/guide",
     "/settings",
 ]
 

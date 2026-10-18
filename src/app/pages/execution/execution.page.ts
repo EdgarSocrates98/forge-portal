@@ -143,45 +143,50 @@ import {
                 <span>{{ fmtMs(executions().windowEnd) }}</span>
               </div>
               @for (g of executions().groups; track g.key || 'unlinked') {
-                <button
-                  class="tl__row"
-                  type="button"
-                  role="listitem"
-                  [attr.data-execution]="g.correlationId ?? 'unlinked'"
-                  [attr.data-selected]="selectedCid() === g.correlationId || null"
-                  [attr.data-errors]="g.errorCount || null"
-                  [attr.aria-label]="g.correlationId ?? ('execution.unlinked' | t)"
-                  (click)="selectExecution(g)"
-                >
-                  <span class="tl__label" [attr.title]="g.correlationId">
-                    @if (g.correlationId) {
-                      <code>{{ shortId(g.correlationId) }}</code>
-                    } @else {
-                      <span class="muted">{{ 'execution.unlinked' | t }}</span>
-                    }
-                    <span class="tl__n">{{ g.events.length }}</span>
-                  </span>
-                  <span class="tl__track">
-                    @for (s of g.spans; track s.spanId) {
-                      <span
-                        class="tl__span"
-                        [style.left.%]="s.leftPct"
-                        [style.width.%]="s.widthPct"
-                      ></span>
-                    }
-                    @for (p of placedIn(g); track p.idx) {
-                      <span
-                        class="tl__tick"
-                        [attr.data-status]="statusKind(p.event.status)"
-                        [style.left.%]="tickLeft(g, p)"
-                        [title]="p.event.event_type + ' — ' + fmtAt(p.event.timestamp)"
-                      ></span>
-                    }
-                  </span>
-                  <span class="tl__dur num">{{
-                    g.durationMs === null ? '—' : fmtDur(g.durationMs)
-                  }}</span>
-                </button>
+                <!-- listitem must wrap the button — <button> cannot carry
+                     role="listitem" itself (axe aria-allowed-role) -->
+                <div class="tl__item" role="listitem">
+                  <!-- no aria-label: the accessible name comes from the
+                       button's own content (shortId + count + duration)
+                       — axe label-content-name-mismatch -->
+                  <button
+                    class="tl__row"
+                    type="button"
+                    [attr.data-execution]="g.correlationId ?? 'unlinked'"
+                    [attr.data-selected]="selectedCid() === g.correlationId || null"
+                    [attr.data-errors]="g.errorCount || null"
+                    (click)="selectExecution(g)"
+                  >
+                    <span class="tl__label" [attr.title]="g.correlationId">
+                      @if (g.correlationId) {
+                        <code>{{ shortId(g.correlationId) }}</code>
+                      } @else {
+                        <span class="muted">{{ 'execution.unlinked' | t }}</span>
+                      }
+                      <span class="tl__n">{{ g.events.length }}</span>
+                    </span>
+                    <span class="tl__track">
+                      @for (s of g.spans; track s.spanId) {
+                        <span
+                          class="tl__span"
+                          [style.left.%]="s.leftPct"
+                          [style.width.%]="s.widthPct"
+                        ></span>
+                      }
+                      @for (p of placedIn(g); track p.idx) {
+                        <span
+                          class="tl__tick"
+                          [attr.data-status]="statusKind(p.event.status)"
+                          [style.left]="'clamp(0px, ' + tickLeft(g, p) + '%, calc(100% - 3px))'"
+                          [title]="p.event.event_type + ' — ' + fmtAt(p.event.timestamp)"
+                        ></span>
+                      }
+                    </span>
+                    <span class="tl__dur num">{{
+                      g.durationMs === null ? '—' : fmtDur(g.durationMs)
+                    }}</span>
+                  </button>
+                </div>
               }
             </div>
             @if (executions().unplacedCount) {

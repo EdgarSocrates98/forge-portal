@@ -1105,9 +1105,13 @@ def test_axe_core_audit(page, portal):
     if not AXE.is_file():
         pytest.skip("axe-core not installed — npm i -D axe-core")
     axe_src = AXE.read_text(encoding="utf-8")
-    routes = ["/", "/install", "/config", "/forges", "/federation",
-              "/profiles", "/hosts", "/mcp", "/skills", "/agents",
-              "/tasks", "/graph", "/settings"]
+    # every navigable route — Cycle 6 extended the scan from 13 to all
+    # 21 routes incl. detail (/forges/self), /execution and /guide
+    routes = ["/", "/install", "/config", "/forges", "/forges/self",
+              "/match", "/federation", "/profiles", "/hosts", "/mcp",
+              "/skills", "/agents", "/tasks", "/graph", "/observe",
+              "/execution", "/lab", "/versions", "/knowledge", "/guide",
+              "/settings"]
     report: dict[str, list[dict]] = {}
     for route in routes:
         page.goto(f"http://127.0.0.1:{portal.port}{route}"

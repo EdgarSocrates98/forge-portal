@@ -31,8 +31,8 @@ AXE = REPO / "node_modules" / "axe-core" / "axe.min.js"
 ROUTES = [
     "/dashboard", "/install", "/config", "/forges", "/forges/self",
     "/match", "/federation", "/profiles", "/hosts", "/mcp", "/skills",
-    "/agents", "/tasks", "/graph", "/observe", "/lab", "/versions",
-    "/knowledge", "/settings",
+    "/agents", "/tasks", "/graph", "/observe", "/execution", "/lab",
+    "/versions", "/knowledge", "/guide", "/settings",
 ]
 
 # srgb "r g b" or hex -> luminance ratio vs a background color

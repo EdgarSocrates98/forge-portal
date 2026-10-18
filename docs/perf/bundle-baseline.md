@@ -45,6 +45,20 @@ só é baixado quando o modo canvas do Graph Studio é ativado
 São avisos de estilo de componente, não de bundle JS; nenhuma página pesa
 mais que o chunk lazy mediano +9 kB de transferência.
 
+## Re-medida — ciclo 6 (2026-10-18, `feat/portal-2.1-cycle6`)
+
+`ng build` produção: **initial 369.09 kB raw / 97.50 kB transfer**
+(4 arquivos: `main` 43.31 + chunk compartilhado 281.68 + `styles` 39.49
++ chunk 4.61); lazy 1 045 kB em 37 arquivos (cytoscape 453.03 kB é o
+maior e continua lazy). **0 warnings de budget** — os avisos de CSS de
+componente da linha anterior desapareceram porque os estilos foram
+consolidados em `styles.css` global (não sujeito a `anyComponentStyle`).
+
+Comparação com a medida original acima: +16.74 kB raw (+4.8%) de
+initial — superfície acumulada dos ciclos 3–5 (execution, explorer,
+knowledge). Abaixo do limiar de justificativa (~400 kB raw) definido
+neste próprio documento e muito abaixo do budget Angular (warn 500 kB).
+
 ## Avaliação
 
 - **92.98 kB de transferência inicial** é aceitável para um painel admin
