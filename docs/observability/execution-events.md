@@ -151,7 +151,7 @@ The E2E adapter emits, truthfully scoped to what each op did:
 
 ## 8. Evidence
 
-- `tests/test_telemetry.py` — 78 tests (recorder bounds, contract
+- `tests/test_telemetry.py` — 17 tests (recorder bounds, contract
   floor, HTTP ops, filters, task linkage).
 - `e2e/test_browser_e2e.py` — Chromium drives `/execution` against
   real recorded events (timeline, `?cid=` deep link, replay stepping,
