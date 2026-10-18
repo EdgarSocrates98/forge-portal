@@ -272,7 +272,7 @@ def run_forge(forge: str, repo: str, argv: list[str]) -> bool:
         code, body = request(base, token, f"/api/v1/tasks/{tid}/events")
         te = body.get("data") or {}
         ok &= check(
-            "task events -> 窓取得 (task_id=%s)" % tid,
+            f"task events -> 窓取得 (task_id={tid})",
             code == 200
             and te.get("schema") == "forge/PortalEventReport/1"
             and isinstance(te.get("events"), list),
