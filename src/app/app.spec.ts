@@ -84,6 +84,7 @@ describe('App shell', () => {
       '/config',
       '/graph',
       '/observe',
+      '/execution',
       '/lab',
       '/versions',
       '/settings',

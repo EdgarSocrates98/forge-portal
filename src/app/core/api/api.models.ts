@@ -271,6 +271,65 @@ export interface TaskEvent {
   receipt?: Record<string, unknown>;
 }
 
+/**
+ * forge/PortalEvent/1 — Cycle 3 execution telemetry.
+ * docs/observability/execution-events.md is the contract.
+ *
+ * Floor: `schema` + `event_type` are guaranteed; `timestamp` is the
+ * producer's real emit time — stamped when the event is recorded,
+ * never back-filled. Every other field is optional and must be
+ * treated as absent-when-unverified, not defaulted:
+ *   - `correlation_id`/`span_id`/`trace_id`/`parent_span_id`: real
+ *     causal relations; a consumer renders a link only when the
+ *     value came off the wire.
+ *   - `duration_ms`: real measured wall-clock of the thing the event
+ *     ends (e.g. operation.end); absent ≠ zero.
+ *   - `metadata`/`evidence`: producer context, already redacted.
+ */
+export interface PortalEvent {
+  schema: 'forge/PortalEvent/1';
+  event_type: string;
+  event_id?: string;
+  timestamp?: string;
+  correlation_id?: string;
+  trace_id?: string;
+  span_id?: string;
+  parent_span_id?: string;
+  source?: string;
+  target?: string;
+  status?: string;
+  duration_ms?: number;
+  metadata?: Record<string, unknown>;
+  evidence?: Record<string, unknown>;
+}
+
+/** forge/PortalEventReport/1 — `GET /events`. `truncated` means the
+ *  bounded buffer already evicted older events: the window is REAL
+ *  but PARTIAL — consumers must surface the gap, not claim full
+ *  history. `count` reflects any applied query filters. */
+export interface PortalEventReport {
+  schema: 'forge/PortalEventReport/1';
+  generated_at: string;
+  forge_id?: string | null;
+  count: number;
+  dropped: number;
+  truncated: boolean;
+  capacity: number;
+  counters: Record<string, number>;
+  events: PortalEvent[];
+}
+
+/** `GET /tasks/{id}/events` — events really linked to one task
+ *  (`metadata.task_id` match or shared correlation_id). `task: null`
+ *  discriminates "no such record" from "record exists, no events". */
+export interface TaskEventReport {
+  schema: 'forge/PortalEventReport/1';
+  task_id: string;
+  task: TaskExecution | null;
+  events: PortalEvent[];
+  truncated: boolean;
+}
+
 export interface GraphAvailability {
   state: 'available' | 'no_graph' | 'disabled' | 'unverified';
   detail?: string;

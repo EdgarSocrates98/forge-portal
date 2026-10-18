@@ -278,6 +278,83 @@ describe('buildFederatedGraph — §5.6 federated model', () => {
     expect(g.sources.graphs.endpoint).toBe('GET /api/v1/graphs');
   });
 
+  it('emits observed edges only for recorded kind:id entity refs', () => {
+    const g = buildFederatedGraph({
+      ...fullInput(),
+      events: [
+        {
+          schema: 'forge/PortalEvent/1',
+          event_type: 'tool.invocation',
+          timestamp: '2026-10-20T12:00:00Z',
+          correlation_id: 'c1',
+          source: 'forge:the-forge',
+          target: 'tool:forge-cli',
+        },
+        {
+          schema: 'forge/PortalEvent/1',
+          event_type: 'task.finished',
+          source: 'forge:the-forge',
+          metadata: { task_id: 'task-1' },
+        },
+        // bare labels are NOT entities — no nodes, no edges
+        {
+          schema: 'forge/PortalEvent/1',
+          event_type: 'operation.end',
+          source: 'portal_core',
+          target: 'GET /tasks',
+        },
+        // unknown kinds are real data but not graphable
+        {
+          schema: 'forge/PortalEvent/1',
+          event_type: 'span.open',
+          source: 'widget:x',
+          target: 'tool:never',
+        },
+      ],
+      availability: { ...fullInput().availability, events: 'loaded' },
+    });
+    // recorded source→target: entity→entity with the verbatim type
+    const e = edge(g, 'forge:the-forge|observed|tool:forge-cli|tool.invocation');
+    expect(e).toBeTruthy();
+    expect(e?.kind).toBe('observed');
+    expect(e?.detail).toBe('tool.invocation');
+    expect(e?.evidence).toBe('events');
+    expect(node(g, 'tool:forge-cli')?.kind).toBe('tool');
+    expect(node(g, 'tool:forge-cli')?.evidence).toEqual(['events']);
+    // metadata.task_id links the emitter to the real task record
+    expect(edge(g, 'forge:the-forge|observed|operation:task-1|task.finished')).toBeTruthy();
+    // 'portal_core'/'GET /tasks' are labels — no invented nodes/edges
+    expect(node(g, 'operation:GET /tasks')).toBeFalsy();
+    expect(g.edges.some((x) => x.source.includes('portal_core'))).toBe(false);
+    // 'tool:never' IS a recorded entity ref — node exists; but the
+    // 'widget:x' source is not graphable, so no edge is invented
+    expect(node(g, 'tool:never')).toBeTruthy();
+    expect(g.edges.some((x) => x.source === 'tool:never' || x.target === 'tool:never')).toBe(false);
+    expect(node(g, 'widget:x')).toBeFalsy();
+    // 'events' evidence joined the real forge node
+    expect(node(g, 'forge:the-forge')?.evidence).toContain('events');
+  });
+
+  it('marks events-derived nodes unverified when /events is unavailable', () => {
+    const g = buildFederatedGraph({
+      ...fullInput(),
+      events: [
+        {
+          schema: 'forge/PortalEvent/1',
+          event_type: 'tool.invocation',
+          source: 'forge:the-forge',
+          target: 'tool:forge-cli',
+        },
+      ],
+      availability: { ...fullInput().availability, events: 'unavailable' },
+    });
+    // the tool exists only via the failed source → unverified, not hidden
+    expect(node(g, 'tool:forge-cli')?.unverified).toBe(true);
+    // the forge keeps other loaded evidence → still verified
+    expect(node(g, 'forge:the-forge')?.unverified).toBe(false);
+    expect(g.sources.events.endpoint).toBe('GET /api/v1/events');
+  });
+
   it('nodeNeighbors returns the direct-impact set with sorted edges', () => {
     const g = buildFederatedGraph(fullInput());
     const { nodes, edges } = nodeNeighbors(g, 'forge:the-forge');

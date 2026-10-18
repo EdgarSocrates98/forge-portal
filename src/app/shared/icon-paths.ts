@@ -54,6 +54,8 @@ export const PATHS: Record<string, string> = {
   diff: '<path d="M12 3v18"/><path d="M8 8l4-4 4 4"/><path d="m8 16 4 4 4-4"/>',
   history: '<path d="M3 12a9 9 0 1 0 2.6-6.3"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>',
   pulse: '<path d="M3 12h4l2.5-6 4 12 2.5-6h5"/>',
+  execution:
+    '<path d="M3 5h11"/><circle cx="18" cy="5" r="2.5"/><path d="M8 12h6"/><circle cx="5" cy="12" r="2.5"/><path d="M3 19h12"/><circle cx="19" cy="19" r="2.5"/>',
 };
 
 /** Raw path data for hosts that paint icons outside the DOM (the

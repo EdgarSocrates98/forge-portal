@@ -148,7 +148,7 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     expect(el.querySelectorAll('.views li').length).toBe(1);
     // federated layer: one chip per source endpoint
     const strip = el.querySelector('[data-strip="sources"]');
-    expect(strip?.querySelectorAll('li').length).toBe(8);
+    expect(strip?.querySelectorAll('li').length).toBe(9);
     // real nodes from every loaded op (+ api-forge provider + ghost refs)
     const ids = nodeIds(el);
     expect(ids).toContain('capability:graph');
@@ -497,7 +497,7 @@ describe('GraphPage — 2.1 advanced inspector, impact, snapshot, saved view', (
     fixture.detectChanges();
     expect(c.impactDepth()).toBe(1);
     // coverage line states real loaded/total
-    expect(el.querySelector('.fed__honest')?.textContent).toContain('8/8');
+    expect(el.querySelector('.fed__honest')?.textContent).toContain('8/9');
     // topological disclaimer is present, not implied
     expect(sec.textContent).toMatch(/topol|Topological/i);
   });

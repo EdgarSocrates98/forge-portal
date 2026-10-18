@@ -45,6 +45,14 @@ describe('entityLink', () => {
     });
   });
 
+  it('maps tool nodes to the Execution page ?q= deep link', () => {
+    expect(entityLinkForId('tool:forge-cli')).toEqual({
+      commands: ['/execution'],
+      queryParams: { q: 'forge-cli' },
+      navKey: 'nav.execution',
+    });
+  });
+
   it('returns null for capability nodes — no dedicated surface exists', () => {
     expect(entityLinkForId('capability:agents')).toBeNull();
   });

@@ -28,6 +28,7 @@ sys.path.insert(0, str(REPO / "portal_core"))
 
 import forge_portal as fp
 import registry_ops as ro
+import telemetry
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 BUNDLE = REPO / "dist" / "forge-portal-app" / "browser"
@@ -57,7 +58,18 @@ class E2EAdapter(fp.PortalAdapter):
         self.assets_dir = BUNDLE if BUNDLE.is_dir() else None
         self.applied: list[dict] = []
         self.task_log: list[dict] = []
-        self.ops = fp.default_operations(self) + ro.registry_operations() + [
+        # forge/PortalEvent/1 — the adapter opts into telemetry: the
+        # server reads `event_sink` once and every request then records
+        # operation.start/end + request.rejected on its own. Domain
+        # events below emit ONLY what the handler really did.
+        self.recorder = telemetry.EventRecorder()
+        self.event_sink = self.recorder.emit
+        self.ops = (
+            fp.default_operations(self)
+            + ro.registry_operations()
+            + telemetry.operations(self.recorder, self)
+            + [telemetry.task_events_op(self.recorder, lambda: self.task_log)]
+            + [
             fp.Operation("POST", "/installation/plan", self._plan, mutating=True),
             fp.Operation(
                 "POST",
@@ -87,9 +99,7 @@ class E2EAdapter(fp.PortalAdapter):
             fp.Operation(
                 "POST",
                 "/mcp/verify",
-                lambda ctx: {"status": "healthy", "checks": [
-                    {"id": "mcp-handshake", "status": "PASS",
-                     "detail": "initialize + tools/list ok"}]},
+                self._mcp_verify,
                 mutating=True,
                 confirm="verify",
             ),
@@ -107,7 +117,8 @@ class E2EAdapter(fp.PortalAdapter):
                 confirm=None,
                 needs_plan_token=True,
             ),
-        ]
+            ]
+        )
 
     # descriptor/navigation the shell needs to render the nav
     def descriptor(self) -> dict:
@@ -285,6 +296,12 @@ class E2EAdapter(fp.PortalAdapter):
         if not ctx.handler.server.check_plan(ctx.body["plan_token"], plan):
             raise fp.PortalError("PORTAL-PLAN-STALE", "plan token invalid", http=409)
         self.applied.append(plan)
+        ctx.emit(
+            "installation.applied",
+            source=f"forge:{self.forge_id}",
+            status="completed",
+            metadata={"operation": "install", "profile": plan.get("profile")},
+        )
         return {
             "schema": "forge/InstallReceipt/v1",
             "forge_id": self.forge_id,
@@ -319,6 +336,12 @@ class E2EAdapter(fp.PortalAdapter):
         if not ctx.handler.server.check_plan(body["plan_token"], plan):
             raise fp.PortalError("PORTAL-PLAN-STALE", "plan token invalid", http=409)
         self.applied.append(plan)
+        ctx.emit(
+            "installation.applied",
+            source=f"forge:{self.forge_id}",
+            status="completed",
+            metadata={"operation": "install-auto", "forge": plan.get("forge")},
+        )
         return {
             "schema": "forge/InstallReceipt/v1",
             "forge_id": self.forge_id,
@@ -337,6 +360,12 @@ class E2EAdapter(fp.PortalAdapter):
             raise fp.PortalError("PORTAL-MISSING-FIELD", "intent required")
         plan = {"verb": "status", "label": "installation status",
                 "intent": intent, "args": {}}
+        ctx.emit(
+            "task.planned",
+            source=f"forge:{self.forge_id}",
+            status="planned",
+            metadata={"verb": plan["verb"], "intent": intent},
+        )
         return {"plan": plan,
                 "plan_token": ctx.handler.server.sign_plan(plan),
                 "status": "planned"}
@@ -346,16 +375,52 @@ class E2EAdapter(fp.PortalAdapter):
         if not ctx.handler.server.check_plan(ctx.body["plan_token"], plan):
             raise fp.PortalError("PORTAL-PLAN-STALE", "plan token invalid",
                                  http=409)
+        started = fp._utc_now()
+        ctx.emit(
+            "task.started",
+            source=f"forge:{self.forge_id}",
+            target="operation:task-1",
+            metadata={"verb": plan.get("verb"), "task_id": "task-1"},
+        )
         record = {
             "id": "task-1", "verb": plan.get("verb", "status"),
             "label": plan.get("label", "status"), "stage": "completed",
-            "started_at": "2026-10-11T00:00:00Z",
-            "finished_at": "2026-10-11T00:00:01Z", "exit_code": 0,
+            # real record-time timestamps — never fabricated history
+            "started_at": started,
+            "finished_at": fp._utc_now(), "exit_code": 0,
+            # this request's real correlation id — /tasks/{id}/events
+            # links the execute-request span to the task record
+            "correlation_id": ctx.correlation_id,
             "receipt": self.installation_status(),
         }
         self.task_log.append(record)
+        ctx.emit(
+            "task.finished",
+            source=f"forge:{self.forge_id}",
+            target="operation:task-1",
+            status="completed",
+            metadata={"task_id": "task-1", "exit_code": 0},
+        )
+        ctx.emit(
+            "receipt.issued",
+            source=f"forge:{self.forge_id}",
+            target="operation:task-1",
+            metadata={"task_id": "task-1", "schema": "forge/InstallReceipt/v1"},
+        )
         return {"status": "completed", "task": record,
                 "actions": [{"kind": "task", "path": "status", "status": "completed"}]}
+
+    def _mcp_verify(self, ctx: fp.RequestContext) -> dict:
+        checks = [{"id": "mcp-handshake", "status": "PASS",
+                   "detail": "initialize + tools/list ok"}]
+        ctx.emit(
+            "mcp.verified",
+            source=f"forge:{self.forge_id}",
+            target="mcp:e2e-forge-mcp",
+            status="healthy",
+            metadata={"server_id": "e2e-forge-mcp", "checks": len(checks)},
+        )
+        return {"status": "healthy", "checks": checks}
 
 
 # ---------------------------------------------------------------------------
@@ -420,7 +485,8 @@ def test_global_stylesheet_applies(page, portal):
 def test_all_routes_render(page, portal):
     routes = ["/install", "/config", "/forges", "/forges/self", "/federation",
               "/profiles", "/hosts", "/mcp", "/skills",
-              "/agents", "/tasks", "/graph", "/settings"]
+              "/agents", "/tasks", "/graph", "/observe", "/execution",
+              "/settings"]
     _open(page, portal)
     for r in routes:
         page.goto(f"http://127.0.0.1:{portal.port}{r}"
@@ -567,6 +633,101 @@ def test_tasks_plan_card(page, portal):
         _shot(page, "06-task-plan")
         # legible plan card — not raw JSON in the viewport
         assert page.locator(".plan-card, dl").count() > 0
+
+
+def test_execution_timeline_replay_inspector(page, portal):
+    """Cycle 3 — real forge/PortalEvent/1 stream → waterfall, replay,
+    inspector. Events are produced by REAL /tasks/plan + /tasks/execute
+    calls against this same server (operation.start/end come free from
+    the dispatch layer); the page renders only what was recorded."""
+    # -- produce a real execution through the real endpoints ----------
+    s, planned = _req(portal, "POST", "/tasks/plan",
+                      body={"intent": "check the installation status"})
+    assert s == 200, planned
+    s, done = _req(portal, "POST", "/tasks/execute",
+                   body={"plan": planned["data"]["plan"],
+                         "plan_token": planned["data"]["plan_token"]})
+    assert s == 200, done
+    execute_cid = done["data"]["task"]["correlation_id"]
+
+    s, env = _req(portal, "GET", "/events")
+    assert s == 200, env
+    report = env["data"]
+    assert report["count"] > 0
+    types = {e["event_type"] for e in report["events"]}
+    # recorded, not fabricated: dispatch events + adapter domain events
+    assert {"operation.start", "operation.end",
+            "task.planned", "task.started", "task.finished",
+            "receipt.issued"} <= types
+    # every recorded event carries the contract schema + real timestamp
+    assert all(e["schema"] == "forge/PortalEvent/1" for e in report["events"])
+    assert all(e["timestamp"] for e in report["events"])
+
+    page.goto(f"http://127.0.0.1:{portal.port}/execution"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+
+    # -- summary + waterfall over the recorded window ------------------
+    assert page.locator('[data-section="summary"]').count() == 1
+    assert page.locator('[data-section="local-only"]').count() == 1
+    rows = page.locator(".tl__row")
+    # plan + execute requests mint distinct correlation ids (plus any
+    # earlier traffic on this shared server)
+    assert rows.count() >= 2
+    _shot(page, "08-execution-timeline")
+
+    # -- ?cid= deep link selects the execute-request group --------------
+    page.goto(f"http://127.0.0.1:{portal.port}/execution"
+              f"?cid={execute_cid}&forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    sel = page.locator(f'.tl__row[data-execution="{execute_cid}"]')
+    assert sel.count() == 1
+    assert sel.get_attribute("data-selected") is not None
+
+    # -- replay walks the recorded order; step advances the marker ------
+    steps = page.locator(".rp__step")
+    assert steps.count() >= 3  # operation.start → domain events → operation.end
+    page.locator('[data-action="step-next"]').click()
+    page.wait_for_timeout(200)
+    assert page.locator('.rp__step[data-current]').count() == 1
+    _shot(page, "09-execution-replay")
+
+    # -- inspector shows the recorded event verbatim --------------------
+    steps.first.click()
+    page.wait_for_timeout(300)
+    insp = page.locator('[data-section="inspector"]')
+    assert insp.count() == 1
+    text = insp.inner_text()
+    assert "operation.start" in text and execute_cid in text
+    _shot(page, "10-execution-inspector")
+
+    # -- free-text filter narrows the table to real matches only --------
+    page.locator('[data-filter="search"]').fill("receipt.issued")
+    page.wait_for_timeout(300)
+    body_rows = page.locator('[data-section="events"] tbody tr')
+    assert body_rows.count() >= 1
+    assert "receipt.issued" in body_rows.first.inner_text()
+
+
+def test_execution_unlinked_and_honest_gaps(page, portal):
+    """Events without a correlation id collect under 'unlinked'; events
+    without timestamps are never placed on the waterfall — the page
+    states the gap instead of drawing invented history."""
+    page.goto(f"http://127.0.0.1:{portal.port}/execution"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    _s, env = _req(portal, "GET", "/events")
+    uncorrelated = [
+        e for e in env["data"]["events"] if not e.get("correlation_id")
+    ]
+    # every recorded event has a timestamp in this stream — the honest
+    # assertion is on correlation grouping: an 'unlinked' row exists
+    # iff the buffer really holds uncorrelated events.
+    unlinked = page.locator('.tl__row[data-execution="unlinked"]')
+    assert unlinked.count() == (1 if uncorrelated else 0)
 
 
 def test_mobile_viewport(page, portal):
