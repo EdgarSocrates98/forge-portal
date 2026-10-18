@@ -35,7 +35,11 @@ import { RegistryOpsPanel } from './registry-ops-panel';
     RegistryOpsPanel,
   ],
   template: `
-    <ui-page-header [title]="'explorer.title' | t" [subtitle]="'explorer.subtitle' | t">
+    <ui-page-header
+      [title]="'explorer.title' | t"
+      [subtitle]="'explorer.subtitle' | t"
+      hintId="forge"
+    >
       <button class="btn" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}

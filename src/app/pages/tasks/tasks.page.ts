@@ -69,7 +69,7 @@ interface PendingPlan {
     UiSkeleton,
   ],
   template: `
-    <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t">
+    <ui-page-header [title]="'tasks.title' | t" [subtitle]="'tasks.subtitle' | t" hintId="diagnose">
       <button class="btn" [disabled]="busy()" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}

@@ -7,6 +7,7 @@ import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PREFS_KEY } from '../../core/prefs/prefs.store';
 import { AgentDescriptor, BootstrapPayload, SkillDescriptor } from '../../core/api/api.models';
 import { UNDECLARED } from './agents.data';
 
@@ -77,6 +78,11 @@ function setup(apiOverrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
     skills: vi.fn(() => of(SKILLS)),
     ...apiOverrides,
   };
+  try {
+    localStorage.removeItem(PREFS_KEY);
+  } catch {
+    // jsdom without storage
+  }
   TestBed.configureTestingModule({
     imports: [AgentsPage],
     providers: [provideRouter([]), { provide: PortalApi, useValue: api }],

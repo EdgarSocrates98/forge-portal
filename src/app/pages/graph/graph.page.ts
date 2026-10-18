@@ -142,7 +142,7 @@ const storage = (): Storage | null => {
     UiFilterBar,
   ],
   template: `
-    <ui-page-header [title]="'graph.title' | t" [subtitle]="'graph.subtitle' | t">
+    <ui-page-header [title]="'graph.title' | t" [subtitle]="'graph.subtitle' | t" hintId="graph">
       <button class="btn" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}

@@ -484,7 +484,7 @@ def test_global_stylesheet_applies(page, portal):
 
 def test_all_routes_render(page, portal):
     routes = ["/install", "/config", "/forges", "/forges/self", "/federation",
-              "/profiles", "/hosts", "/mcp", "/skills",
+              "/profiles", "/hosts", "/mcp", "/skills", "/guide",
               "/agents", "/tasks", "/graph", "/observe", "/execution",
               "/settings"]
     _open(page, portal)
@@ -515,6 +515,59 @@ def test_language_toggle(page, portal):
     assert page.locator("input[name='locale'][value='en']").is_checked(), \
         "clicking the 'English' option did not switch locale"
     _shot(page, "02-language-toggle")
+
+
+def test_cycle5_guide_and_hints(page, portal):
+    """Cycle 5 §8.1/§8.2 — guide page, dismissible hints, persisted prefs."""
+    url = f"http://127.0.0.1:{portal.port}"
+
+    # the guide page renders every concept section with real links
+    _open(page, portal)
+    page.goto(f"{url}/guide?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(300)
+    sections = page.locator(".gsec")
+    assert sections.count() == 9, f"expected 9 guide sections, got {sections.count()}"
+    for anchor in ("start", "forge", "agent", "skill", "mcp",
+                   "graph", "install", "diagnose", "evidence"):
+        assert page.locator(f".gsec#{anchor}").count() == 1
+    _shot(page, "24-guide")
+
+    # a contextual hint on the dashboard dismisses and stays dismissed
+    page.goto(f"{url}/dashboard?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    hint = page.locator("[data-hint='start']")
+    assert hint.count() == 1, "dashboard contextual hint not rendered"
+    hint.locator("button.hint__x").click()
+    page.wait_for_timeout(200)
+    assert page.locator("[data-hint='start']").count() == 0
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+    assert page.locator("[data-hint='start']").count() == 0, \
+        "dismissed hint reappeared after reload"
+
+    # density + motion persist as data-* on <html> (settings → reload)
+    page.goto(f"{url}/settings?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(300)
+    page.locator("label.opt:has(input[name='density'][value='compact'])").click()
+    page.locator("label.opt:has(input[name='motion'][value='reduced'])").click()
+    page.wait_for_timeout(200)
+    assert page.evaluate("document.documentElement.dataset.density") == "compact"
+    assert page.evaluate("document.documentElement.dataset.motion") == "reduced"
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(300)
+    assert page.evaluate("document.documentElement.dataset.density") == "compact", \
+        "density preference not persisted"
+    assert page.evaluate("document.documentElement.dataset.motion") == "reduced", \
+        "motion preference not persisted"
+    # restore defaults so later tests/screenshots stay canonical
+    page.locator("label.opt:has(input[name='density'][value='comfortable'])").click()
+    page.locator("label.opt:has(input[name='motion'][value='system'])").click()
+    _shot(page, "25-settings-prefs")
 
 
 def test_install_flow_plan_apply(page, portal):

@@ -1037,4 +1037,112 @@ export const PT_BR: Record<string, string> = {
     'Este registro não tem correlation id — eventos registrados não podem ser vinculados.',
   'tasks.replay.unavailable':
     'O endpoint /metrics não respondeu — eventos registrados não verificados.',
+
+  // ── Cycle 5: experiência e personalização ──────────────────────────
+  'nav.guide': 'Guia',
+  'dashboard.lastArea': 'Última área:',
+
+  // guia (§8.1) — página /guide
+  'guide.title': 'Guia do portal',
+  'guide.subtitle': 'Conceitos do ecossistema e por onde começar — sempre ligado às páginas reais.',
+  'guide.intro':
+    'Este guia explica o vocabulário do ecossistema e aponta a página real onde cada conceito vira ação. Nada aqui é um tutorial obrigatório — leia o que precisar, quando precisar.',
+  'guide.toc': 'Seções do guia',
+  'guide.start.title': 'Por onde começar',
+  'guide.start.body':
+    'O portal é uma camada de leitura sobre as Forjas instaladas — quase tudo aqui é observado, não inventado. Comece pelo Painel para ver o estado do ecossistema: cada card informa de qual endpoint veio a informação e quando ela foi atualizada.',
+  'guide.forge.title': 'O que é uma Forja',
+  'guide.forge.body':
+    'Uma Forja é um produto independente do ecossistema (spark-forge-aws, api-forge, platform-forge…). Em Forjas você vê quais estão instaladas, o estado reportado por cada uma e abre o detalhe correspondente.',
+  'guide.agent.title': 'O que são agents',
+  'guide.agent.body':
+    'Agents são perfis especializados declarados por cada Forja — coordenadores e executores com domínios e skills declarados. A página Agents lista o catálogo real; Match responde “qual agent cobre X”.',
+  'guide.skill.title': 'O que são skills',
+  'guide.skill.body':
+    'Skills são capacidades reutilizáveis que as Forjas publicam para agents e hosts. O catálogo mostra domínio, hosts e estado declarado — e sinaliza colisões de nome quando existem.',
+  'guide.mcp.title': 'O que é MCP',
+  'guide.mcp.body':
+    'Model Context Protocol (MCP) é o contrato que expõe as tools de uma Forja aos hosts de IA. A página MCP mostra os servidores registrados e o estado real do handshake — verificar executa um handshake de verdade.',
+  'guide.graph.title': 'Explorar grafos',
+  'guide.graph.body':
+    'O Graph Studio desenha entidades e relações extraídas dos descritores reais. Use busca, filtros e agrupamentos; selecione nós e arestas para ver evidências; a análise de impacto mostra o alcance multi-salto com a cobertura declarada dos dados.',
+  'guide.install.title': 'Instalar componentes',
+  'guide.install.body':
+    'Instalação altera o sistema de arquivos — por isso todo fluxo é planejar → confirmar → executar, com plano assinado e receipt. Perfis definem conjuntos de componentes; Hosts mostra o que a Forja detectou nesta máquina.',
+  'guide.diagnose.title': 'Diagnosticar problemas',
+  'guide.diagnose.body':
+    'Quando algo falha, comece pelo Painel: os alertas derivam de sinais reais e apontam a página que resolve. Tarefas lista execuções com estágio e recusa; Observe mostra os eventos registrados; erros trazem código, explicação e próxima ação.',
+  'guide.evidence.title': 'Interpretar evidências',
+  'guide.evidence.body':
+    'Evidência é o que separa fato de suposição: receipts, correlation ids, timestamps e estados declarados vêm do produtor. Execução reproduz os eventos registrados — lacunas aparecem como lacunas, nunca como dados simulados.',
+
+  // dicas contextuais (§8.1) — uma linha por página, dispensável
+  'hint.more': 'Saiba mais',
+  'hint.dismiss': 'Dispensar dica',
+  'hint.start':
+    'Painel operacional: cada seção indica a fonte real dos dados e quando foi atualizada.',
+  'hint.forge':
+    'Uma Forja é um produto do ecossistema — aqui você vê as instaladas e o estado de cada uma.',
+  'hint.agent':
+    'Agents são perfis especializados declarados pelas Forjas — com domínios, skills e hosts declarados.',
+  'hint.skill':
+    'Skills são capacidades reutilizáveis publicadas pelas Forjas — o catálogo mostra origem e estado reais.',
+  'hint.mcp':
+    'MCP é o protocolo que liga as Forjas aos hosts de IA — o estado do handshake aqui é verificado de verdade.',
+  'hint.graph':
+    'O grafo mostra entidades e relações observadas — selecione um nó para ver origem, vizinhos e evidências.',
+  'hint.install':
+    'Instalação segue o fluxo planejar → confirmar → executar — nada muda sem o seu plano confirmado.',
+  'hint.diagnose':
+    'Tarefas registradas mostram estágio, saída e recusas — selecione uma para ver timeline e evidências.',
+  'hint.evidence':
+    'Telemetria real: cada evento traz timestamp e correlation id do produtor — lacunas aparecem como lacunas.',
+
+  // preferências (§8.2)
+  'settings.density': 'Densidade visual',
+  'settings.density.comfortable': 'Confortável',
+  'settings.density.compact': 'Compacta',
+  'settings.motion': 'Animações',
+  'settings.motion.system': 'Sistema',
+  'settings.motion.full': 'Todas',
+  'settings.motion.reduced': 'Reduzidas',
+  'settings.hints': 'Dicas de contexto',
+  'settings.hints.hint': 'As dicas dispensadas voltam a aparecer quando você redefinir.',
+  'settings.hints.reset': 'Mostrar dicas novamente',
+  'settings.privacy':
+    'Idioma, tema, densidade, animações, menu recolhido, última área e filtros ficam salvos apenas neste navegador — nada sensível é armazenado.',
+
+  // diagnóstico acionável (§8.4) — explicação por código de recusa real
+  'err.explain.unreachable': 'O servidor não respondeu. Abra o portal pelo CLI e tente novamente.',
+  'err.explain.session':
+    'A sessão local expirou ou é inválida — abra o portal novamente pelo CLI para receber uma nova sessão.',
+  'err.explain.timeout':
+    'A operação excedeu o tempo limite do servidor — veja em Tarefas se ela foi registrada e qual foi o estágio final.',
+  'err.explain.rateLimited':
+    'Muitas ações de escrita em sequência — aguarde alguns segundos e tente de novo.',
+  'err.explain.payload': 'O corpo da requisição excedeu o limite de 1 MiB do servidor.',
+  'err.explain.cli':
+    'O CLI da Forja não está disponível no PATH — a página de Instalação mostra o estado e os próximos passos.',
+  'err.explain.unsupported':
+    'Esta Forja não expõe essa capacidade — o painel lista o que ela declara suportar.',
+  'err.explain.hostAbsent':
+    'O host pedido não foi detectado nesta máquina — Hosts mostra o que foi encontrado.',
+  'err.explain.forge':
+    'A operação falhou na Forja alvo — a federação mostra o estado reportado por cada uma.',
+  'err.explain.notFound':
+    'O recurso pedido não existe neste portal — volte ao painel e navegue pelo menu.',
+  'err.explain.internal':
+    'Erro interno do servidor — Observe mostra os eventos registrados em torno da falha.',
+  'err.explain.confirm':
+    'A ação exige confirmação explícita — refaça o fluxo: planejar → confirmar → executar.',
+  'err.explain.plan':
+    'O plano expirou ou não corresponde à ação pedida — gere um novo plano antes de executar.',
+  'err.explain.secret':
+    'Falta uma variável ou segredo de ambiente — a Central de configuração mostra o que está faltando.',
+  'err.explain.forbidden': 'A sessão atual não permite essa operação.',
+  'err.explain.unavailable': 'O servidor recusou a operação agora — tente novamente em instantes.',
+  'err.explain.request':
+    'A requisição foi recusada antes de chegar à operação — formato inválido ou origem não permitida.',
+  'err.go.dashboard': 'Ir para o painel',
+  'err.go.observe': 'Ir para Observe',
 };

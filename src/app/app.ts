@@ -2,6 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PortalStore } from './core/portal/portal.store';
+import { PrefsStore } from './core/prefs/prefs.store';
 import { I18nService } from './core/i18n/i18n.service';
 import { TPipe } from './core/i18n/i18n.pipe';
 import { ThemeStore } from './core/theme/theme.store';
@@ -25,6 +26,7 @@ const NAV: NavEntry[] = [
     label: 'nav.section.overview',
     items: [
       { route: '/dashboard', label: 'nav.dashboard', icon: 'dashboard' },
+      { route: '/guide', label: 'nav.guide', icon: 'guide' },
       { route: '/federation', label: 'nav.federation', icon: 'network', capability: 'federation' },
     ],
   },
@@ -142,7 +144,7 @@ const NAV: NavEntry[] = [
               [title]="store.status()"
               aria-hidden="true"
             ></span>
-            <span class="topbar__workspace">
+            <span class="topbar__workspace" [attr.title]="store.workspace()?.root ?? null">
               <ui-icon name="folder" [size]="14" />
               {{ store.workspace()?.name ?? ('dashboard.noWorkspace' | t) }}
             </span>
@@ -206,10 +208,13 @@ export class App {
   readonly store = inject(PortalStore);
   readonly i18n = inject(I18nService);
   private readonly theme = inject(ThemeStore);
+  private readonly prefs = inject(PrefsStore);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly collapsed = signal(false);
+  /** Sidebar collapse persists via PrefsStore — the last layout the user
+   *  chose is the layout they return to (§8.2/§8.3). */
+  readonly collapsed = signal(this.prefs.navCollapsed());
   readonly nav = NAV;
 
   /** First navigation keeps default focus (skip-link still leads); every
@@ -248,6 +253,9 @@ export class App {
     void this.store.bootstrap();
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
       if (!(e instanceof NavigationEnd)) return;
+      // last visited internal URL → "voltar à última área" on the
+      // dashboard (§8.3). Internal-only guard lives in PrefsStore.
+      this.prefs.recordRoute(e.urlAfterRedirects);
       if (!this.navigated) {
         this.navigated = true;
         return;
@@ -265,7 +273,9 @@ export class App {
   }
 
   toggleCollapsed(): void {
-    this.collapsed.set(!this.collapsed());
+    const next = !this.collapsed();
+    this.collapsed.set(next);
+    this.prefs.setNavCollapsed(next);
   }
 
   /** `[` toggles the sidebar — ignored while typing or with modifiers. */

@@ -1027,6 +1027,114 @@ export const EN: Record<string, string> = {
     'This task record carries no correlation id — recorded events cannot be linked.',
   'tasks.replay.unavailable':
     'The /metrics endpoint did not answer — recorded events are unverified.',
+
+  // ── Cycle 5: experience & personalization ──────────────────────────
+  'nav.guide': 'Guide',
+  'dashboard.lastArea': 'Last area:',
+
+  // guide (§8.1) — /guide page
+  'guide.title': 'Portal guide',
+  'guide.subtitle': 'Ecosystem concepts and where to start — always linked to the real pages.',
+  'guide.intro':
+    'This guide explains the ecosystem vocabulary and points to the real page where each concept becomes action. Nothing here is a mandatory tutorial — read what you need, when you need it.',
+  'guide.toc': 'Guide sections',
+  'guide.start.title': 'Where to start',
+  'guide.start.body':
+    'The portal is a read layer over the installed Forges — almost everything here is observed, not invented. Start at the Dashboard to see the ecosystem state: every card states which endpoint the data came from and when it was last updated.',
+  'guide.forge.title': 'What is a Forge',
+  'guide.forge.body':
+    'A Forge is an independent ecosystem product (spark-forge-aws, api-forge, platform-forge…). Under Forges you see which are installed, the state each one reports, and open the matching detail.',
+  'guide.agent.title': 'What agents are',
+  'guide.agent.body':
+    'Agents are specialized profiles declared by each Forge — coordinators and executors with declared domains and skills. The Agents page lists the real catalog; Match answers “which agent covers X”.',
+  'guide.skill.title': 'What skills are',
+  'guide.skill.body':
+    'Skills are reusable capabilities Forges publish for agents and hosts. The catalog shows declared domain, hosts and state — and flags name collisions when they exist.',
+  'guide.mcp.title': 'What MCP is',
+  'guide.mcp.body':
+    'Model Context Protocol (MCP) is the contract that exposes a Forge’s tools to AI hosts. The MCP page shows the registered servers and the real handshake state — verifying performs an actual handshake.',
+  'guide.graph.title': 'Exploring graphs',
+  'guide.graph.body':
+    'Graph Studio draws entities and relations extracted from the real descriptors. Use search, filters and groupings; select nodes and edges to see evidence; impact analysis shows multi-hop reach with the declared data coverage.',
+  'guide.install.title': 'Installing components',
+  'guide.install.body':
+    'Installation changes the file system — so every flow is plan → confirm → execute, with a signed plan and a receipt. Profiles define component sets; Hosts shows what the Forge detected on this machine.',
+  'guide.diagnose.title': 'Diagnosing problems',
+  'guide.diagnose.body':
+    'When something fails, start at the Dashboard: alerts derive from real signals and point to the page that resolves them. Tasks lists executions with stage and refusal; Observe shows the recorded events; errors carry code, explanation and next action.',
+  'guide.evidence.title': 'Reading evidence',
+  'guide.evidence.body':
+    'Evidence is what separates fact from assumption: receipts, correlation ids, timestamps and declared states come from the producer. Execution replays the recorded events — gaps render as gaps, never as simulated data.',
+
+  // contextual hints (§8.1) — one line per page, dismissible
+  'hint.more': 'Learn more',
+  'hint.dismiss': 'Dismiss hint',
+  'hint.start':
+    'Operational dashboard: each section states the real data source and when it was last updated.',
+  'hint.forge':
+    'A Forge is an ecosystem product — here you see the installed ones and each one’s state.',
+  'hint.agent':
+    'Agents are specialized profiles declared by the Forges — with declared domains, skills and hosts.',
+  'hint.skill':
+    'Skills are reusable capabilities published by the Forges — the catalog shows real origin and state.',
+  'hint.mcp':
+    'MCP is the protocol connecting Forges to AI hosts — the handshake state here is really verified.',
+  'hint.graph':
+    'The graph shows observed entities and relations — select a node to see origin, neighbors and evidence.',
+  'hint.install':
+    'Installation follows the plan → confirm → execute flow — nothing changes without your confirmed plan.',
+  'hint.diagnose':
+    'Recorded tasks show stage, exit code and refusals — select one to see its timeline and evidence.',
+  'hint.evidence':
+    'Real telemetry: every event carries the producer’s timestamp and correlation id — gaps render as gaps.',
+
+  // preferences (§8.2)
+  'settings.density': 'Visual density',
+  'settings.density.comfortable': 'Comfortable',
+  'settings.density.compact': 'Compact',
+  'settings.motion': 'Animations',
+  'settings.motion.system': 'System',
+  'settings.motion.full': 'All',
+  'settings.motion.reduced': 'Reduced',
+  'settings.hints': 'Contextual hints',
+  'settings.hints.hint': 'Dismissed hints appear again when you reset them.',
+  'settings.hints.reset': 'Show hints again',
+  'settings.privacy':
+    'Language, theme, density, animations, collapsed menu, last area and filters are stored only in this browser — nothing sensitive is saved.',
+
+  // actionable diagnostics (§8.4) — explanation per real refusal code
+  'err.explain.unreachable':
+    'The server did not respond. Open the portal from the CLI and try again.',
+  'err.explain.session':
+    'The local session expired or is invalid — reopen the portal from the CLI to get a new session.',
+  'err.explain.timeout':
+    'The operation exceeded the server timeout — check Tasks to see whether it was recorded and its final stage.',
+  'err.explain.rateLimited': 'Too many write actions in a row — wait a few seconds and try again.',
+  'err.explain.payload': 'The request body exceeded the server’s 1 MiB limit.',
+  'err.explain.cli':
+    'The Forge CLI is not available on PATH — the Installation page shows state and next steps.',
+  'err.explain.unsupported':
+    'This Forge does not expose that capability — the dashboard lists what it declares as supported.',
+  'err.explain.hostAbsent':
+    'The requested host was not detected on this machine — Hosts shows what was found.',
+  'err.explain.forge':
+    'The operation failed on the target Forge — federation shows the state each one reports.',
+  'err.explain.notFound':
+    'The requested resource does not exist on this portal — go back to the dashboard and use the menu.',
+  'err.explain.internal':
+    'Internal server error — Observe shows the events recorded around the failure.',
+  'err.explain.confirm':
+    'The action requires explicit confirmation — redo the flow: plan → confirm → execute.',
+  'err.explain.plan':
+    'The plan expired or does not match the requested action — generate a new plan before executing.',
+  'err.explain.secret':
+    'An environment variable or secret is missing — the Config center shows what is missing.',
+  'err.explain.forbidden': 'The current session does not allow this operation.',
+  'err.explain.unavailable': 'The server refused the operation right now — try again shortly.',
+  'err.explain.request':
+    'The request was refused before reaching the operation — invalid format or disallowed origin.',
+  'err.go.dashboard': 'Go to dashboard',
+  'err.go.observe': 'Go to Observe',
 };
 
 // compile-time coverage: every pt-BR key must exist in EN

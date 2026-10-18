@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ObservePage } from './observe.page';
 import { PortalApi } from '../../core/api/api.client';
@@ -67,7 +68,7 @@ describe('ObservePage', () => {
     const api = fakeApi(overrides);
     await TestBed.configureTestingModule({
       imports: [ObservePage],
-      providers: [{ provide: PortalApi, useValue: api }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(ObservePage);

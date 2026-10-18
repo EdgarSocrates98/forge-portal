@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { PortalStore } from '../../core/portal/portal.store';
 import { I18nService, LocalePreference } from '../../core/i18n/i18n.service';
 import { ThemeStore, Scheme } from '../../core/theme/theme.store';
+import { Density, MotionPref, PrefsStore } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { UiIcon } from '../../shared/icon';
@@ -49,6 +50,56 @@ import { UiIcon } from '../../shared/icon';
         }
       </div>
     </section>
+
+    <section class="card">
+      <h2>{{ 'settings.density' | t }}</h2>
+      <div class="opts" role="radiogroup" [attr.aria-label]="'settings.density' | t">
+        @for (opt of densityOpts; track opt.id) {
+          <label class="opt" [attr.data-active]="prefs.density() === opt.id || null">
+            <input
+              type="radio"
+              name="density"
+              [value]="opt.id"
+              [checked]="prefs.density() === opt.id"
+              (change)="setDensity(opt.id)"
+            />
+            <span>{{ opt.label | t }}</span>
+          </label>
+        }
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>{{ 'settings.motion' | t }}</h2>
+      <div class="opts" role="radiogroup" [attr.aria-label]="'settings.motion' | t">
+        @for (opt of motionOpts; track opt.id) {
+          <label class="opt" [attr.data-active]="prefs.motion() === opt.id || null">
+            <input
+              type="radio"
+              name="motion"
+              [value]="opt.id"
+              [checked]="prefs.motion() === opt.id"
+              (change)="setMotion(opt.id)"
+            />
+            <span>{{ opt.label | t }}</span>
+          </label>
+        }
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>{{ 'settings.hints' | t }}</h2>
+      <p class="muted">{{ 'settings.hints.hint' | t }}</p>
+      <button
+        class="btn"
+        [disabled]="prefs.dismissedHints().length === 0"
+        (click)="prefs.resetHints()"
+      >
+        {{ 'settings.hints.reset' | t }}
+      </button>
+    </section>
+
+    <p class="muted privacy">{{ 'settings.privacy' | t }}</p>
 
     <section class="card">
       <h2>{{ 'settings.about' | t }}</h2>
@@ -153,12 +204,21 @@ import { UiIcon } from '../../shared/icon';
       margin: 0;
       font-weight: 500;
     }
+    .muted {
+      color: var(--fg-muted);
+    }
+    .privacy {
+      max-width: 640px;
+      margin: 0 0 var(--space-4);
+      font-size: var(--font-xs);
+    }
   `,
 })
 export class SettingsPage {
   readonly store = inject(PortalStore);
   readonly i18n = inject(I18nService);
   readonly theme = inject(ThemeStore);
+  readonly prefs = inject(PrefsStore);
 
   readonly localeOpts: { id: LocalePreference; label: string }[] = [
     { id: 'automatic', label: 'settings.language.auto' },
@@ -172,12 +232,31 @@ export class SettingsPage {
     { id: 'dark', label: 'settings.theme.dark' },
   ];
 
+  readonly densityOpts: { id: Density; label: string }[] = [
+    { id: 'comfortable', label: 'settings.density.comfortable' },
+    { id: 'compact', label: 'settings.density.compact' },
+  ];
+
+  readonly motionOpts: { id: MotionPref; label: string }[] = [
+    { id: 'system', label: 'settings.motion.system' },
+    { id: 'full', label: 'settings.motion.full' },
+    { id: 'reduced', label: 'settings.motion.reduced' },
+  ];
+
   setLocale(pref: LocalePreference): void {
     void this.i18n.applyPreference(pref);
   }
 
   setScheme(scheme: Scheme): void {
     this.theme.setScheme(scheme);
+  }
+
+  setDensity(d: Density): void {
+    this.prefs.setDensity(d);
+  }
+
+  setMotion(m: MotionPref): void {
+    this.prefs.setMotion(m);
   }
 
   schemeIcon(id: Scheme): string {

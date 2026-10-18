@@ -80,6 +80,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/knowledge/knowledge.page').then((m) => m.KnowledgePage),
   },
   {
+    path: 'guide',
+    loadComponent: () => import('./pages/guide/guide.page').then((m) => m.GuidePage),
+  },
+  {
     path: 'settings',
     loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
   },

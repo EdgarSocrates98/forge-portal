@@ -63,7 +63,7 @@ const STATE_ORDER: Record<McpState, number | null> = {
   standalone: true,
   imports: [RouterLink, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
   template: `
-    <ui-page-header [title]="'mcp.title' | t" [subtitle]="'mcp.subtitle' | t">
+    <ui-page-header [title]="'mcp.title' | t" [subtitle]="'mcp.subtitle' | t" hintId="mcp">
       <button class="btn btn--primary" data-action="verify" [disabled]="busy()" (click)="verify()">
         <ui-icon name="shield-check" [size]="15" />
         {{ 'mcp.verify' | t }}

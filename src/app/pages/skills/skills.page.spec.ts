@@ -5,6 +5,7 @@ import { SkillsPage } from './skills.page';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PREFS_KEY } from '../../core/prefs/prefs.store';
 import { SkillDescriptor } from '../../core/api/api.models';
 
 const SKILLS: SkillDescriptor[] = [
@@ -62,6 +63,11 @@ function setup(apiOverrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
     skills: vi.fn(() => of(SKILLS)),
     ...apiOverrides,
   };
+  try {
+    localStorage.removeItem(PREFS_KEY);
+  } catch {
+    // jsdom without storage
+  }
   TestBed.configureTestingModule({
     imports: [SkillsPage],
     providers: [provideRouter([]), { provide: PortalApi, useValue: api }],

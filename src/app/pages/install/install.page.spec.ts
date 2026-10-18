@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { InstallPage } from './install.page';
 import { PortalApi } from '../../core/api/api.client';
@@ -87,6 +88,7 @@ function setup(apiOverrides: Partial<Record<keyof PortalApi, unknown>> = {}, con
   TestBed.configureTestingModule({
     imports: [InstallPage],
     providers: [
+      provideRouter([]),
       { provide: PortalApi, useValue: api },
       { provide: PortalStore, useValue: store },
       { provide: ConfirmService, useValue: { ask } },

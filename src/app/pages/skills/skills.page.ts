@@ -1,10 +1,11 @@
-import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { SkillDescriptor } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PrefsStore } from '../../core/prefs/prefs.store';
 import { DedupFinding, findDuplicateGroups } from '../../core/catalog/dedup';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -49,7 +50,7 @@ const norm = (s: string): string =>
     UiFilterBar,
   ],
   template: `
-    <ui-page-header [title]="'skills.title' | t" [subtitle]="'skills.subtitle' | t">
+    <ui-page-header [title]="'skills.title' | t" [subtitle]="'skills.subtitle' | t" hintId="skill">
       <button class="btn" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}
@@ -442,6 +443,7 @@ const norm = (s: string): string =>
 export class SkillsPage implements OnInit {
   private readonly api = inject(PortalApi);
   readonly store = inject(PortalStore);
+  private readonly prefs = inject(PrefsStore);
 
   /** Route `?q=` deep-link (withComponentInputBinding) — e.g. from the
    *  agent detail's associated-skills links. */
@@ -496,12 +498,19 @@ export class SkillsPage implements OnInit {
   });
 
   constructor() {
+    // §8.3 — the filter text persists; a `?q=` deep-link wins over the
+    // stored value, and whatever wins is kept for the next visit.
+    effect(() => this.prefs.setFilter('skills', this.query()));
     void this.load();
   }
 
   ngOnInit(): void {
     const seed = this.q();
     if (seed) this.query.set(seed);
+    else {
+      const saved = this.prefs.filterFor('skills');
+      if (saved) this.query.set(saved);
+    }
   }
 
   async load(): Promise<void> {
