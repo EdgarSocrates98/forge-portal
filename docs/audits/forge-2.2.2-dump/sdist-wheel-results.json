@@ -1,0 +1,86 @@
+[
+  {
+    "pkg": "theforge-core",
+    "ver": "0.5.2",
+    "sdist": "theforge_core-0.5.2.tar.gz",
+    "published_wheel": "theforge_core-0.5.2-py3-none-any.whl",
+    "built_wheel": "theforge_core-0.5.2-py3-none-any.whl",
+    "pub_files": 318,
+    "built_files": 318,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "apiforge-af",
+    "ver": "0.1.2",
+    "sdist": "apiforge_af-0.1.2.tar.gz",
+    "published_wheel": "apiforge_af-0.1.2-py3-none-any.whl",
+    "built_wheel": "apiforge_af-0.1.2-py3-none-any.whl",
+    "pub_files": 745,
+    "built_files": 745,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "sparkforge-aws",
+    "ver": "0.5.2",
+    "sdist": "sparkforge_aws-0.5.2.tar.gz",
+    "published_wheel": "sparkforge_aws-0.5.2-py3-none-any.whl",
+    "built_wheel": "sparkforge_aws-0.5.2-py3-none-any.whl",
+    "pub_files": 1043,
+    "built_files": 1043,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "sparkforge-azure",
+    "ver": "0.1.2",
+    "sdist": "sparkforge_azure-0.1.2.tar.gz",
+    "published_wheel": "sparkforge_azure-0.1.2-py3-none-any.whl",
+    "built_wheel": "sparkforge_azure-0.1.2-py3-none-any.whl",
+    "pub_files": 633,
+    "built_files": 633,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "platformforge",
+    "ver": "0.1.2",
+    "sdist": "platformforge-0.1.2.tar.gz",
+    "published_wheel": "platformforge-0.1.2-py3-none-any.whl",
+    "built_wheel": "platformforge-0.1.2-py3-none-any.whl",
+    "pub_files": 668,
+    "built_files": 668,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "forge-doctor-data",
+    "ver": "1.0.2",
+    "sdist": "forge_doctor_data-1.0.2.tar.gz",
+    "published_wheel": "forge_doctor_data-1.0.2-py3-none-any.whl",
+    "built_wheel": "forge_doctor_data-1.0.2-py3-none-any.whl",
+    "pub_files": 443,
+    "built_files": 443,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  },
+  {
+    "pkg": "forge-doctor-api",
+    "ver": "0.2.2",
+    "sdist": "forge_doctor_api-0.2.2.tar.gz",
+    "published_wheel": "forge_doctor_api-0.2.2-py3-none-any.whl",
+    "built_wheel": "forge_doctor_api-0.2.2-py3-none-any.whl",
+    "pub_files": 270,
+    "built_files": 270,
+    "missing_in_built": [],
+    "extra_in_built": [],
+    "parity": true
+  }
+]

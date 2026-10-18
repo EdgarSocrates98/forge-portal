@@ -113,6 +113,19 @@ SECRET_RES: list[tuple[re.Pattern[str], object]] = [
     (re.compile(r"glpat-[A-Za-z0-9_-]{10,}"), "<REDACTED>"),
     (re.compile(r"AKIA[0-9A-Z]{16}"), "<REDACTED>"),
     (re.compile(r"xox[baprs]-[A-Za-z0-9-]{10,}"), "<REDACTED>"),
+    # 2.2.2-F2: provider-prefixed tokens (npm / PyPI / GCP / Google OAuth)
+    (re.compile(r"npm_[A-Za-z0-9]{20,}"), "<REDACTED>"),
+    (re.compile(r"pypi-[A-Za-z0-9_-]{16,}"), "<REDACTED>"),
+    (re.compile(r"AIza[0-9A-Za-z_-]{35}"), "<REDACTED>"),
+    (re.compile(r"ya29\.[A-Za-z0-9_-]{10,}"), "<REDACTED>"),
+    # PEM / SSH private-key blocks (multi-line)
+    (
+        re.compile(
+            r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY(?: BLOCK)?-----"
+            r"[\s\S]*?-----END [A-Z0-9 ]*PRIVATE KEY(?: BLOCK)?-----"
+        ),
+        "<REDACTED>",
+    ),
     (
         re.compile(r"(?i)(Bearer\s+)[A-Za-z0-9._~+/=-]{8,}"),
         lambda m: m.group(1) + "<REDACTED>",
@@ -121,7 +134,8 @@ SECRET_RES: list[tuple[re.Pattern[str], object]] = [
         re.compile(
             r"(?i)((?:password|passwd|secret|api[_-]?key|token|access[_-]?token"
             r"|auth[_-]?token|refresh[_-]?token|session[_-]?token"
-            r"|private[_-]?key)\s*[:=]\s*)[^\s\"',;]{4,}"
+            r"|private[_-]?key|aws_secret_access_key|aws_session_token"
+            r"|client_secret|webhook_secret)\s*[:=]\s*)[^\s\"',;]{4,}"
         ),
         lambda m: m.group(1) + "<REDACTED>",
     ),
