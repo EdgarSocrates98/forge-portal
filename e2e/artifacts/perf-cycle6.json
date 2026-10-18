@@ -1,0 +1,787 @@
+{
+  "meta": {
+    "date": "2026-10-18T04:27:04Z",
+    "tool": "e2e/perf_probe.py",
+    "chromium": "playwright 1.60 bundled",
+    "note": "single-run headless numbers — orders of magnitude, not SLAs"
+  },
+  "routes": {
+    "/dashboard": {
+      "nav": {
+        "fcp_ms": 340,
+        "dom_interactive_ms": 18.8,
+        "dom_content_loaded_ms": 125.9,
+        "load_complete_ms": 315.9,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 4813920,
+        "JSHeapTotalSize": 9437184,
+        "Documents": 3,
+        "Frames": 1,
+        "JSEventListeners": 69,
+        "Nodes": 1168,
+        "LayoutCount": 13,
+        "RecalcStyleCount": 29,
+        "LayoutDuration": 0.274099,
+        "RecalcStyleDuration": 0.024152,
+        "ScriptDuration": 0.086875,
+        "TaskDuration": 0.528976
+      },
+      "delta": {
+        "ScriptDuration_ms": 86.9,
+        "TaskDuration_ms": 529.0,
+        "LayoutDuration_ms": 274.1,
+        "RecalcStyleDuration_ms": 24.2,
+        "LayoutCount": 13,
+        "RecalcStyleCount": 29
+      }
+    },
+    "/install": {
+      "nav": {
+        "fcp_ms": 140,
+        "dom_interactive_ms": 11.3,
+        "dom_content_loaded_ms": 83.7,
+        "load_complete_ms": 93,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 7176928,
+        "JSHeapTotalSize": 12582912,
+        "Documents": 4,
+        "Frames": 1,
+        "JSEventListeners": 132,
+        "Nodes": 2065,
+        "LayoutCount": 25,
+        "RecalcStyleCount": 47,
+        "LayoutDuration": 0.289075,
+        "RecalcStyleDuration": 0.038751,
+        "ScriptDuration": 0.106984,
+        "TaskDuration": 0.660351
+      },
+      "delta": {
+        "ScriptDuration_ms": 20.1,
+        "TaskDuration_ms": 131.2,
+        "LayoutDuration_ms": 15.0,
+        "RecalcStyleDuration_ms": 14.6,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/config": {
+      "nav": {
+        "fcp_ms": 116,
+        "dom_interactive_ms": 11.8,
+        "dom_content_loaded_ms": 81.7,
+        "load_complete_ms": 92.3,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 10825476,
+        "JSHeapTotalSize": 14680064,
+        "Documents": 5,
+        "Frames": 1,
+        "JSEventListeners": 184,
+        "Nodes": 2867,
+        "LayoutCount": 35,
+        "RecalcStyleCount": 64,
+        "LayoutDuration": 0.350719,
+        "RecalcStyleDuration": 0.051369,
+        "ScriptDuration": 0.125409,
+        "TaskDuration": 0.825294
+      },
+      "delta": {
+        "ScriptDuration_ms": 18.4,
+        "TaskDuration_ms": 164.7,
+        "LayoutDuration_ms": 61.6,
+        "RecalcStyleDuration_ms": 12.6,
+        "LayoutCount": 10,
+        "RecalcStyleCount": 17
+      }
+    },
+    "/forges": {
+      "nav": {
+        "fcp_ms": 108,
+        "dom_interactive_ms": 10.2,
+        "dom_content_loaded_ms": 76.4,
+        "load_complete_ms": 84.2,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 12336448,
+        "JSHeapTotalSize": 17825792,
+        "Documents": 6,
+        "Frames": 1,
+        "JSEventListeners": 237,
+        "Nodes": 3525,
+        "LayoutCount": 47,
+        "RecalcStyleCount": 81,
+        "LayoutDuration": 0.36124,
+        "RecalcStyleDuration": 0.063376,
+        "ScriptDuration": 0.144301,
+        "TaskDuration": 0.936336
+      },
+      "delta": {
+        "ScriptDuration_ms": 18.9,
+        "TaskDuration_ms": 110.8,
+        "LayoutDuration_ms": 10.5,
+        "RecalcStyleDuration_ms": 12.0,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 17
+      }
+    },
+    "/forges/self": {
+      "nav": {
+        "fcp_ms": 112,
+        "dom_interactive_ms": 12.4,
+        "dom_content_loaded_ms": 82.4,
+        "load_complete_ms": 92.9,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 14539992,
+        "JSHeapTotalSize": 22544384,
+        "Documents": 7,
+        "Frames": 1,
+        "JSEventListeners": 287,
+        "Nodes": 4178,
+        "LayoutCount": 59,
+        "RecalcStyleCount": 99,
+        "LayoutDuration": 0.371544,
+        "RecalcStyleDuration": 0.076185,
+        "ScriptDuration": 0.169963,
+        "TaskDuration": 1.060547
+      },
+      "delta": {
+        "ScriptDuration_ms": 25.7,
+        "TaskDuration_ms": 124.0,
+        "LayoutDuration_ms": 10.3,
+        "RecalcStyleDuration_ms": 12.8,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/match": {
+      "nav": {
+        "fcp_ms": 116,
+        "dom_interactive_ms": 12.7,
+        "dom_content_loaded_ms": 77.5,
+        "load_complete_ms": 86.7,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 16371856,
+        "JSHeapTotalSize": 25165824,
+        "Documents": 8,
+        "Frames": 1,
+        "JSEventListeners": 332,
+        "Nodes": 4629,
+        "LayoutCount": 72,
+        "RecalcStyleCount": 113,
+        "LayoutDuration": 0.378194,
+        "RecalcStyleDuration": 0.085793,
+        "ScriptDuration": 0.185758,
+        "TaskDuration": 1.155192
+      },
+      "delta": {
+        "ScriptDuration_ms": 15.8,
+        "TaskDuration_ms": 94.4,
+        "LayoutDuration_ms": 6.6,
+        "RecalcStyleDuration_ms": 9.6,
+        "LayoutCount": 13,
+        "RecalcStyleCount": 14
+      }
+    },
+    "/federation": {
+      "nav": {
+        "fcp_ms": 116,
+        "dom_interactive_ms": 12.6,
+        "dom_content_loaded_ms": 85.9,
+        "load_complete_ms": 95.5,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 19987744,
+        "JSHeapTotalSize": 25427968,
+        "Documents": 9,
+        "Frames": 1,
+        "JSEventListeners": 392,
+        "Nodes": 5269,
+        "LayoutCount": 84,
+        "RecalcStyleCount": 129,
+        "LayoutDuration": 0.387533,
+        "RecalcStyleDuration": 0.097174,
+        "ScriptDuration": 0.199859,
+        "TaskDuration": 1.258545
+      },
+      "delta": {
+        "ScriptDuration_ms": 14.1,
+        "TaskDuration_ms": 103.2,
+        "LayoutDuration_ms": 9.3,
+        "RecalcStyleDuration_ms": 11.4,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 16
+      }
+    },
+    "/profiles": {
+      "nav": {
+        "fcp_ms": 104,
+        "dom_interactive_ms": 10.7,
+        "dom_content_loaded_ms": 78.8,
+        "load_complete_ms": 90.3,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 23535652,
+        "JSHeapTotalSize": 29097984,
+        "Documents": 10,
+        "Frames": 1,
+        "JSEventListeners": 434,
+        "Nodes": 5812,
+        "LayoutCount": 101,
+        "RecalcStyleCount": 147,
+        "LayoutDuration": 0.398308,
+        "RecalcStyleDuration": 0.108185,
+        "ScriptDuration": 0.216084,
+        "TaskDuration": 1.358588
+      },
+      "delta": {
+        "ScriptDuration_ms": 16.2,
+        "TaskDuration_ms": 99.8,
+        "LayoutDuration_ms": 10.8,
+        "RecalcStyleDuration_ms": 11.0,
+        "LayoutCount": 17,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/hosts": {
+      "nav": {
+        "fcp_ms": 112,
+        "dom_interactive_ms": 12.2,
+        "dom_content_loaded_ms": 84.7,
+        "load_complete_ms": 94.2,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 22930620,
+        "JSHeapTotalSize": 33554432,
+        "Documents": 11,
+        "Frames": 1,
+        "JSEventListeners": 476,
+        "Nodes": 6633,
+        "LayoutCount": 113,
+        "RecalcStyleCount": 166,
+        "LayoutDuration": 0.406809,
+        "RecalcStyleDuration": 0.122278,
+        "ScriptDuration": 0.235116,
+        "TaskDuration": 1.475257
+      },
+      "delta": {
+        "ScriptDuration_ms": 19.0,
+        "TaskDuration_ms": 116.4,
+        "LayoutDuration_ms": 8.5,
+        "RecalcStyleDuration_ms": 14.1,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 19
+      }
+    },
+    "/mcp": {
+      "nav": {
+        "fcp_ms": 104,
+        "dom_interactive_ms": 11.2,
+        "dom_content_loaded_ms": 80.2,
+        "load_complete_ms": 91,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 26695648,
+        "JSHeapTotalSize": 35651584,
+        "Documents": 12,
+        "Frames": 1,
+        "JSEventListeners": 521,
+        "Nodes": 7273,
+        "LayoutCount": 124,
+        "RecalcStyleCount": 183,
+        "LayoutDuration": 0.41381,
+        "RecalcStyleDuration": 0.134908,
+        "ScriptDuration": 0.252539,
+        "TaskDuration": 1.578798
+      },
+      "delta": {
+        "ScriptDuration_ms": 17.4,
+        "TaskDuration_ms": 103.3,
+        "LayoutDuration_ms": 7.0,
+        "RecalcStyleDuration_ms": 12.6,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 17
+      }
+    },
+    "/skills": {
+      "nav": {
+        "fcp_ms": 108,
+        "dom_interactive_ms": 12.1,
+        "dom_content_loaded_ms": 83.8,
+        "load_complete_ms": 93.3,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 27185596,
+        "JSHeapTotalSize": 41418752,
+        "Documents": 13,
+        "Frames": 1,
+        "JSEventListeners": 566,
+        "Nodes": 7757,
+        "LayoutCount": 136,
+        "RecalcStyleCount": 201,
+        "LayoutDuration": 0.420273,
+        "RecalcStyleDuration": 0.145865,
+        "ScriptDuration": 0.268701,
+        "TaskDuration": 1.681134
+      },
+      "delta": {
+        "ScriptDuration_ms": 16.2,
+        "TaskDuration_ms": 102.2,
+        "LayoutDuration_ms": 6.5,
+        "RecalcStyleDuration_ms": 11.0,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/agents": {
+      "nav": {
+        "fcp_ms": 100,
+        "dom_interactive_ms": 11,
+        "dom_content_loaded_ms": 74.7,
+        "load_complete_ms": 82.6,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 31010528,
+        "JSHeapTotalSize": 42205184,
+        "Documents": 14,
+        "Frames": 1,
+        "JSEventListeners": 616,
+        "Nodes": 8274,
+        "LayoutCount": 153,
+        "RecalcStyleCount": 219,
+        "LayoutDuration": 0.429634,
+        "RecalcStyleDuration": 0.156824,
+        "ScriptDuration": 0.283597,
+        "TaskDuration": 1.782249
+      },
+      "delta": {
+        "ScriptDuration_ms": 14.9,
+        "TaskDuration_ms": 100.8,
+        "LayoutDuration_ms": 9.4,
+        "RecalcStyleDuration_ms": 11.0,
+        "LayoutCount": 17,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/tasks": {
+      "nav": {
+        "fcp_ms": 112,
+        "dom_interactive_ms": 11.9,
+        "dom_content_loaded_ms": 77.1,
+        "load_complete_ms": 86.7,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 31103048,
+        "JSHeapTotalSize": 45613056,
+        "Documents": 15,
+        "Frames": 1,
+        "JSEventListeners": 664,
+        "Nodes": 8765,
+        "LayoutCount": 165,
+        "RecalcStyleCount": 237,
+        "LayoutDuration": 0.43624,
+        "RecalcStyleDuration": 0.16821,
+        "ScriptDuration": 0.298781,
+        "TaskDuration": 1.890729
+      },
+      "delta": {
+        "ScriptDuration_ms": 15.2,
+        "TaskDuration_ms": 108.3,
+        "LayoutDuration_ms": 6.6,
+        "RecalcStyleDuration_ms": 11.4,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/graph": {
+      "nav": {
+        "fcp_ms": 116,
+        "dom_interactive_ms": 13.2,
+        "dom_content_loaded_ms": 73.2,
+        "load_complete_ms": 80.6,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 35654828,
+        "JSHeapTotalSize": 46923776,
+        "Documents": 16,
+        "Frames": 1,
+        "JSEventListeners": 737,
+        "Nodes": 9575,
+        "LayoutCount": 177,
+        "RecalcStyleCount": 255,
+        "LayoutDuration": 0.444556,
+        "RecalcStyleDuration": 0.180454,
+        "ScriptDuration": 0.320407,
+        "TaskDuration": 2.011699
+      },
+      "delta": {
+        "ScriptDuration_ms": 21.6,
+        "TaskDuration_ms": 120.8,
+        "LayoutDuration_ms": 8.3,
+        "RecalcStyleDuration_ms": 12.2,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/observe": {
+      "nav": {
+        "fcp_ms": 128,
+        "dom_interactive_ms": 10.7,
+        "dom_content_loaded_ms": 76.9,
+        "load_complete_ms": 87.5,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 42264816,
+        "JSHeapTotalSize": 51380224,
+        "Documents": 17,
+        "Frames": 1,
+        "JSEventListeners": 779,
+        "Nodes": 24125,
+        "LayoutCount": 189,
+        "RecalcStyleCount": 268,
+        "LayoutDuration": 0.506976,
+        "RecalcStyleDuration": 0.217623,
+        "ScriptDuration": 0.377909,
+        "TaskDuration": 2.291551
+      },
+      "delta": {
+        "ScriptDuration_ms": 57.5,
+        "TaskDuration_ms": 279.7,
+        "LayoutDuration_ms": 62.4,
+        "RecalcStyleDuration_ms": 37.2,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 13
+      }
+    },
+    "/execution": {
+      "nav": {
+        "fcp_ms": 124,
+        "dom_interactive_ms": 18.2,
+        "dom_content_loaded_ms": 90.2,
+        "load_complete_ms": 98.9,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 45961688,
+        "JSHeapTotalSize": 65011712,
+        "Documents": 18,
+        "Frames": 1,
+        "JSEventListeners": 2271,
+        "Nodes": 53250,
+        "LayoutCount": 195,
+        "RecalcStyleCount": 275,
+        "LayoutDuration": 0.625162,
+        "RecalcStyleDuration": 0.292651,
+        "ScriptDuration": 0.504401,
+        "TaskDuration": 2.721529
+      },
+      "delta": {
+        "ScriptDuration_ms": 126.5,
+        "TaskDuration_ms": 429.7,
+        "LayoutDuration_ms": 118.2,
+        "RecalcStyleDuration_ms": 75.0,
+        "LayoutCount": 6,
+        "RecalcStyleCount": 7
+      }
+    },
+    "/lab": {
+      "nav": {
+        "fcp_ms": 136,
+        "dom_interactive_ms": 25,
+        "dom_content_loaded_ms": 99.2,
+        "load_complete_ms": 107.6,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 49753868,
+        "JSHeapTotalSize": 67895296,
+        "Documents": 19,
+        "Frames": 1,
+        "JSEventListeners": 2310,
+        "Nodes": 53664,
+        "LayoutCount": 206,
+        "RecalcStyleCount": 290,
+        "LayoutDuration": 0.630016,
+        "RecalcStyleDuration": 0.302636,
+        "ScriptDuration": 0.51776,
+        "TaskDuration": 2.830889
+      },
+      "delta": {
+        "ScriptDuration_ms": 13.4,
+        "TaskDuration_ms": 109.1,
+        "LayoutDuration_ms": 4.9,
+        "RecalcStyleDuration_ms": 10.0,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 15
+      }
+    },
+    "/versions": {
+      "nav": {
+        "fcp_ms": 112,
+        "dom_interactive_ms": 13.1,
+        "dom_content_loaded_ms": 81.1,
+        "load_complete_ms": 90,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 49965812,
+        "JSHeapTotalSize": 77594624,
+        "Documents": 20,
+        "Frames": 1,
+        "JSEventListeners": 2349,
+        "Nodes": 54078,
+        "LayoutCount": 218,
+        "RecalcStyleCount": 306,
+        "LayoutDuration": 0.635481,
+        "RecalcStyleDuration": 0.313452,
+        "ScriptDuration": 0.529855,
+        "TaskDuration": 2.936949
+      },
+      "delta": {
+        "ScriptDuration_ms": 12.1,
+        "TaskDuration_ms": 105.8,
+        "LayoutDuration_ms": 5.5,
+        "RecalcStyleDuration_ms": 10.8,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 16
+      }
+    },
+    "/knowledge": {
+      "nav": {
+        "fcp_ms": 124,
+        "dom_interactive_ms": 29.7,
+        "dom_content_loaded_ms": 100.3,
+        "load_complete_ms": 108.3,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 54749744,
+        "JSHeapTotalSize": 80216064,
+        "Documents": 21,
+        "Frames": 1,
+        "JSEventListeners": 2413,
+        "Nodes": 54858,
+        "LayoutCount": 230,
+        "RecalcStyleCount": 324,
+        "LayoutDuration": 0.643118,
+        "RecalcStyleDuration": 0.325456,
+        "ScriptDuration": 0.549147,
+        "TaskDuration": 3.063461
+      },
+      "delta": {
+        "ScriptDuration_ms": 19.3,
+        "TaskDuration_ms": 126.3,
+        "LayoutDuration_ms": 7.6,
+        "RecalcStyleDuration_ms": 12.0,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 18
+      }
+    },
+    "/guide": {
+      "nav": {
+        "fcp_ms": 112,
+        "dom_interactive_ms": 11.3,
+        "dom_content_loaded_ms": 87.3,
+        "load_complete_ms": 97.1,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 58718524,
+        "JSHeapTotalSize": 81264640,
+        "Documents": 22,
+        "Frames": 1,
+        "JSEventListeners": 2476,
+        "Nodes": 55551,
+        "LayoutCount": 241,
+        "RecalcStyleCount": 336,
+        "LayoutDuration": 0.650147,
+        "RecalcStyleDuration": 0.336282,
+        "ScriptDuration": 0.569071,
+        "TaskDuration": 3.169648
+      },
+      "delta": {
+        "ScriptDuration_ms": 19.9,
+        "TaskDuration_ms": 106.0,
+        "LayoutDuration_ms": 7.0,
+        "RecalcStyleDuration_ms": 10.8,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 12
+      }
+    },
+    "/settings": {
+      "nav": {
+        "fcp_ms": 124,
+        "dom_interactive_ms": 11.4,
+        "dom_content_loaded_ms": 86.3,
+        "load_complete_ms": 98.5,
+        "transfer_bytes": 830,
+        "encoded_bytes": 530,
+        "decoded_bytes": 530
+      },
+      "cdp": {
+        "JSHeapUsedSize": 62371520,
+        "JSHeapTotalSize": 83099648,
+        "Documents": 23,
+        "Frames": 1,
+        "JSEventListeners": 2526,
+        "Nodes": 56033,
+        "LayoutCount": 252,
+        "RecalcStyleCount": 353,
+        "LayoutDuration": 0.681352,
+        "RecalcStyleDuration": 0.348395,
+        "ScriptDuration": 0.583577,
+        "TaskDuration": 3.29424
+      },
+      "delta": {
+        "ScriptDuration_ms": 14.5,
+        "TaskDuration_ms": 124.4,
+        "LayoutDuration_ms": 31.2,
+        "RecalcStyleDuration_ms": 12.1,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 17
+      }
+    }
+  },
+  "interactions": {
+    "filter-skills": {
+      "route": "/skills",
+      "wall_ms": 400.0,
+      "ScriptDuration_ms": 2.6,
+      "TaskDuration_ms": 40.5,
+      "LayoutDuration_ms": 0.5,
+      "RecalcStyleDuration_ms": 2.1,
+      "LayoutCount": 2,
+      "RecalcStyleCount": 12
+    },
+    "filter-agents": {
+      "route": "/agents",
+      "wall_ms": 377.3,
+      "ScriptDuration_ms": 1.8,
+      "TaskDuration_ms": 22.9,
+      "LayoutDuration_ms": 0.6,
+      "RecalcStyleDuration_ms": 2.1,
+      "LayoutCount": 2,
+      "RecalcStyleCount": 14
+    },
+    "command-palette": {
+      "route": "/dashboard",
+      "wall_ms": 448.2,
+      "ScriptDuration_ms": 19.4,
+      "TaskDuration_ms": 81.7,
+      "LayoutDuration_ms": 6.7,
+      "RecalcStyleDuration_ms": 4.0,
+      "LayoutCount": 12,
+      "RecalcStyleCount": 15
+    },
+    "graph-canvas-toggle": {
+      "route": "/graph",
+      "wall_ms": 1055.9,
+      "ScriptDuration_ms": 353.2,
+      "TaskDuration_ms": 706.2,
+      "LayoutDuration_ms": 2.3,
+      "RecalcStyleDuration_ms": 4.8,
+      "LayoutCount": 5,
+      "RecalcStyleCount": 13
+    },
+    "theme-toggle": {
+      "route": "/dashboard",
+      "wall_ms": 565.3,
+      "ScriptDuration_ms": 1.8,
+      "TaskDuration_ms": 95.7,
+      "LayoutDuration_ms": 0.6,
+      "RecalcStyleDuration_ms": 31.6,
+      "LayoutCount": 3,
+      "RecalcStyleCount": 21
+    }
+  },
+  "telemetry": {
+    "recorder": {
+      "capacity": 500,
+      "emit_total_ms": 9.15,
+      "emit_per_event_us": 18.3,
+      "report_ms": 0.04,
+      "metrics_report_ms": 0.6,
+      "report_bytes": 121018,
+      "metrics_bytes": 100021
+    },
+    "http": {
+      "buffer_events": 500,
+      "events_ms": 35.5,
+      "events_bytes": 86780,
+      "events_limit25_ms": 2.9,
+      "metrics_ms": 9.7,
+      "metrics_bytes": 80747
+    }
+  },
+  "budget": {
+    "initial_files": [
+      "chunk-BelLryvf.js",
+      "chunk-DjkjLihA.js",
+      "favicon.ico",
+      "main-A2NKRJGT.js",
+      "styles-G23E7YXX.css"
+    ],
+    "initial_raw_bytes": 384177,
+    "lazy_files": 37,
+    "lazy_raw_bytes": 1069911,
+    "total_raw_bytes": 1454088
+  }
+}

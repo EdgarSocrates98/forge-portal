@@ -316,29 +316,33 @@ interface PendingPlan {
                 <span>{{ fmtAt(tl.windowEnd) }}</span>
               </div>
               @for (r of tl.rows; track r.task.id) {
-                <button
-                  class="tl__row"
-                  type="button"
-                  role="listitem"
-                  [attr.data-selected]="selectedId() === r.task.id || null"
-                  [attr.aria-label]="r.task.label || r.task.verb"
-                  (click)="selectTask(r.task)"
-                >
-                  <span class="tl__label" [attr.title]="r.task.label || r.task.verb">{{
-                    r.task.label || r.task.verb
-                  }}</span>
-                  <span class="tl__track">
-                    <span
-                      class="tl__bar"
-                      [attr.data-kind]="stageKind(r.task.stage)"
-                      [attr.data-open]="r.endMs === null || null"
-                      [style.left.%]="r.leftPct"
-                      [style.width.%]="r.widthPct"
-                      [title]="tipFor(r)"
-                    ></span>
-                  </span>
-                  <span class="tl__dur num">{{ duration(r.task) }}</span>
-                </button>
+                <!-- listitem wraps the button — <button> cannot carry
+                     role="listitem" itself (axe aria-allowed-role) -->
+                <div class="tl__item" role="listitem">
+                  <!-- no aria-label: accessible name = visible content
+                       (axe label-content-name-mismatch) -->
+                  <button
+                    class="tl__row"
+                    type="button"
+                    [attr.data-selected]="selectedId() === r.task.id || null"
+                    (click)="selectTask(r.task)"
+                  >
+                    <span class="tl__label" [attr.title]="r.task.label || r.task.verb">{{
+                      r.task.label || r.task.verb
+                    }}</span>
+                    <span class="tl__track">
+                      <span
+                        class="tl__bar"
+                        [attr.data-kind]="stageKind(r.task.stage)"
+                        [attr.data-open]="r.endMs === null || null"
+                        [style.left]="'clamp(0px, ' + r.leftPct + '%, calc(100% - 3px))'"
+                        [style.width.%]="r.widthPct"
+                        [title]="tipFor(r)"
+                      ></span>
+                    </span>
+                    <span class="tl__dur num">{{ duration(r.task) }}</span>
+                  </button>
+                </div>
               }
             </div>
             @if (tl.unplaced.length) {

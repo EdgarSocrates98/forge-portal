@@ -28,6 +28,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
@@ -748,3 +749,53 @@ class TestResourceExhaustion:
         # Server still healthy after the oversized attempt.
         s, _, _ = call(server, "GET", "/api/v1/health")
         assert s == 200
+
+
+# ---------------------------------------------------------------------------
+# cycle-6 — every response class carries the security headers
+# (was C5 matrix finding #5: static send_error 404s used to be the only
+# response without CSP/nosniff/no-store)
+
+
+class TestSecurityHeadersEverywhere:
+    """The portal's header set must cover JSON, static AND send_error
+    responses — a refusal page without CSP is still a page the browser
+    trusts as same-origin."""
+
+    _EXPECTED: ClassVar[dict[str, str]] = {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-store",
+        "X-Frame-Options": "DENY",
+    }
+
+    def _assert_headers(self, hdrs: dict) -> None:
+        for k, v in self._EXPECTED.items():
+            assert hdrs.get(k) == v, f"{k}: {hdrs.get(k)!r}"
+        assert "default-src 'self'" in hdrs.get("Content-Security-Policy", "")
+        pp = hdrs.get("Permissions-Policy", "")
+        assert "camera=()" in pp and "browsing-topics=()" in pp
+
+    def test_send_error_404_carries_security_headers(self, server):
+        # traversal containment and missing assets land in send_error(404)
+        # (extension-less misses intentionally hit the SPA fallback → 200).
+        for path in ("/../escape.txt", "/missing.css", "/sub/missing-404.js"):
+            s, body, hdrs = call(server, "GET", path, session=False)
+            assert s == 404, path
+            self._assert_headers(hdrs)
+            # the refusal page never reflects the requested path
+            assert b"escape.txt" not in body and b"missing.css" not in body
+            assert "text/html" in hdrs.get("Content-Type", "")
+
+    def test_api_and_static_200_carry_full_header_set(self, server):
+        _, _, hdrs = call(server, "GET", "/api/v1/health")
+        self._assert_headers(hdrs)
+        _, _, hdrs = call(server, "GET", "/", session=False)
+        self._assert_headers(hdrs)
+
+    def test_send_error_body_is_generic_and_escaped(self, server):
+        # send_error answers a generic escaped page — nothing from the
+        # request line is reflected unescaped into markup.
+        s, body, _ = call(server, "GET", "/%3Cscript%3Ealert(1)%3C/script%3E.css", session=False)
+        assert s == 404
+        assert b"<script>" not in body and b"alert(1)" not in body
