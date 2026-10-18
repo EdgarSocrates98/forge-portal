@@ -1,0 +1,113 @@
+[bench] 50n/150e model built @1ms
+[bench] 50n/150e isolated cy.add done @14ms
+[bench] 50n/150e clone done (21KB) @15ms
+[bench] 50n/150e renderer mounted @20ms
+[bench] 50n/150e setData settled @938ms
+[bench] 50n/150e setData refresh settled @1669ms
+[bench] 50n/150e layout cose → 708ms @2377ms
+[bench] 50n/150e layout circle → 11ms @2388ms
+[bench] 50n/150e layout concentric → 11ms @2399ms
+[bench] 50n/150e layout grid → 6ms @2406ms
+[bench] 50n/150e layout breadthfirst → 35ms @2441ms
+[bench] 50n/150e analysis done @2445ms
+[bench] 50n/150e interaction samples done @2502ms
+[bench] 50n/150e svg done @2506ms
+[bench] 50n/150e done — layouts {"cose":708,"circle":11,"concentric":11,"grid":6,"breadthfirst":35}
+[bench] 100n/300e model built @1ms
+[bench] 100n/300e isolated cy.add done @14ms
+[bench] 100n/300e clone done (42KB) @16ms
+[bench] 100n/300e renderer mounted @18ms
+[bench] 100n/300e setData settled @1335ms
+[bench] 100n/300e setData refresh settled @2575ms
+[bench] 100n/300e layout cose → 1089ms @3664ms
+[bench] 100n/300e layout circle → 9ms @3673ms
+[bench] 100n/300e layout concentric → 12ms @3685ms
+[bench] 100n/300e layout grid → 7ms @3693ms
+[bench] 100n/300e layout breadthfirst → 50ms @3742ms
+[bench] 100n/300e analysis done @3745ms
+[bench] 100n/300e interaction samples done @3826ms
+[bench] 100n/300e svg done @3829ms
+[bench] 100n/300e done — layouts {"cose":1089,"circle":9,"concentric":12,"grid":7,"breadthfirst":50}
+[bench] 200n/800e model built @2ms
+[bench] 200n/800e isolated cy.add done @22ms
+[bench] 200n/800e clone done (105KB) @25ms
+[bench] 200n/800e renderer mounted @27ms
+[bench] 200n/800e setData settled @2672ms
+[bench] 200n/800e setData refresh settled @5132ms
+[bench] 200n/800e layout cose → 2549ms @7682ms
+[bench] 200n/800e layout circle → 13ms @7695ms
+[bench] 200n/800e layout concentric → 24ms @7719ms
+[bench] 200n/800e layout grid → 10ms @7729ms
+[bench] 200n/800e layout breadthfirst → 108ms @7837ms
+[bench] 200n/800e analysis done @7841ms
+[bench] 200n/800e interaction samples done @7987ms
+[bench] 200n/800e svg done @7994ms
+[bench] 200n/800e done — layouts {"cose":2549,"circle":13,"concentric":24,"grid":10,"breadthfirst":108}
+[bench] 500n/2000e model built @4ms
+[bench] 500n/2000e isolated cy.add done @57ms
+[bench] 500n/2000e clone done (266KB) @64ms
+[bench] 500n/2000e renderer mounted @68ms
+[bench] 500n/2000e setData settled @13170ms
+[bench] 500n/2000e setData refresh settled @26180ms
+[bench] 500n/2000e layout cose → 12384ms @38564ms
+[bench] 500n/2000e layout circle → 28ms @38592ms
+[bench] 500n/2000e layout concentric → 31ms @38623ms
+[bench] 500n/2000e layout grid → 22ms @38645ms
+[bench] 500n/2000e layout breadthfirst → 200ms @38845ms
+[bench] 500n/2000e analysis done @38853ms
+[bench] 500n/2000e interaction samples done @39187ms
+[bench] 500n/2000e svg done @39212ms
+[bench] 500n/2000e done — layouts {"cose":12384,"circle":28,"concentric":31,"grid":22,"breadthfirst":200}
+[bench] 1000n/5000e model built @10ms
+[bench] 1000n/5000e isolated cy.add done @143ms
+[bench] 1000n/5000e clone done (630KB) @158ms
+[bench] 1000n/5000e renderer mounted @164ms
+[bench] 1000n/5000e setData settled @46309ms
+[bench] 1000n/5000e setData refresh settled @99696ms
+[bench] 1000n/5000e layout cose → 46563ms @146259ms
+[bench] 1000n/5000e layout circle → 62ms @146321ms
+[bench] 1000n/5000e layout concentric → 84ms @146405ms
+[bench] 1000n/5000e layout grid → 58ms @146463ms
+[bench] 1000n/5000e layout breadthfirst → 588ms @147051ms
+[bench] 1000n/5000e analysis done @147076ms
+[bench] 1000n/5000e interaction samples done @148019ms
+[bench] 1000n/5000e svg done @148053ms
+[bench] 1000n/5000e grouping done @162840ms
+[bench] 1000n/5000e done — layouts {"cose":46563,"circle":62,"concentric":84,"grid":58,"breadthfirst":588}
+[bench] 2000n/9000e model built @26ms
+[bench] 2000n/9000e isolated cy.add done @313ms
+[bench] 2000n/9000e clone done (1179KB) @359ms
+[bench] 2000n/9000e renderer mounted @369ms
+[bench] 2000n/9000e setData settled @78669ms
+[bench] 2000n/9000e setData refresh settled @148956ms
+[bench] 2000n/9000e layout cose → >60s @224098ms
+[bench] 2000n/9000e layout circle → 144ms @224243ms
+[bench] 2000n/9000e layout concentric → 193ms @224436ms
+[bench] 2000n/9000e layout grid → 125ms @224561ms
+[bench] 2000n/9000e layout breadthfirst → 1069ms @225631ms
+[bench] 2000n/9000e analysis done @225663ms
+[bench] 2000n/9000e interaction samples done @227285ms
+[bench] 2000n/9000e svg done @227345ms
+[bench] 2000n/9000e grouping done @251248ms
+[bench] 2000n/9000e done — layouts {"cose":null,"circle":144,"concentric":193,"grid":125,"breadthfirst":1069}
+[bench] 5000n/20000e model built @31ms
+[bench] 5000n/20000e isolated cy.add done @533ms
+[bench] 5000n/20000e clone done (2735KB) @612ms
+[bench] 5000n/20000e renderer mounted @631ms
+[bench] 5000n/20000e setData settled @268302ms
+[bench] 5000n/20000e setData refresh settled @497064ms
+[bench] 5000n/20000e layout cose → >60s @687120ms
+[bench] 5000n/20000e layout circle → 296ms @687416ms
+[bench] 5000n/20000e layout concentric → 467ms @687883ms
+[bench] 5000n/20000e layout grid → 293ms @688176ms
+[bench] 5000n/20000e layout breadthfirst → 2323ms @690499ms
+[bench] 5000n/20000e analysis done @690579ms
+[bench] 5000n/20000e interaction samples done @693798ms
+[bench] 5000n/20000e svg done @693942ms
+[bench] 5000n/20000e grouping done @748470ms
+[bench] 5000n/20000e done — layouts {"cose":null,"circle":296,"concentric":467,"grid":293,"breadthfirst":2323}
+[bench] 10000n/50000e model built @118ms
+[bench] 10000n/50000e isolated cy.add done @1400ms
+[bench] 10000n/50000e clone done (6480KB) @1614ms
+[bench] 10000n/50000e renderer mounted @1650ms
+[bench] 10000n/50000e setData settled @1262286ms

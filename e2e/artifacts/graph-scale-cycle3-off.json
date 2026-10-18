@@ -1,0 +1,743 @@
+{
+  "env": {
+    "node": "v22.23.2",
+    "cytoscape": "3.34.3",
+    "host": "headless (jsdom — no rasterizer; FPS/raster UNTESTED)",
+    "policy": "off",
+    "layoutTimeoutMs": 60000,
+    "samples": 9
+  },
+  "runs": [
+    {
+      "nodes": 50,
+      "edges": 150,
+      "nodesReal": 50,
+      "edgesReal": 145,
+      "stats": {
+        "nodes": 50,
+        "edges": 145,
+        "density": 5.8,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 0.73,
+      "synthMs": 0.62,
+      "toViewModelMs": 0.56,
+      "structuredCloneMs": 0.52,
+      "cyAddIsolatedMs": 8.4,
+      "mountMs": 3.67,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 918,
+      "setDataRefreshMs": 731,
+      "layoutsMs": {
+        "cose": 708,
+        "circle": 11,
+        "concentric": 11,
+        "grid": 6,
+        "breadthfirst": 35
+      },
+      "guardEvents": [],
+      "analysisMs": 3.82,
+      "impactDepth3": {
+        "uses": 28,
+        "usedBy": 25
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.15,
+          "p50": 0.19,
+          "p95": 0.64,
+          "max": 0.64
+        },
+        "highlight": {
+          "n": 9,
+          "min": 1.81,
+          "p50": 2.12,
+          "p95": 2.86,
+          "max": 2.86
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 1.69,
+          "p50": 2.09,
+          "p95": 6.06,
+          "max": 6.06
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.07,
+          "p50": 1.31,
+          "p95": 1.86,
+          "max": 1.86
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.04,
+          "p50": 0.05,
+          "p95": 0.83,
+          "max": 0.83
+        },
+        "search": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.01,
+          "p95": 0.1,
+          "max": 0.1
+        }
+      },
+      "exportSvgMs": 4,
+      "exportSvgKb": 26,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 1.11,
+      "heapUsedMb": 71,
+      "rssMb": 176,
+      "peakRssMb": 176,
+      "elements": 195
+    },
+    {
+      "nodes": 100,
+      "edges": 300,
+      "nodesReal": 100,
+      "edgesReal": 286,
+      "stats": {
+        "nodes": 100,
+        "edges": 286,
+        "density": 5.72,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 0.67,
+      "synthMs": 0.58,
+      "toViewModelMs": 0.59,
+      "structuredCloneMs": 1.33,
+      "cyAddIsolatedMs": 11.53,
+      "mountMs": 1.06,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 1317,
+      "setDataRefreshMs": 1240,
+      "layoutsMs": {
+        "cose": 1089,
+        "circle": 9,
+        "concentric": 12,
+        "grid": 7,
+        "breadthfirst": 50
+      },
+      "guardEvents": [],
+      "analysisMs": 2.42,
+      "impactDepth3": {
+        "uses": 18,
+        "usedBy": 38
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.12,
+          "p50": 0.2,
+          "p95": 0.49,
+          "max": 0.49
+        },
+        "highlight": {
+          "n": 9,
+          "min": 3.29,
+          "p50": 3.61,
+          "p95": 7.5,
+          "max": 7.5
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 2.06,
+          "p50": 3.47,
+          "p95": 5.49,
+          "max": 5.49
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.04,
+          "p50": 1.05,
+          "p95": 2.54,
+          "max": 2.54
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.03,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "search": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.02,
+          "p95": 0.08,
+          "max": 0.08
+        }
+      },
+      "exportSvgMs": 3,
+      "exportSvgKb": 52,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 0.35,
+      "heapUsedMb": 60,
+      "rssMb": 176,
+      "peakRssMb": 176,
+      "elements": 386
+    },
+    {
+      "nodes": 200,
+      "edges": 800,
+      "nodesReal": 200,
+      "edgesReal": 786,
+      "stats": {
+        "nodes": 200,
+        "edges": 786,
+        "density": 7.86,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "small",
+        "layout": "cose",
+        "expensive": false,
+        "timeoutMs": 15000,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 0
+      },
+      "policyEvalMs": 1.23,
+      "synthMs": 0.99,
+      "toViewModelMs": 0.72,
+      "structuredCloneMs": 2.08,
+      "cyAddIsolatedMs": 18.5,
+      "mountMs": 0.64,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 2645,
+      "setDataRefreshMs": 2460,
+      "layoutsMs": {
+        "cose": 2549,
+        "circle": 13,
+        "concentric": 24,
+        "grid": 10,
+        "breadthfirst": 108
+      },
+      "guardEvents": [],
+      "analysisMs": 3.66,
+      "impactDepth3": {
+        "uses": 67,
+        "usedBy": 89
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.1,
+          "p50": 0.11,
+          "p95": 0.42,
+          "max": 0.42
+        },
+        "highlight": {
+          "n": 9,
+          "min": 5.54,
+          "p50": 7.22,
+          "p95": 10.09,
+          "max": 10.09
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 5.14,
+          "p50": 6.66,
+          "p95": 7.57,
+          "max": 7.57
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.06,
+          "p50": 2.57,
+          "p95": 4.36,
+          "max": 4.36
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.01,
+          "p95": 0.11,
+          "max": 0.11
+        },
+        "search": {
+          "n": 9,
+          "min": 0.03,
+          "p50": 0.03,
+          "p95": 0.11,
+          "max": 0.11
+        }
+      },
+      "exportSvgMs": 7,
+      "exportSvgKb": 125,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 0.72,
+      "heapUsedMb": 71,
+      "rssMb": 176,
+      "peakRssMb": 177,
+      "elements": 986
+    },
+    {
+      "nodes": 500,
+      "edges": 2000,
+      "nodesReal": 500,
+      "edgesReal": 1989,
+      "stats": {
+        "nodes": 500,
+        "edges": 1989,
+        "density": 7.956,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "medium",
+        "layout": "concentric",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 300
+      },
+      "policyEvalMs": 3.36,
+      "synthMs": 2.51,
+      "toViewModelMs": 1.7,
+      "structuredCloneMs": 5.37,
+      "cyAddIsolatedMs": 50.44,
+      "mountMs": 0.53,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 13102,
+      "setDataRefreshMs": 13010,
+      "layoutsMs": {
+        "cose": 12384,
+        "circle": 28,
+        "concentric": 31,
+        "grid": 22,
+        "breadthfirst": 200
+      },
+      "guardEvents": [],
+      "analysisMs": 7.77,
+      "impactDepth3": {
+        "uses": 124,
+        "usedBy": 66
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 0.21,
+          "p50": 0.22,
+          "p95": 0.66,
+          "max": 0.66
+        },
+        "highlight": {
+          "n": 9,
+          "min": 13.03,
+          "p50": 14.68,
+          "p95": 15.9,
+          "max": 15.9
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 12.86,
+          "p50": 16.44,
+          "p95": 24.14,
+          "max": 24.14
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.08,
+          "p50": 6.56,
+          "p95": 13.25,
+          "max": 13.25
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.02,
+          "p50": 0.02,
+          "p95": 0.15,
+          "max": 0.15
+        },
+        "search": {
+          "n": 9,
+          "min": 0.1,
+          "p50": 0.1,
+          "p95": 0.32,
+          "max": 0.32
+        }
+      },
+      "exportSvgMs": 25,
+      "exportSvgKb": 314,
+      "groupingLayoutMs": null,
+      "groupingInteractMs": null,
+      "destroyMs": 1.28,
+      "heapUsedMb": 130,
+      "rssMb": 240,
+      "peakRssMb": 240,
+      "elements": 2489
+    },
+    {
+      "nodes": 1000,
+      "edges": 5000,
+      "nodesReal": 1000,
+      "edgesReal": 4982,
+      "stats": {
+        "nodes": 1000,
+        "edges": 4982,
+        "density": 9.964,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "medium",
+        "layout": "concentric",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 300
+      },
+      "policyEvalMs": 5.13,
+      "synthMs": 5.78,
+      "toViewModelMs": 4.27,
+      "structuredCloneMs": 11.79,
+      "cyAddIsolatedMs": 127.49,
+      "mountMs": 0.82,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": 46144,
+      "setDataRefreshMs": 53386,
+      "layoutsMs": {
+        "cose": 46563,
+        "circle": 62,
+        "concentric": 84,
+        "grid": 58,
+        "breadthfirst": 588
+      },
+      "guardEvents": [],
+      "analysisMs": 24.58,
+      "impactDepth3": {
+        "uses": 129,
+        "usedBy": 218
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 1.3,
+          "p50": 1.42,
+          "p95": 9.89,
+          "max": 9.89
+        },
+        "highlight": {
+          "n": 9,
+          "min": 35.86,
+          "p50": 45.56,
+          "p95": 47.23,
+          "max": 47.23
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 37.38,
+          "p50": 44.09,
+          "p95": 78.01,
+          "max": 78.01
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.07,
+          "p50": 15.39,
+          "p95": 18.06,
+          "max": 18.06
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.16,
+          "max": 0.16
+        },
+        "search": {
+          "n": 9,
+          "min": 0.12,
+          "p50": 0.14,
+          "p95": 0.28,
+          "max": 0.28
+        }
+      },
+      "exportSvgMs": 34,
+      "exportSvgKb": 728,
+      "groupingLayoutMs": 932,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 716.99,
+          "p50": 805.36,
+          "p95": 958.21,
+          "max": 958.21
+        },
+        "expand": {
+          "n": 7,
+          "min": 882.07,
+          "p50": 1009.06,
+          "p95": 1179.67,
+          "max": 1179.67
+        }
+      },
+      "destroyMs": 3.25,
+      "heapUsedMb": 183,
+      "rssMb": 461,
+      "peakRssMb": 461,
+      "elements": 5982
+    },
+    {
+      "nodes": 2000,
+      "edges": 9000,
+      "nodesReal": 2000,
+      "edgesReal": 8987,
+      "stats": {
+        "nodes": 2000,
+        "edges": 8987,
+        "density": 8.987,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "large",
+        "layout": "grid",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 150
+      },
+      "policyEvalMs": 8.33,
+      "synthMs": 14.61,
+      "toViewModelMs": 11.01,
+      "structuredCloneMs": 37.98,
+      "cyAddIsolatedMs": 277.63,
+      "mountMs": 1.15,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": null,
+      "setDataRefreshMs": null,
+      "layoutsMs": {
+        "cose": null,
+        "circle": 144,
+        "concentric": 193,
+        "grid": 125,
+        "breadthfirst": 1069
+      },
+      "guardEvents": [],
+      "analysisMs": 32.49,
+      "impactDepth3": {
+        "uses": 111,
+        "usedBy": 103
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 2.17,
+          "p50": 2.46,
+          "p95": 7.4,
+          "max": 7.4
+        },
+        "highlight": {
+          "n": 9,
+          "min": 67.51,
+          "p50": 75.53,
+          "p95": 81.37,
+          "max": 81.37
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 63.06,
+          "p50": 73.91,
+          "p95": 78.97,
+          "max": 78.97
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.07,
+          "p50": 40.31,
+          "p95": 51.19,
+          "max": 51.19
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.13,
+          "max": 0.13
+        },
+        "search": {
+          "n": 9,
+          "min": 0.13,
+          "p50": 0.27,
+          "p95": 0.71,
+          "max": 0.71
+        }
+      },
+      "exportSvgMs": 60,
+      "exportSvgKb": 1375,
+      "groupingLayoutMs": 1440,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 1233.72,
+          "p50": 1350.98,
+          "p95": 1483.65,
+          "max": 1483.65
+        },
+        "expand": {
+          "n": 7,
+          "min": 1319.86,
+          "p50": 1690.64,
+          "p95": 1847.3,
+          "max": 1847.3
+        }
+      },
+      "destroyMs": 0.08,
+      "heapUsedMb": 544,
+      "rssMb": 701,
+      "peakRssMb": 701,
+      "elements": 10987
+    },
+    {
+      "nodes": 5000,
+      "edges": 20000,
+      "nodesReal": 5000,
+      "edgesReal": 19992,
+      "stats": {
+        "nodes": 5000,
+        "edges": 19992,
+        "density": 7.9968,
+        "components": 1,
+        "largestShare": 1
+      },
+      "policy": {
+        "scale": "large",
+        "layout": "grid",
+        "expensive": false,
+        "timeoutMs": 0,
+        "progressive": false,
+        "cluster": false,
+        "coseNumIter": 150
+      },
+      "policyEvalMs": 18.95,
+      "synthMs": 22.93,
+      "toViewModelMs": 7.65,
+      "structuredCloneMs": 64.04,
+      "cyAddIsolatedMs": 491.64,
+      "mountMs": 0.61,
+      "firstLayout": "cose",
+      "setDataFirstLayoutMs": null,
+      "setDataRefreshMs": null,
+      "layoutsMs": {
+        "cose": null,
+        "circle": 296,
+        "concentric": 467,
+        "grid": 293,
+        "breadthfirst": 2323
+      },
+      "guardEvents": [],
+      "analysisMs": 79.1,
+      "impactDepth3": {
+        "uses": 66,
+        "usedBy": 44
+      },
+      "pathFound": true,
+      "interactionMs": {
+        "select": {
+          "n": 9,
+          "min": 5.88,
+          "p50": 6.42,
+          "p95": 10.35,
+          "max": 10.35
+        },
+        "highlight": {
+          "n": 9,
+          "min": 160.45,
+          "p50": 164.9,
+          "p95": 192.16,
+          "max": 192.16
+        },
+        "dimExcept": {
+          "n": 9,
+          "min": 162.55,
+          "p50": 183.02,
+          "p95": 198.6,
+          "max": 198.6
+        },
+        "setViewport": {
+          "n": 9,
+          "min": 0.05,
+          "p50": 2.98,
+          "p95": 4.08,
+          "max": 4.08
+        },
+        "zoomTo": {
+          "n": 9,
+          "min": 0.01,
+          "p50": 0.02,
+          "p95": 0.11,
+          "max": 0.11
+        },
+        "search": {
+          "n": 9,
+          "min": 0.32,
+          "p50": 0.36,
+          "p95": 1.13,
+          "max": 1.13
+        }
+      },
+      "exportSvgMs": 144,
+      "exportSvgKb": 3211,
+      "groupingLayoutMs": 3851,
+      "groupingInteractMs": {
+        "collapse": {
+          "n": 7,
+          "min": 3112.18,
+          "p50": 3231.32,
+          "p95": 4028.52,
+          "max": 4028.52
+        },
+        "expand": {
+          "n": 7,
+          "min": 3259.87,
+          "p50": 3384.72,
+          "p95": 3662.26,
+          "max": 3662.26
+        }
+      },
+      "destroyMs": 0.26,
+      "heapUsedMb": 316,
+      "rssMb": 1143,
+      "peakRssMb": 1143,
+      "elements": 24992
+    }
+  ]
+}
