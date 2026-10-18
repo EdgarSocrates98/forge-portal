@@ -457,6 +457,8 @@ export const PT_BR: Record<string, string> = {
   'graph.layout.timeout': '{layout} excedeu o limite de tempo — exibindo {fallback}.',
   'graph.layout.error': '{layout} falhou ao executar — exibindo {fallback}.',
   'graph.layout.warn': '{layout} é pesado neste tamanho (medido).',
+  'graph.layout.blocked':
+    '{layout} é inseguro nesta escala (medido) — um único frame síncrono excede o watchdog, então está bloqueado aqui.',
   'graph.layout.recommended': 'Recomendado: {layout}',
   'graph.layout.runAnyway': 'Executar mesmo assim',
   'graph.layout.useRecommended': 'Usar {layout}',
@@ -902,6 +904,7 @@ export const PT_BR: Record<string, string> = {
   'execution.insp.metadata': 'Metadados',
   'execution.insp.evidence': 'Evidência',
   'execution.insp.related': 'Eventos relacionados',
+  'execution.skipToEvents': 'Pular para a lista de eventos',
 
   // version manager (§5.5)
   'nav.lab': 'Lab',

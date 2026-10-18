@@ -458,6 +458,8 @@ export const EN: Record<string, string> = {
   'graph.layout.timeout': '{layout} exceeded its time budget — showing {fallback} instead.',
   'graph.layout.error': '{layout} failed to run — showing {fallback} instead.',
   'graph.layout.warn': '{layout} is measured-expensive at this size.',
+  'graph.layout.blocked':
+    '{layout} is measured-unsafe at this scale — a single synchronous frame outlasts the watchdog, so it is blocked here.',
   'graph.layout.recommended': 'Recommended: {layout}',
   'graph.layout.runAnyway': 'Run anyway',
   'graph.layout.useRecommended': 'Use {layout}',
@@ -892,6 +894,7 @@ export const EN: Record<string, string> = {
   'execution.insp.metadata': 'Metadata',
   'execution.insp.evidence': 'Evidence',
   'execution.insp.related': 'Related events',
+  'execution.skipToEvents': 'Skip to the events list',
 
   // version manager (§5.5)
   'nav.lab': 'Lab',

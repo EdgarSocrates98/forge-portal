@@ -95,6 +95,27 @@ const section = (el: HTMLElement, name: string) =>
   el.querySelector(`[data-section="${name}"]`) as HTMLElement | null;
 const rows = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('tbody tr')];
 
+/** 240-event window — exercises the bounded page slices and the
+ *  keyboard journey across page boundaries. */
+const BIG: PortalEventReport = {
+  ...REPORT,
+  count: 240,
+  dropped: 0,
+  truncated: false,
+  events: Array.from({ length: 240 }, (_, i) =>
+    ev({
+      event_id: `b${i}`,
+      event_type: i % 3 ? 'tool.invocation' : 'operation.end',
+      correlation_id: `cid-${(i % 60).toString().padStart(3, '0')}`,
+      timestamp: `2026-10-20T12:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(
+        i % 60,
+      ).padStart(2, '0')}.000Z`,
+      source: `forge:scale-${i % 4}`,
+      status: i % 5 ? 'ok' : 'failed',
+    }),
+  ),
+};
+
 describe('ExecutionPage — forge/PortalEvent/1 observability', () => {
   async function setup(
     overrides: Partial<Record<keyof PortalApi, unknown>> = {},
@@ -242,25 +263,6 @@ describe('ExecutionPage — forge/PortalEvent/1 observability', () => {
   });
 
   // -- Cycle 4 §7 — bounded rendering --------------------------------
-  const BIG: PortalEventReport = {
-    ...REPORT,
-    count: 240,
-    dropped: 0,
-    truncated: false,
-    events: Array.from({ length: 240 }, (_, i) =>
-      ev({
-        event_id: `b${i}`,
-        event_type: i % 3 ? 'tool.invocation' : 'operation.end',
-        correlation_id: `cid-${(i % 60).toString().padStart(3, '0')}`,
-        timestamp: `2026-10-20T12:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(
-          i % 60,
-        ).padStart(2, '0')}.000Z`,
-        source: `forge:scale-${i % 4}`,
-        status: i % 5 ? 'ok' : 'failed',
-      }),
-    ),
-  };
-
   it('bounds the events table to a page slice — the range stays honest', async () => {
     const { el, fixture } = await setup({ events: vi.fn(() => of(BIG)) });
     const events = section(el, 'events')!;
@@ -342,5 +344,192 @@ describe('ExecutionPage — forge/PortalEvent/1 observability', () => {
     expect(el.querySelector('ui-empty[data-empty="events"]')).toBeTruthy();
     expect(section(el, 'timeline')).toBeNull();
     expect(section(el, 'replay')).toBeNull();
+  });
+});
+
+describe('ExecutionPage — 2.2.1 cycle 6 keyboard navigation', () => {
+  const key = (el: Element, k: string) =>
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
+
+  async function setupKb(
+    overrides: Partial<Record<keyof PortalApi, unknown>> = {},
+    inputs: Record<string, unknown> = {},
+  ) {
+    const api = fakeApi(overrides);
+    await TestBed.configureTestingModule({
+      imports: [ExecutionPage],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
+    }).compileComponents();
+    await TestBed.inject(I18nService).applyPreference('en');
+    const fixture = TestBed.createComponent(ExecutionPage);
+    for (const [k, v] of Object.entries(inputs)) fixture.componentRef.setInput(k, v);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return { fixture, api, el: fixture.nativeElement as HTMLElement };
+  }
+
+  it('each dense list costs exactly one tab stop (roving tabindex)', async () => {
+    const { el } = await setupKb({ events: vi.fn(() => of(BIG)) });
+    const evRows = rows(section(el, 'events')!);
+    expect(evRows.length).toBe(100);
+    // exactly one row owns the tab stop; every other row is reachable
+    // by arrows, never by Tab — the 58-keypress mechanism removed
+    expect(evRows.filter((r) => r.getAttribute('tabindex') === '0').length).toBe(1);
+    expect(evRows[0].getAttribute('tabindex')).toBe('0');
+    expect(evRows[1].getAttribute('tabindex')).toBe('-1');
+    const tlRows = [...section(el, 'timeline')!.querySelectorAll<HTMLElement>('.tl__row')];
+    expect(tlRows.filter((r) => r.getAttribute('tabindex') === '0').length).toBe(1);
+    const steps = [...section(el, 'replay')!.querySelectorAll<HTMLElement>('.rp__step')];
+    expect(steps.filter((s) => s.getAttribute('tabindex') === '0').length).toBe(1);
+  });
+
+  it('reaches an event in <= ~10 key actions (was ~58)', async () => {
+    const { el, fixture } = await setupKb();
+    // DOM order: the skip link precedes the dense blocks it bypasses
+    const order = el.querySelectorAll('[data-action="skip-events"], [data-section="timeline"]');
+    expect(order[0].getAttribute('data-action')).toBe('skip-events');
+    // journey: Tab to refresh (1) → Tab to the skip link (2) → Enter (3)
+    // lands focus on the table's tab row → Enter (4) opens the inspector
+    let keys = 0;
+    const skip = el.querySelector<HTMLElement>('[data-action="skip-events"]')!;
+    expect(skip).toBeTruthy();
+    skip.click();
+    keys += 3;
+    await vi.waitFor(() => {
+      expect(document.activeElement?.getAttribute('data-action')).toBe('inspect');
+    });
+    key(document.activeElement!, 'Enter');
+    keys += 1;
+    fixture.detectChanges();
+    expect(section(el, 'inspector')).toBeTruthy();
+    expect(keys).toBeLessThanOrEqual(10);
+  });
+
+  it('arrows walk rows across page boundaries; Home/End/PageUp/PageDown jump', async () => {
+    const { el, fixture } = await setupKb({ events: vi.fn(() => of(BIG)) });
+    const inst = fixture.componentInstance;
+    const evs = section(el, 'events')!;
+    const row = (i: number) => evs.querySelector<HTMLElement>(`tbody tr[data-idx="${i}"]`)!;
+    // one step inside the page
+    key(row(0), 'ArrowDown');
+    fixture.detectChanges();
+    expect(inst.evCursor()).toBe(1);
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(1)));
+    // page boundary: last row of page 1 → ArrowDown crosses to page 2
+    key(row(99), 'ArrowDown');
+    fixture.detectChanges();
+    expect(inst.eventsPage()).toBe(1);
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(100)));
+    // End jumps to the last row of the whole filtered window
+    key(row(100), 'End');
+    fixture.detectChanges();
+    expect(inst.evCursor()).toBe(239);
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(239)));
+    // PageUp/PageDown move one page size
+    key(row(239), 'PageUp');
+    fixture.detectChanges();
+    expect(inst.evCursor()).toBe(139);
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(139)));
+    // Home jumps back to the first row — and the page follows
+    key(row(139), 'Home');
+    fixture.detectChanges();
+    expect(inst.evCursor()).toBe(0);
+    expect(inst.eventsPage()).toBe(0);
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(0)));
+  });
+
+  it('opens the inspector with Enter on the focused row; Escape closes it', async () => {
+    const { el, fixture } = await setupKb();
+    const evs = section(el, 'events')!;
+    const row = (i: number) => evs.querySelector<HTMLElement>(`tbody tr[data-idx="${i}"]`)!;
+    key(row(1), 'ArrowDown'); // row 1 → cursor 2
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(2)));
+    key(row(2), 'Enter');
+    fixture.detectChanges();
+    const insp = section(el, 'inspector');
+    expect(insp).toBeTruthy();
+    expect(text(insp)).toContain('operation.end'); // e3 — third event
+    insp!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+    expect(section(el, 'inspector')).toBeNull();
+  });
+
+  it('closing the inspector returns focus to the row that opened it', async () => {
+    const { el, fixture } = await setupKb();
+    const evs = section(el, 'events')!;
+    const row = (i: number) => evs.querySelector<HTMLElement>(`tbody tr[data-idx="${i}"]`)!;
+    key(row(2), 'Enter');
+    fixture.detectChanges();
+    expect(section(el, 'inspector')).toBeTruthy();
+    // the close button path
+    section(el, 'inspector')!.querySelector<HTMLButtonElement>('.icon-btn')!.click();
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(2)));
+    // the Escape-in-inspector path returns to the row too
+    key(row(3), 'Enter');
+    fixture.detectChanges();
+    section(el, 'inspector')!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+    );
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(document.activeElement).toBe(row(3)));
+  });
+
+  it('paging keeps exactly one tab stop — the clamped row owns it', async () => {
+    const { el, fixture } = await setupKb({ events: vi.fn(() => of(BIG)) });
+    const evs = section(el, 'events')!;
+    evs.querySelector<HTMLButtonElement>('ui-pager [data-page="next"]')!.click();
+    fixture.detectChanges();
+    const rs = rows(evs);
+    expect(rs.filter((r) => r.getAttribute('tabindex') === '0').length).toBe(1);
+    // cursor was on page 1 → the page-2 slice's first row takes the stop
+    expect(rs[0].getAttribute('tabindex')).toBe('0');
+    expect(rs[0].getAttribute('data-idx')).toBe('100');
+  });
+
+  it('timeline rows and replay steps share the same roving contract', async () => {
+    const { el, fixture } = await setupKb({ events: vi.fn(() => of(BIG)) });
+    const inst = fixture.componentInstance;
+    const tl = section(el, 'timeline')!;
+    const trow = (i: number) => tl.querySelector<HTMLElement>(`.tl__row[data-idx="${i}"]`)!;
+    key(trow(0), 'ArrowDown');
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(document.activeElement).toBe(trow(1)));
+    // crossing the timeline page boundary moves the pager too
+    key(trow(49), 'ArrowDown');
+    fixture.detectChanges();
+    expect(inst.tlPage()).toBe(1);
+    await vi.waitFor(() => expect(document.activeElement).toBe(trow(50)));
+    // replay steps: End jumps the whole recorded window
+    const rp = section(el, 'replay')!;
+    const step = (i: number) => rp.querySelector<HTMLElement>(`.rp__step[data-idx="${i}"]`)!;
+    key(step(0), 'End');
+    fixture.detectChanges();
+    expect(inst.stepCursor()).toBe(239);
+    await vi.waitFor(() => expect(document.activeElement).toBe(step(239)));
+  });
+
+  it('filter changes keep the tab row reachable — cursor self-heals', async () => {
+    const { el, fixture } = await setupKb({ events: vi.fn(() => of(BIG)) });
+    const inst = fixture.componentInstance;
+    inst.evCursor.set(200);
+    const q = el.querySelector<HTMLInputElement>('input[data-filter="search"]')!;
+    q.value = 'zzz-no-match';
+    q.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    // empty window → no tab stop at all
+    expect(inst.evTabIdx()).toBe(-1);
+    q.value = 'scale-1'; // matches the recorded `source` field of 60 events
+    q.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    // cursor 200 lands outside the 60-row window → clamped to its last
+    // row — the tab stop is always a real rendered row, never a gap
+    expect(inst.evTabIdx()).toBe(59);
+    const evs = section(el, 'events')!;
+    const rs = rows(evs).filter((r) => r.getAttribute('tabindex') === '0');
+    expect(rs.length).toBe(1);
   });
 });
