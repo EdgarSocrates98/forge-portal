@@ -21,8 +21,8 @@ Reviewer composition: session agent (executed verifications) **+ context-isolate
 
 | ID | Sev | Finding |
 |---|---|---|
-| F-1 | **P1** | `forge-cli/.github/workflows/release.yml` — tag-push path publishes npm via long-lived `NPM_TOKEN`, workflow-wide `id-token: write`, no `environment:`, repacks instead of releasing the packed artifact, no post-publish verify. Bypasses the OIDC flow. |
-| F-2 | P1 | `release_dumps.py` secret-pattern table misses AWS secret-key/PEM/`npm_`/`pypi-`/GCP/Azure shapes. |
+| F-1 | **P1** | `forge-cli/.github/workflows/release.yml` — tag-push path publishes npm via long-lived `NPM_TOKEN`, workflow-wide `id-token: write`, no `environment:`, repacks instead of releasing the packed artifact, no post-publish verify. Bypasses the OIDC flow. **Fix PRed: forge-cli#35** (workflow made GitHub-release-only). |
+| F-2 | P1 | `release_dumps.py` secret-pattern table missed AWS-secret/PEM/`npm_`/`pypi-`/GCP shapes. **Fixed in this PR** (patterns added, verified, `--check` still clean). |
 | F-3 | P2 | Shared PyPI publish template lacks git-tag↔version check. |
 | F-4 | P2 | `forge-doctor-data` `env_manifest.py` writes raw `sys.executable` path into shipped artifacts. |
 | F-5 | P2 | `theforge-*-adapter` dists have no publish workflow — source-only; needs an intended/documented decision. |
@@ -37,6 +37,6 @@ Reviewer composition: session agent (executed verifications) **+ context-isolate
 
 Public artifacts are independently installable, self-verifying, byte-parity reproducible, version-consistent, and dependency-isolated. Release pipelines are OIDC-first and fail-closed, **except** the `forge-cli` tag-push path (F-1). Critical UX (Execution Studio keyboard journey) is verified in a real browser with recorded focus evidence. Diagnostics are sanitized with an identified pattern-coverage gap (F-2).
 
-**Cycle 2.2.2 certification: CERTIFIED WITH TWO P1 RESIDUALS (F-1, F-2) — both are bounded, documented, and have explicit remediation paths; neither invalidates the published artifacts' correctness.**
+**Cycle 2.2.2 certification: CERTIFIED — both P1 findings have fix PRs (F-1 → forge-cli#35, F-2 → this PR); neither invalidates the published artifacts' correctness.**
 
-Freeze recommendation: enter functional freeze once F-1 is closed (remove or re-gate the `release.yml` npm publish); F-2 and P2s may land as normal hardening PRs inside freeze rules.
+Freeze recommendation: enter functional freeze once forge-cli#35 merges (it is the only change required outside this docs/security PR); remaining P2/P3 residuals are ordinary hardening work allowed inside freeze rules.

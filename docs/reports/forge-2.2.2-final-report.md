@@ -35,8 +35,8 @@
 | Public packages tested | ✓ 8/8 |
 | Independence confirmed | ✓ |
 | Versions coherent | ✓ |
-| Workflows secure | ⚠ F-1 (forge-cli release.yml) — P1 residual |
-| Dumps sanitized | ⚠ F-2 pattern coverage — P1 residual |
+| Workflows secure | ⚠→✓ F-1 fix PRed: `forge-cli#35` (release.yml → GH-release-only) |
+| Dumps sanitized | ⚠→✓ F-2 fixed in this PR (patterns extended, verified) |
 | Critical UX tested | ✓ keyboard journey PASS |
 | Independent certification | ✓ this review |
 | Documentation updated | ✓ this PR |
