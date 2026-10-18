@@ -53,13 +53,20 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def manifest_for(assets_dir: Path) -> dict:
+def manifest_for(assets_dir: Path, server_path: Path = SERVER_SRC) -> dict:
     files = {}
     for p in sorted(assets_dir.rglob("*")):
         if p.is_file():
             rel = p.relative_to(assets_dir).as_posix()
             files[rel] = {"sha256": sha256(p), "bytes": p.stat().st_size}
-    return {"schema": "forge/PortalAssets/1", "portal_version": PORTAL_VERSION, "files": files}
+    server_hash = sha256(server_path)
+    return {
+        "schema": "forge/PortalAssets/1",
+        "portal_version": PORTAL_VERSION,
+        "server_generation": server_hash[:16],
+        "server_sha256": server_hash,
+        "files": files,
+    }
 
 
 def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[str]:
@@ -110,7 +117,7 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
         shutil.copytree(ASSETS_SRC, assets_dst)
         manifest_dst.parent.mkdir(parents=True, exist_ok=True)
         manifest_dst.write_text(
-            json.dumps(manifest_for(assets_dst), indent=2, sort_keys=True) + "\n",
+            json.dumps(manifest_for(assets_dst, server_dst), indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
         notes.append(f"  wrote {assets_dst.relative_to(repo)}/ + manifest.json")
