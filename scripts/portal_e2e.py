@@ -238,41 +238,45 @@ def run_forge(forge: str, repo: str, argv: list[str]) -> bool:
         code, _ = request(base, token, "/api/v1/graphs")
         ok &= check("GET graphs -> 200/404/409", code in (200, 404, 409), f"{code}")
 
-        # --- telemetria (opt-in): report real ou recusa nomeada ----------
+        # --- telemetria: 7 forjas とも event_sink 配線済み → 200 必須 ---
+        # 404/409 も許容すると「アンマウント退行」を検出できないため厳格に。
         code, body = request(base, token, "/api/v1/events")
         rep = body.get("data") or {}
-        events_ok = (
+        ok &= check(
+            "events -> PortalEventReport/1",
             code == 200
             and rep.get("schema") == "forge/PortalEventReport/1"
             and isinstance(rep.get("events"), list)
-            and isinstance(rep.get("dropped"), int)
-        )
-        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
-        ok &= check(
-            "events -> PortalEventReport/1 ou recusa",
-            events_ok or refused, f"{code}",
+            and isinstance(rep.get("dropped"), int),
+            f"{code} {rep.get('schema', '')}",
         )
 
         code, body = request(base, token, "/api/v1/metrics")
         met = body.get("data") or {}
-        metrics_ok = (
+        ok &= check(
+            "metrics -> counters+events 投影",
             code == 200
             and isinstance(met.get("counters"), dict)
-            and isinstance(met.get("events"), list)
-        )
-        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
-        ok &= check(
-            "metrics -> projecao ou recusa",
-            metrics_ok or refused, f"{code}",
+            and isinstance(met.get("events"), list),
+            f"{code}",
         )
 
-        code, body = request(base, token, "/api/v1/tasks/nope/events")
+        # 実タスクの correlation でフィルタされることも確認(なければ skip ではなく
+        # 空窓のまま検証 — タスク面が無い adapter でも落ちないように)。
+        code, body = request(base, token, "/api/v1/tasks")
+        tasks = body.get("data") if isinstance(body.get("data"), list) else []
+        tid = next(
+            (t.get("id") for t in tasks if isinstance(t, dict) and t.get("id")),
+            "nope",
+        )
+        code, body = request(base, token, f"/api/v1/tasks/{tid}/events")
         te = body.get("data") or {}
-        task_ev_ok = code == 200 and isinstance(te.get("events"), list)
-        refused = code in (404, 409) or bool((body.get("error") or {}).get("code"))
         ok &= check(
-            "task events -> janela vazia honesta ou recusa",
-            task_ev_ok or refused, f"{code}",
+            "task events -> 窓取得 (task_id=%s)" % tid,
+            code == 200
+            and te.get("schema") == "forge/PortalEventReport/1"
+            and isinstance(te.get("events"), list),
+            f"{code}",
         )
 
         # --- traversal / SPA ---------------------------------------------
