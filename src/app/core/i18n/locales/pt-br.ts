@@ -57,6 +57,12 @@ export const PT_BR: Record<string, string> = {
   'state.none': 'Nenhum',
   'state.all': 'Todos',
 
+  // paginação (Ciclo 4 — renderização delimitada de listas gravadas)
+  'pager.label': 'Paginação',
+  'pager.prev': 'Anterior',
+  'pager.next': 'Próxima',
+  'pager.range': '{from}–{to} de {total}',
+
   // instalação — estados
   'installState.NOT_INSTALLED': 'Não instalado',
   'installState.INSTALLED': 'Instalado',

@@ -356,6 +356,35 @@ describe('TasksPage — execution timeline (Cycle 4)', () => {
     expect(el.querySelector('[data-section="timeline"]')).toBeNull();
     expect(el.querySelector('[data-section="history"] ui-empty')).toBeTruthy();
   });
+
+  it('bounds history and timeline to a page slice — totals stay honest', async () => {
+    const big: TaskExecution[] = Array.from({ length: 130 }, (_, i) => ({
+      id: `t-${String(i).padStart(3, '0')}`,
+      verb: 'doctor.check',
+      label: `check ${i}`,
+      stage: 'completed',
+      started_at: `2026-10-14T01:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(
+        i % 60,
+      ).padStart(2, '0')}.000Z`,
+      finished_at: `2026-10-14T01:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(
+        i % 60,
+      ).padStart(2, '0')}.500Z`,
+      exit_code: 0,
+    }));
+    const { fixture, c, el } = await setup({ tasks: () => of(big) });
+    const history = section(el, 'history')!;
+    expect(history.querySelectorAll('tbody tr').length).toBe(c.LIST_PAGE);
+    const hp = history.querySelector('ui-pager')!;
+    expect(hp).toBeTruthy();
+    expect(text(hp.querySelector('[data-page="range"]'))).toContain('130');
+    const tl = section(el, 'timeline')!;
+    expect(tl.querySelectorAll('.tl__row').length).toBe(c.LIST_PAGE);
+    expect(tl.querySelector('ui-pager')).toBeTruthy();
+    // page 2 of history shows the next real slice
+    hp.querySelector<HTMLElement>('[data-page="next"]')!.click();
+    fixture.detectChanges();
+    expect(history.querySelectorAll('tbody tr').length).toBe(c.LIST_PAGE);
+  });
 });
 
 describe('TasksPage — recorded-events replay (Cycle 4)', () => {
@@ -478,6 +507,53 @@ describe('TasksPage — recorded-events replay (Cycle 4)', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     expect(c.selectedId()).toBe('t2');
+  });
+
+  it('bounds replay steps to a page; transport re-centres the current step', async () => {
+    const task: TaskExecution = {
+      ...TASKS[0]!,
+      correlation_id: 'corr-long-run',
+    };
+    const metrics: MetricsReport = {
+      ...METRICS,
+      events: Array.from({ length: 130 }, (_, i) => ({
+        kind: 'task',
+        at: `2026-10-14T02:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(i % 60).padStart(
+          2,
+          '0',
+        )}.000Z`,
+        duration_ms: 5,
+        status: 'completed',
+        origin: 'tasks',
+        correlation_id: 'corr-long-run',
+      })),
+    };
+    const { fixture, c, el } = await setup({
+      tasks: () => of([task]),
+      metrics: () => of(metrics),
+    });
+    c.selectTask(task);
+    fixture.detectChanges();
+    const rep = c.replay();
+    expect(rep.state).toBe('ready');
+    expect(rep.steps.length).toBe(130);
+    const replay = section(el, 'replay')!;
+    expect(replay.querySelectorAll('.replay__step').length).toBe(c.LIST_PAGE);
+    // jump manually to the last page, then step — the transport wins back
+    replay.querySelector<HTMLElement>('.pager [data-page="next"]')!.click();
+    fixture.detectChanges();
+    replay.querySelector<HTMLElement>('[data-action="next"]')!.click();
+    fixture.detectChanges();
+    expect(c.replayManual()).toBeNull();
+    // fast-forward past the first page — the visible page follows the step
+    // (idx is 1 after the click above; LIST_PAGE−1 more lands on 50)
+    for (let i = 1; i < c.LIST_PAGE; i++) c.stepReplay(1);
+    fixture.detectChanges();
+    expect(c.replayIdx()).toBe(c.LIST_PAGE);
+    const cur = replay.querySelector<HTMLElement>('.replay__steps li[data-current]');
+    expect(cur).toBeTruthy();
+    expect(cur!.getAttribute('aria-posinset')).toBe(String(c.LIST_PAGE + 1));
+    expect(replay.querySelector<HTMLElement>('[data-page="range"]')).toBeTruthy();
   });
 
   it('ignores a ?task= value that matches no record — nothing is fabricated', async () => {

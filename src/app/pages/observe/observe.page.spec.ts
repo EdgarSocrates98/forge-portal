@@ -172,6 +172,46 @@ describe('ObservePage', () => {
     expect(input?.value).toBe('corr-abc123def456');
   });
 
+  it('bounds the events table to a page slice at large windows', async () => {
+    const big: MetricsReport = {
+      ...REPORT,
+      truncated: false,
+      events: Array.from({ length: 240 }, (_, i) => ({
+        kind: i % 2 ? 'task' : 'verify',
+        at: `2026-01-03T12:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(i % 60).padStart(
+          2,
+          '0',
+        )}.000Z`,
+        duration_ms: i,
+        status: 'completed',
+        origin: 'cli',
+        correlation_id: null,
+      })),
+    };
+    const { el, fixture } = await setup({ metrics: () => of(big) });
+    const events = section(el, 'events')!;
+    // 240 real events — one page in the DOM, range text stays honest
+    expect(rows(events).length).toBe(fixture.componentInstance.EVENTS_PAGE);
+    const pager = events.querySelector('ui-pager')!;
+    expect(pager).toBeTruthy();
+    expect(text(pager.querySelector('[data-page="range"]'))).toContain('240');
+    const table = events.querySelector('table')!;
+    expect(Number(table.getAttribute('aria-rowcount'))).toBe(241);
+    // newest-first sort holds across pages: last page ends with the oldest
+    pager.querySelector<HTMLButtonElement>('[data-page="next"]')!.click();
+    fixture.detectChanges();
+    expect(rows(events).length).toBe(fixture.componentInstance.EVENTS_PAGE);
+    expect(Number(events.querySelector('tbody tr')!.getAttribute('aria-rowindex'))).toBe(
+      fixture.componentInstance.EVENTS_PAGE + 2,
+    );
+    // a filter change returns to page 1 — a stale offset never renders empty
+    setFilter(events, 'kind', 'verify');
+    fixture.detectChanges();
+    // half of 240 match — still paged (100 shown), total stays honest
+    expect(rows(events).length).toBe(fixture.componentInstance.EVENTS_PAGE);
+    expect(text(pager.querySelector('[data-page="range"]'))).toContain('120');
+  });
+
   it('shows the bounded-window note when the report is truncated', async () => {
     const { el } = await setup();
     expect(el.querySelector('[data-note="truncated"]')).toBeTruthy();

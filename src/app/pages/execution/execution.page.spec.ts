@@ -133,7 +133,11 @@ describe('ExecutionPage — forge/PortalEvent/1 observability', () => {
     expect(el.querySelector('[data-execution="cid-aaa111"]')).toBeTruthy();
     // ticks = placed events of that row
     const g1 = el.querySelector('[data-execution="cid-aaa111"]')!;
-    expect(g1.querySelectorAll('.tl__tick').length).toBe(3);
+    // placed events draw as one gradient layer on the track — the real
+    // count is advertised on data-ticks (Cycle 4: zero DOM per event)
+    const track = g1.querySelector<HTMLElement>('.tl__track')!;
+    expect(Number(track.getAttribute('data-ticks'))).toBe(3);
+    expect(track.style.backgroundImage).toContain('linear-gradient');
     // a span underlay exists only where duration+timestamp were recorded
     expect(g1.querySelectorAll('.tl__span').length).toBe(1);
   });
@@ -235,6 +239,85 @@ describe('ExecutionPage — forge/PortalEvent/1 observability', () => {
     expect(inst.playing()).toBe(true);
     inst.pause();
     expect(inst.playing()).toBe(false);
+  });
+
+  // -- Cycle 4 §7 — bounded rendering --------------------------------
+  const BIG: PortalEventReport = {
+    ...REPORT,
+    count: 240,
+    dropped: 0,
+    truncated: false,
+    events: Array.from({ length: 240 }, (_, i) =>
+      ev({
+        event_id: `b${i}`,
+        event_type: i % 3 ? 'tool.invocation' : 'operation.end',
+        correlation_id: `cid-${(i % 60).toString().padStart(3, '0')}`,
+        timestamp: `2026-10-20T12:${String(Math.floor(i / 60)).padStart(2, '0')}:${String(
+          i % 60,
+        ).padStart(2, '0')}.000Z`,
+        source: `forge:scale-${i % 4}`,
+        status: i % 5 ? 'ok' : 'failed',
+      }),
+    ),
+  };
+
+  it('bounds the events table to a page slice — the range stays honest', async () => {
+    const { el, fixture } = await setup({ events: vi.fn(() => of(BIG)) });
+    const events = section(el, 'events')!;
+    // 240 real events, but the DOM holds one page, not the window
+    expect(rows(events).length).toBe(fixture.componentInstance.EVENTS_PAGE);
+    const pager = events.querySelector('ui-pager')!;
+    expect(pager).toBeTruthy();
+    expect(text(pager.querySelector('[data-page="range"]'))).toContain('240');
+    // aria-rowcount/rowindex keep the real table size in the a11y tree
+    const table = events.querySelector('table')!;
+    expect(Number(table.getAttribute('aria-rowcount'))).toBe(241);
+    const firstRow = table.querySelector('tbody tr')!;
+    expect(Number(firstRow.getAttribute('aria-rowindex'))).toBe(2);
+    // next page renders the next real slice — never an empty view
+    pager.querySelector<HTMLButtonElement>('[data-page="next"]')!.click();
+    fixture.detectChanges();
+    const p2 = events.querySelectorAll('tbody tr');
+    expect(p2.length).toBe(fixture.componentInstance.EVENTS_PAGE);
+    expect(Number(p2[0].getAttribute('aria-rowindex'))).toBe(
+      fixture.componentInstance.EVENTS_PAGE + 2,
+    );
+  });
+
+  it('bounds timeline groups and replay steps; transport keeps the page in view', async () => {
+    const { el, fixture } = await setup({ events: vi.fn(() => of(BIG)) });
+    const inst = fixture.componentInstance;
+    const tl = section(el, 'timeline')!;
+    // 60 real groups, one page of rows drawn
+    expect(tl.querySelectorAll('.tl__row').length).toBe(inst.TL_PAGE);
+    expect(tl.querySelector('ui-pager')).toBeTruthy();
+    // 240 real steps, one page drawn; the current step stays visible
+    const replay = section(el, 'replay')!;
+    expect(replay.querySelectorAll('.rp__step').length).toBe(inst.STEPS_PAGE);
+    // step 101 lands on page 2 automatically — no manual paging needed
+    for (let i = 0; i < inst.STEPS_PAGE; i++)
+      el.querySelector<HTMLButtonElement>('[data-action="step-next"]')!.click();
+    fixture.detectChanges();
+    expect(inst.replayIdx()).toBe(inst.STEPS_PAGE);
+    const curLi = replay.querySelector<HTMLElement>('.rp__steps li[data-current]');
+    expect(curLi).toBeTruthy();
+    expect(curLi!.getAttribute('aria-posinset')).toBe(String(inst.STEPS_PAGE + 1));
+  });
+
+  it('destroys without leaks — the replay timer is cleared on teardown', async () => {
+    const { fixture } = await setup({ events: vi.fn(() => of(BIG)) });
+    const inst = fixture.componentInstance;
+    vi.useFakeTimers();
+    try {
+      inst.play();
+      expect(inst.playing()).toBe(true);
+      fixture.destroy(); // the route-change destroy path
+      // a surviving timer would advance the index; cleared, nothing moves
+      vi.advanceTimersByTime(60000);
+      expect(inst.replayIdx()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('marks the capability UNVERIFIED on 404 — never an empty success', async () => {

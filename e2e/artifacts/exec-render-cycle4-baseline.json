@@ -1,0 +1,1152 @@
+{
+  "meta": {
+    "date": "2026-10-18T10:56:03Z",
+    "tool": "e2e/exec_render_probe.py",
+    "chromium": "playwright 1.60 bundled",
+    "scenarios": [
+      50,
+      500,
+      1000,
+      5000,
+      10000
+    ],
+    "note": "synthetic event streams via probe-only ScaleAdapter; production telemetry.DEFAULT_CAPACITY (500) untouched"
+  },
+  "scenarios": {
+    "50": {
+      "routes": {
+        "/observe": {
+          "wall_ms": 2114.5,
+          "cdp": {
+            "JSHeapUsedSize": 5221852,
+            "JSHeapTotalSize": 8650752,
+            "JSEventListeners": 42,
+            "Nodes": 2074,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8,
+            "LayoutDuration": 0.752146,
+            "RecalcStyleDuration": 0.021701,
+            "ScriptDuration": 0.141487,
+            "TaskDuration": 1.238033
+          },
+          "delta": {
+            "ScriptDuration_ms": 141.5,
+            "TaskDuration_ms": 1235.8,
+            "LayoutDuration_ms": 752.1,
+            "RecalcStyleDuration_ms": 21.7,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 1003,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 693,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 50,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 20.1
+          }
+        },
+        "/execution": {
+          "wall_ms": 1335.1,
+          "cdp": {
+            "JSHeapUsedSize": 7444724,
+            "JSHeapTotalSize": 12320768,
+            "JSEventListeners": 206,
+            "Nodes": 5320,
+            "LayoutCount": 12,
+            "RecalcStyleCount": 16,
+            "LayoutDuration": 0.8382,
+            "RecalcStyleDuration": 0.05752,
+            "ScriptDuration": 0.248243,
+            "TaskDuration": 1.818605
+          },
+          "delta": {
+            "ScriptDuration_ms": 106.8,
+            "TaskDuration_ms": 580.0,
+            "LayoutDuration_ms": 86.1,
+            "RecalcStyleDuration_ms": 35.8,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 1526,
+            "max_depth": 14,
+            "sec_timeline": 180,
+            "sec_events": 625,
+            "sec_replay": 443,
+            "sec_inspector": 0,
+            "table_rows": 50,
+            "tl_rows": 15,
+            "tl_ticks": 48,
+            "tl_spans": 18,
+            "rp_steps": 50,
+            "elements_per_event": 30.5
+          }
+        },
+        "/tasks": {
+          "wall_ms": 1318.9,
+          "cdp": {
+            "JSHeapUsedSize": 10009284,
+            "JSHeapTotalSize": 15728640,
+            "JSEventListeners": 278,
+            "Nodes": 6156,
+            "LayoutCount": 21,
+            "RecalcStyleCount": 31,
+            "LayoutDuration": 0.870608,
+            "RecalcStyleDuration": 0.079824,
+            "ScriptDuration": 0.309186,
+            "TaskDuration": 2.221925
+          },
+          "delta": {
+            "ScriptDuration_ms": 60.9,
+            "TaskDuration_ms": 403.1,
+            "LayoutDuration_ms": 32.4,
+            "RecalcStyleDuration_ms": 22.3,
+            "LayoutCount": 9,
+            "RecalcStyleCount": 15
+          },
+          "dom": {
+            "elements": 516,
+            "max_depth": 14,
+            "sec_timeline": 78,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 12,
+            "tl_rows": 12,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 10.3
+          }
+        },
+        "/lab": {
+          "wall_ms": 1267.4,
+          "cdp": {
+            "JSHeapUsedSize": 12143716,
+            "JSHeapTotalSize": 19660800,
+            "JSEventListeners": 325,
+            "Nodes": 6859,
+            "LayoutCount": 30,
+            "RecalcStyleCount": 42,
+            "LayoutDuration": 0.88859,
+            "RecalcStyleDuration": 0.126674,
+            "ScriptDuration": 0.361708,
+            "TaskDuration": 2.615667
+          },
+          "delta": {
+            "ScriptDuration_ms": 52.5,
+            "TaskDuration_ms": 393.5,
+            "LayoutDuration_ms": 18.0,
+            "RecalcStyleDuration_ms": 46.9,
+            "LayoutCount": 9,
+            "RecalcStyleCount": 11
+          },
+          "dom": {
+            "elements": 381,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 9,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 7.6
+          }
+        }
+      },
+      "leak": {
+        "nodes_per_cycle": [
+          17071,
+          21710,
+          26349
+        ],
+        "listeners_per_cycle": [
+          937,
+          1190,
+          1443
+        ],
+        "heap_per_cycle": [
+          25960276,
+          29453368,
+          38975168
+        ],
+        "nodes_growth": 9278,
+        "listeners_growth": 506,
+        "heap_growth_bytes": 13014892
+      },
+      "interact": {
+        "exec-filter-search": {
+          "wall_ms": 438.0,
+          "ScriptDuration_ms": 18.3,
+          "TaskDuration_ms": 155.5,
+          "LayoutDuration_ms": 3.0,
+          "RecalcStyleDuration_ms": 18.5,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 13
+        },
+        "exec-select-execution": {
+          "wall_ms": 473.5,
+          "ScriptDuration_ms": 3.2,
+          "TaskDuration_ms": 105.3,
+          "LayoutDuration_ms": 1.3,
+          "RecalcStyleDuration_ms": 14.7,
+          "LayoutCount": 2,
+          "RecalcStyleCount": 16
+        },
+        "exec-open-inspector": {
+          "wall_ms": 441.9,
+          "ScriptDuration_ms": 8.2,
+          "TaskDuration_ms": 123.3,
+          "LayoutDuration_ms": 16.0,
+          "RecalcStyleDuration_ms": 17.2,
+          "LayoutCount": 1,
+          "RecalcStyleCount": 21
+        },
+        "exec-replay-step": {
+          "wall_ms": 335.7,
+          "ScriptDuration_ms": 0.0,
+          "TaskDuration_ms": 9.9,
+          "LayoutDuration_ms": 0.0,
+          "RecalcStyleDuration_ms": 0.0,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0
+        },
+        "observe-filter-corr": {
+          "wall_ms": 391.0,
+          "ScriptDuration_ms": 4.9,
+          "TaskDuration_ms": 117.3,
+          "LayoutDuration_ms": 2.3,
+          "RecalcStyleDuration_ms": 8.5,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 11
+        }
+      },
+      "endpoints": {
+        "events_ms": 80.1,
+        "events_bytes": 16314,
+        "events_filtered_ms": 12.6,
+        "events_limit25_ms": 6.0,
+        "metrics_ms": 5.1,
+        "metrics_bytes": 10244
+      }
+    },
+    "500": {
+      "routes": {
+        "/observe": {
+          "wall_ms": 2026.6,
+          "cdp": {
+            "JSHeapUsedSize": 6967656,
+            "JSHeapTotalSize": 11272192,
+            "JSEventListeners": 42,
+            "Nodes": 14074,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8,
+            "LayoutDuration": 0.44846,
+            "RecalcStyleDuration": 0.069809,
+            "ScriptDuration": 0.252311,
+            "TaskDuration": 1.190913
+          },
+          "delta": {
+            "ScriptDuration_ms": 252.3,
+            "TaskDuration_ms": 1190.9,
+            "LayoutDuration_ms": 448.5,
+            "RecalcStyleDuration_ms": 69.8,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 6703,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 6393,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 500,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 13.4
+          }
+        },
+        "/execution": {
+          "wall_ms": 1279.7,
+          "cdp": {
+            "JSHeapUsedSize": 15088292,
+            "JSHeapTotalSize": 22020096,
+            "JSEventListeners": 1162,
+            "Nodes": 38678,
+            "LayoutCount": 12,
+            "RecalcStyleCount": 16,
+            "LayoutDuration": 0.710384,
+            "RecalcStyleDuration": 0.19122,
+            "ScriptDuration": 0.498818,
+            "TaskDuration": 2.203828
+          },
+          "delta": {
+            "ScriptDuration_ms": 246.5,
+            "TaskDuration_ms": 1008.5,
+            "LayoutDuration_ms": 261.9,
+            "RecalcStyleDuration_ms": 121.4,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 11507,
+            "max_depth": 14,
+            "sec_timeline": 1126,
+            "sec_events": 5875,
+            "sec_replay": 4228,
+            "sec_inspector": 0,
+            "table_rows": 500,
+            "tl_rows": 71,
+            "tl_ticks": 463,
+            "tl_spans": 157,
+            "rp_steps": 500,
+            "elements_per_event": 23.0
+          }
+        },
+        "/tasks": {
+          "wall_ms": 1550.7,
+          "cdp": {
+            "JSHeapUsedSize": 19055532,
+            "JSHeapTotalSize": 29622272,
+            "JSEventListeners": 1460,
+            "Nodes": 42565,
+            "LayoutCount": 18,
+            "RecalcStyleCount": 25,
+            "LayoutDuration": 0.778087,
+            "RecalcStyleDuration": 0.22692,
+            "ScriptDuration": 0.635833,
+            "TaskDuration": 2.793029
+          },
+          "delta": {
+            "ScriptDuration_ms": 137.0,
+            "TaskDuration_ms": 588.9,
+            "LayoutDuration_ms": 67.7,
+            "RecalcStyleDuration_ms": 35.7,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 9
+          },
+          "dom": {
+            "elements": 2550,
+            "max_depth": 14,
+            "sec_timeline": 756,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 125,
+            "tl_rows": 125,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 5.1
+          }
+        },
+        "/lab": {
+          "wall_ms": 1242.2,
+          "cdp": {
+            "JSHeapUsedSize": 20237000,
+            "JSHeapTotalSize": 35913728,
+            "JSEventListeners": 1507,
+            "Nodes": 45016,
+            "LayoutCount": 25,
+            "RecalcStyleCount": 35,
+            "LayoutDuration": 0.813195,
+            "RecalcStyleDuration": 0.253974,
+            "ScriptDuration": 0.713056,
+            "TaskDuration": 3.198285
+          },
+          "delta": {
+            "ScriptDuration_ms": 77.2,
+            "TaskDuration_ms": 404.6,
+            "LayoutDuration_ms": 35.1,
+            "RecalcStyleDuration_ms": 27.1,
+            "LayoutCount": 7,
+            "RecalcStyleCount": 10
+          },
+          "dom": {
+            "elements": 1393,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 101,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 2.8
+          }
+        }
+      },
+      "leak": {
+        "nodes_per_cycle": [
+          110318,
+          136763,
+          163424
+        ],
+        "listeners_per_cycle": [
+          4927,
+          6162,
+          7412
+        ],
+        "heap_per_cycle": [
+          43533396,
+          53027884,
+          68772304
+        ],
+        "nodes_growth": 53106,
+        "listeners_growth": 2485,
+        "heap_growth_bytes": 25238908
+      },
+      "interact": {
+        "exec-filter-search": {
+          "wall_ms": 447.0,
+          "ScriptDuration_ms": 86.2,
+          "TaskDuration_ms": 239.1,
+          "LayoutDuration_ms": 20.8,
+          "RecalcStyleDuration_ms": 6.6,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 5
+        },
+        "exec-select-execution": {
+          "wall_ms": 396.0,
+          "ScriptDuration_ms": 8.7,
+          "TaskDuration_ms": 187.7,
+          "LayoutDuration_ms": 2.5,
+          "RecalcStyleDuration_ms": 6.0,
+          "LayoutCount": 2,
+          "RecalcStyleCount": 15
+        },
+        "exec-open-inspector": {
+          "wall_ms": 435.3,
+          "ScriptDuration_ms": 14.8,
+          "TaskDuration_ms": 182.2,
+          "LayoutDuration_ms": 8.4,
+          "RecalcStyleDuration_ms": 7.7,
+          "LayoutCount": 1,
+          "RecalcStyleCount": 21
+        },
+        "exec-replay-step": {
+          "wall_ms": 396.9,
+          "ScriptDuration_ms": 10.2,
+          "TaskDuration_ms": 142.5,
+          "LayoutDuration_ms": 2.5,
+          "RecalcStyleDuration_ms": 10.6,
+          "LayoutCount": 4,
+          "RecalcStyleCount": 19
+        },
+        "observe-filter-corr": {
+          "wall_ms": 412.5,
+          "ScriptDuration_ms": 39.9,
+          "TaskDuration_ms": 151.2,
+          "LayoutDuration_ms": 3.8,
+          "RecalcStyleDuration_ms": 3.4,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 14
+        }
+      },
+      "endpoints": {
+        "events_ms": 39.8,
+        "events_bytes": 157697,
+        "events_filtered_ms": 6.9,
+        "events_limit25_ms": 5.9,
+        "metrics_ms": 19.8,
+        "metrics_bytes": 97115
+      }
+    },
+    "1000": {
+      "routes": {
+        "/observe": {
+          "wall_ms": 1533.1,
+          "cdp": {
+            "JSHeapUsedSize": 9078272,
+            "JSHeapTotalSize": 15466496,
+            "JSEventListeners": 42,
+            "Nodes": 27407,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8,
+            "LayoutDuration": 0.6008,
+            "RecalcStyleDuration": 0.119758,
+            "ScriptDuration": 0.329528,
+            "TaskDuration": 1.436135
+          },
+          "delta": {
+            "ScriptDuration_ms": 329.5,
+            "TaskDuration_ms": 1436.1,
+            "LayoutDuration_ms": 600.8,
+            "RecalcStyleDuration_ms": 119.8,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 13036,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 12726,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 1000,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 13.0
+          }
+        },
+        "/execution": {
+          "wall_ms": 1303.2,
+          "cdp": {
+            "JSHeapUsedSize": 21460104,
+            "JSHeapTotalSize": 33525760,
+            "JSEventListeners": 2223,
+            "Nodes": 75661,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 16,
+            "LayoutDuration": 1.074264,
+            "RecalcStyleDuration": 0.403597,
+            "ScriptDuration": 0.859226,
+            "TaskDuration": 3.32734
+          },
+          "delta": {
+            "ScriptDuration_ms": 529.7,
+            "TaskDuration_ms": 1881.2,
+            "LayoutDuration_ms": 473.5,
+            "RecalcStyleDuration_ms": 283.8,
+            "LayoutCount": 7,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 22602,
+            "max_depth": 14,
+            "sec_timeline": 2183,
+            "sec_events": 11708,
+            "sec_replay": 8433,
+            "sec_inspector": 0,
+            "table_rows": 1000,
+            "tl_rows": 134,
+            "tl_ticks": 925,
+            "tl_spans": 311,
+            "rp_steps": 1000,
+            "elements_per_event": 22.6
+          }
+        },
+        "/tasks": {
+          "wall_ms": 1716.6,
+          "cdp": {
+            "JSHeapUsedSize": 23896464,
+            "JSHeapTotalSize": 44273664,
+            "JSEventListeners": 2771,
+            "Nodes": 82923,
+            "LayoutCount": 19,
+            "RecalcStyleCount": 24,
+            "LayoutDuration": 1.162815,
+            "RecalcStyleDuration": 0.466599,
+            "ScriptDuration": 1.054797,
+            "TaskDuration": 4.108164
+          },
+          "delta": {
+            "ScriptDuration_ms": 195.6,
+            "TaskDuration_ms": 777.3,
+            "LayoutDuration_ms": 88.6,
+            "RecalcStyleDuration_ms": 63.0,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 4800,
+            "max_depth": 14,
+            "sec_timeline": 1506,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 250,
+            "tl_rows": 250,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 4.8
+          }
+        },
+        "/lab": {
+          "wall_ms": 1265.9,
+          "cdp": {
+            "JSHeapUsedSize": 28974608,
+            "JSHeapTotalSize": 45060096,
+            "JSEventListeners": 2818,
+            "Nodes": 87274,
+            "LayoutCount": 26,
+            "RecalcStyleCount": 32,
+            "LayoutDuration": 1.243796,
+            "RecalcStyleDuration": 0.501578,
+            "ScriptDuration": 1.146303,
+            "TaskDuration": 4.579042
+          },
+          "delta": {
+            "ScriptDuration_ms": 91.5,
+            "TaskDuration_ms": 470.6,
+            "LayoutDuration_ms": 81.0,
+            "RecalcStyleDuration_ms": 35.0,
+            "LayoutCount": 7,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 2493,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 201,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 2.5
+          }
+        }
+      },
+      "leak": {
+        "nodes_per_cycle": [
+          213513,
+          263699,
+          314101
+        ],
+        "listeners_per_cycle": [
+          9381,
+          11679,
+          13992
+        ],
+        "heap_per_cycle": [
+          70857856,
+          76274560,
+          89825348
+        ],
+        "nodes_growth": 100588,
+        "listeners_growth": 4611,
+        "heap_growth_bytes": 18967492
+      },
+      "interact": {
+        "exec-filter-search": {
+          "wall_ms": 512.7,
+          "ScriptDuration_ms": 124.2,
+          "TaskDuration_ms": 438.9,
+          "LayoutDuration_ms": 32.5,
+          "RecalcStyleDuration_ms": 12.2,
+          "LayoutCount": 4,
+          "RecalcStyleCount": 8
+        },
+        "exec-select-execution": {
+          "wall_ms": 378.9,
+          "ScriptDuration_ms": 9.4,
+          "TaskDuration_ms": 209.2,
+          "LayoutDuration_ms": 2.4,
+          "RecalcStyleDuration_ms": 6.3,
+          "LayoutCount": 2,
+          "RecalcStyleCount": 16
+        },
+        "exec-open-inspector": {
+          "wall_ms": 429.7,
+          "ScriptDuration_ms": 20.6,
+          "TaskDuration_ms": 198.1,
+          "LayoutDuration_ms": 7.8,
+          "RecalcStyleDuration_ms": 11.7,
+          "LayoutCount": 1,
+          "RecalcStyleCount": 23
+        },
+        "exec-replay-step": {
+          "wall_ms": 398.7,
+          "ScriptDuration_ms": 7.7,
+          "TaskDuration_ms": 143.4,
+          "LayoutDuration_ms": 1.7,
+          "RecalcStyleDuration_ms": 6.7,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 17
+        },
+        "observe-filter-corr": {
+          "wall_ms": 388.0,
+          "ScriptDuration_ms": 72.2,
+          "TaskDuration_ms": 183.5,
+          "LayoutDuration_ms": 3.6,
+          "RecalcStyleDuration_ms": 4.0,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 12
+        }
+      },
+      "endpoints": {
+        "events_ms": 43.6,
+        "events_bytes": 315055,
+        "events_filtered_ms": 13.5,
+        "events_limit25_ms": 4.7,
+        "metrics_ms": 31.7,
+        "metrics_bytes": 193739
+      }
+    },
+    "5000": {
+      "routes": {
+        "/observe": {
+          "wall_ms": 1449.5,
+          "cdp": {
+            "JSHeapUsedSize": 25649384,
+            "JSHeapTotalSize": 38998016,
+            "JSEventListeners": 40,
+            "Nodes": 133975,
+            "LayoutCount": 9,
+            "RecalcStyleCount": 11,
+            "LayoutDuration": 1.488881,
+            "RecalcStyleDuration": 0.49023,
+            "ScriptDuration": 0.890067,
+            "TaskDuration": 3.641358
+          },
+          "delta": {
+            "ScriptDuration_ms": 890.1,
+            "TaskDuration_ms": 3641.3,
+            "LayoutDuration_ms": 1488.9,
+            "RecalcStyleDuration_ms": 490.2,
+            "LayoutCount": 9,
+            "RecalcStyleCount": 11
+          },
+          "dom": {
+            "elements": 63703,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 63393,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 5000,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 12.7
+          }
+        },
+        "/execution": {
+          "wall_ms": 1571.5,
+          "cdp": {
+            "JSHeapUsedSize": 54661312,
+            "JSHeapTotalSize": 73273344,
+            "JSEventListeners": 10681,
+            "Nodes": 367076,
+            "LayoutCount": 22,
+            "RecalcStyleCount": 26,
+            "LayoutDuration": 3.186156,
+            "RecalcStyleDuration": 1.28034,
+            "ScriptDuration": 2.354645,
+            "TaskDuration": 8.864599
+          },
+          "delta": {
+            "ScriptDuration_ms": 1464.6,
+            "TaskDuration_ms": 5222.6,
+            "LayoutDuration_ms": 1697.3,
+            "RecalcStyleDuration_ms": 790.1,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 15
+          },
+          "dom": {
+            "elements": 111332,
+            "max_depth": 14,
+            "sec_timeline": 10605,
+            "sec_events": 58375,
+            "sec_replay": 42074,
+            "sec_inspector": 0,
+            "table_rows": 5000,
+            "tl_rows": 634,
+            "tl_ticks": 4617,
+            "tl_spans": 1541,
+            "rp_steps": 5000,
+            "elements_per_event": 22.3
+          }
+        },
+        "/tasks": {
+          "wall_ms": 1819.4,
+          "cdp": {
+            "JSHeapUsedSize": 65257496,
+            "JSHeapTotalSize": 81924096,
+            "JSEventListeners": 11229,
+            "Nodes": 369335,
+            "LayoutCount": 28,
+            "RecalcStyleCount": 34,
+            "LayoutDuration": 3.264489,
+            "RecalcStyleDuration": 1.334243,
+            "ScriptDuration": 2.520191,
+            "TaskDuration": 9.74949
+          },
+          "delta": {
+            "ScriptDuration_ms": 165.5,
+            "TaskDuration_ms": 879.4,
+            "LayoutDuration_ms": 78.3,
+            "RecalcStyleDuration_ms": 53.9,
+            "LayoutCount": 6,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 4800,
+            "max_depth": 14,
+            "sec_timeline": 1506,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 250,
+            "tl_rows": 250,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 1.0
+          }
+        },
+        "/lab": {
+          "wall_ms": 1217.4,
+          "cdp": {
+            "JSHeapUsedSize": 70346640,
+            "JSHeapTotalSize": 86642688,
+            "JSEventListeners": 11276,
+            "Nodes": 373686,
+            "LayoutCount": 36,
+            "RecalcStyleCount": 44,
+            "LayoutDuration": 3.307271,
+            "RecalcStyleDuration": 1.364324,
+            "ScriptDuration": 2.584701,
+            "TaskDuration": 10.14365
+          },
+          "delta": {
+            "ScriptDuration_ms": 64.5,
+            "TaskDuration_ms": 393.6,
+            "LayoutDuration_ms": 42.8,
+            "RecalcStyleDuration_ms": 30.1,
+            "LayoutCount": 8,
+            "RecalcStyleCount": 10
+          },
+          "dom": {
+            "elements": 2493,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 201,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 0.5
+          }
+        }
+      },
+      "leak": {
+        "nodes_per_cycle": [
+          485203,
+          562416,
+          756464
+        ],
+        "listeners_per_cycle": [
+          10836,
+          20527,
+          19819
+        ],
+        "heap_per_cycle": [
+          68901720,
+          84577372,
+          89910832
+        ],
+        "nodes_growth": 271261,
+        "listeners_growth": 8983,
+        "heap_growth_bytes": 21009112
+      },
+      "interact": {
+        "exec-filter-search": {
+          "wall_ms": 4175.6,
+          "ScriptDuration_ms": 916.4,
+          "TaskDuration_ms": 4179.2,
+          "LayoutDuration_ms": 1573.3,
+          "RecalcStyleDuration_ms": 714.4,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 6
+        },
+        "exec-select-execution": {
+          "wall_ms": 954.3,
+          "ScriptDuration_ms": 208.4,
+          "TaskDuration_ms": 736.2,
+          "LayoutDuration_ms": 114.2,
+          "RecalcStyleDuration_ms": 52.3,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 15
+        },
+        "exec-open-inspector": {
+          "wall_ms": 475.7,
+          "ScriptDuration_ms": 24.1,
+          "TaskDuration_ms": 329.7,
+          "LayoutDuration_ms": 11.0,
+          "RecalcStyleDuration_ms": 11.2,
+          "LayoutCount": 1,
+          "RecalcStyleCount": 15
+        },
+        "exec-replay-step": {
+          "wall_ms": 454.9,
+          "ScriptDuration_ms": 19.0,
+          "TaskDuration_ms": 222.3,
+          "LayoutDuration_ms": 1.6,
+          "RecalcStyleDuration_ms": 5.3,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 15
+        },
+        "observe-filter-corr": {
+          "wall_ms": 774.9,
+          "ScriptDuration_ms": 218.5,
+          "TaskDuration_ms": 791.5,
+          "LayoutDuration_ms": 2.1,
+          "RecalcStyleDuration_ms": 1.7,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 8
+        }
+      },
+      "endpoints": {
+        "events_ms": 204.2,
+        "events_bytes": 1585215,
+        "events_filtered_ms": 29.9,
+        "events_limit25_ms": 7.5,
+        "metrics_ms": 172.9,
+        "metrics_bytes": 970364
+      }
+    },
+    "10000": {
+      "routes": {
+        "/observe": {
+          "wall_ms": 1602.7,
+          "cdp": {
+            "JSHeapUsedSize": 47283460,
+            "JSHeapTotalSize": 70389760,
+            "JSEventListeners": 40,
+            "Nodes": 267308,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 17,
+            "LayoutDuration": 2.10383,
+            "RecalcStyleDuration": 0.598926,
+            "ScriptDuration": 1.121779,
+            "TaskDuration": 4.988613
+          },
+          "delta": {
+            "ScriptDuration_ms": 1121.8,
+            "TaskDuration_ms": 4988.6,
+            "LayoutDuration_ms": 2103.8,
+            "RecalcStyleDuration_ms": 598.9,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 17
+          },
+          "dom": {
+            "elements": 127036,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 126726,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 10000,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 12.7
+          }
+        },
+        "/execution": {
+          "wall_ms": 9872.3,
+          "cdp": {
+            "JSHeapUsedSize": 104369348,
+            "JSHeapTotalSize": 131862528,
+            "JSEventListeners": 21306,
+            "Nodes": 722749,
+            "LayoutCount": 26,
+            "RecalcStyleCount": 33,
+            "LayoutDuration": 5.509781,
+            "RecalcStyleDuration": 2.35028,
+            "ScriptDuration": 3.334633,
+            "TaskDuration": 14.274228
+          },
+          "delta": {
+            "ScriptDuration_ms": 2212.9,
+            "TaskDuration_ms": 9285.3,
+            "LayoutDuration_ms": 3406.0,
+            "RecalcStyleDuration_ms": 1751.4,
+            "LayoutCount": 13,
+            "RecalcStyleCount": 16
+          },
+          "dom": {
+            "elements": 222247,
+            "max_depth": 14,
+            "sec_timeline": 21134,
+            "sec_events": 116708,
+            "sec_replay": 84127,
+            "sec_inspector": 0,
+            "table_rows": 10000,
+            "tl_rows": 1259,
+            "tl_ticks": 9232,
+            "tl_spans": 3080,
+            "rp_steps": 10000,
+            "elements_per_event": 22.2
+          }
+        },
+        "/tasks": {
+          "wall_ms": 2106.2,
+          "cdp": {
+            "JSHeapUsedSize": 93271512,
+            "JSHeapTotalSize": 133697536,
+            "JSEventListeners": 21854,
+            "Nodes": 730011,
+            "LayoutCount": 33,
+            "RecalcStyleCount": 41,
+            "LayoutDuration": 5.570779,
+            "RecalcStyleDuration": 2.395391,
+            "ScriptDuration": 3.47877,
+            "TaskDuration": 15.431644
+          },
+          "delta": {
+            "ScriptDuration_ms": 144.1,
+            "TaskDuration_ms": 1157.1,
+            "LayoutDuration_ms": 61.0,
+            "RecalcStyleDuration_ms": 45.1,
+            "LayoutCount": 7,
+            "RecalcStyleCount": 8
+          },
+          "dom": {
+            "elements": 4800,
+            "max_depth": 14,
+            "sec_timeline": 1506,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 250,
+            "tl_rows": 250,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 0.5
+          }
+        },
+        "/lab": {
+          "wall_ms": 1247.4,
+          "cdp": {
+            "JSHeapUsedSize": 13206872,
+            "JSHeapTotalSize": 63963136,
+            "JSEventListeners": 593,
+            "Nodes": 11542,
+            "LayoutCount": 40,
+            "RecalcStyleCount": 50,
+            "LayoutDuration": 5.606865,
+            "RecalcStyleDuration": 2.425376,
+            "ScriptDuration": 3.566913,
+            "TaskDuration": 16.10078
+          },
+          "delta": {
+            "ScriptDuration_ms": 88.1,
+            "TaskDuration_ms": 654.4,
+            "LayoutDuration_ms": 36.1,
+            "RecalcStyleDuration_ms": 30.0,
+            "LayoutCount": 7,
+            "RecalcStyleCount": 9
+          },
+          "dom": {
+            "elements": 2493,
+            "max_depth": 14,
+            "sec_timeline": 0,
+            "sec_events": 0,
+            "sec_replay": 0,
+            "sec_inspector": 0,
+            "table_rows": 201,
+            "tl_rows": 0,
+            "tl_ticks": 0,
+            "tl_spans": 0,
+            "rp_steps": 0,
+            "elements_per_event": 0.2
+          }
+        }
+      },
+      "leak": {
+        "nodes_per_cycle": [
+          500691,
+          466072,
+          668635
+        ],
+        "listeners_per_cycle": [
+          11461,
+          21345,
+          32783
+        ],
+        "heap_per_cycle": [
+          93154692,
+          81452212,
+          131039884
+        ],
+        "nodes_growth": 167944,
+        "listeners_growth": 21322,
+        "heap_growth_bytes": 37885192
+      },
+      "interact": {
+        "exec-filter-search": {
+          "wall_ms": 6851.9,
+          "ScriptDuration_ms": 1376.4,
+          "TaskDuration_ms": 6851.5,
+          "LayoutDuration_ms": 2105.0,
+          "RecalcStyleDuration_ms": 2163.8,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 7
+        },
+        "exec-select-execution": {
+          "wall_ms": 1422.6,
+          "ScriptDuration_ms": 552.3,
+          "TaskDuration_ms": 1230.5,
+          "LayoutDuration_ms": 238.6,
+          "RecalcStyleDuration_ms": 55.5,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 16
+        },
+        "exec-open-inspector": {
+          "wall_ms": 603.4,
+          "ScriptDuration_ms": 36.8,
+          "TaskDuration_ms": 483.1,
+          "LayoutDuration_ms": 6.2,
+          "RecalcStyleDuration_ms": 13.4,
+          "LayoutCount": 1,
+          "RecalcStyleCount": 19
+        },
+        "exec-replay-step": {
+          "wall_ms": 463.3,
+          "ScriptDuration_ms": 37.0,
+          "TaskDuration_ms": 267.8,
+          "LayoutDuration_ms": 1.9,
+          "RecalcStyleDuration_ms": 6.4,
+          "LayoutCount": 3,
+          "RecalcStyleCount": 13
+        },
+        "observe-filter-corr": {
+          "wall_ms": 896.5,
+          "ScriptDuration_ms": 215.2,
+          "TaskDuration_ms": 900.2,
+          "LayoutDuration_ms": 0.7,
+          "RecalcStyleDuration_ms": 0.9,
+          "LayoutCount": 2,
+          "RecalcStyleCount": 5
+        }
+      },
+      "endpoints": {
+        "events_ms": 508.0,
+        "events_bytes": 3173002,
+        "events_filtered_ms": 62.8,
+        "events_limit25_ms": 7.0,
+        "metrics_ms": 321.2,
+        "metrics_bytes": 1941168
+      }
+    }
+  }
+}

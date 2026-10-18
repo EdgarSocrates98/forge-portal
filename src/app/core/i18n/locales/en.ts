@@ -59,6 +59,12 @@ export const EN: Record<string, string> = {
   'state.none': 'None',
   'state.all': 'All',
 
+  // pagination (Cycle 4 — bounded rendering of recorded lists)
+  'pager.label': 'Pagination',
+  'pager.prev': 'Prev',
+  'pager.next': 'Next',
+  'pager.range': '{from}–{to} of {total}',
+
   // installation states
   'installState.NOT_INSTALLED': 'Not installed',
   'installState.INSTALLED': 'Installed',

@@ -1,13 +1,20 @@
 import { PortalEvent } from '../../core/api/api.models';
 import {
   REPLAY_MAX_WAIT_MS,
+  buildEventRows,
   buildExecutions,
+  buildRelationIndex,
   buildReplay,
+  buildSearchIndex,
+  buildStepRows,
+  buildTickGradient,
   causedBy,
+  causedByIn,
   filterEvents,
   fmtGap,
   placeEvents,
   relatedEvents,
+  relatedIn,
   shortId,
   statusKind,
 } from './execution.data';
@@ -225,6 +232,119 @@ describe('relations — observed links only', () => {
     expect(causedBy(b, all)?.event_id).toBe('a');
     expect(causedBy(a, all)).toBeNull();
     expect(causedBy(c, all)).toBeNull();
+  });
+});
+
+describe('buildTickGradient — every placed event, zero DOM', () => {
+  const placed = (...idxs: number[]) =>
+    idxs.map((i) => ({
+      event: ev({
+        event_id: `e${i}`,
+        timestamp: `2026-10-20T12:00:0${i}.000Z`,
+        status: i === 0 ? 'started' : 'ok',
+      }),
+      idx: i,
+      timeMs: Date.parse(`2026-10-20T12:00:0${i}.000Z`),
+    }));
+
+  it('emits one color stop pair per placed event in recorded order', () => {
+    const g = buildTickGradient(
+      placed(0, 1, 2),
+      Date.parse('2026-10-20T12:00:00.000Z'),
+      Date.parse('2026-10-20T12:00:02.000Z'),
+    );
+    expect(g).toContain('linear-gradient(90deg');
+    // first tick at window start, mid tick ~50%, last near window end
+    expect(g).toContain('var(--info) 0%');
+    expect(g).toContain('var(--ok) 50%');
+    expect(g).toContain('var(--ok) 99.2%');
+  });
+
+  it('returns empty when nothing is drawable', () => {
+    expect(buildTickGradient([], null, null)).toBe('');
+    expect(buildTickGradient(placed(0), null, Date.parse(T0))).toBe('');
+  });
+
+  it('still draws a tick for a single point-in-time group', () => {
+    const g = buildTickGradient(placed(0), Date.parse(T0), Date.parse(T0));
+    expect(g).toContain('linear-gradient');
+    expect(g).toContain('var(--info)');
+  });
+
+  it('keeps stop positions non-decreasing for overlapping ticks', () => {
+    const p = [0, 0, 0].map((i) => ({
+      event: ev({ event_id: `s${i}`, timestamp: T0, status: 'ok' }),
+      idx: i,
+      timeMs: Date.parse(T0),
+    }));
+    const g = buildTickGradient(p, Date.parse(T0), Date.parse(T2));
+    const positions = [...g.matchAll(/(\d+(?:\.\d+)?)%/g)].map((m) => +m[1]);
+    for (let i = 1; i < positions.length; i++)
+      expect(positions[i]).toBeGreaterThanOrEqual(positions[i - 1]);
+  });
+});
+
+describe('search + relation indexes — same results, O(1) lookup', () => {
+  const events: PortalEvent[] = [
+    ev({ event_id: 'a', correlation_id: 'c1', span_id: 'sp1', status: 'ok' }),
+    ev({ event_id: 'b', correlation_id: 'c1', span_id: 'sp2', parent_span_id: 'sp1' }),
+    ev({ event_id: 'c', correlation_id: 'c2', metadata: { task_id: 'task-9' } }),
+  ];
+
+  it('filterEvents with an index matches the unindexed result', () => {
+    const idx = buildSearchIndex(events);
+    const f = { type: null, status: null, correlation: '', q: 'task-9' };
+    expect(filterEvents(events, f, idx).map((e) => e.event_id)).toEqual(['c']);
+    expect(filterEvents(events, f, idx)).toEqual(filterEvents(events, f));
+    // every criterion still applies alongside the indexed path
+    const f2 = { type: 'operation.start', status: 'ok', correlation: 'c1', q: 'c1' };
+    expect(filterEvents(events, f2, idx).map((e) => e.event_id)).toEqual(['a']);
+  });
+
+  it('relatedIn/causedByIn return the same sets as the scan versions', () => {
+    const idx = buildRelationIndex(events);
+    const [a, b, c] = events;
+    expect(relatedIn(a, idx).map((e) => e.event_id)).toEqual(['b']);
+    expect(relatedIn(a, idx)).toEqual(relatedEvents(a, events));
+    expect(relatedIn(c, idx)).toEqual([]);
+    expect(causedByIn(b, idx)?.event_id).toBe(causedBy(b, events)?.event_id);
+    expect(causedByIn(c, idx)).toBeNull();
+  });
+});
+
+describe('view-models — display strings resolved once', () => {
+  it('buildEventRows carries 1-based positions and honest placeholders', () => {
+    const rows = buildEventRows([
+      ev({
+        event_id: 'a',
+        timestamp: T0,
+        status: 'ok',
+        duration_ms: 40,
+        correlation_id: 'corr-xxxxxxxxxxxxxxxx',
+      }),
+      ev({ event_id: 'b' }),
+    ]);
+    expect(rows[0].position).toBe(1);
+    expect(rows[0].dur).toBe('40 ms');
+    expect(rows[0].cidShort).toBe('corr-xxx…');
+    expect(rows[0].cidFull).toBe('corr-xxxxxxxxxxxxxxxx');
+    expect(rows[1].dur).toBeNull();
+    expect(rows[1].cidShort).toBeNull();
+    // offsets keep global positions honest on paged slices
+    expect(buildEventRows([ev({})], 100)[0].position).toBe(101);
+  });
+
+  it('buildStepRows keeps global indexes and marks unplaced steps', () => {
+    const steps = buildReplay([
+      ev({ event_id: 'a', timestamp: T0 }),
+      ev({ event_id: 'u' }), // no timestamp — real but undrawn
+    ]);
+    const rows = buildStepRows(steps);
+    expect(rows[0].index).toBe(0);
+    expect(rows[0].unplaced).toBe(false);
+    expect(rows[1].unplaced).toBe(true);
+    expect(rows[1].gap).toBe('—'); // no fake gap
+    expect(buildStepRows(steps.slice(1), 1)[0].index).toBe(1);
   });
 });
 

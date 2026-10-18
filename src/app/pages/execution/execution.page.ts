@@ -10,16 +10,20 @@ import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
 import { Source, stamp } from '../explorer/forges.data';
+import { UiPager, pageSlice } from '../../shared/pager';
 import {
   ExecutionGroup,
   ReplayStep,
+  buildEventRows,
   buildExecutions,
+  buildRelationIndex,
   buildReplay,
-  causedBy,
+  buildSearchIndex,
+  buildStepRows,
+  causedByIn,
   filterEvents,
   fmtAt,
-  fmtGap,
-  relatedEvents,
+  relatedIn,
   shortId,
   statusKind,
 } from './execution.data';
@@ -45,7 +49,17 @@ import {
 @Component({
   selector: 'page-execution',
   standalone: true,
-  imports: [RouterLink, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [
+    RouterLink,
+    TPipe,
+    PageHeader,
+    StateBadge,
+    EmptyState,
+    ErrorState,
+    UiIcon,
+    UiSkeleton,
+    UiPager,
+  ],
   template: `
     <ui-page-header
       [title]="'execution.title' | t"
@@ -142,10 +156,15 @@ import {
                 <span>{{ fmtMs(executions().windowStart) }}</span>
                 <span>{{ fmtMs(executions().windowEnd) }}</span>
               </div>
-              @for (g of executions().groups; track g.key || 'unlinked') {
+              @for (g of pagedGroups(); track g.key || 'unlinked') {
                 <!-- listitem must wrap the button — <button> cannot carry
                      role="listitem" itself (axe aria-allowed-role) -->
-                <div class="tl__item" role="listitem">
+                <div
+                  class="tl__item"
+                  role="listitem"
+                  [attr.aria-setsize]="executions().groups.length"
+                  [attr.aria-posinset]="tlSlice().start + $index + 1"
+                >
                   <!-- no aria-label: the accessible name comes from the
                        button's own content (shortId + count + duration)
                        — axe label-content-name-mismatch -->
@@ -165,20 +184,21 @@ import {
                       }
                       <span class="tl__n">{{ g.events.length }}</span>
                     </span>
-                    <span class="tl__track">
+                    <!-- Track is decorative: every placed event is a real
+                         color stop of ONE gradient (same positions/tokens
+                         the old per-tick spans drew, zero DOM per event);
+                         the events table below is the structured list. -->
+                    <span
+                      class="tl__track"
+                      aria-hidden="true"
+                      [style.background-image]="g.tickGradient || null"
+                      [attr.data-ticks]="g.placed.length"
+                    >
                       @for (s of g.spans; track s.spanId) {
                         <span
                           class="tl__span"
                           [style.left.%]="s.leftPct"
                           [style.width.%]="s.widthPct"
-                        ></span>
-                      }
-                      @for (p of placedIn(g); track p.idx) {
-                        <span
-                          class="tl__tick"
-                          [attr.data-status]="statusKind(p.event.status)"
-                          [style.left]="'clamp(0px, ' + tickLeft(g, p) + '%, calc(100% - 3px))'"
-                          [title]="p.event.event_type + ' — ' + fmtAt(p.event.timestamp)"
                         ></span>
                       }
                     </span>
@@ -189,6 +209,13 @@ import {
                 </div>
               }
             </div>
+            <ui-pager
+              [total]="executions().groups.length"
+              [pageSize]="TL_PAGE"
+              [page]="tlSlice().page"
+              [label]="'execution.timeline.title' | t"
+              (pageChange)="tlPage.set($event)"
+            />
             @if (executions().unplacedCount) {
               <p class="muted tl__unplaced" data-note="unplaced">
                 {{ 'execution.timeline.unplaced' | t: { count: executions().unplacedCount } }}
@@ -263,44 +290,48 @@ import {
             </span>
           </div>
           <ol class="rp__steps">
-            @for (s of replaySteps(); track s.event.idx) {
-              <li [attr.data-current]="$index === replayIdx() || null">
+            @for (r of pagedStepRows(); track r.step.event.idx) {
+              <li
+                [attr.data-current]="r.index === replayIdx() || null"
+                [attr.aria-setsize]="replaySteps().length"
+                [attr.aria-posinset]="r.index + 1"
+              >
                 <button
                   class="rp__step"
                   type="button"
                   data-action="inspect"
-                  [attr.data-current]="$index === replayIdx() || null"
-                  (click)="inspect(s.event.event); replayIdx.set($index)"
+                  [attr.data-current]="r.index === replayIdx() || null"
+                  (click)="inspect(r.step.event.event); replayIdx.set(r.index)"
                 >
-                  <span class="rp__gap" [attr.title]="'execution.replay.gap' | t">{{
-                    fmtGap(s.gapMs)
-                  }}</span>
-                  @if (s.compressed) {
+                  <span class="rp__gap" [attr.title]="'execution.replay.gap' | t">{{ r.gap }}</span>
+                  @if (r.step.compressed) {
                     <span class="rp__compressed" [title]="'execution.replay.compressed' | t"
                       >⇥</span
                     >
                   }
-                  <code class="rp__kind">{{ s.event.event.event_type }}</code>
-                  <span class="rp__at">{{ fmtAt(s.event.event.timestamp) }}</span>
-                  <ui-state-badge
-                    [state]="statusKind(s.event.event.status)"
-                    [labelOverride]="s.event.event.status ?? '—'"
-                  />
-                  @if (s.event.event.duration_ms !== undefined) {
-                    <span class="num">{{ s.event.event.duration_ms }} ms</span>
+                  <code class="rp__kind">{{ r.step.event.event.event_type }}</code>
+                  <span class="rp__at">{{ r.at }}</span>
+                  <ui-state-badge [state]="r.kind" [labelOverride]="r.label" />
+                  @if (r.dur) {
+                    <span class="num">{{ r.dur }}</span>
                   }
-                  @if (s.event.event.source || s.event.event.target) {
-                    <span class="rp__flow"
-                      >{{ s.event.event.source ?? '—' }} → {{ s.event.event.target ?? '—' }}</span
-                    >
+                  @if (r.flow) {
+                    <span class="rp__flow">{{ r.flow }}</span>
                   }
-                  @if (!s.event.event.timestamp || !timeParseable(s.event.event.timestamp)) {
+                  @if (r.unplaced) {
                     <span class="rp__unplaced muted">{{ 'execution.noTimestamp' | t }}</span>
                   }
                 </button>
               </li>
             }
           </ol>
+          <ui-pager
+            [total]="replaySteps().length"
+            [pageSize]="STEPS_PAGE"
+            [page]="stepSlice().page"
+            [label]="'execution.replay.title' | t"
+            (pageChange)="stepManual.set($event)"
+          />
         </section>
       }
 
@@ -360,7 +391,7 @@ import {
 
         @if (filteredEvents().length) {
           <div class="table-wrap">
-            <table class="table">
+            <table class="table" [attr.aria-rowcount]="filteredEvents().length + 1">
               <thead>
                 <tr>
                   <th scope="col">{{ 'execution.col.type' | t }}</th>
@@ -372,39 +403,37 @@ import {
                 </tr>
               </thead>
               <tbody>
-                @for (e of filteredEvents(); track e.event_id ?? $index) {
+                @for (r of pagedEventRows(); track r.e.event_id ?? r.position) {
                   <tr
                     data-action="inspect"
-                    [attr.data-selected]="inspected() === e || null"
-                    (click)="inspect(e)"
+                    [attr.data-selected]="inspected() === r.e || null"
+                    [attr.aria-rowindex]="r.position + 1"
+                    (click)="inspect(r.e)"
                   >
                     <td>
-                      <code>{{ e.event_type }}</code>
+                      <code>{{ r.e.event_type }}</code>
                     </td>
-                    <td class="num">{{ fmtAt(e.timestamp) }}</td>
+                    <td class="num">{{ r.at }}</td>
                     <td>
-                      <ui-state-badge
-                        [state]="statusKind(e.status)"
-                        [labelOverride]="e.status ?? '—'"
-                      />
+                      <ui-state-badge [state]="r.kind" [labelOverride]="r.label" />
                     </td>
                     <td class="flow">
-                      @if (e.source || e.target) {
-                        {{ e.source ?? '—' }} → {{ e.target ?? '—' }}
+                      @if (r.flow) {
+                        {{ r.flow }}
                       } @else {
                         <span class="muted">—</span>
                       }
                     </td>
                     <td class="num">
-                      @if (e.duration_ms !== undefined) {
-                        {{ e.duration_ms }} ms
+                      @if (r.dur) {
+                        {{ r.dur }}
                       } @else {
                         <span class="muted">—</span>
                       }
                     </td>
                     <td>
-                      @if (e.correlation_id; as cid) {
-                        <code class="corr" [attr.title]="cid">{{ shortId(cid) }}</code>
+                      @if (r.cidFull; as cid) {
+                        <code class="corr" [attr.title]="cid">{{ r.cidShort }}</code>
                       } @else {
                         <span class="muted">—</span>
                       }
@@ -414,6 +443,13 @@ import {
               </tbody>
             </table>
           </div>
+          <ui-pager
+            [total]="filteredEvents().length"
+            [pageSize]="EVENTS_PAGE"
+            [page]="eventSlice().page"
+            [label]="'execution.events' | t"
+            (pageChange)="eventsPage.set($event)"
+          />
         } @else {
           @if (events().length) {
             <ui-empty icon="search" data-empty="no-matches" [title]="'execution.noMatches' | t" />
@@ -721,32 +757,16 @@ import {
       border: 1px solid var(--border);
       overflow: hidden;
     }
-    .tl__span,
-    .tl__tick {
+    .tl__span {
       position: absolute;
       top: 0;
       bottom: 0;
-    }
-    .tl__span {
       background: color-mix(in srgb, var(--info) 28%, transparent);
       border-radius: var(--radius-pill);
     }
-    .tl__tick {
-      width: 3px;
-      background: var(--tick, var(--fg-muted));
-    }
-    .tl__tick[data-status='supported'] {
-      --tick: var(--ok);
-    }
-    .tl__tick[data-status='error'] {
-      --tick: var(--error);
-    }
-    .tl__tick[data-status='warn'] {
-      --tick: var(--warn);
-    }
-    .tl__tick[data-status='info'] {
-      --tick: var(--info);
-    }
+    /* event ticks are color stops of the track's inline
+       background-image gradient — they paint above the span
+       underlays and need no extra rules here. */
     .tl__dur {
       text-align: right;
     }
@@ -862,11 +882,30 @@ export class ExecutionPage {
   readonly speed = signal(1);
   readonly SPEEDS = [1, 4, 16, 64] as const;
 
+  /** Paging state (Cycle 4 §7): page-size slices of the recorded window
+   *  keep the DOM bounded at any buffer size. `stepManual` holds a
+   *  user-picked replay page; when unset the page follows replayIdx so
+   *  transport controls always keep the current step in view. */
+  readonly eventsPage = signal(0);
+  readonly tlPage = signal(0);
+  readonly stepManual = signal<number | null>(null);
+  readonly EVENTS_PAGE = 100;
+  readonly TL_PAGE = 50;
+  readonly STEPS_PAGE = 100;
+
   private replayTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly deepApplied = signal<string | null>(null);
 
   /** The report's own event list — the whole recorded window. */
   readonly events = computed(() => this.report()?.events ?? []);
+
+  /** Normalized haystack per event — built once per data change, so a
+   *  filter keystroke is `includes` over real fields, not stringify×N. */
+  private readonly searchIndex = computed(() => buildSearchIndex(this.events()));
+
+  /** Correlation/span lookup tables for the inspector's observed
+   *  relations — a map hit instead of a full-window scan per render. */
+  private readonly relationIndex = computed(() => buildRelationIndex(this.events()));
 
   readonly typeOptions = computed(() =>
     [...new Set(this.events().map((e) => e.event_type))].sort((a, b) => a.localeCompare(b)),
@@ -882,17 +921,43 @@ export class ExecutionPage {
   );
 
   readonly filteredEvents = computed(() =>
-    filterEvents(this.events(), {
-      type: this.typeFilter(),
-      status: this.statusFilter(),
-      correlation: this.corrFilter(),
-      q: this.qFilter(),
-    }),
+    filterEvents(
+      this.events(),
+      {
+        type: this.typeFilter(),
+        status: this.statusFilter(),
+        correlation: this.corrFilter(),
+        q: this.qFilter(),
+      },
+      this.searchIndex(),
+    ),
   );
 
   /** Waterfall over the filtered window — filters narrow what is drawn;
    *  they never add history. */
   readonly executions = computed(() => buildExecutions(this.filteredEvents()));
+
+  /** Timeline slice — group rows stay bounded at any buffer size. */
+  readonly tlSlice = computed(() =>
+    pageSlice(this.executions().groups.length, this.TL_PAGE, this.tlPage()),
+  );
+  readonly pagedGroups = computed(() =>
+    this.executions().groups.slice(this.tlSlice().start, this.tlSlice().end),
+  );
+
+  /** Events-table slice — view-model rows are built only for the
+   *  visible page so formatting cost scales with the page, not the
+   *  buffer. `aria-rowcount`/`aria-rowindex` keep the table's real size
+   *  and position in the a11y tree. */
+  readonly eventSlice = computed(() =>
+    pageSlice(this.filteredEvents().length, this.EVENTS_PAGE, this.eventsPage()),
+  );
+  readonly pagedEventRows = computed(() =>
+    buildEventRows(
+      this.filteredEvents().slice(this.eventSlice().start, this.eventSlice().end),
+      this.eventSlice().start,
+    ),
+  );
 
   readonly selectedGroup = computed<ExecutionGroup | null>(() => {
     const cid = this.selectedCid();
@@ -912,9 +977,23 @@ export class ExecutionPage {
     return cid ?? 'unlinked';
   });
 
+  /** Replay slice — the page follows the current step unless the user
+   *  paged away manually; a manual pick is still clamped into range. */
+  readonly stepPage = computed(
+    () => this.stepManual() ?? Math.floor(this.replayIdx() / this.STEPS_PAGE),
+  );
+  readonly stepSlice = computed(() =>
+    pageSlice(this.replaySteps().length, this.STEPS_PAGE, this.stepPage()),
+  );
+  readonly pagedStepRows = computed(() =>
+    buildStepRows(
+      this.replaySteps().slice(this.stepSlice().start, this.stepSlice().end),
+      this.stepSlice().start,
+    ),
+  );
+
   readonly stamp = stamp;
   readonly fmtAt = fmtAt;
-  readonly fmtGap = fmtGap;
   readonly shortId = shortId;
   readonly statusKind = statusKind;
 
@@ -931,11 +1010,19 @@ export class ExecutionPage {
       const q = this.q();
       if (q) this.qFilter.set(q);
     });
+    // A filter/data change re-slices the window — return every pager to
+    // its first page so a stale offset can never render an empty view.
+    effect(() => {
+      this.filteredEvents();
+      this.eventsPage.set(0);
+      this.tlPage.set(0);
+    });
     // Any data/filter change re-derives the step list — reset position
     // and stop a playback that would otherwise walk stale steps.
     effect(() => {
       this.replaySteps();
       this.replayIdx.set(0);
+      this.stepManual.set(null);
       this.pause();
     });
     this.destroyRef.onDestroy(() => this.clearTimer());
@@ -956,19 +1043,6 @@ export class ExecutionPage {
     this.inspected.set(e);
   }
 
-  placedIn(g: ExecutionGroup) {
-    return g.events.filter((p) => p.timeMs !== null);
-  }
-
-  /** Tick position inside the group's own bar — derived from the
-   *  recorded window only; returns the bar start when the group has a
-   *  single point in time. */
-  tickLeft(g: ExecutionGroup, p: { timeMs: number | null }): number {
-    if (g.startMs === null || g.endMs === null || g.endMs === g.startMs || p.timeMs === null)
-      return 0;
-    return ((p.timeMs - g.startMs) / (g.endMs - g.startMs)) * 100;
-  }
-
   fmtMs(ms: number | null): string {
     return ms === null ? '—' : new Date(ms).toLocaleString();
   }
@@ -977,20 +1051,16 @@ export class ExecutionPage {
     return ms < 1000 ? `${ms} ms` : `${Number((ms / 1000).toFixed(1))} s`;
   }
 
-  timeParseable(iso: string | undefined): boolean {
-    return !!iso && Number.isFinite(Date.parse(iso));
-  }
-
   json(v: unknown): string {
     return JSON.stringify(v, null, 2);
   }
 
   related(e: PortalEvent): PortalEvent[] {
-    return relatedEvents(e, this.events());
+    return relatedIn(e, this.relationIndex());
   }
 
   causedByOf(e: PortalEvent): PortalEvent | null {
-    return causedBy(e, this.events());
+    return causedByIn(e, this.relationIndex());
   }
 
   /** The task id an event really names — `metadata.task_id` only. */
@@ -1032,6 +1102,7 @@ export class ExecutionPage {
 
   stepReplay(delta: number): void {
     this.pause();
+    this.stepManual.set(null); // transport moves → page follows the step
     const next = this.replayIdx() + delta;
     const last = this.replaySteps().length - 1;
     this.replayIdx.set(Math.max(0, Math.min(next, last)));
@@ -1052,6 +1123,7 @@ export class ExecutionPage {
     this.replayTimer = setTimeout(
       () => {
         this.replayTimer = null;
+        this.stepManual.set(null); // playback → the page tracks the step
         this.replayIdx.set(next);
         this.scheduleNext();
       },
