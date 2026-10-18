@@ -95,6 +95,22 @@ export interface FedNode {
   /** True when no loaded endpoint supplied it, or the descriptor itself
    *  reports `state: 'unverified'`. Rendered dashed/muted in the studio. */
   unverified: boolean;
+  /** Descriptor-reported lifecycle state when the source model carries
+   *  one verbatim (skill/agent/capability `state`, mcp `state`, host
+   *  `integration`, task `stage`). Absent when nothing was declared. */
+  state?: string;
+  /** Kind-scoped classification from a real field: skill `domain`,
+   *  agent `role`, mcp bound `host`, task `verb`. Never inferred. */
+  category?: string;
+  /** Declared origin Forja id — only when a descriptor or a declares
+   *  edge actually named one. */
+  origin?: string;
+  /** Reported version (host `version`, serving-Forja `forge_version`)
+   *  — absent when the source reported none. */
+  version?: string;
+  /** Whitelisted scalar extras from the descriptor, surfaced by the
+   *  inspector as-is (`tools_count`, `exit_code`, timestamps…). */
+  meta?: Record<string, string | number | boolean | null>;
 }
 
 export type FedEdgeKind = 'declares' | 'origin' | 'associated' | 'bound_to';
@@ -133,6 +149,8 @@ export interface FederatedInput {
   graphViews?: readonly Record<string, unknown>[] | null;
   /** `descriptor.forge_id` of the serving Forja (bootstrap payload). */
   servingForge?: string | null;
+  /** `descriptor.forge_version` — real version of the serving Forja. */
+  servingVersion?: string | null;
   /** Per-source availability observed while loading; absent keys fall
    *  back to `'loaded'` when data is present, `'unavailable'` otherwise. */
   availability?: Partial<Record<FedSource, SourceAvailability>>;
@@ -202,7 +220,17 @@ interface NodeAcc {
   evidence: Set<FedSource>;
   /** Descriptor-level `state === 'unverified'`. */
   flagged: boolean;
+  state?: string;
+  category?: string;
+  origin?: string;
+  version?: string;
+  meta?: Record<string, string | number | boolean | null>;
 }
+
+/** Optional real fields a descriptor contributes. Later evidence only
+ *  fills still-empty slots — first declared value wins, never merges
+ *  into something the source did not say. */
+type NodeFields = Partial<Pick<NodeAcc, 'state' | 'category' | 'origin' | 'version' | 'meta'>>;
 
 export function buildFederatedGraph(input: FederatedInput): FedGraph {
   const availability = {} as Record<FedSource, SourceAvailability>;
@@ -241,21 +269,31 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
     label: string,
     evidence: FedSource,
     flagged = false,
+    fields?: NodeFields,
   ): string {
     const id = `${kind}:${entityId}`;
     const acc = nodes.get(id);
     if (acc) {
       acc.evidence.add(evidence);
       acc.flagged ||= flagged;
+      if (fields) mergeFields(acc, fields);
     } else {
-      nodes.set(id, { label, kind, evidence: new Set([evidence]), flagged });
+      nodes.set(id, { label, kind, evidence: new Set([evidence]), flagged, ...fields });
     }
     return id;
   }
 
-  function addForge(forgeId: string, evidence: FedSource): string {
+  function mergeFields(acc: NodeAcc, f: NodeFields): void {
+    acc.state ??= f.state;
+    acc.category ??= f.category;
+    acc.origin ??= f.origin;
+    acc.version ??= f.version;
+    if (f.meta) acc.meta = { ...f.meta, ...acc.meta };
+  }
+
+  function addForge(forgeId: string, evidence: FedSource, version?: string | null): string {
     knownForges.add(forgeId);
-    return addNode('forge', forgeId, forgeId, evidence);
+    return addNode('forge', forgeId, forgeId, evidence, false, { version: version ?? undefined });
   }
 
   /** Referenced-but-undescribed endpoint still gets a node — the
@@ -278,11 +316,21 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
     if (!edges.has(id)) edges.set(id, { id, source, target, kind, evidence });
   }
 
+  const cleanMeta = (
+    m: Record<string, string | number | boolean | null | undefined>,
+  ): Record<string, string | number | boolean | null> | undefined => {
+    const out: Record<string, string | number | boolean | null> = {};
+    for (const [k, v] of Object.entries(m)) if (v !== undefined) out[k] = v;
+    return Object.keys(out).length ? out : undefined;
+  };
+  const joinHosts = (h: readonly string[] | undefined): string | null =>
+    h?.length ? [...h].sort(cmp).join(', ') : null;
+
   // -- forges: serving Forja first (bootstrap), then every provider a
   //    real graph view credits (descriptor.provider_id + per-node
   //    source_provider). Populates `knownForges` before origin probes.
   const serving = text(input.servingForge);
-  if (serving) addForge(serving, 'bootstrap');
+  if (serving) addForge(serving, 'bootstrap', text(input.servingVersion));
 
   for (const view of input.graphViews ?? []) {
     if (!view || typeof view !== 'object') continue;
@@ -291,7 +339,12 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
       desc && typeof desc === 'object'
         ? text((desc as Record<string, unknown>)['provider_id'])
         : null;
-    if (pid) addForge(pid, 'graphs');
+    const pver =
+      desc && typeof desc === 'object'
+        ? (text((desc as Record<string, unknown>)['provider_version']) ??
+          text((desc as Record<string, unknown>)['version']))
+        : null;
+    if (pid) addForge(pid, 'graphs', pver);
     const vnodes = view['nodes'];
     if (Array.isArray(vnodes)) {
       for (const n of vnodes) {
@@ -308,7 +361,11 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
   for (const c of input.capabilities ?? []) {
     const id = text(c?.id);
     if (!id) continue;
-    addNode('capability', id, id, 'capabilities', c.state === 'unverified');
+    addNode('capability', id, id, 'capabilities', c.state === 'unverified', {
+      state: text(c?.state) ?? undefined,
+      origin: serving ?? undefined,
+      meta: cleanMeta({ detail: text(c?.detail) }),
+    });
     if (serving) addEdge(`forge:${serving}`, `capability:${id}`, 'declares', 'capabilities');
   }
 
@@ -316,8 +373,17 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
   for (const s of input.skills ?? []) {
     const id = text(s?.id) ?? text(s?.name);
     if (!id) continue;
-    addNode('skill', id, text(s?.name) ?? id, 'skills', s.state === 'unverified');
     const origin = originOf(s as unknown as Record<string, unknown>, knownForges);
+    addNode('skill', id, text(s?.name) ?? id, 'skills', s.state === 'unverified', {
+      state: text(s?.state) ?? undefined,
+      category: text(s?.domain) ?? undefined,
+      origin: origin ?? undefined,
+      meta: cleanMeta({
+        hosts: joinHosts(s?.hosts),
+        source: text(s?.source),
+        description: text(s?.description),
+      }),
+    });
     if (origin) addEdge(`skill:${id}`, `forge:${origin}`, 'origin', 'skills');
   }
 
@@ -341,8 +407,19 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
   for (const a of input.agents ?? []) {
     const id = text(a?.id) ?? text(a?.name);
     if (!id) continue;
-    addNode('agent', id, text(a?.name) ?? id, 'agents', a.state === 'unverified');
     const origin = originOf(a as unknown as Record<string, unknown>, knownForges);
+    addNode('agent', id, text(a?.name) ?? id, 'agents', a.state === 'unverified', {
+      state: text(a?.state) ?? undefined,
+      category: text(a?.role) ?? undefined,
+      origin: origin ?? undefined,
+      meta: cleanMeta({
+        authority: text(a?.authority),
+        domains: a?.domains?.length ? [...a.domains].sort(cmp).join(', ') : null,
+        skills: a?.skills?.length ?? null,
+        hosts: joinHosts(a?.hosts),
+        description: text(a?.description),
+      }),
+    });
     if (origin) addEdge(`agent:${id}`, `forge:${origin}`, 'origin', 'agents');
     const seen = new Set<string>();
     for (const ref of a.skills ?? []) {
@@ -357,8 +434,15 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
   for (const m of input.mcp ?? []) {
     const id = text(m?.id);
     if (!id) continue;
-    addNode('mcp', id, id, 'mcp');
     const host = text(m.host);
+    addNode('mcp', id, id, 'mcp', false, {
+      state: text(m?.state) ?? undefined,
+      category: host ?? undefined,
+      meta: cleanMeta({
+        tools_count: m?.tools_count ?? null,
+        last_verify: text(m?.last_verify),
+      }),
+    });
     if (host) addEdge(`mcp:${id}`, `host:${host}`, 'bound_to', 'mcp');
   }
 
@@ -366,7 +450,16 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
   for (const h of input.hosts ?? []) {
     const id = text(h?.host);
     if (!id) continue;
-    addNode('host', id, id, 'hosts');
+    addNode('host', id, id, 'hosts', false, {
+      state: text(h?.integration) ?? undefined,
+      version: text(h?.version) ?? undefined,
+      meta: cleanMeta({
+        detected: h?.detected ?? null,
+        supported: h?.supported ?? null,
+        logged_in: h?.logged_in ?? null,
+        launchable: h?.launchable ?? null,
+      }),
+    });
   }
 
   // -- tasks (operations) → origin forge when declared.
@@ -374,8 +467,17 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
     const id = text(t?.id);
     if (!id) continue;
     const label = text(t?.label) ?? text(t?.verb) ?? id;
-    addNode('operation', id, label, 'tasks');
     const origin = originOf(t as unknown as Record<string, unknown>, knownForges);
+    addNode('operation', id, label, 'tasks', false, {
+      state: text(t?.stage) ?? undefined,
+      category: text(t?.verb) ?? undefined,
+      origin: origin ?? undefined,
+      meta: cleanMeta({
+        exit_code: t?.exit_code ?? null,
+        started_at: text(t?.started_at),
+        finished_at: text(t?.finished_at),
+      }),
+    });
     if (origin) addEdge(`operation:${id}`, `forge:${origin}`, 'origin', 'tasks');
   }
 
@@ -389,6 +491,11 @@ export function buildFederatedGraph(input: FederatedInput): FedGraph {
         label: acc.label,
         evidence,
         unverified: acc.flagged || !evidence.some((s) => availability[s] === 'loaded'),
+        ...(acc.state !== undefined ? { state: acc.state } : {}),
+        ...(acc.category !== undefined ? { category: acc.category } : {}),
+        ...(acc.origin !== undefined ? { origin: acc.origin } : {}),
+        ...(acc.version !== undefined ? { version: acc.version } : {}),
+        ...(acc.meta !== undefined ? { meta: acc.meta } : {}),
       };
     })
     .sort((a, b) => cmp(a.id, b.id));

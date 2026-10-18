@@ -55,3 +55,4 @@ graphify-out/
 
 # Python virtualenv (dev env, not vendored)
 .venv/
+scripts/.graph-bench.cjs

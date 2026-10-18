@@ -1,27 +1,35 @@
 import cytoscape from 'cytoscape';
-import { EDGE_STYLE, KIND_STYLE } from './view-model';
+import { iconPath } from '../../shared/icon-paths';
+import { EDGE_LINE, EDGE_STYLE, KIND_ICON, KIND_STYLE, tierLabel } from './view-model';
 import {
+  GraphDetailTier,
+  GraphDiffMarks,
+  GraphGrouping,
   GraphLayoutName,
   GraphNodeShape,
   GraphRenderer,
   GraphSelection,
+  GraphViewport,
   GraphViewModel,
 } from './renderer';
 
 /**
- * §5.6 — Cytoscape.js adapter for the GraphRenderer contract.
+ * §5.6 / Graph Studio 2.1 — Cytoscape.js adapter for GraphRenderer.
  *
  * The only file allowed to import `cytoscape` — everything upstream
  * (view model, page) speaks the engine-agnostic contract in
  * `renderer.ts`. The adapter carries no business logic: it projects
  * `GraphViewModel` elements, maps honesty flags to visual states
- * (`unverified` → dashed border, `absent` → extra dim), and reports
- * pointer selection back through `onSelect`.
+ * (`unverified` → dashed border, `absent` → extra dim, `failed` →
+ * error-colored border), evidence availability to edge line style
+ * (loaded → solid, unverified → dashed, unavailable → dotted), zoom
+ * level to label detail tiers, and reports pointer selection, hover
+ * and camera changes back through the contract callbacks.
  *
- * Hosts without a 2D canvas (jsdom tests) run headless: layout,
- * selection and the SVG projection still work; `exportPng` returns
- * null because no rasterizer exists — an honest "unavailable", not a
- * failure.
+ * Hosts without a 2D canvas (jsdom tests, headless benchmarks) run
+ * headless: layout, selection, classes, viewport and the SVG
+ * projection still work; `exportPng` returns null because no
+ * rasterizer exists — an honest "unavailable", not a failure.
  */
 
 export interface CytoscapeRendererOptions {
@@ -30,10 +38,20 @@ export interface CytoscapeRendererOptions {
   /** Animate layout transitions. Caller passes false under
    *  `prefers-reduced-motion`; viewport ops stay instant either way. */
   animate?: boolean;
+  /** Pan/zoom perf hints (edge hiding + texture cache during viewport
+   *  moves). Default true — raster-only, honest: no data is dropped,
+   *  edges reappear the moment the camera settles. */
+  perfHints?: boolean;
 }
 
 const NODE_SIZE = 46;
 const SVG_PAD = 48;
+/** Zoom-tier boundaries — model-space zoom factors, not pixels. */
+const TIER_FAR = 0.6;
+const TIER_NEAR = 1.35;
+/** Per-zoom class churn is skipped past this size — far-tier labels
+ *  stay (documented in the benchmark doc). */
+const TIER_MAX_NODES = 4000;
 
 function canRaster(): boolean {
   if (typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent)) return false;
@@ -62,6 +80,18 @@ function esc(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
+/** Per-kind white-stroke SVG data URIs — the same lucide paths the
+ *  DOM `<ui-icon>` paints, rasterized by the canvas renderer. */
+const KIND_ICON_URI: Record<string, string> = Object.fromEntries(
+  Object.entries(KIND_ICON).map(([kind, name]) => {
+    const d = iconPath(name);
+    const svg =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"` +
+      ` stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+    return [kind, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`];
+  }),
+);
+
 /** Regular polygon points (for SVG export) centered at (cx, cy). */
 function polygon(cx: number, cy: number, r: number, sides: number, rot = -Math.PI / 2): string {
   const pts: string[] = [];
@@ -82,12 +112,18 @@ function starPoints(cx: number, cy: number, r: number): string {
   return pts.join(' ');
 }
 
+const GROUP_KIND = 'grp:';
+const isGroupId = (id: string): boolean => id.startsWith(GROUP_KIND);
+
 export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): GraphRenderer {
   const headless = opts.headless ?? !canRaster();
   // Headless hosts have nothing to animate (and cytoscape's animated
   // refresh loop dereferences the absent renderer) — force instant.
   const animate = (opts.animate ?? true) && !headless;
+  const perfHints = opts.perfHints ?? true;
   const listeners: ((sel: GraphSelection | null) => void)[] = [];
+  const hoverListeners: ((sel: GraphSelection | null) => void)[] = [];
+  const viewportListeners: ((v: GraphViewport) => void)[] = [];
 
   let cy: cytoscape.Core | null = null;
   // Honesty/emphasis state survives setData rebuilds.
@@ -97,12 +133,80 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
   let dimSet: Set<string> | null = null;
   let selectedId: string | null = null;
   let currentLayout: GraphLayoutName = 'cose';
+  let lastView: GraphViewModel | null = null;
+  let grouping: GraphGrouping | null = null;
+  let diff: GraphDiffMarks | null = null;
+  let tier: GraphDetailTier = 'far';
+  let vpTimer: ReturnType<typeof setTimeout> | null = null;
+  let viewNodes = new Map<string, GraphViewModel['nodes'][number]>();
+  /** The in-flight layout — superseded runs are stopped, never stacked. */
+  let runningLayout: cytoscape.Layouts | null = null;
+  /** Stopped continuous layouts that still owe one final frame. Cose
+   *  keeps a queued frame past stop(); that frame runs done()→refresh()
+   *  on the next tick, so the engine may only be torn down after every
+   *  stopped layout has emitted its last layoutstop (see destroy). */
+  let inFlightLayoutFrames = 0;
+
+  function stopLayout(layout: cytoscape.Layouts): void {
+    inFlightLayoutFrames++;
+    layout.stop(); // emits layoutstop synchronously — flag set, frame pending
+    // attached after stop() so it only counts the PENDING frame's emit
+    layout.one('layoutstop', () => {
+      inFlightLayoutFrames--;
+    });
+  }
 
   const emit = (sel: GraphSelection | null): void => {
     for (const cb of listeners) cb(sel);
   };
+  const emitHover = (sel: GraphSelection | null): void => {
+    for (const cb of hoverListeners) cb(sel);
+  };
+
+  function currentViewport(): GraphViewport | null {
+    if (!cy) return null;
+    const p = cy.pan();
+    return { zoom: cy.zoom(), panX: p.x, panY: p.y };
+  }
+
+  /** Debounced zoom+pan handler: recomputes the detail tier (label
+   *  density) and notifies camera subscribers for saved views. */
+  function onViewport(): void {
+    if (vpTimer) clearTimeout(vpTimer);
+    vpTimer = setTimeout(() => {
+      vpTimer = null;
+      if (!cy) return;
+      applyTier();
+      const v = currentViewport();
+      if (v) for (const cb of viewportListeners) cb(v);
+    }, 90);
+  }
+
+  function applyTier(): void {
+    if (!cy) return;
+    const z = cy.zoom();
+    const next: GraphDetailTier = z < TIER_FAR ? 'far' : z < TIER_NEAR ? 'mid' : 'near';
+    if (next === tier) return;
+    tier = next;
+    if (cy.nodes().length > TIER_MAX_NODES) return; // churn guard
+    cy.batch(() => {
+      cy!
+        .nodes()
+        .filter((n) => !isGroupId(n.id()))
+        .forEach((n) => {
+          const v = viewNodes.get(n.id());
+          if (v) n.data('dlabel', tierLabel(v, tier));
+        });
+      cy!.edges().forEach((e) => {
+        e.data('elabel', tier === 'far' ? '' : (e.data('kind') as string));
+      });
+    });
+  }
 
   function stylesheet(labelColor: string, accent: string): cytoscape.StylesheetJson {
+    const ok = cssVar('--fg-success', '#0b7a42');
+    const warn = cssVar('--fg-warning', '#a35c00');
+    const err = cssVar('--fg-error', '#c0392b');
     const kindRules = Object.entries(KIND_STYLE).map(([kind, st]) => ({
       selector: `node[kind = "${kind}"]`,
       style: { 'background-color': st.color, shape: st.shape as cytoscape.Css.Node['shape'] },
@@ -117,30 +221,59 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
         style: {
           width: NODE_SIZE,
           height: NODE_SIZE,
-          label: 'data(label)',
+          label: 'data(dlabel)',
           'font-size': 10,
           color: labelColor,
           'text-valign': 'bottom',
           'text-halign': 'center',
           'text-margin-y': 5,
-          'text-wrap': 'ellipsis',
-          'text-max-width': '110px',
+          'text-wrap': 'wrap',
+          'text-max-width': '130px',
           'border-width': 1.5,
           'border-color': 'data(color)',
           'border-opacity': 0.9,
           'background-opacity': 0.92,
+          'background-image': 'data(icon)',
+          'background-width': '52%',
+          'background-height': '52%',
+          'background-image-opacity': 0.95,
+          'background-clip': 'none',
         },
       },
       ...kindRules,
+      {
+        selector: 'node.grp',
+        style: {
+          shape: 'round-rectangle',
+          'background-opacity': 0.06,
+          'background-color': labelColor,
+          'border-width': 1.4,
+          'border-style': 'dashed',
+          'border-color': labelColor,
+          'border-opacity': 0.55,
+          label: 'data(dlabel)',
+          'font-size': 11,
+          'font-weight': 'bold',
+          color: labelColor,
+          'text-valign': 'top',
+          'text-halign': 'center',
+          'text-margin-y': -4,
+          padding: '14px',
+          'background-image': 'none',
+          events: 'yes',
+        },
+      },
       {
         selector: 'edge',
         style: {
           width: 1.6,
           'curve-style': 'bezier',
+          'line-style': (e: cytoscape.EdgeSingular) =>
+            (e.data('line') as 'solid' | 'dashed' | 'dotted' | 'double' | undefined) ?? 'solid',
           'target-arrow-shape': 'triangle',
           'target-arrow-fill': 'filled',
           'arrow-scale': 0.9,
-          label: 'data(kind)',
+          label: 'data(elabel)',
           'font-size': 8,
           color: labelColor,
           'text-rotation': 'autorotate',
@@ -151,6 +284,30 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       ...edgeRules,
       { selector: 'node.unverified', style: { 'border-style': 'dashed', opacity: 0.7 } },
       { selector: 'node.absent', style: { opacity: 0.35 } },
+      {
+        selector: 'node.failed',
+        style: { 'border-color': err, 'border-width': 3, 'border-style': 'solid' },
+      },
+      {
+        selector: '.diff-added',
+        style: {
+          'border-color': ok,
+          'line-color': ok,
+          'target-arrow-color': ok,
+          'border-width': 3,
+        },
+      },
+      {
+        selector: '.diff-changed',
+        style: {
+          'border-color': warn,
+          'line-color': warn,
+          'target-arrow-color': warn,
+          'border-width': 3,
+          'border-style': 'double',
+        },
+      },
+      { selector: '.g-hidden', style: { display: 'none', events: 'no' } },
       { selector: '.faded', style: { opacity: 0.12, events: 'yes' } },
       { selector: '.dimmed', style: { opacity: 0.15 } },
       {
@@ -169,12 +326,37 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     ];
   }
 
+  /** Elements hidden by a collapsed group: members plus every edge
+   *  touching one. The current canvas stays honest — hidden members
+   *  still exist in the model, the group box shows their count. */
+  function hiddenByCollapse(): Set<string> {
+    const hidden = new Set<string>();
+    if (!grouping || !lastView) return hidden;
+    const memberOf = new Map<string, string>();
+    for (const g of grouping.groups) for (const m of g.members) memberOf.set(m, g.id);
+    for (const g of grouping.groups) {
+      if (!grouping.collapsed.has(g.id)) continue;
+      for (const m of g.members) hidden.add(m);
+    }
+    if (!hidden.size) return hidden;
+    for (const e of lastView.edges) {
+      if (hidden.has(e.source) || hidden.has(e.target)) hidden.add(e.id);
+    }
+    return hidden;
+  }
+
   function applyStates(): void {
     if (!cy) return;
-    const nodes = cy.nodes();
+    const nodes = cy.nodes().filter((n) => !isGroupId(n.id()));
     const edges = cy.edges();
-    nodes.removeClass('nh faded dimmed');
-    edges.removeClass('nh faded');
+    nodes.removeClass('nh faded dimmed diff-added diff-changed g-hidden');
+    edges.removeClass('nh faded diff-added diff-changed g-hidden');
+    const hidden = hiddenByCollapse();
+    if (hidden.size) {
+      cy.elements().forEach((el) => {
+        if (hidden.has(el.id())) el.addClass('g-hidden');
+      });
+    }
     if (fadedOn) {
       nodes.forEach((n) => {
         if (!fadedNodes.has(n.id())) n.addClass('faded');
@@ -191,26 +373,122 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
         if (!dim.has(n.id())) n.addClass('dimmed');
       });
     }
+    if (diff) {
+      diff.nodes.forEach((mark, id) => cy!.getElementById(id).addClass(`diff-${mark}`));
+      diff.edges.forEach((mark, id) => cy!.getElementById(id).addClass(`diff-${mark}`));
+    }
     if (selectedId) cy.getElementById(selectedId).select();
   }
 
   function runLayout(name: GraphLayoutName): void {
     if (!cy) return;
-    const options: cytoscape.LayoutOptions = { name, animate, fit: false };
+    // never stack layouts — a timed-out or superseded run stops here
+    if (runningLayout) stopLayout(runningLayout);
+    const options: cytoscape.LayoutOptions = {
+      name,
+      animate,
+      fit: false,
+      // collapsed members stay where they were — the layout flows over
+      // what is actually visible, so folds never leave ghost space
+      eles: cy.elements().not('.g-hidden'),
+    } as cytoscape.LayoutOptions;
     if (name === 'concentric') {
       (options as cytoscape.ConcentricLayoutOptions).concentric = (n) => n.degree(false);
       (options as cytoscape.ConcentricLayoutOptions).levelWidth = () => 2;
     }
+    if (name === 'cose' && !animate) {
+      // cytoscape cose runs its whole simulation in ONE synchronous
+      // while-loop whenever animate !== true — uncancellable, timers
+      // starve, and a big graph freezes the tab for minutes (measured:
+      // >15 min at 5k/20k). Keeping animate:true preserves the async
+      // frame loop (stop() still lands between frames); pushing
+      // animationThreshold past any runtime means positions are only
+      // applied once at layoutstop — no visible motion, so reduced-
+      // motion users keep a still canvas AND a responsive page.
+      const coseOpts = options as cytoscape.CoseLayoutOptions;
+      coseOpts.animate = true;
+      coseOpts.animationThreshold = Number.MAX_SAFE_INTEGER;
+    }
     const layout = cy.layout(options);
-    layout.one('layoutstop', () => cy?.fit(undefined, 36));
+    runningLayout = layout;
+    layout.one('layoutstop', () => {
+      if (runningLayout === layout) runningLayout = null;
+      cy?.fit(undefined, 36);
+      applyTier();
+    });
     layout.run();
+  }
+
+  /** Rebuild all elements from the stored view + grouping spec. */
+  function render(): void {
+    if (!cy || !lastView) return;
+    viewNodes = new Map(lastView.nodes.map((n) => [n.id, n]));
+    const memberOf = new Map<string, string>();
+    if (grouping) {
+      for (const g of grouping.groups) for (const m of g.members) memberOf.set(m, g.id);
+    }
+    cy.elements().remove();
+    if (grouping) {
+      for (const g of grouping.groups) {
+        const collapsed = grouping.collapsed.has(g.id);
+        cy.add({
+          data: {
+            id: g.id,
+            label: g.label,
+            kind: 'group',
+            dlabel: collapsed ? `${g.label} (${g.members.length})` : g.label,
+            members: g.members.length,
+          },
+          classes: 'grp',
+        });
+      }
+    }
+    cy.add([
+      ...lastView.nodes.map((n) => ({
+        data: {
+          id: n.id,
+          label: n.label,
+          dlabel: tierLabel(n, tier),
+          kind: n.kind,
+          color: KIND_STYLE[n.kind].color,
+          icon: KIND_ICON_URI[n.kind] ?? '',
+          unverified: n.unverified,
+          absent: n.absent,
+          failed: n.failed,
+          degree: n.degree,
+          state: n.state,
+          category: n.category,
+          origin: n.origin,
+          version: n.version,
+          ...(memberOf.has(n.id) ? { parent: memberOf.get(n.id) } : {}),
+        },
+        classes:
+          `${n.unverified ? 'unverified' : ''}${n.absent ? ' absent' : ''}` +
+          `${n.failed ? ' failed' : ''}`,
+      })),
+      ...lastView.edges.map((e) => ({
+        data: {
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          kind: e.kind,
+          evidence: e.evidence,
+          evidenceState: e.evidenceState,
+          endpoint: e.evidenceEndpoint,
+          line: EDGE_LINE[e.evidenceState] ?? 'solid',
+          elabel: tier === 'far' ? '' : e.kind,
+        },
+      })),
+    ]);
+    applyStates();
+    runLayout(currentLayout);
   }
 
   /** Deterministic SVG projection of node positions — not a raster
    *  trace, so it works headless and stays diffable. */
   function svgProjection(): string | null {
     if (!cy) return null;
-    const nodes = cy.nodes();
+    const nodes = cy.nodes().filter((n) => !isGroupId(n.id()) && n.visible());
     if (!nodes.length) return null;
     const r = NODE_SIZE / 2;
     let minX = Infinity,
@@ -232,14 +510,18 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(w)}" height="${Math.ceil(h)}" viewBox="0 0 ${Math.ceil(w)} ${Math.ceil(h)}">`,
       '<rect width="100%" height="100%" fill="white"/>',
     ];
-    cy.edges().forEach((e) => {
-      const s = e.source().position();
-      const t = e.target().position();
-      const color = EDGE_STYLE[e.data('kind') as keyof typeof EDGE_STYLE]?.color ?? '#7d8894';
-      parts.push(
-        `<line x1="${(s.x + ox).toFixed(1)}" y1="${(s.y + oy).toFixed(1)}" x2="${(t.x + ox).toFixed(1)}" y2="${(t.y + oy).toFixed(1)}" stroke="${color}" stroke-width="1.5" opacity="0.8"/>`,
-      );
-    });
+    cy.edges()
+      .filter((e) => e.visible())
+      .forEach((e) => {
+        const s = e.source().position();
+        const t = e.target().position();
+        const color = EDGE_STYLE[e.data('kind') as keyof typeof EDGE_STYLE]?.color ?? '#7d8894';
+        const dash =
+          e.data('line') === 'dashed' ? '5 3' : e.data('line') === 'dotted' ? '2 3' : null;
+        parts.push(
+          `<line x1="${(s.x + ox).toFixed(1)}" y1="${(s.y + oy).toFixed(1)}" x2="${(t.x + ox).toFixed(1)}" y2="${(t.y + oy).toFixed(1)}" stroke="${color}" stroke-width="1.5" opacity="0.8"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`,
+        );
+      });
     const byId = (a: cytoscape.NodeSingular, b: cytoscape.NodeSingular) =>
       a.id() < b.id() ? -1 : a.id() > b.id() ? 1 : 0;
     [...nodes].sort(byId).forEach((n) => {
@@ -250,7 +532,8 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
       const cyv = p.y + oy;
       const dash = n.data('unverified') ? ' stroke-dasharray="4 3"' : '';
       const op = n.data('absent') ? 0.35 : n.data('unverified') ? 0.7 : 1;
-      const attrs = `fill="${style.color}" stroke="${style.color}" stroke-width="1.5"${dash} opacity="${op}"`;
+      const stroke = n.data('failed') ? '#c0392b' : style.color;
+      const attrs = `fill="${style.color}" stroke="${stroke}" stroke-width="1.5"${dash} opacity="${op}"`;
       const shape = style.shape as GraphNodeShape;
       if (shape === 'ellipse') {
         parts.push(
@@ -290,41 +573,34 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
         autoungrabify: false,
         userZoomingEnabled: true,
         userPanningEnabled: true,
+        // viewport-move perf hints: edges/labels reappear when the
+        // camera settles — raster-only, never a data change
+        textureOnViewport: perfHints,
+        hideEdgesOnViewport: perfHints,
+        pixelRatio: 'auto',
+      } as cytoscape.CytoscapeOptions);
+      cy.on('tap', 'node', (evt) => {
+        const id: string = evt.target.id();
+        if (isGroupId(id)) return; // group boxes are containers, not data
+        emit({ type: 'node', id });
       });
-      cy.on('tap', 'node', (evt) => emit({ type: 'node', id: evt.target.id() }));
       cy.on('tap', 'edge', (evt) => emit({ type: 'edge', id: evt.target.id() }));
       cy.on('tap', (evt) => {
         if (evt.target === cy) emit(null);
       });
+      cy.on('mouseover', 'node, edge', (evt) => {
+        const el = evt.target;
+        const id: string = el.id();
+        if (isGroupId(id)) return;
+        emitHover({ type: el.isNode() ? 'node' : 'edge', id });
+      });
+      cy.on('mouseout', 'node, edge', () => emitHover(null));
+      cy.on('viewport', () => onViewport());
     },
 
     setData(view: GraphViewModel): void {
-      if (!cy) return;
-      cy.elements().remove();
-      cy.add([
-        ...view.nodes.map((n) => ({
-          data: {
-            id: n.id,
-            label: n.label,
-            kind: n.kind,
-            color: KIND_STYLE[n.kind].color,
-            unverified: n.unverified,
-            absent: n.absent,
-          },
-          classes: `${n.unverified ? 'unverified' : ''}${n.absent ? ' absent' : ''}`.trim(),
-        })),
-        ...view.edges.map((e) => ({
-          data: {
-            id: e.id,
-            source: e.source,
-            target: e.target,
-            kind: e.kind,
-            evidence: e.evidence,
-          },
-        })),
-      ]);
-      applyStates();
-      runLayout(currentLayout);
+      lastView = view;
+      render();
     },
 
     select(id: string | null): void {
@@ -358,7 +634,7 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     zoomTo(id: string): void {
       if (!cy) return;
       const el = cy.getElementById(id);
-      if (el.empty()) return;
+      if (el.empty() || !el.visible()) return;
       const target = Math.max(cy.zoom(), 1.3);
       if (animate) {
         cy.animate({ center: { eles: el }, zoom: target }, { duration: 180 });
@@ -367,6 +643,34 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
         const pos = el.isNode() ? el.position() : (el as cytoscape.EdgeSingular).midpoint();
         cy.zoom({ level: target, position: pos });
       }
+    },
+
+    setGrouping(spec: GraphGrouping | null): void {
+      grouping = spec;
+      render();
+    },
+
+    setDiff(marks: GraphDiffMarks | null): void {
+      diff = marks;
+      applyStates();
+    },
+
+    viewport(): GraphViewport | null {
+      return currentViewport();
+    },
+
+    setViewport(v: GraphViewport): void {
+      if (!cy) return;
+      cy.viewport({ zoom: v.zoom, pan: { x: v.panX, y: v.panY } });
+      applyTier();
+    },
+
+    onViewport(cb: (v: GraphViewport) => void): void {
+      viewportListeners.push(cb);
+    },
+
+    onHover(cb: (sel: GraphSelection | null) => void): void {
+      hoverListeners.push(cb);
     },
 
     exportPng(): string | null {
@@ -391,14 +695,45 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     },
 
     destroy(): void {
-      cy?.destroy();
+      if (vpTimer) clearTimeout(vpTimer);
+      vpTimer = null;
+      const engine = cy;
       cy = null;
+      if (runningLayout) {
+        stopLayout(runningLayout);
+        runningLayout = null;
+      }
+      // A stopped layout's queued frame still calls cy methods on its
+      // last tick — cy.destroy() before that lands crashes endBatch on
+      // the null renderer (hit in the 10k benchmark). Poll briefly so
+      // the engine dies only after in-flight frames settle; the 500 ms
+      // cap bounds teardown when a frame never fires (≫ one 16 ms raf).
+      const finish = (budget = 25): void => {
+        if (!engine) return;
+        if (inFlightLayoutFrames <= 0 || budget <= 0) {
+          try {
+            engine.destroy();
+          } catch {
+            /* engine already torn down */
+          }
+          return;
+        }
+        setTimeout(() => finish(budget - 1), 20);
+      };
+      finish();
       listeners.length = 0;
+      hoverListeners.length = 0;
+      viewportListeners.length = 0;
       fadedOn = false;
       fadedNodes = new Set();
       fadedEdges = new Set();
       dimSet = null;
       selectedId = null;
+      lastView = null;
+      viewNodes = new Map();
+      grouping = null;
+      diff = null;
+      tier = 'far';
     },
   };
 }

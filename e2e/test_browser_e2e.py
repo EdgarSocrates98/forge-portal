@@ -753,6 +753,130 @@ def test_graph_canvas_shared_selection(page, portal):
     _shot(page, "20-graph-canvas-shared-selection")
 
 
+def test_graph_impact_panel(page, portal):
+    """2.1 impact panel — selecting a node shows the topological report:
+    depth pills, uses/usedBy lists and the coverage + disclaimer row."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    first = page.locator(".fed__node").first
+    assert first.count() > 0, "graph list rendered no nodes"
+    first.click()
+    page.wait_for_timeout(300)
+    impact = page.locator("[data-section='impact']")
+    assert impact.count() > 0, "impact panel did not open"
+    depth = page.locator("[data-section='impact'] [data-depth='1']")
+    assert depth.count() > 0, "depth selector missing"
+    depth.click()
+    page.wait_for_timeout(200)
+    honest = page.locator(".fed__honest")
+    assert honest.count() > 0 and "/" in honest.inner_text(), \
+        "coverage row missing or without loaded/total"
+    note = page.locator(".fed__toponote")
+    assert note.count() > 0, "topological disclaimer missing"
+    _shot(page, "24-graph-impact")
+
+
+def test_graph_snapshot_capture_and_diff(page, portal):
+    """2.1 snapshots — capture persists a real GraphSnapshot/v1 to
+    localStorage and the diff vs the same model is honestly empty."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    cap = page.locator("button[data-action='snapshot']")
+    assert cap.count() > 0, "snapshot button missing"
+    cap.click()
+    page.wait_for_timeout(400)
+    bar = page.locator("[data-section='snapshot-bar']")
+    assert bar.count() > 0, "snapshot bar did not appear"
+    raw = page.evaluate(
+        "() => localStorage.getItem('forge-portal/graph-snapshot/v1')")
+    assert raw and '"forge-portal/GraphSnapshot/v1"' in raw, \
+        "snapshot was not persisted under the versioned key"
+    diff = page.locator("[data-section='diff']")
+    assert diff.count() > 0, "self-diff did not render"
+    assert page.locator("[data-diff='added']").count() == 0, \
+        "identical snapshot reported added elements"
+    page.locator("button[data-action='snap-clear']").click()
+    page.wait_for_timeout(300)
+    assert page.locator("[data-section='snapshot-bar']").count() == 0
+    _shot(page, "25-graph-snapshot")
+
+
+def test_graph_saved_view_restores(page, portal):
+    """2.1 saved views — mode + search persist in localStorage under
+    GraphView/v1 and reload restores them without user input."""
+    page.goto(f"http://127.0.0.1:{portal.port}/graph"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+    search = page.locator("input[type='search']")
+    search.fill("reviewer")
+    page.wait_for_timeout(400)
+    # wait for the debounced save
+    deadline = 30
+    raw = None
+    while deadline and not raw:
+        raw = page.evaluate(
+            "() => localStorage.getItem('forge-portal/graph-view/v1')")
+        page.wait_for_timeout(100)
+        deadline -= 1
+    assert raw and '"query":"reviewer"' in raw, \
+        f"view state never reached localStorage: {raw}"
+    # canvas mode persists too
+    toggle = page.locator("button[data-view='canvas']")
+    if toggle.count():
+        toggle.click()
+        page.wait_for_selector("[data-canvas='graph'] canvas", timeout=15000)
+        page.wait_for_timeout(400)
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(900)
+    restored = page.locator("input[type='search']")
+    assert restored.input_value() == "reviewer", \
+        f"saved query not restored: {restored.input_value()!r}"
+    # canvas mode may have persisted — switch back to the list to
+    # verify the restored filter narrows the accessible list
+    listbtn = page.locator("button[data-view='list']")
+    if listbtn.count():
+        listbtn.click()
+        page.wait_for_timeout(400)
+    nodes = page.locator(".fed__node")
+    assert nodes.count() == 1, f"restored filter did not apply: {nodes.count()}"
+    _shot(page, "26-graph-saved-view")
+
+
+def test_graph_grouping_chips(page, portal):
+    """2.1 grouping — the group select compounds nodes per declared kind
+    and exposes one collapse chip per real group."""
+    _canvas_on(page, portal)
+    sel = page.locator("select[data-action='group']")
+    assert sel.count() > 0, "group select missing from toolbar"
+    sel.select_option("kind")
+    page.wait_for_timeout(900)  # relayout settles
+    chips = page.locator("[data-strip='groups'] [data-group]")
+    assert chips.count() >= 3, f"expected kind group chips, got {chips.count()}"
+    chips.first.click()  # collapse → chip toggles pressed
+    page.wait_for_timeout(400)
+    assert chips.first.get_attribute("aria-pressed") == "true", \
+        "collapse chip did not toggle"
+    _shot(page, "27-graph-grouped")
+
+
+def test_graph_layout_count(page, portal):
+    """2.1 — at least five working layouts are offered in the toolbar."""
+    _canvas_on(page, portal)
+    layouts = page.locator(".fed__toolbar [data-layout]")
+    names = [layouts.nth(i).get_attribute("data-layout")
+             for i in range(layouts.count())]
+    assert len(names) >= 5, f"fewer than five layouts exposed: {names}"
+    for required in ("cose", "concentric", "breadthfirst", "circle"):
+        assert required in names, f"required layout {required} missing: {names}"
+    _shot(page, "28-graph-layouts")
+
+
 AXE = REPO / "node_modules" / "axe-core" / "axe.min.js"
 
 
