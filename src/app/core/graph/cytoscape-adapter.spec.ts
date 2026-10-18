@@ -4,18 +4,63 @@ import { GraphSelection, GraphViewModel } from './renderer';
 
 /**
  * Adapter-level tests. jsdom has no 2D rasterizer, so the engine runs
- * headless: layout positions, element data, classes and selection are
- * all real model state — only `cy.png()` is unavailable and the
- * adapter must honestly return null there.
+ * headless: layout positions, element data, classes, viewport and
+ * selection are all real model state — only `cy.png()` is unavailable
+ * and the adapter must honestly return null there.
  */
 
 const VM: GraphViewModel = {
   nodes: [
-    { id: 'forge:f1', label: 'f1', kind: 'forge', unverified: false, absent: false },
-    { id: 'skill:s1', label: 's1', kind: 'skill', unverified: false, absent: false },
-    { id: 'agent:a1', label: 'a1', kind: 'agent', unverified: false, absent: false },
-    { id: 'capability:c1', label: 'c1', kind: 'capability', unverified: true, absent: false },
-    { id: 'host:h1', label: 'h1', kind: 'host', unverified: true, absent: true },
+    {
+      id: 'forge:f1',
+      label: 'f1',
+      kind: 'forge',
+      unverified: false,
+      absent: false,
+      failed: false,
+      degree: 3,
+      version: '1.0.0',
+    },
+    {
+      id: 'skill:s1',
+      label: 's1',
+      kind: 'skill',
+      unverified: false,
+      absent: false,
+      failed: false,
+      degree: 1,
+      state: 'available',
+      origin: 'f1',
+    },
+    {
+      id: 'agent:a1',
+      label: 'a1',
+      kind: 'agent',
+      unverified: false,
+      absent: false,
+      failed: false,
+      degree: 2,
+      category: 'review',
+    },
+    {
+      id: 'capability:c1',
+      label: 'c1',
+      kind: 'capability',
+      unverified: true,
+      absent: false,
+      failed: false,
+      degree: 1,
+    },
+    {
+      id: 'host:h1',
+      label: 'h1',
+      kind: 'host',
+      unverified: true,
+      absent: true,
+      failed: true,
+      degree: 0,
+      state: 'FAILED',
+    },
   ],
   edges: [
     {
@@ -24,35 +69,66 @@ const VM: GraphViewModel = {
       target: 'capability:c1',
       kind: 'declares',
       evidence: 'capabilities',
+      evidenceState: 'loaded',
+      evidenceEndpoint: 'GET /api/v1/capabilities',
     },
-    { id: 'e2', source: 'agent:a1', target: 'skill:s1', kind: 'associated', evidence: 'agents' },
-    { id: 'e3', source: 'agent:a1', target: 'forge:f1', kind: 'origin', evidence: 'agents' },
+    {
+      id: 'e2',
+      source: 'agent:a1',
+      target: 'skill:s1',
+      kind: 'associated',
+      evidence: 'agents',
+      evidenceState: 'loaded',
+      evidenceEndpoint: 'GET /api/v1/agents',
+    },
+    {
+      id: 'e3',
+      source: 'agent:a1',
+      target: 'forge:f1',
+      kind: 'origin',
+      evidence: 'agents',
+      evidenceState: 'unverified',
+      evidenceEndpoint: 'GET /api/v1/agents',
+    },
   ],
 };
 
 function make(): { r: ReturnType<typeof createCytoscapeRenderer>; cy: cytoscape.Core } {
   const r = createCytoscapeRenderer({ headless: true, animate: false });
-  r.mount(document.createElement('div'));
+  // jsdom divs report 0×0 — layouts that read the container box would
+  // collapse every node to the origin. Fake a real viewport so grid /
+  // circle / concentric compute genuine positions.
+  const host = document.createElement('div');
+  Object.defineProperty(host, 'clientWidth', { value: 800 });
+  Object.defineProperty(host, 'clientHeight', { value: 600 });
+  r.mount(host);
   r.setData(VM);
   return { r, cy: r.nativeHandle() as cytoscape.Core };
 }
 
 describe('cytoscape adapter — GraphRenderer contract (headless)', () => {
-  it('setData creates typed nodes with kind, color and honesty classes', () => {
+  it('setData creates typed nodes with kind, color, icon and honesty classes', () => {
     const { cy } = make();
     expect(cy.nodes().length).toBe(VM.nodes.length);
     expect(cy.edges().length).toBe(VM.edges.length);
     const skill = cy.getElementById('skill:s1');
     expect(skill.data('kind')).toBe('skill');
     expect(skill.data('color')).toBe('#7c3aed');
+    expect(skill.data('icon')).toContain('data:image/svg+xml');
+    expect(skill.data('degree')).toBe(1);
+    expect(skill.data('label')).toBe('s1');
+    expect(skill.data('dlabel')).toContain('s1'); // tier label from the field
     const unverified = cy.getElementById('capability:c1');
     expect(unverified.hasClass('unverified')).toBe(true);
     const absent = cy.getElementById('host:h1');
     expect(absent.hasClass('unverified')).toBe(true);
     expect(absent.hasClass('absent')).toBe(true);
+    expect(absent.hasClass('failed')).toBe(true);
     const edge = cy.getElementById('e1');
     expect(edge.data('kind')).toBe('declares');
     expect(edge.data('evidence')).toBe('capabilities');
+    expect(edge.data('line')).toBe('solid');
+    expect(cy.getElementById('e3').data('line')).toBe('dashed'); // unverified source
   });
 
   it('positions exist after mount — a layout ran', () => {
@@ -105,15 +181,20 @@ describe('cytoscape adapter — GraphRenderer contract (headless)', () => {
     expect(cy.$('.dimmed').length).toBe(0);
   });
 
-  it('switching layouts repositions nodes and keeps the selection', () => {
+  it('all five layouts reposition nodes and keep the selection', () => {
     const { r, cy } = make();
     r.select('agent:a1');
-    const before = { ...cy.getElementById('agent:a1').position() };
     r.layout('grid');
+    // grid applies positions synchronously over the real container box —
+    // a 0×0 host collapses everything to the origin, so assert real spread
     const after = cy.getElementById('agent:a1').position();
     expect(cy.getElementById('agent:a1').selected()).toBe(true);
-    expect(after.x !== before.x || after.y !== before.y).toBe(true);
-    for (const name of ['cose', 'concentric', 'breadthfirst'] as const) {
+    const xs = cy.nodes().map((n) => n.position().x);
+    const ys = cy.nodes().map((n) => n.position().y);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(0);
+    expect(Math.max(...ys) - Math.min(...ys)).toBeGreaterThan(0);
+    expect(Number.isFinite(after.x) && Number.isFinite(after.y)).toBe(true);
+    for (const name of ['cose', 'concentric', 'breadthfirst', 'circle'] as const) {
       expect(() => r.layout(name)).not.toThrow();
     }
   });
@@ -136,7 +217,7 @@ describe('cytoscape adapter — GraphRenderer contract (headless)', () => {
     expect(svg).toBeTruthy();
     expect(svg).toContain('<svg');
     expect(svg).toContain('>s1<'); // node label projected as text
-    expect(svg).toContain('stroke-dasharray'); // unverified dashed
+    expect(svg).toContain('stroke-dasharray'); // unverified dashed + evidence line style
     expect(r.exportPng()).toBeNull();
   });
 
@@ -147,5 +228,123 @@ describe('cytoscape adapter — GraphRenderer contract (headless)', () => {
     expect(cy.getElementById('skill:s1').position()).toBeTruthy();
     r.destroy();
     expect(r.nativeHandle()).toBeNull();
+  });
+});
+
+describe('cytoscape adapter — 2.1 detail tiers, groups, diff, viewport', () => {
+  it('zoom tiers enrich node labels and reveal edge labels near-in', async () => {
+    const { cy } = make();
+    // far: label only, no edge labels
+    cy.zoom(0.4);
+    cy.emit('viewport');
+    await vi.waitFor(() => expect(cy.getElementById('skill:s1').data('dlabel')).toBe('s1'));
+    expect(cy.getElementById('e1').data('elabel')).toBe('');
+    cy.zoom(2); // near
+    cy.emit('viewport');
+    await vi.waitFor(() =>
+      expect(cy.getElementById('skill:s1').data('dlabel')).toContain('available'),
+    );
+    // near tier adds state + relation count lines — all real fields
+    const label = cy.getElementById('skill:s1').data('dlabel') as string;
+    expect(label).toContain('s1');
+    expect(label).toContain('1 rel');
+    expect(cy.getElementById('e1').data('elabel')).toBe('declares');
+    // node without state keeps its label line only
+    expect(cy.getElementById('capability:c1').data('dlabel')).toContain('c1');
+  });
+
+  it('mid tier adds the state+origin line only when fields are real', async () => {
+    const { cy } = make();
+    cy.zoom(0.9); // mid
+    cy.emit('viewport');
+    // s1 carries state 'available' + origin 'f1' — both real, both shown
+    await vi.waitFor(() =>
+      expect(cy.getElementById('skill:s1').data('dlabel')).toBe('s1\navailable · f1'),
+    );
+    expect(cy.getElementById('capability:c1').data('dlabel')).toBe('c1');
+    expect(cy.getElementById('e1').data('elabel')).toBe('declares');
+  });
+
+  it('setGrouping adds compound parents and collapse hides members', () => {
+    const { r, cy } = make();
+    r.setGrouping({
+      groups: [
+        { id: 'grp:kind:skill', label: 'skill', members: ['skill:s1'] },
+        { id: 'grp:forge:f1', label: 'f1', members: ['agent:a1', 'capability:c1'] },
+      ],
+      collapsed: new Set(),
+    });
+    expect(cy.getElementById('grp:kind:skill').hasClass('grp')).toBe(true);
+    expect(cy.getElementById('skill:s1').data('parent')).toBe('grp:kind:skill');
+    expect(cy.getElementById('agent:a1').data('parent')).toBe('grp:forge:f1');
+    // collapse → members + their edges hidden, parent shows the count
+    r.setGrouping({
+      groups: [
+        { id: 'grp:kind:skill', label: 'skill', members: ['skill:s1'] },
+        { id: 'grp:forge:f1', label: 'f1', members: ['agent:a1', 'capability:c1'] },
+      ],
+      collapsed: new Set(['grp:forge:f1']),
+    });
+    expect(cy.getElementById('agent:a1').hasClass('g-hidden')).toBe(true);
+    expect(cy.getElementById('e2').hasClass('g-hidden')).toBe(true);
+    expect(cy.getElementById('grp:forge:f1').data('dlabel')).toBe('f1 (2)');
+    expect(cy.getElementById('skill:s1').hasClass('g-hidden')).toBe(false);
+    r.setGrouping(null);
+    expect(cy.getElementById('grp:kind:skill').empty()).toBe(true);
+    expect(cy.getElementById('agent:a1').hasClass('g-hidden')).toBe(false);
+  });
+
+  it('setDiff marks added/changed on live elements only', () => {
+    const { r, cy } = make();
+    r.setDiff({
+      nodes: new Map([
+        ['skill:s1', 'added'],
+        ['agent:a1', 'changed'],
+      ]),
+      edges: new Map([['e2', 'added']]),
+    });
+    expect(cy.getElementById('skill:s1').hasClass('diff-added')).toBe(true);
+    expect(cy.getElementById('agent:a1').hasClass('diff-changed')).toBe(true);
+    expect(cy.getElementById('e2').hasClass('diff-added')).toBe(true);
+    r.setDiff(null);
+    expect(cy.$('.diff-added').length).toBe(0);
+    expect(cy.$('.diff-changed').length).toBe(0);
+  });
+
+  it('viewport get/set round-trips and onViewport reports camera moves', async () => {
+    const { r, cy } = make();
+    const seen: { zoom: number; panX: number; panY: number }[] = [];
+    r.onViewport((v) => seen.push(v));
+    r.setViewport({ zoom: 1.7, panX: 40, panY: -25 });
+    const v = r.viewport();
+    expect(v).not.toBeNull();
+    expect(v!.zoom).toBeCloseTo(1.7);
+    expect(v!.panX).toBeCloseTo(40);
+    expect(v!.panY).toBeCloseTo(-25);
+    cy.emit('viewport');
+    await vi.waitFor(() => expect(seen.length).toBeGreaterThan(0));
+    expect(seen[seen.length - 1].zoom).toBeCloseTo(1.7);
+  });
+
+  it('onHover reports element ids and ignores group containers', () => {
+    const { r, cy } = make();
+    const seen: (GraphSelection | null)[] = [];
+    r.onHover((s) => seen.push(s));
+    cy.getElementById('forge:f1').emit('mouseover');
+    cy.getElementById('e1').emit('mouseover');
+    cy.getElementById('e1').emit('mouseout');
+    expect(seen).toEqual([{ type: 'node', id: 'forge:f1' }, { type: 'edge', id: 'e1' }, null]);
+  });
+
+  it('destroy() while a continuous layout is in flight tears down cleanly', async () => {
+    const { r, cy } = make();
+    // cose is intentionally run async (see runLayout) — it is almost
+    // always still in flight here, which is the case under test
+    r.destroy();
+    // let the stopped layout's queued frame land, then the deferred
+    // engine teardown — before the fix this crashed inside cytoscape
+    await new Promise((res) => setTimeout(res, 700));
+    expect(r.nativeHandle()).toBeNull();
+    expect(cy.destroyed()).toBe(true);
   });
 });

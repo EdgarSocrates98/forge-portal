@@ -1729,3 +1729,114 @@ tr[data-selected] td {
   flex-wrap: wrap;
   margin: 0 0 var(--space-2);
 }
+
+/* ---- Graph Studio 2.1 shared blocks ------------------------------------
+   Inspector/impact/diff/grouping styles shared by the graph page — moved
+   here the same way .chip/.chip-link were, to keep the component style
+   block inside the 4 kB budget. Scoped by the fed__ prefix. */
+.fed__sources,
+.fed__groups,
+.fed__legend,
+.fed__edges,
+.fed__nodes,
+.fed__pathlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fed__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.fed__groupsel {
+  font-size: var(--font-sm);
+  padding: 3px 8px;
+}
+.fed__snap,
+.fed__facts,
+.fed__honest,
+.fed__path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+.fed__diff {
+  margin: var(--space-3) 0;
+  border-left: 3px solid var(--warn);
+}
+.fed__diff-cols,
+.fed__rel-cols {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.fed__rel-cols {
+  margin-top: var(--space-2);
+}
+.fed__evidence,
+.fed__edges li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+.fed__edges {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--font-sm);
+}
+.fed__edge-ev {
+  color: var(--fg-muted);
+  font-size: var(--font-xs);
+}
+.fed__impact,
+.fed__impactsub {
+  margin: var(--space-1) 0;
+  font-weight: 650;
+}
+.fed__impactsec {
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+}
+.fed__depth {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin-left: var(--space-2);
+}
+.fg-pill--mini {
+  font-size: var(--font-xs);
+  padding: 1px 8px;
+}
+.fed__cycle {
+  border: 1px dashed var(--warn);
+  border-radius: var(--radius-pill);
+  padding: 0 8px;
+  font-size: var(--font-xs);
+  color: var(--warn);
+}
+.fed__pathsel {
+  max-width: 22rem;
+  font-size: var(--font-sm);
+}
+.fed__pathlist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+.fed__pathlist li {
+  display: inline-flex;
+  align-items: center;
+}
+.fed__pathlist li + li::before {
+  content: '→';
+  color: var(--fg-muted);
+  margin-right: var(--space-1);
+}
+.fed__toponote {
+  font-style: italic;
+}

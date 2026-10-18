@@ -238,7 +238,11 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     ) {
       downloaded = this.href;
     });
-    (fixture.nativeElement.querySelector('.fed__head .btn') as HTMLButtonElement).click();
+    (
+      fixture.nativeElement.querySelector(
+        '.fed__head button[data-action="export"]',
+      ) as HTMLButtonElement
+    ).click();
     expect(click).toHaveBeenCalledOnce();
     expect(downloaded).toContain('data:application/json');
     const payload = JSON.parse(decodeURIComponent(downloaded.split(',', 2)[1]));
@@ -347,7 +351,8 @@ describe('GraphPage — §5.6 canvas surface', () => {
     expect(cy.getElementById('forge:the-forge').selected()).toBe(true);
     expect(cy.getElementById('capability:graph').hasClass('nh')).toBe(true);
     // kind legend present
-    expect(el.querySelectorAll('.fed__legend li').length).toBe(7);
+    expect(el.querySelectorAll('.fed__legend li:not(.fed__legend-line)').length).toBe(7);
+    expect(el.querySelectorAll('.fed__legend li.fed__legend-line').length).toBe(3);
     // back to the list: canvas torn down, state intact
     c.setMode('list');
     fixture.detectChanges();
@@ -448,5 +453,186 @@ describe('GraphPage — §5.6 canvas surface', () => {
     (el.querySelector('[data-action="png"]') as HTMLButtonElement).click();
     expect(downloads.length).toBe(1);
     click.mockRestore();
+  });
+});
+
+describe('GraphPage — 2.1 advanced inspector, impact, snapshot, saved view', () => {
+  it('shows real state/origin/version/degree and in/out relation columns', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    c.select(c.fed()!.nodes.find((n) => n.id === 'agent:reviewer')!);
+    fixture.detectChanges();
+    const panel = fixture.nativeElement.querySelector('[data-section="inspector"]')!;
+    const text = panel.textContent ?? '';
+    expect(text).toContain('available'); // real descriptor state
+    expect(text).toContain('the-forge'); // declared forge origin
+    expect(panel.querySelector('[data-rel="out"]')).toBeTruthy();
+    expect(panel.querySelector('[data-rel="in"]')).toBeTruthy();
+    // origin chip navigates to the forge node
+    const relOut = panel.querySelectorAll('[data-rel="out"] li');
+    const kinds = [...panel.querySelectorAll('[data-rel="out"] code')].map((x) =>
+      x.textContent?.trim(),
+    );
+    expect(kinds).toContain('associated');
+    expect(relOut.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('impact panel lists uses/usedBy at the chosen depth with topo honesty', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    c.select(c.fed()!.nodes.find((n) => n.id === 'forge:the-forge')!);
+    fixture.detectChanges();
+    const sec = el.querySelector('[data-section="impact"]')!;
+    expect(sec).toBeTruthy();
+    expect(sec.textContent).toContain('reviewer'); // declared origin lands here
+    const usedBy = sec.querySelectorAll('[data-impact="usedBy"] li');
+    const uses = sec.querySelectorAll('[data-impact="uses"] li');
+    expect(usedBy.length).toBeGreaterThanOrEqual(2); // agent + task point at the forge
+    expect(uses.length).toBeGreaterThanOrEqual(2); // forge declares both capabilities
+    // depth switch recomputes honestly
+    (sec.querySelector('[data-depth="1"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.impactDepth()).toBe(1);
+    // coverage line states real loaded/total
+    expect(el.querySelector('.fed__honest')?.textContent).toContain('8/8');
+    // topological disclaimer is present, not implied
+    expect(sec.textContent).toMatch(/topol|Topological/i);
+  });
+
+  it('shortest-path finder highlights the hops or reports none', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    // capability leaves have no outgoing path to the agent; undirected
+    // the declared chain cap ← forge ← agent connects them
+    c.select(c.fed()!.nodes.find((n) => n.id === 'capability:graph')!);
+    c.pathTarget.set('agent:reviewer');
+    fixture.detectChanges();
+    expect(c.pathResult()?.nodes).toBeNull();
+    c.pathDir.set('both');
+    fixture.detectChanges();
+    const p = c.pathResult();
+    expect(p?.nodes).not.toBeNull();
+    expect(p!.nodes![0]).toBe('capability:graph');
+    expect(p!.nodes![p!.nodes!.length - 1]).toBe('agent:reviewer');
+    const hops = el.querySelectorAll('[data-path="found"] li');
+    expect(hops.length).toBe(p!.nodes!.length);
+  });
+
+  it('captures a snapshot, diffs honestly, and clears it', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('[data-section="snapshot-bar"]')).toBeNull();
+    c.takeSnapshot();
+    fixture.detectChanges();
+    expect(c.snap()?.schema).toBe('forge-portal/GraphSnapshot/v1');
+    // self-diff → honest unchanged line, three empty columns
+    const bar = el.querySelector('[data-section="snapshot-bar"]')!;
+    expect(bar).toBeTruthy();
+    const diff = el.querySelector('[data-section="diff"]')!;
+    // unchanged self-diff → the honest 'no changes' line, no columns yet
+    expect(diff.querySelector('[data-diff]')).toBeNull();
+    expect(diff.textContent?.trim().length).toBeGreaterThan(0);
+    // simulate change: drop the agent edge and re-diff → removed edge appears
+    const g = c.fed()!;
+    const shrunk = { ...g, edges: g.edges.filter((e) => e.kind !== 'associated') };
+    c.fed.set(shrunk);
+    c.diff.set(null); // clear the self-diff, then compare fresh
+    c.toggleDiff(shrunk);
+    fixture.detectChanges();
+    const removed = el.querySelector('[data-diff="removed"]')!;
+    expect(removed.textContent).toContain('associated');
+    c.dropSnapshot();
+    fixture.detectChanges();
+    expect(c.snap()).toBeNull();
+    expect(c.diff()).toBeNull();
+    expect(localStorage.getItem('forge-portal/graph-snapshot/v1')).toBeNull();
+  });
+
+  it('restores a saved view once and reset-view clears it', async () => {
+    localStorage.setItem(
+      'forge-portal/graph-view/v1',
+      JSON.stringify({
+        schema: 'forge-portal/GraphView/v1',
+        mode: 'canvas',
+        layout: 'concentric',
+        query: 'reviewer',
+        kind: 'agent',
+        selectedNode: 'agent:reviewer',
+        selectedEdge: null,
+        viewport: { zoom: 1.5, panX: 10, panY: -5 },
+        groupBy: 'kind',
+        collapsedGroups: [],
+      }),
+    );
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    expect(c.mode()).toBe('canvas');
+    expect(c.layoutName()).toBe('concentric');
+    expect(c.query()).toBe('reviewer');
+    expect(c.kind()).toBe('agent');
+    expect(c.selected()?.id).toBe('agent:reviewer');
+    expect(c.groupBy()).toBe('kind');
+    c.resetView();
+    expect(c.mode()).toBe('list');
+    expect(c.query()).toBe('');
+    expect(c.kind()).toBeNull();
+    expect(c.selected()).toBeNull();
+    expect(c.layoutName()).toBe('cose');
+    expect(c.groupBy()).toBeNull();
+    expect(localStorage.getItem('forge-portal/graph-view/v1')).toBeNull();
+  });
+
+  it('grouping select creates compound parents and collapse chips work', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    c.setMode('canvas');
+    fixture.detectChanges();
+    await vi.waitFor(() => expect(c.canvasRenderer()).toBeTruthy());
+    fixture.detectChanges();
+    const cy = c.canvasRenderer()!.nativeHandle() as cytoscape.Core;
+    const sel = el.querySelector('[data-action="group"]') as HTMLSelectElement;
+    sel.value = 'kind';
+    sel.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const chips = el.querySelectorAll('[data-strip="groups"] [data-group]');
+    expect(chips.length).toBeGreaterThanOrEqual(7); // one group per present kind
+    expect(cy.$('.grp').length).toBeGreaterThanOrEqual(7);
+    // collapse one group → its members hide on the canvas
+    (chips[0] as HTMLButtonElement).click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(c.collapsed().size).toBe(1);
+    expect(cy.$('.g-hidden').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('persists view state to localStorage on change', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    vi.useFakeTimers();
+    try {
+      c.query.set('kiro');
+      vi.advanceTimersByTime(400);
+      const raw = localStorage.getItem('forge-portal/graph-view/v1');
+      expect(raw).toBeTruthy();
+      const state = JSON.parse(raw!);
+      expect(state.schema).toBe('forge-portal/GraphView/v1');
+      expect(state.query).toBe('kiro');
+      expect(state.mode).toBe('list');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
