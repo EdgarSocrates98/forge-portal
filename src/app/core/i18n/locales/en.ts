@@ -450,6 +450,18 @@ export const EN: Record<string, string> = {
   'graph.legend.declared': 'declared & loaded',
   'graph.legend.unverified': 'unverified source',
   'graph.legend.unavailable': 'unavailable source',
+  // portal 2.2 cycle 3 — adaptive layout + safety guard
+  'graph.canvas.auto': 'Auto',
+  'graph.layout.running': 'Applying {layout} layout…',
+  'graph.layout.rendering': 'Rendering {done} of {total} elements…',
+  'graph.layout.cancelled': 'Layout cancelled — last stable positions kept.',
+  'graph.layout.timeout': '{layout} exceeded its time budget — showing {fallback} instead.',
+  'graph.layout.error': '{layout} failed to run — showing {fallback} instead.',
+  'graph.layout.warn': '{layout} is measured-expensive at this size.',
+  'graph.layout.recommended': 'Recommended: {layout}',
+  'graph.layout.runAnyway': 'Run anyway',
+  'graph.layout.useRecommended': 'Use {layout}',
+  'graph.group.autoNote': 'Auto-grouped for scale — expand a group to see its members.',
 
   // knowledge
   'knowledge.title': 'Knowledge',

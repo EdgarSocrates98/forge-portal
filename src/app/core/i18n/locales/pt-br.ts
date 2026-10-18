@@ -449,6 +449,19 @@ export const PT_BR: Record<string, string> = {
   'graph.legend.declared': 'declarada e carregada',
   'graph.legend.unverified': 'fonte não verificada',
   'graph.legend.unavailable': 'fonte indisponível',
+  // portal 2.2 ciclo 3 — layout adaptativo + guarda de segurança
+  'graph.canvas.auto': 'Auto',
+  'graph.layout.running': 'Aplicando layout {layout}…',
+  'graph.layout.rendering': 'Renderizando {done} de {total} elementos…',
+  'graph.layout.cancelled': 'Layout cancelado — últimas posições estáveis mantidas.',
+  'graph.layout.timeout': '{layout} excedeu o limite de tempo — exibindo {fallback}.',
+  'graph.layout.error': '{layout} falhou ao executar — exibindo {fallback}.',
+  'graph.layout.warn': '{layout} é pesado neste tamanho (medido).',
+  'graph.layout.recommended': 'Recomendado: {layout}',
+  'graph.layout.runAnyway': 'Executar mesmo assim',
+  'graph.layout.useRecommended': 'Usar {layout}',
+  'graph.group.autoNote':
+    'Agrupado automaticamente pela escala — expanda um grupo para ver os membros.',
 
   // conhecimento
   'knowledge.title': 'Conhecimento',

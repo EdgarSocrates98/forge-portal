@@ -35,7 +35,15 @@ import {
 } from '../../core/graph/federated';
 import { GraphPath, ImpactReport, impactReport, shortestPath } from '../../core/graph/analysis';
 import {
+  GraphStats,
+  LayoutChoice,
+  chooseLayout,
+  effectiveCost,
+  graphStats,
+} from '../../core/graph/layout-policy';
+import {
   GRAPH_LAYOUTS,
+  GraphLayoutEvent,
   GraphLayoutName,
   GraphRenderer,
   GraphSelection,
@@ -89,6 +97,15 @@ const norm = (s: string): string =>
  *  would dominate the DOM — the honest cap is documented. */
 const PATH_TARGET_CAP = 400;
 const IMPACT_LIST_CAP = 24;
+
+/** Empty-model stats — the policy's neutral input before data lands. */
+const EMPTY_STATS: GraphStats = {
+  nodes: 0,
+  edges: 0,
+  density: 0,
+  components: 0,
+  largestShare: 1,
+};
 
 const storage = (): Storage | null => {
   try {
@@ -770,13 +787,23 @@ const storage = (): Storage | null => {
           <div class="fed__canvas-wrap" data-section="canvas">
             <div class="fed__toolbar" role="toolbar" [attr.aria-label]="'graph.canvas.tools' | t">
               <span class="muted">{{ 'graph.canvas.layout' | t }}</span>
+              <button
+                class="fg-pill"
+                type="button"
+                data-layout="auto"
+                [attr.data-tone]="layoutAuto() ? 'accent' : null"
+                [attr.aria-pressed]="layoutAuto()"
+                (click)="setAutoLayout()"
+              >
+                {{ 'graph.canvas.auto' | t }} · {{ effectiveLayout() }}
+              </button>
               @for (l of layouts; track l) {
                 <button
                   class="fg-pill"
                   type="button"
                   [attr.data-layout]="l"
-                  [attr.data-tone]="layoutName() === l ? 'accent' : null"
-                  [attr.aria-pressed]="layoutName() === l"
+                  [attr.data-tone]="!layoutAuto() && layoutName() === l ? 'accent' : null"
+                  [attr.aria-pressed]="!layoutAuto() && layoutName() === l"
                   (click)="setLayout(l)"
                 >
                   {{ l }}
@@ -821,6 +848,76 @@ const storage = (): Storage | null => {
                 {{ 'graph.view.reset' | t }}
               </button>
             </div>
+            @if (pendingLayout(); as pl) {
+              <div class="fed__warn" data-section="layout-warn" role="alert">
+                <span>
+                  {{ 'graph.layout.warn' | t: { layout: pl } }}
+                  {{ 'graph.layout.recommended' | t: { layout: layoutChoice().recommended } }}
+                </span>
+                <button
+                  class="fg-pill fg-pill--mini"
+                  type="button"
+                  data-action="layout-confirm"
+                  (click)="confirmLayout()"
+                >
+                  {{ 'graph.layout.runAnyway' | t }}
+                </button>
+                <button
+                  class="fg-pill fg-pill--mini"
+                  type="button"
+                  data-action="layout-use-rec"
+                  (click)="useRecommended()"
+                >
+                  {{ 'graph.layout.useRecommended' | t: { layout: layoutChoice().recommended } }}
+                </button>
+              </div>
+            }
+            @if (layoutBusy() || layoutStatus()) {
+              <p class="muted fed__layoutstatus" data-status="layout" role="status">
+                @if (layoutBusy()) {
+                  @if (layoutStatus()?.type === 'progress') {
+                    {{
+                      'graph.layout.rendering'
+                        | t
+                          : {
+                              done: layoutStatus()?.done ?? 0,
+                              total: layoutStatus()?.total ?? 0,
+                            }
+                    }}
+                  } @else {
+                    {{ 'graph.layout.running' | t: { layout: layoutStatus()?.layout ?? '' } }}
+                    <button
+                      class="fg-pill fg-pill--mini"
+                      type="button"
+                      data-action="cancel-layout"
+                      (click)="cancelLayout()"
+                    >
+                      {{ 'state.cancel' | t }}
+                    </button>
+                  }
+                } @else if (layoutStatus()?.type === 'timeout') {
+                  {{
+                    'graph.layout.timeout'
+                      | t
+                        : {
+                            layout: layoutStatus()?.layout ?? '',
+                            fallback: layoutStatus()?.fallback ?? '',
+                          }
+                  }}
+                } @else if (layoutStatus()?.type === 'error') {
+                  {{
+                    'graph.layout.error'
+                      | t
+                        : {
+                            layout: layoutStatus()?.layout ?? '',
+                            fallback: layoutStatus()?.fallback ?? '',
+                          }
+                  }}
+                } @else if (layoutStatus()?.type === 'cancelled') {
+                  {{ 'graph.layout.cancelled' | t }}
+                }
+              </p>
+            }
             @if (groupSpec(); as gs) {
               @if (gs.groups.length) {
                 <ul
@@ -840,6 +937,11 @@ const storage = (): Storage | null => {
                       >
                         {{ gr.label }} · {{ gr.members.length }}
                       </button>
+                    </li>
+                  }
+                  @if (autoClustered()) {
+                    <li class="muted fed__autonote" data-note="auto-cluster">
+                      {{ 'graph.group.autoNote' | t }}
                     </li>
                   }
                 </ul>
@@ -1153,6 +1255,31 @@ const storage = (): Storage | null => {
     .fed__legend-rule--dotted {
       border-top-style: dotted;
     }
+    .fed__warn {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--warn, #a35c00);
+      border-left-width: 3px;
+      border-radius: var(--radius-md);
+      font-size: var(--font-sm);
+    }
+    .fed__warn button {
+      border: 1px solid var(--border);
+    }
+    .fed__layoutstatus {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin: 0;
+      min-height: 1.1em;
+      font-size: var(--font-xs);
+    }
+    .fed__autonote {
+      font-style: italic;
+    }
   `,
 })
 export class GraphPage {
@@ -1175,7 +1302,19 @@ export class GraphPage {
    *  mounted on demand and destroyed when the toggle leaves it. */
   readonly mode = signal<'list' | 'canvas'>('list');
   readonly layouts = GRAPH_LAYOUTS;
+  /** Cycle 3 §6.2: adaptive layout is the default — `auto` resolves
+   *  through the measured policy; an explicit pill pick turns it off. */
+  readonly layoutAuto = signal(true);
   readonly layoutName = signal<GraphLayoutName>('cose');
+  /** Guard surface (§6.3): last lifecycle event, in-flight flag and an
+   *  expensive pick waiting for the user's confirm. */
+  readonly layoutStatus = signal<GraphLayoutEvent | null>(null);
+  readonly layoutBusy = signal(false);
+  readonly pendingLayout = signal<GraphLayoutName | null>(null);
+  /** Honest override guards: once the user picks "no grouping" or
+   *  expands/collapses a group by hand, auto-clustering yields. */
+  private userGroupChoice = false;
+  private userCollapseChoice = false;
   readonly canvasEl = viewChild<ElementRef<HTMLElement>>('canvasEl');
   /** Signals the sync effects once the async engine import lands. */
   readonly rendererReady = signal(false);
@@ -1247,10 +1386,43 @@ export class GraphPage {
 
   readonly groupSpec = computed(() => {
     const g = this.fed();
+    if (!g) return null;
     const by = this.groupBy();
-    if (!g || !by) return null;
-    return groupingFor(g, by);
+    if (by) return groupingFor(g, by);
+    // §6.2: auto-clustered overview at very-large scale — the dropdown
+    // still reads "none" because the user did not pick it; the strip
+    // carries an explicit auto note instead.
+    if (this.autoClustered()) return groupingFor(g, 'kind');
+    return null;
   });
+
+  /** Measured scale stats of the current model — the policy input. */
+  readonly stats = computed<GraphStats | null>(() => {
+    const g = this.fed();
+    return g ? graphStats(g.nodes, g.edges) : null;
+  });
+
+  /** The adaptive layout decision — auto resolves through the measured
+   *  policy; an explicit pick carries `source: 'user'`. */
+  readonly layoutChoice = computed<LayoutChoice>(() =>
+    chooseLayout(this.stats() ?? EMPTY_STATS, {
+      preferred: this.layoutAuto() ? null : this.layoutName(),
+      env: { grouped: this.groupBy() !== null },
+    }),
+  );
+
+  /** The layout that actually runs (or would run) on the canvas. */
+  readonly effectiveLayout = computed<GraphLayoutName>(() => this.layoutChoice().layout);
+
+  /** True when the policy grouped the graph on its own — very-large
+   *  scale, auto mode, and the user never touched the group select. */
+  readonly autoClustered = computed(
+    () =>
+      this.layoutChoice().cluster &&
+      this.layoutAuto() &&
+      this.groupBy() === null &&
+      !this.userGroupChoice,
+  );
 
   /** Edges sharing the selected edge's endpoints — related relations,
    *  direction-agnostic, excluding the edge itself. */
@@ -1265,6 +1437,10 @@ export class GraphPage {
     );
   }
 
+  /** Per-node normalized keys — FedNode objects keep identity across
+   *  keystrokes, so query typing doesn't re-normalize 10k nodes. */
+  private readonly normCache = new WeakMap<FedNode, { id: string; label: string }>();
+
   readonly filtered = computed<FedNode[]>(() => {
     const g = this.fed();
     if (!g) return [];
@@ -1273,7 +1449,12 @@ export class GraphPage {
     return g.nodes.filter((n) => {
       if (k !== null && n.kind !== k) return false;
       if (!q) return true;
-      return norm(n.id).includes(q) || norm(n.label).includes(q);
+      let nk = this.normCache.get(n);
+      if (!nk) {
+        nk = { id: norm(n.id), label: norm(n.label) };
+        this.normCache.set(n, nk);
+      }
+      return nk.id.includes(q) || nk.label.includes(q);
     });
   });
 
@@ -1284,12 +1465,14 @@ export class GraphPage {
       if (el && !this.renderer) void this.mountCanvas(el);
       if (!el && this.renderer) this.destroyCanvas();
     });
-    // FedGraph → view model, re-pushed after every rebuild.
+    // FedGraph → view model, re-pushed after every rebuild. The policy
+    // pick rides with the data so a scale-class change re-chooses the
+    // auto layout without an extra pass over the outgoing elements.
     effect(() => {
       this.rendererReady();
       const g = this.fed();
       if (this.renderer && g) {
-        this.renderer.setData(toViewModel(g));
+        this.renderer.setData(toViewModel(g), { layout: this.effectiveLayout() });
         if (this.pendingViewport) {
           this.renderer.setViewport(this.pendingViewport);
           this.pendingViewport = null;
@@ -1338,6 +1521,20 @@ export class GraphPage {
       if (!r) return;
       const spec = this.groupSpec();
       r.setGrouping(spec ? { ...spec, collapsed: this.collapsed() } : null);
+    });
+    // Auto-cluster activation: collapse every group once so the canvas
+    // opens on the clustered overview — user toggles win afterwards.
+    effect(() => {
+      const spec = this.groupSpec();
+      if (
+        this.autoClustered() &&
+        spec &&
+        spec.groups.length &&
+        !this.userCollapseChoice &&
+        this.collapsed().size === 0
+      ) {
+        this.collapsed.set(new Set(spec.groups.map((x) => x.id)));
+      }
     });
     // Diff overlay — canvas marks only for still-present elements.
     effect(() => {
@@ -1388,7 +1585,27 @@ export class GraphPage {
       r.onSelect((s) => this.onCanvasSelect(s));
       r.onHover((s) => this.hovered.set(s));
       r.onViewport((v) => this.vp.set(v));
-      r.layout(this.layoutName());
+      r.onLayoutStatus((e) => {
+        // 'superseded' is immediately followed by the new run's
+        // 'started' — leave the strip alone.
+        if (e.type === 'superseded') return;
+        if (e.type === 'done' || e.type === 'skipped') {
+          this.layoutBusy.set(false);
+          // Keep a timeout/error/cancelled notice visible — a trailing
+          // 'skipped' from the refresh effect or the fallback's 'done'
+          // must not erase why the canvas did not move.
+          const prev = this.layoutStatus();
+          if (prev?.type !== 'timeout' && prev?.type !== 'error' && prev?.type !== 'cancelled') {
+            this.layoutStatus.set(null);
+          }
+          return;
+        }
+        this.layoutStatus.set(e);
+        // 'timeout' is followed by the fallback's started→done, so the
+        // busy flag stays up through the automatic recovery too
+        this.layoutBusy.set(e.type === 'started' || e.type === 'progress' || e.type === 'timeout');
+      });
+      r.layout(this.effectiveLayout());
       this.renderer = r;
       this.rendererReady.set(true);
     } finally {
@@ -1420,12 +1637,49 @@ export class GraphPage {
   }
 
   setLayout(name: GraphLayoutName): void {
+    this.pendingLayout.set(null);
+    const s = this.stats();
+    // §6.3 guard: a measured-expensive pick asks for confirmation and
+    // names the recommended alternative instead of silently freezing.
+    if (s && effectiveCost(name, s) !== 'ok') {
+      this.pendingLayout.set(name);
+      return;
+    }
+    this.applyLayout(name);
+  }
+
+  /** The confirmed/allowed explicit pick — auto mode turns off. */
+  private applyLayout(name: GraphLayoutName): void {
+    this.layoutAuto.set(false);
     this.layoutName.set(name);
+    this.pendingLayout.set(null);
     this.renderer?.layout(name);
   }
 
+  confirmLayout(): void {
+    const p = this.pendingLayout();
+    if (p) this.applyLayout(p);
+  }
+
+  useRecommended(): void {
+    this.pendingLayout.set(null);
+    this.layoutAuto.set(true);
+    this.renderer?.layout(this.effectiveLayout());
+  }
+
+  setAutoLayout(): void {
+    this.layoutAuto.set(true);
+    this.pendingLayout.set(null);
+    this.renderer?.layout(this.effectiveLayout());
+  }
+
+  cancelLayout(): void {
+    this.renderer?.cancelLayout();
+  }
+
   resetLayout(): void {
-    this.renderer?.layout(this.layoutName());
+    this.pendingLayout.set(null);
+    this.renderer?.layout(this.effectiveLayout());
   }
 
   fitCanvas(): void {
@@ -1446,11 +1700,13 @@ export class GraphPage {
 
   onGroupBy(e: Event): void {
     const v = (e.target as HTMLSelectElement).value;
+    this.userGroupChoice = true; // an explicit pick yields auto-clustering
     this.groupBy.set(v === 'kind' || v === 'forge' || v === 'host' ? v : null);
     this.collapsed.set(new Set());
   }
 
   toggleGroup(gid: string): void {
+    this.userCollapseChoice = true;
     const next = new Set(this.collapsed());
     if (next.has(gid)) next.delete(gid);
     else next.add(gid);
@@ -1504,9 +1760,13 @@ export class GraphPage {
     this.pathTarget.set(null);
     this.groupBy.set(null);
     this.collapsed.set(new Set());
+    this.userGroupChoice = false;
+    this.userCollapseChoice = false;
+    this.layoutAuto.set(true);
+    this.pendingLayout.set(null);
     this.layoutName.set('cose');
     this.vp.set(null);
-    this.renderer?.layout('cose');
+    this.renderer?.layout(this.effectiveLayout());
   }
 
   private schedulePersist(): void {
@@ -1517,6 +1777,7 @@ export class GraphPage {
         schema: 'forge-portal/GraphView/v1',
         mode: this.mode(),
         layout: this.layoutName(),
+        layoutAuto: this.layoutAuto(),
         query: this.query(),
         kind: this.kind(),
         selectedNode: this.selected()?.id ?? null,
@@ -1537,7 +1798,11 @@ export class GraphPage {
     const s = loadViewState(storage());
     if (!s) return;
     this.mode.set(s.mode);
+    // v1 records written before cycle 3 carry no flag — auto is the
+    // honest default; an explicit `false` restores the picked layout.
+    this.layoutAuto.set(s.layoutAuto !== false);
     this.layoutName.set(s.layout);
+    if (s.layoutAuto === false) this.userGroupChoice = true;
     this.query.set(s.query);
     this.kind.set(s.kind);
     this.groupBy.set(s.groupBy);
