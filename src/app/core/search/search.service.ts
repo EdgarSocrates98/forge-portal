@@ -73,6 +73,7 @@ interface BuiltIndex {
  *  (`/forges`, `/config`); `capability` mirrors the old palette gate. */
 const STATIC_PAGES: { route: string; labelKey: string; icon: string; capability?: string }[] = [
   { route: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' },
+  { route: '/guide', labelKey: 'nav.guide', icon: 'guide' },
   { route: '/install', labelKey: 'nav.install', icon: 'install' },
   { route: '/federation', labelKey: 'nav.federation', icon: 'network' },
   { route: '/forges', labelKey: 'nav.forges', icon: 'gem' },

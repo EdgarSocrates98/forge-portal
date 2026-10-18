@@ -24,6 +24,7 @@ import {
 } from '../../core/graph/renderer';
 import { KIND_STYLE, toViewModel } from '../../core/graph/view-model';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PrefsStore } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -87,7 +88,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
     UiFilterBar,
   ],
   template: `
-    <ui-page-header [title]="'agents.title' | t" [subtitle]="'agents.subtitle' | t">
+    <ui-page-header [title]="'agents.title' | t" [subtitle]="'agents.subtitle' | t" hintId="agent">
       <div
         class="view-toggle"
         role="group"
@@ -827,6 +828,7 @@ type StudioMode = 'cards' | 'table' | 'graph';
 export class AgentsPage implements OnInit {
   private readonly api = inject(PortalApi);
   readonly store = inject(PortalStore);
+  private readonly prefs = inject(PrefsStore);
   private readonly destroyRef = inject(DestroyRef);
 
   /** Route `?q=` deep-link (withComponentInputBinding). */
@@ -959,6 +961,9 @@ export class AgentsPage implements OnInit {
       r.select(sel ? `agent:${sel.id}` : null);
       r.highlight(new Set(), new Set());
     });
+    // §8.3 — the filter text persists; a `?q=` deep-link wins over the
+    // stored value, and whatever wins is kept for the next visit.
+    effect(() => this.prefs.setFilter('agents', this.query()));
     this.destroyRef.onDestroy(() => this.destroyCanvas());
     void this.load();
   }
@@ -966,6 +971,10 @@ export class AgentsPage implements OnInit {
   ngOnInit(): void {
     const seed = this.q();
     if (seed) this.query.set(seed);
+    else {
+      const saved = this.prefs.filterFor('agents');
+      if (saved) this.query.set(saved);
+    }
   }
 
   async load(): Promise<void> {

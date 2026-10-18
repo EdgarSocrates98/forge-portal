@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { RegistryOpsPanel } from './registry-ops-panel';
 import { PortalApi } from '../../core/api/api.client';
@@ -70,7 +71,7 @@ describe('RegistryOpsPanel', () => {
   async function setup(overrides: Partial<PortalApi> = {}) {
     await TestBed.configureTestingModule({
       imports: [RegistryOpsPanel],
-      providers: [{ provide: PortalApi, useValue: fakeApi(overrides) }],
+      providers: [provideRouter([]), { provide: PortalApi, useValue: fakeApi(overrides) }],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(RegistryOpsPanel);

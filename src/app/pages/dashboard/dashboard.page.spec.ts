@@ -6,6 +6,7 @@ import { PortalApi } from '../../core/api/api.client';
 import { PortalStore } from '../../core/portal/portal.store';
 import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
+import { PREFS_KEY } from '../../core/prefs/prefs.store';
 import {
   FederationSnapshot,
   GraphBundle,
@@ -150,6 +151,11 @@ const text = (el: Element | null | undefined) => el?.textContent ?? '';
 
 describe('DashboardPage', () => {
   async function setup(overrides: Partial<PortalApi> = {}) {
+    try {
+      localStorage.removeItem(PREFS_KEY);
+    } catch {
+      // jsdom without storage
+    }
     await TestBed.configureTestingModule({
       imports: [DashboardPage],
       providers: [provideRouter([]), { provide: PortalApi, useValue: fakeApi(overrides) }],

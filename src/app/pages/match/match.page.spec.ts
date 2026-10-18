@@ -6,6 +6,7 @@ import { MatchService } from '../../core/match/match.service';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PREFS_KEY } from '../../core/prefs/prefs.store';
 import { AgentDescriptor, BootstrapPayload, SkillDescriptor } from '../../core/api/api.models';
 
 const AGENTS: AgentDescriptor[] = [
@@ -68,6 +69,11 @@ function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
 }
 
 async function setup(overrides: Partial<PortalApi> = {}) {
+  try {
+    localStorage.removeItem(PREFS_KEY);
+  } catch {
+    // jsdom without storage
+  }
   TestBed.configureTestingModule({
     imports: [MatchPage],
     providers: [provideRouter([]), { provide: PortalApi, useValue: fakeApi(overrides) }],

@@ -47,7 +47,11 @@ import {
   standalone: true,
   imports: [RouterLink, TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
   template: `
-    <ui-page-header [title]="'execution.title' | t" [subtitle]="'execution.subtitle' | t">
+    <ui-page-header
+      [title]="'execution.title' | t"
+      [subtitle]="'execution.subtitle' | t"
+      hintId="evidence"
+    >
       <button class="btn" [disabled]="src.loading()" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}

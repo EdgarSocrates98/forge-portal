@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { App } from './app';
 import { PortalStore } from './core/portal/portal.store';
+import { PREFS_KEY } from './core/prefs/prefs.store';
 
 @Component({ standalone: true, template: '<p>stub</p>' })
 class StubPage {}
@@ -30,6 +31,11 @@ class PortalStoreStub {
 
 describe('App shell', () => {
   beforeEach(async () => {
+    try {
+      localStorage.removeItem(PREFS_KEY);
+    } catch {
+      // jsdom without storage
+    }
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideRouter([]), { provide: PortalStore, useClass: PortalStoreStub }],
@@ -70,6 +76,7 @@ describe('App shell', () => {
     );
     expect(routes).toEqual([
       '/dashboard',
+      '/guide',
       '/federation',
       '/forges',
       '/agents',

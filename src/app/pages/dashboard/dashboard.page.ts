@@ -11,6 +11,7 @@ import {
   VersionInfo,
 } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
+import { PrefsStore, routeLabelKey } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -46,7 +47,11 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
     InventoryPanel,
   ],
   template: `
-    <ui-page-header [title]="'dashboard.title' | t" [subtitle]="'dashboard.subtitle' | t">
+    <ui-page-header
+      [title]="'dashboard.title' | t"
+      [subtitle]="'dashboard.subtitle' | t"
+      hintId="start"
+    >
       <button class="btn" (click)="refreshAll()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}
@@ -101,6 +106,15 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
               <ui-state-badge state="MISSING" />
             }
           </span>
+          @if (lastArea(); as la) {
+            <span class="meta">
+              <ui-icon name="history" [size]="13" />
+              {{ 'dashboard.lastArea' | t }}
+              <a class="linklike" [routerLink]="la.url">{{
+                la.labelKey ? (la.labelKey | t) : la.url
+              }}</a>
+            </span>
+          }
         </div>
         <p class="src">
           <code>bootstrap · GET /api/v1/installation/status</code>
@@ -779,6 +793,7 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
 export class DashboardPage {
   readonly store = inject(PortalStore);
   private readonly api = inject(PortalApi);
+  private readonly prefs = inject(PrefsStore);
 
   readonly fed = new Source<FederationSnapshot>();
   readonly tasksSrc = new Source<TaskExecution[]>();
@@ -807,6 +822,15 @@ export class DashboardPage {
     () => (this.health()?.checks ?? []).filter((c) => c.state === 'PASS').length,
   );
   readonly registryCount = computed(() => registryInstallCount(this.registrySrc.data()));
+
+  /** §8.3 — "voltar à última área": the last internal route the user
+   *  visited, rendered only when it isn't this page. The label is the
+   *  same nav key the sidebar renders — never a guessed name. */
+  readonly lastArea = computed(() => {
+    const url = this.prefs.lastRoute();
+    if (!url || url === '/' || url === '/dashboard') return null;
+    return { url, labelKey: routeLabelKey(url) };
+  });
 
   private readonly opsSources = () => [
     this.fed,

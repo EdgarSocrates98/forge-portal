@@ -56,6 +56,9 @@ export const PATHS: Record<string, string> = {
   pulse: '<path d="M3 12h4l2.5-6 4 12 2.5-6h5"/>',
   execution:
     '<path d="M3 5h11"/><circle cx="18" cy="5" r="2.5"/><path d="M8 12h6"/><circle cx="5" cy="12" r="2.5"/><path d="M3 19h12"/><circle cx="19" cy="19" r="2.5"/>',
+  guide:
+    '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.6 2.6 0 1 1 3.8 2.3c-.85.42-1.2 1-1.2 1.8v.4"/><path d="M12 17h.01"/>',
+  close: '<path d="m6 6 12 12M18 6 6 18"/>',
 };
 
 /** Raw path data for hosts that paint icons outside the DOM (the

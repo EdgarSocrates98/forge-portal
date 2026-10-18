@@ -6,6 +6,7 @@ import {
   MatchKind,
   MatchService,
 } from '../../core/match/match.service';
+import { PrefsStore } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -210,6 +211,7 @@ type Filter = MatchKind | 'all';
 })
 export class MatchPage {
   readonly svc = inject(MatchService);
+  private readonly prefs = inject(PrefsStore);
 
   readonly query = signal('');
   readonly filter = signal<Filter>('all');
@@ -230,7 +232,11 @@ export class MatchPage {
   });
 
   constructor() {
-    // one wiring point: the box drives the debounced service query
+    // §8.3 — the last filter text restores on revisit and persists on
+    // every change; the box then drives the debounced service query.
+    const saved = this.prefs.filterFor('match');
+    if (saved) this.query.set(saved);
+    effect(() => this.prefs.setFilter('match', this.query()));
     effect(() => this.svc.setQuery(this.query()));
   }
 }

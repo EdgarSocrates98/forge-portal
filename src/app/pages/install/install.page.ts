@@ -61,7 +61,11 @@ interface HostChoice {
   standalone: true,
   imports: [TPipe, PageHeader, StateBadge, ErrorState, EmptyState, UiIcon, UiSkeleton],
   template: `
-    <ui-page-header [title]="'install.title' | t" [subtitle]="'install.subtitle' | t">
+    <ui-page-header
+      [title]="'install.title' | t"
+      [subtitle]="'install.subtitle' | t"
+      hintId="install"
+    >
       <button class="btn" [disabled]="busy()" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
         {{ 'state.refresh' | t }}

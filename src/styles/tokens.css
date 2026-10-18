@@ -317,6 +317,30 @@
   --focus-ring: var(--fg-focus-ring);
 }
 
+/* ---- user preferences (Cycle 5 §8.2) -------------------------------------
+   PrefsStore writes data-density / data-motion on <html>. Values resolve
+   here at the token layer so components never branch on the preference.
+
+   Density: `compact` tightens the larger spacing steps (1–2 stay — they
+   are already minimal); `comfortable` is the default scale above.
+   Motion: `system` (default, attribute absent value) defers to
+   prefers-reduced-motion below; `reduced` collapses durations now;
+   `full` is an explicit opt-OUT of the OS reduce — honored because it is
+   the user's own choice recorded by the user themself. */
+[data-density='compact'] {
+  --fg-space-3: 0.625rem;
+  --fg-space-4: 0.75rem;
+  --fg-space-5: 1.125rem;
+  --fg-space-6: 1.5rem;
+  --fg-space-7: 2.25rem;
+}
+
+[data-motion='reduced'] {
+  --fg-motion-fast: 0ms;
+  --fg-motion-press: 0ms;
+  --fg-motion-med: 0ms;
+}
+
 /* ---- user-agent preferences ---------------------------------------------
    High contrast: stronger borders, dim text lifted toward --fg-text, a
    thicker focus ring. Reduced motion: every duration token collapses to
@@ -339,7 +363,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  :root:not([data-motion='full']) {
     --fg-motion-fast: 0ms;
     --fg-motion-press: 0ms;
     --fg-motion-med: 0ms;
