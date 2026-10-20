@@ -28,7 +28,11 @@ WORKSPACE = ROOT.parent
 SERVER_SRC = ROOT / "portal_core" / "forge_portal.py"
 TELEMETRY_SRC = ROOT / "portal_core" / "telemetry.py"
 ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
-PORTAL_VERSION = "1.0.0"
+# Única fonte de verdade da versão do portal — portal_core/forge_portal.py
+# (vendored verbatim para dentro dos pacotes; package.json é validado
+# contra ela por teste para não abrir trilha dupla de novo).
+sys.path.insert(0, str(ROOT / "portal_core"))
+from forge_portal import PORTAL_VERSION  # noqa: E402
 
 # sibling repo → package dir that receives _forge_portal.py
 FORGES: dict[str, str | dict[str, str]] = {
