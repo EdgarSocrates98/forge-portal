@@ -29,6 +29,9 @@ import {
   TaskExecution,
   VersionInfo,
   LabData,
+  PortalSpecialistsReport,
+  PortalDelegationsReport,
+  DelegationGraphReport,
 } from './api.models';
 import { ApiError } from './api.error';
 
@@ -216,6 +219,15 @@ export class PortalApi {
   }
   graphs() {
     return this.get<GraphBundle>('/graphs');
+  }
+  specialists() {
+    return this.get<PortalSpecialistsReport>('/specialists');
+  }
+  delegations() {
+    return this.get<PortalDelegationsReport>('/delegations');
+  }
+  delegationsGraph() {
+    return this.get<DelegationGraphReport>('/delegations/graph');
   }
   docsSearch(query: string, limit = 20) {
     return this.get<DocHit[]>(`/docs/search?q=${encodeURIComponent(query)}&limit=${limit}`);

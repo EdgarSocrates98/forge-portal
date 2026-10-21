@@ -499,3 +499,147 @@ export interface LabData {
   reports: LabReport[];
   notes: string[];
 }
+
+/* ------------------------------------------------------------------ */
+/* lf-0032 — Specialist Explorer / Delegation Explorer projections.    */
+/* Every field echoes the adapter document; nothing is inferred.       */
+/* ------------------------------------------------------------------ */
+
+export interface SpecialistCapabilityRow {
+  id: string;
+  description?: string;
+  version?: string;
+  finding_class?: string | null;
+  execution_mode?: string;
+  risk?: string;
+  requires?: string[];
+  external_cost?: string;
+  limitations?: string[];
+}
+
+export interface SpecialistDeclaredRelations {
+  family?: string | null;
+  composes_with?: string[];
+  preferred_verifiers?: string[];
+  fallback?: string[];
+}
+
+export interface SpecialistRow {
+  provider: string;
+  state: string;
+  version?: string;
+  checks?: Record<string, string>;
+  notes?: string[];
+  limitations?: string[];
+  capabilities?: SpecialistCapabilityRow[];
+  capability_count?: number;
+  compatibility?: { state?: string; detail?: string };
+  relations?: { declared?: SpecialistDeclaredRelations };
+  last_check?: string | null;
+}
+
+export interface PortalSpecialistsReport {
+  schema?: string;
+  availability: { state: string; probed?: boolean; detail?: string };
+  generated_at?: string;
+  probed?: boolean;
+  truncated?: boolean;
+  limitations?: string[];
+  specialists: SpecialistRow[];
+}
+
+export interface DelegationEntryRow {
+  coordinator?: string;
+  specialist?: string;
+  capability?: string;
+  status?: string;
+  finding_class?: string;
+  risks?: string[];
+  cost_bearing?: boolean;
+  justification?: string[];
+  command?: string[];
+  delegation_stage?: string;
+  handoff_status?: string;
+  notes?: string[];
+}
+
+export interface DelegationFindingRow {
+  id: string;
+  finding_class?: string;
+  severity?: string;
+  confidence?: string;
+  summary?: string;
+  providers?: string[];
+  capabilities?: string[];
+  correlated?: boolean;
+  evidence_refs?: string[];
+}
+
+export interface DelegationUnresolvedRow {
+  code: string;
+  detail?: string;
+  provider?: string;
+}
+
+export interface DelegationRecommendedRow {
+  action: string;
+  why?: string;
+  provider?: string;
+}
+
+export interface DelegationRun {
+  file?: string;
+  correlation_id?: string;
+  kind?: string;
+  intent?: string;
+  generated_at?: string;
+  plan_status?: string;
+  duration_ms?: number | null;
+  entries?: DelegationEntryRow[];
+  findings?: DelegationFindingRow[];
+  unresolved?: DelegationUnresolvedRow[];
+  recommended?: DelegationRecommendedRow[];
+  provenance?: Record<string, unknown>;
+  limitations?: string[];
+  unknowns?: string[];
+  prior_runs_same_intent?: number;
+}
+
+export interface PortalDelegationsReport {
+  schema?: string;
+  availability: { state: string; detail?: string | null };
+  notes?: string[];
+  runs: DelegationRun[];
+}
+
+export interface DelegationGraphNode {
+  id: string;
+  kind: string;
+  label?: string;
+  [key: string]: unknown;
+}
+
+export interface DelegationGraphEdge {
+  source: string;
+  target: string;
+  kind: string;
+  provenance: 'declared' | 'observed';
+  detail?: string;
+}
+
+export interface DelegationGraphReport {
+  schema?: string;
+  availability: {
+    state: string;
+    detail?: string | null;
+    declared?: string;
+    observed_reports?: number;
+  };
+  notes?: string[];
+  views: {
+    nodes: DelegationGraphNode[];
+    edges: DelegationGraphEdge[];
+    edge_kinds?: string[];
+    provenances?: string[];
+  }[];
+}

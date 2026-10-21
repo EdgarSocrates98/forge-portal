@@ -60,6 +60,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/graph/graph.page').then((m) => m.GraphPage),
   },
   {
+    path: 'specialists',
+    loadComponent: () =>
+      import('./pages/specialists/specialists.page').then((m) => m.SpecialistsPage),
+  },
+  {
+    path: 'delegations',
+    loadComponent: () =>
+      import('./pages/delegations/delegations.page').then((m) => m.DelegationsPage),
+  },
+  {
     path: 'observe',
     loadComponent: () => import('./pages/observe/observe.page').then((m) => m.ObservePage),
   },

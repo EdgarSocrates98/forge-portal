@@ -912,6 +912,8 @@ export class DashboardPage {
     scan: 'search',
     analyze: 'search',
     docs: 'knowledge',
+    specialists: 'gem',
+    delegations: 'history',
   };
 
   constructor() {
