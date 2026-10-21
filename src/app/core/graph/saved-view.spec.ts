@@ -32,6 +32,10 @@ const STATE: GraphViewState = {
   viewport: { zoom: 1.4, panX: 12, panY: -30 },
   groupBy: 'forge',
   collapsedGroups: ['grp:forge:unscoped'],
+  // lf-0023: provider filter is part of view state; a record without it
+  // parses back as null (all providers) — scope/viewIdx stay optional
+  // and absent (toEqual ignores undefined-valued keys).
+  provider: null,
 };
 
 describe('saved view state — forge-portal/graph-view/v1', () => {

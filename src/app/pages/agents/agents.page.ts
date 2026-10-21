@@ -22,7 +22,7 @@ import {
   GraphRenderer,
   GraphSelection,
 } from '../../core/graph/renderer';
-import { KIND_STYLE, toViewModel } from '../../core/graph/view-model';
+import { kindStyle, toViewModel } from '../../core/graph/view-model';
 import { PortalStore } from '../../core/portal/portal.store';
 import { PrefsStore } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
@@ -1114,10 +1114,10 @@ export class AgentsPage implements OnInit {
   }
 
   kindColor(k: FedNodeKind): string {
-    return KIND_STYLE[k].color;
+    return kindStyle(k).color;
   }
 
   kindShape(k: FedNodeKind): string {
-    return KIND_STYLE[k].shape;
+    return kindStyle(k).shape;
   }
 }
