@@ -51,11 +51,18 @@ import {
 } from '../../core/graph/renderer';
 import {
   GraphGroupBy,
-  KIND_STYLE,
   groupingFor,
   isFailed,
+  kindStyle,
   toViewModel,
 } from '../../core/graph/view-model';
+import {
+  ViewInfo,
+  buildProjectionGraph,
+  mergeViews,
+  providerCounts,
+  viewInfo,
+} from '../../core/graph/projection';
 import {
   GraphViewState,
   clearViewState,
@@ -188,7 +195,9 @@ const storage = (): Storage | null => {
           <ul class="views">
             @for (v of b.views; track $index) {
               <li>
-                <strong><ui-icon name="graph" [size]="14" />{{ viewName(v) }}</strong>
+                <button class="btn" type="button" data-action="open-view" (click)="openView($index)">
+                  <ui-icon name="graph" [size]="14" />{{ viewName(v) }}
+                </button>
                 <span class="muted">
                   {{ 'graph.nodes' | t: { count: viewNodes(v) } }} ·
                   {{ 'graph.edges' | t: { count: viewEdges(v) } }}
@@ -215,6 +224,35 @@ const storage = (): Storage | null => {
             <span class="chip">{{ 'graph.federated' | t }}</span>
           </h2>
           <div class="fed__head-side">
+            @if (hasViews()) {
+              <div
+                class="fed__view-toggle"
+                role="group"
+                [attr.aria-label]="'graph.scope.toggle' | t"
+                data-toggle="scope"
+              >
+                <button
+                  class="fg-pill"
+                  type="button"
+                  data-scope="federation"
+                  [attr.data-tone]="scope() === 'federation' ? 'accent' : null"
+                  [attr.aria-pressed]="scope() === 'federation'"
+                  (click)="setScope('federation')"
+                >
+                  {{ 'graph.scope.federation' | t }}
+                </button>
+                <button
+                  class="fg-pill"
+                  type="button"
+                  data-scope="views"
+                  [attr.data-tone]="scope() === 'views' ? 'accent' : null"
+                  [attr.aria-pressed]="scope() === 'views'"
+                  (click)="setScope('views')"
+                >
+                  {{ 'graph.scope.views' | t }}
+                </button>
+              </div>
+            }
             <div
               class="fed__view-toggle"
               role="group"
@@ -275,6 +313,62 @@ const storage = (): Storage | null => {
           }
         </ul>
         <p class="muted">{{ 'graph.fed.evidenceNote' | t }}</p>
+
+        @if (scope() === 'views') {
+          <div data-section="explorer">
+            <div class="fed__toolbar">
+              @if (viewInfos().length > 1) {
+                <label class="muted" for="view-sel">{{ 'graph.view.select' | t }}</label>
+                <select
+                  id="view-sel"
+                  class="input"
+                  data-action="view-select"
+                  (change)="setViewIdx($event)"
+                  [value]="viewIdx()"
+                >
+                  <option [value]="-1">{{ 'graph.view.all' | t }}</option>
+                  @for (vi of viewInfos(); track $index) {
+                    @if (vi) {
+                      <option [value]="$index">
+                        {{ vi.graphId }} · {{ vi.providerId }} ({{ vi.nodeCount }}n/{{
+                          vi.edgeCount
+                        }}e)
+                      </option>
+                    }
+                  }
+                </select>
+              }
+              <span class="muted" data-section="stats">
+                {{ g.nodes.length }} {{ 'graph.legend.nodes' | t }} ·
+                {{ g.edges.length }} {{ 'graph.legend.edges' | t }} ·
+                {{ componentCount() }} {{ 'graph.stats.components' | t }} ·
+                {{ providerCount() }} {{ 'graph.stats.providers' | t }}
+              </span>
+            </div>
+            @if (projProviders().length > 1) {
+              <ul
+                class="fed__sources"
+                data-strip="providers"
+                [attr.aria-label]="'graph.providers' | t"
+              >
+                @for (p of projProviders(); track p.provider) {
+                  <li>
+                    <button
+                      class="fg-pill fg-pill--mini"
+                      type="button"
+                      [attr.data-provider]="p.provider"
+                      [attr.data-tone]="provider() === p.provider ? 'accent' : null"
+                      [attr.aria-pressed]="provider() === p.provider"
+                      (click)="toggleProvider(p.provider)"
+                    >
+                      {{ p.provider }} · {{ p.count }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
 
         @if (snap(); as sp) {
           <div class="fed__snap muted" data-section="snapshot-bar">
@@ -763,6 +857,30 @@ const storage = (): Storage | null => {
                   <dt>{{ 'graph.edge.observedAt' | t }}</dt>
                   <dd>
                     <code>{{ at }}</code>
+                  </dd>
+                </div>
+              }
+              @if (se.prov) {
+                <div>
+                  <dt>{{ 'graph.edge.provenance' | t }}</dt>
+                  <dd>
+                    <code>{{ se.prov }}</code>
+                  </dd>
+                </div>
+              }
+              @if (se.epistemic) {
+                <div>
+                  <dt>{{ 'graph.edge.epistemic' | t }}</dt>
+                  <dd>
+                    <code>{{ se.epistemic }}</code>
+                  </dd>
+                </div>
+              }
+              @for (m of edgeMetaRows(se); track m[0]) {
+                <div>
+                  <dt>{{ m[0] }}</dt>
+                  <dd>
+                    <code>{{ m[1] ?? '—' }}</code>
                   </dd>
                 </div>
               }
@@ -1318,6 +1436,18 @@ export class GraphPage {
   readonly selected = signal<FedNode | null>(null);
   readonly selectedEdge = signal<FedEdge | null>(null);
 
+  /** lf-0023 Graph Explorer plane. 'federation' = the descriptor
+   *  overlay composed client-side (historical studio). 'views' = the
+   *  raw ForgeGraphView/v1 engine projection(s) served by `/graphs` —
+   *  the SAME vertex/edge set the CLI `graph ui` renders. */
+  readonly scope = signal<'federation' | 'views'>('federation');
+  /** Which view inside the bundle the explorer shows; -1 = all views
+   *  merged (`forge/FederatedGraph` semantics, provider-namespaced). */
+  readonly viewIdx = signal(-1);
+  /** Per-forge provenance filter (explorer only) — a node's `origin`
+   *  is its document `source_provider`. */
+  readonly provider = signal<string | null>(null);
+
   /** Studio surface: the accessible list is the default; the canvas is
    *  mounted on demand and destroyed when the toggle leaves it. */
   readonly mode = signal<'list' | 'canvas'>('list');
@@ -1375,6 +1505,38 @@ export class GraphPage {
     const map = new Map<string, FedNode>();
     for (const n of this.fed()?.nodes ?? []) map.set(n.id, n);
     return map;
+  });
+
+  /** lf-0023 — descriptor info for every ForgeGraphView/v1 document
+   *  the bundle carries; a document that fails the contract parse is
+   *  dropped from the selector (viewInfo returns null, never guessed). */
+  readonly viewInfos = computed<(ViewInfo | null)[]>(() =>
+    (this.bundle()?.views ?? []).map((v) => viewInfo(v)),
+  );
+
+  /** True when at least one contract-valid view is available — gates
+   *  the explorer scope pill. */
+  readonly hasViews = computed(() => this.viewInfos().some((i) => i !== null));
+
+  /** The document the explorer renders: the selected view, or every
+   *  view merged provider-namespaced when viewIdx is -1 (federated_merge
+   *  semantics — never invents cross-forge relations). */
+  readonly projDoc = computed<Record<string, unknown> | null>(() => {
+    const views = this.bundle()?.views ?? [];
+    const idx = this.viewIdx();
+    if (idx >= 0) {
+      const v = views[idx];
+      return v && viewInfo(v) ? v : null;
+    }
+    return mergeViews(views);
+  });
+
+  /** Per-forge element counts in the current explorer model —
+   *  `{provider: nodes}` from real `source_provider` fields. */
+  readonly projProviders = computed(() => {
+    if (this.scope() !== 'views') return [] as { provider: string; count: number }[];
+    const g = this.fed();
+    return g ? providerCounts(g) : [];
   });
 
   /** Real incident-edge count per node — one pass over the edges. */
@@ -1482,8 +1644,10 @@ export class GraphPage {
     if (!g) return [];
     const q = norm(this.query());
     const k = this.kind();
+    const p = this.provider();
     return g.nodes.filter((n) => {
       if (k !== null && n.kind !== k) return false;
+      if (p !== null && n.origin !== p) return false;
       if (!q) return true;
       let nk = this.normCache.get(n);
       if (!nk) {
@@ -1834,6 +1998,7 @@ export class GraphPage {
     this.pendingLayout.set(null);
     this.layoutName.set('cose');
     this.vp.set(null);
+    this.provider.set(null);
     this.renderer?.layout(this.effectiveLayout());
   }
 
@@ -1853,6 +2018,9 @@ export class GraphPage {
         viewport: this.vp(),
         groupBy: this.groupBy(),
         collapsedGroups: [...this.collapsed()],
+        scope: this.scope(),
+        viewIdx: this.viewIdx(),
+        provider: this.provider(),
       };
       saveViewState(storage(), state);
     }, 200);
@@ -1876,6 +2044,14 @@ export class GraphPage {
     this.groupBy.set(s.groupBy);
     this.collapsed.set(new Set(s.collapsedGroups));
     if (s.viewport) this.pendingViewport = s.viewport;
+    // lf-0023 explorer plane — restored before the first rebuild uses
+    // it; absent fields keep the federation default.
+    if (s.scope === 'views' && this.hasViews()) {
+      this.scope.set('views');
+      this.viewIdx.set(s.viewIdx ?? -1);
+      this.provider.set(s.provider ?? null);
+      this.rebuild();
+    }
     const nodes = this.nodeById();
     if (s.selectedNode && nodes.has(s.selectedNode)) {
       this.selected.set(nodes.get(s.selectedNode)!);
@@ -1910,11 +2086,11 @@ export class GraphPage {
   }
 
   kindColor(k: FedNodeKind): string {
-    return KIND_STYLE[k].color;
+    return kindStyle(k).color;
   }
 
   kindShape(k: FedNodeKind): string {
-    return KIND_STYLE[k].shape;
+    return kindStyle(k).shape;
   }
 
   readonly isFailed = isFailed;
@@ -1935,6 +2111,10 @@ export class GraphPage {
     return Object.entries(n.meta ?? {});
   }
 
+  edgeMetaRows(e: FedEdge): [string, string | number | boolean | null][] {
+    return Object.entries(e.meta ?? {});
+  }
+
   /** Status-line under the canvas: hovered element provenance — the
    *  canvas-tooltip honest substitute (canvas has no DOM tooltips). */
   hoverLine(): string {
@@ -1947,7 +2127,9 @@ export class GraphPage {
       return n ? `${n.kind} · ${n.id}` : h.id;
     }
     const e = g.edges.find((x) => x.id === h.id);
-    return e ? `${e.kind} · ${SOURCE_ENDPOINT[e.evidence]}` : h.id;
+    return e
+      ? `${e.kind} · ${e.prov ?? SOURCE_ENDPOINT[e.evidence]}`
+      : h.id;
   }
 
   evidenceState(src: FedSource): SourceAvailability {
@@ -2033,6 +2215,18 @@ export class GraphPage {
     for (const s of this.srcs) availability[s.id] = avail(s.src);
     availability['graphs'] = graphsAvail;
     availability['bootstrap'] = descriptor ? 'loaded' : 'unverified';
+
+    // lf-0023 explorer plane: render the served ForgeGraphView/v1
+    // document itself — the same vertex/edge set the CLI `graph ui`
+    // gets — instead of the descriptor overlay. Fall back to the
+    // overlay when the projection document is absent/invalid.
+    if (this.scope() === 'views') {
+      const doc = this.projDoc();
+      if (doc) {
+        this.fed.set(buildProjectionGraph(doc, graphsAvail));
+        return;
+      }
+    }
     this.fed.set(
       buildFederatedGraph({
         capabilities: this.data<PortalCapability[]>('capabilities'),
@@ -2090,8 +2284,72 @@ export class GraphPage {
     this.kind.set(this.kind() === k ? null : k);
   }
 
+  /** Kind filter chips — canonical overlay kinds first, then every
+   *  other kind the model actually carries (engine projection kinds),
+   *  sorted. Nothing is hidden just because it is outside the known
+   *  set. */
   kindOptions(g: FedGraph): FedNodeKind[] {
-    return FED_NODE_KINDS.filter((k) => (g.counts[k] ?? 0) > 0);
+    const known = FED_NODE_KINDS.filter((k) => (g.counts[k] ?? 0) > 0);
+    const knownSet = new Set<string>(FED_NODE_KINDS);
+    const rest = Object.keys(g.counts)
+      .filter((k) => !knownSet.has(k) && (g.counts[k] ?? 0) > 0)
+      .sort();
+    return [...known, ...rest];
+  }
+
+  // -- lf-0023 explorer plane ---------------------------------------
+
+  /** Switch between the descriptor overlay and the raw engine
+   *  projection(s). A scope switch resets selection — ids mean
+   *  different things across models, so nothing carries over. */
+  setScope(s: 'federation' | 'views'): void {
+    if (this.scope() === s) return;
+    this.scope.set(s);
+    this.selected.set(null);
+    this.selectedEdge.set(null);
+    this.provider.set(null);
+    this.diff.set(null);
+    this.rebuild();
+  }
+
+  setViewIdx(e: Event): void {
+    const v = Number((e.target as HTMLSelectElement).value);
+    this.viewIdx.set(Number.isFinite(v) ? v : -1);
+    this.selected.set(null);
+    this.selectedEdge.set(null);
+    this.provider.set(null);
+    this.diff.set(null);
+    this.rebuild();
+  }
+
+  /** Select a view straight from the views list — same affordance as
+   *  the selector, one click shorter. */
+  openView(i: number): void {
+    this.viewIdx.set(i);
+    if (this.scope() === 'views') {
+      this.selected.set(null);
+      this.selectedEdge.set(null);
+      this.provider.set(null);
+      this.diff.set(null);
+      this.rebuild();
+    } else {
+      this.setScope('views');
+    }
+  }
+
+  toggleProvider(p: string): void {
+    this.provider.set(this.provider() === p ? null : p);
+  }
+
+  /** Count of connected components in the current model — in the
+   *  merged federation view each provider's subgraph is its own
+   *  component (cross-forge relations are never inferred). */
+  componentCount(): number {
+    return this.stats()?.components ?? 0;
+  }
+
+  providerCount(): number {
+    return this.projProviders().length;
   }
 
   label(id: string): string {
@@ -2136,6 +2394,15 @@ export class GraphPage {
   // -- kept per-Forja views helpers ----------------------------------
 
   viewName(v: Record<string, unknown>): string {
+    const d = v['descriptor'];
+    if (d && typeof d === 'object') {
+      const r = d as Record<string, unknown>;
+      const gid = r['graph_id'];
+      const pid = r['provider_id'];
+      if (typeof gid === 'string' && gid) {
+        return typeof pid === 'string' && pid ? `${pid} · ${gid}` : gid;
+      }
+    }
     return String(v['view'] ?? v['name'] ?? 'view');
   }
   viewNodes(v: Record<string, unknown>): number {

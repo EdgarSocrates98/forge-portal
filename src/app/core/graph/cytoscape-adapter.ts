@@ -7,7 +7,8 @@ import {
   graphStats,
   layoutTimeoutMs,
 } from './layout-policy';
-import { EDGE_LINE, EDGE_STYLE, KIND_ICON, KIND_STYLE, tierLabel } from './view-model';
+import { EDGE_LINE, EDGE_STYLE, KIND_ICON, KIND_STYLE, kindStyle, tierLabel } from './view-model';
+import { FedNodeKind } from './federated';
 import {
   GraphDetailTier,
   GraphDiffMarks,
@@ -576,7 +577,7 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
         label: n.label,
         dlabel: tierLabel(n, tier),
         kind: n.kind,
-        color: KIND_STYLE[n.kind].color,
+        color: kindStyle(n.kind).color,
         icon: KIND_ICON_URI[n.kind] ?? '',
         unverified: n.unverified,
         absent: n.absent,
@@ -844,8 +845,8 @@ export function createCytoscapeRenderer(opts: CytoscapeRendererOptions = {}): Gr
     const byId = (a: cytoscape.NodeSingular, b: cytoscape.NodeSingular) =>
       a.id() < b.id() ? -1 : a.id() > b.id() ? 1 : 0;
     [...nodes].sort(byId).forEach((n) => {
-      const kind = n.data('kind') as keyof typeof KIND_STYLE;
-      const style = KIND_STYLE[kind];
+      const kind = n.data('kind') as FedNodeKind;
+      const style = kindStyle(kind);
       const p = n.position();
       const cx = p.x + ox;
       const cyv = p.y + oy;

@@ -47,11 +47,18 @@ import {
 
 export const FED_GRAPH_SCHEMA = 'forge/FederatedGraph/v1';
 
-export type FedNodeKind =
+/** Kinds the descriptor overlay declares. Engine projections
+ *  (ForgeGraphView/v1 → projection.ts) carry their OWN kind vocabulary
+ *  verbatim — code-intel kinds, rules, jobs — so the node kind space is
+ *  open: `FedNodeKind` is the known set plus any other declared string.
+ *  Unknown kinds are real data; they are never remapped or hidden. */
+export type KnownFedNodeKind =
   'forge' | 'capability' | 'skill' | 'agent' | 'mcp' | 'host' | 'operation' | 'tool';
+export type FedNodeKind = KnownFedNodeKind | (string & {});
 
-/** Canonical display/order for kinds — fixed, not alphabetical. */
-export const FED_NODE_KINDS: readonly FedNodeKind[] = [
+/** Canonical display/order for the overlay kinds — fixed, not
+ *  alphabetical. Projection kinds are ordered after these, sorted. */
+export const FED_NODE_KINDS: readonly KnownFedNodeKind[] = [
   'forge',
   'capability',
   'skill',
@@ -130,12 +137,14 @@ export interface FedNode {
   meta?: Record<string, string | number | boolean | null>;
 }
 
-export type FedEdgeKind = 'declares' | 'origin' | 'associated' | 'bound_to' | 'observed';
+export type KnownFedEdgeKind = 'declares' | 'origin' | 'associated' | 'bound_to' | 'observed';
+export type FedEdgeKind = KnownFedEdgeKind | (string & {});
 
 export interface FedEdge {
   /** `${source}|${kind}|${target}` — same shape as ForgeGraphView edges;
    *  `observed` edges append `|{event_type}` so distinct recorded
-   *  relation types stay distinct. */
+   *  relation types stay distinct. Projection edges keep the document's
+   *  verbatim edge id (parity with `graph ui`). */
   id: string;
   source: string;
   target: string;
@@ -146,6 +155,15 @@ export interface FedEdge {
    *  the relation (e.g. `tool.invocation`) — the graph never upgrades
    *  it into a semantic kind the producer did not declare. */
   detail?: string;
+  /** Projection edges only: the document's verbatim `provenance`
+   *  (`{provider}/{provenance}` in a merged view) — surfaced by the
+   *  inspector as the edge's forge provenance. */
+  prov?: string;
+  /** Projection edges only: verbatim `epistemic_state`. */
+  epistemic?: string;
+  /** Whitelisted scalar extras carried verbatim from the projection
+   *  edge's `attributes` (confidence, temporal, rule…). */
+  meta?: Record<string, string | number | boolean | null>;
 }
 
 export interface FedSourceInfo {

@@ -1,4 +1,12 @@
-import { FedEdgeKind, FedGraph, FedNode, FedNodeKind, SOURCE_ENDPOINT } from './federated';
+import {
+  FedEdgeKind,
+  FedGraph,
+  FedNode,
+  FedNodeKind,
+  KnownFedEdgeKind,
+  KnownFedNodeKind,
+  SOURCE_ENDPOINT,
+} from './federated';
 import {
   GraphDetailTier,
   GraphEdgeView,
@@ -21,7 +29,7 @@ import {
  * as line style, never a color-only cue.
  */
 
-export const KIND_STYLE: Record<FedNodeKind, { color: string; shape: GraphNodeShape }> = {
+export const KIND_STYLE: Record<KnownFedNodeKind, { color: string; shape: GraphNodeShape }> = {
   forge: { color: '#e8611c', shape: 'round-rectangle' },
   capability: { color: '#1d5fd1', shape: 'diamond' },
   skill: { color: '#7c3aed', shape: 'ellipse' },
@@ -31,6 +39,21 @@ export const KIND_STYLE: Record<FedNodeKind, { color: string; shape: GraphNodeSh
   operation: { color: '#b45309', shape: 'star' },
   tool: { color: '#0e7490', shape: 'pentagon' },
 };
+
+/** Deterministic palette for projection kinds outside the known set —
+ *  kind-string hash picks a slot, so the same kind always paints the
+ *  same color across renders (no clock, no random). */
+const FALLBACK_KIND_COLORS = [
+  '#0e7490', '#7c3aed', '#1d5fd1', '#0f8a4c', '#b45309', '#c026d3', '#64748b',
+] as const;
+
+export function kindStyle(k: FedNodeKind): { color: string; shape: GraphNodeShape } {
+  const known = (KIND_STYLE as Record<string, { color: string; shape: GraphNodeShape }>)[k];
+  if (known) return known;
+  let h = 0;
+  for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) | 0;
+  return { color: FALLBACK_KIND_COLORS[(h >>> 0) % FALLBACK_KIND_COLORS.length], shape: 'ellipse' };
+}
 
 /** Per-kind icon names — resolved through `iconPath` (icon.ts), the
  *  same set the DOM icon component paints. */
@@ -45,7 +68,7 @@ export const KIND_ICON: Record<FedNodeKind, string> = {
   tool: 'terminal',
 };
 
-export const EDGE_STYLE: Record<FedEdgeKind, { color: string }> = {
+export const EDGE_STYLE: Record<KnownFedEdgeKind, { color: string }> = {
   declares: { color: '#7d8894' },
   origin: { color: '#1d5fd1' },
   associated: { color: '#7c3aed' },

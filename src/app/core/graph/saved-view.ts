@@ -31,10 +31,15 @@ export interface GraphViewState {
   viewport: GraphViewport | null;
   groupBy: GraphGroupBy | null;
   collapsedGroups: string[];
+  /** lf-0023 explorer plane: which model the page renders and which
+   *  view inside the bundle. Optional — records written before the
+   *  explorer shipped simply leave them absent (federation overlay). */
+  scope?: 'federation' | 'views';
+  viewIdx?: number;
+  provider?: string | null;
 }
 
 const LAYOUTS = new Set(['cose', 'concentric', 'grid', 'breadthfirst', 'circle']);
-const KINDS = new Set(['forge', 'capability', 'skill', 'agent', 'mcp', 'host', 'operation']);
 const GROUPS = new Set(['kind', 'forge', 'host']);
 
 const str = (v: unknown): string | null => (typeof v === 'string' ? v : null);
@@ -66,7 +71,9 @@ export function parseViewState(raw: unknown): GraphViewState | null {
     layout,
     layoutAuto: o['layoutAuto'] === false ? false : true,
     query: str(o['query']) ?? '',
-    kind: KINDS.has(o['kind'] as string) ? (o['kind'] as FedNodeKind) : null,
+    // open kind space — any declared kind string is a valid filter
+    // (overlay kinds + engine projection kinds)
+    kind: typeof o['kind'] === 'string' ? (o['kind'] as FedNodeKind) : null,
     selectedNode: str(o['selectedNode']),
     selectedEdge: str(o['selectedEdge']),
     viewport,
@@ -74,6 +81,12 @@ export function parseViewState(raw: unknown): GraphViewState | null {
     collapsedGroups: Array.isArray(o['collapsedGroups'])
       ? o['collapsedGroups'].filter((x): x is string => typeof x === 'string')
       : [],
+    scope:
+      o['scope'] === 'federation' || o['scope'] === 'views'
+        ? (o['scope'] as 'federation' | 'views')
+        : undefined,
+    viewIdx: num(o['viewIdx']) ?? undefined,
+    provider: str(o['provider']),
   };
 }
 

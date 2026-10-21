@@ -834,3 +834,161 @@ describe('GraphPage — 2.2.1 cycle 7 manual layout hard guard', () => {
     expect(el.querySelector('[data-section="layout-warn"]')).toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// lf-0023/lf-0024 — the views explorer scope: the served ForgeGraphView/v1
+// document(s) rendered as the model itself (portal parity with `graph ui`).
+// ---------------------------------------------------------------------------
+
+const VIEW2: Record<string, unknown> = {
+  schema: 'forge/ForgeGraphView/v1',
+  descriptor: { provider_id: 'api-forge', graph_id: 'api-graph', domain: 'api' },
+  nodes: [
+    { id: 'api-forge:svc', kind: 'service', label: 'svc', source_provider: 'api-forge' },
+    { id: 'api-forge:db', kind: 'datastore', label: 'db', source_provider: 'api-forge' },
+  ],
+  edges: [
+    {
+      id: 'e-1',
+      source: 'api-forge:svc',
+      target: 'api-forge:db',
+      kind: 'reads',
+      provenance: 'extract',
+      epistemic_state: 'observed',
+    },
+  ],
+};
+
+const BUNDLE_MULTI: GraphBundle = {
+  availability: { state: 'available' },
+  // third entry is NOT a view — the explorer must drop it, never guess it
+  views: [VIEW, VIEW2, { bogus: true }],
+  studio_url: 'http://127.0.0.1:9999/studio',
+};
+
+// jsdom localStorage survives across specs in this file and earlier tests
+// persist view state (kind/provider/query); the explorer assertions need a
+// clean browser, not a restored filter from an unrelated suite.
+const setupMulti = () => {
+  localStorage.clear();
+  return setup({ graphs: vi.fn(() => of(BUNDLE_MULTI)) });
+};
+
+describe('GraphPage — lf-0023 views explorer scope', () => {
+  it('the scope pill exists only with contract-valid views and switches models', async () => {
+    setupMulti();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+
+    expect(c.hasViews()).toBe(true);
+    expect(c.viewInfos().filter((i) => i !== null).length).toBe(2); // bogus dropped
+    expect(el.querySelector('[data-toggle="scope"]')).toBeTruthy();
+
+    // default scope is the descriptor overlay (federation overlay nodes)
+    const overlayIds = c.fed()!.nodes.map((n) => n.id);
+    expect(overlayIds).toContain('capability:graph');
+
+    (el.querySelector('[data-scope="views"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    // explorer model = merged views — ids already carrying their provider
+    // prefix pass through verbatim (merge is idempotent); NOT the overlay
+    const ids = c.fed()!.nodes.map((n) => n.id);
+    expect(ids).toContain('the-forge:c1');
+    expect(ids).toContain('api-forge:svc');
+    expect(ids).not.toContain('capability:graph');
+    expect(el.querySelector('[data-section="explorer"]')).toBeTruthy();
+  });
+
+  it('openView jumps straight into the explorer on that single view', async () => {
+    setupMulti();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+
+    const buttons = el.querySelectorAll('[data-action="open-view"]');
+    expect(buttons.length).toBe(3); // one per bundle entry
+    (buttons[1] as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(c.scope()).toBe('views');
+    expect(c.viewIdx()).toBe(1);
+    // single-view model — verbatim ids, no namespacing
+    const ids = c.fed()!.nodes.map((n) => n.id);
+    expect(ids).toEqual(['api-forge:svc', 'api-forge:db']);
+    expect(c.fed()!.edges.map((e) => e.kind)).toEqual(['reads']);
+  });
+
+  it('view select swaps the model and provider pills filter it', async () => {
+    setupMulti();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelector('[data-scope="views"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    // merged model: two providers → a pill each, with real counts
+    const pills = [...el.querySelectorAll('[data-provider]')] as HTMLButtonElement[];
+    expect(pills.map((p) => p.dataset['provider']).sort()).toEqual([
+      'api-forge',
+      'the-forge',
+    ]);
+    const merged = c.fed()!.nodes.length;
+    expect(c.providerCount()).toBe(2);
+
+    // filter to one provider — only its nodes pass the filter
+    c.toggleProvider('api-forge');
+    fixture.detectChanges();
+    expect(c.filtered().every((n) => n.origin === 'api-forge')).toBe(true);
+    expect(c.filtered().length).toBeLessThan(merged);
+    c.toggleProvider('api-forge'); // toggle off restores
+    expect(c.filtered().length).toBe(merged);
+
+    // pick view 0 in the selector → single-view model replaces the merged one
+    const sel = el.querySelector('[data-action="view-select"]') as HTMLSelectElement;
+    sel.value = '0';
+    sel.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    const ids = c.fed()!.nodes.map((n) => n.id);
+    expect(ids).toEqual(['the-forge:c1', 'api-forge:a1']);
+  });
+
+  it('stats line and scope back to federation restore the overlay model', async () => {
+    setupMulti();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelector('[data-scope="views"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const stats = el.querySelector('[data-section="stats"]')!.textContent!;
+    // merged model: 4 real nodes (2+2), 1 real edge, 3 components
+    // (c1 and a1 are isolated; svc→db is the only connected subgraph)
+    expect(c.fed()!.nodes.length).toBe(4);
+    expect(c.fed()!.edges.length).toBe(1);
+    expect(c.componentCount()).toBe(3);
+    expect(c.providerCount()).toBe(2);
+    expect(stats).toBeTruthy();
+
+    (el.querySelector('[data-scope="federation"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(c.fed()!.nodes.map((n) => n.id)).toContain('capability:graph');
+  });
+
+  it('no contract-valid views → no scope pill (never a dead toggle)', async () => {
+    localStorage.clear();
+    setup({
+      graphs: vi.fn(() =>
+        of({
+          availability: { state: 'available' },
+          views: [{ bogus: true }],
+          studio_url: null,
+        } as unknown as GraphBundle),
+      ),
+    });
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    const el = fixture.nativeElement as HTMLElement;
+    expect(c.hasViews()).toBe(false);
+    expect(el.querySelector('[data-toggle="scope"]')).toBeNull();
+  });
+});
