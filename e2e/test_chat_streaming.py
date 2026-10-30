@@ -16,10 +16,8 @@ Skips honestly when the bundle or Chromium is unavailable.
 import http.server
 import json
 import os
-import shutil
 import socketserver
 import subprocess
-import sys
 import tempfile
 import threading
 import time
@@ -41,7 +39,7 @@ pytestmark = pytest.mark.skipif(
 
 playwright = pytest.importorskip("playwright.sync_api",
                                  reason="playwright not installed")
-from playwright.sync_api import sync_playwright  # noqa: E402
+from playwright.sync_api import sync_playwright
 
 
 def _free_port() -> int:
@@ -81,13 +79,13 @@ def stack():
           "open(sys.argv[1]+'/boot.log','w').write(lb.pair_token());"
           f"lb.serve({b_port})"), str(fab_state)],
         env={**os.environ, "FAB_ALLOWED_ORIGINS": portal},
-        stdout=open(ARTIFACTS / "fab.log", "w"),
+        stdout=open(ARTIFACTS / "fab.log", "w"),  # noqa: SIM115
         stderr=subprocess.STDOUT)
     for _ in range(60):
         try:
             urllib.request.urlopen(f"{bridge}/status", timeout=1)
             break
-        except Exception:
+        except Exception:  # noqa: BLE001 — readiness poll
             time.sleep(0.3)
 
     class Quiet(http.server.SimpleHTTPRequestHandler):
