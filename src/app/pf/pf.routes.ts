@@ -32,6 +32,10 @@ export const PF_ROUTES: Routes = [
     loadComponent: () => import('./pages/control-center.page').then((m) => m.PfControlCenterPage),
   },
   {
+    path: 'diagnostics',
+    loadComponent: () => import('./pages/diagnostics.page').then((m) => m.PfDiagnosticsPage),
+  },
+  {
     path: 'compare',
     loadComponent: () => import('./pages/compare.page').then((m) => m.PfComparePage),
   },

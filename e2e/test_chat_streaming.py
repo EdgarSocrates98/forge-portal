@@ -203,3 +203,55 @@ def test_chat_prompt_sse_dedup_cancel(stack):
             "js_errors": js_errors}, indent=1))
         browser.close()
     assert not js_errors, js_errors
+
+
+def test_diagnostics_page_renders_real_data(stack):
+    """Diagnostic Center: provider records + MCP Doctor from the real
+    bridge, including a deliberately broken MCP server classification."""
+    bridge, portal, tok = stack["bridge"], stack["portal"], stack["token"]
+
+    # seed a broken MCP server (revoked trust + invalid transport + error)
+    st, _ = _req(f"{bridge}/mcp", "POST", {
+        "schema": "forge/MCPServerDescriptor/1",
+        "server_id": "broken-e2e", "name": "Broken E2E",
+        "endpoint": "invalid-transport", "trust": "revoked",
+        "capabilities": [], "required_scopes": []}, tok=tok)
+    assert st in (200, 201)
+    st, _ = _req(f"{bridge}/mcp/broken-e2e/health", "POST",
+                 {"health": "error"}, tok=tok)
+    assert st == 200
+
+    # sanity: doctor classifies it before the browser round-trip
+    st, doc = _req(f"{bridge}/mcp/doctor", "GET", tok=tok)
+    assert st == 200
+    broken = next(i for i in doc["items"] if i["server_id"] == "broken-e2e")
+    assert broken["state"] == "error"
+
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        ctx = browser.new_context()
+        pg = ctx.new_page()
+        js_errors: list[str] = []
+        pg.on("pageerror", lambda e: js_errors.append(str(e)))
+        pg.goto(f"{portal}/pf/diagnostics", wait_until="domcontentloaded")
+        pg.evaluate(
+            """([k1, v1, k2, v2, k3, v3]) => {
+                localStorage.setItem(k1, v1);
+                localStorage.setItem(k2, v2);
+                localStorage.setItem(k3, v3);
+            }""",
+            ["fab.baseUrl", bridge, "fab.sessionToken", tok,
+             "fab.deviceId", stack["device"]])
+        pg.goto(f"{portal}/pf/diagnostics", wait_until="networkidle")
+        pg.wait_for_timeout(1500)
+        pg.screenshot(path=str(ARTIFACTS / "03_diagnostics.png"),
+                      full_page=True)
+        body = pg.locator("body").inner_text()
+        # providers table renders real detected providers
+        assert "fake" in body and "codex" in body
+        # MCP Doctor card renders the broken server + classification
+        assert "broken-e2e" in body
+        assert "credential" in body or "config" in body
+        assert not js_errors, js_errors
+        ctx.close()
+        browser.close()

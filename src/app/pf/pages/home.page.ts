@@ -192,6 +192,10 @@ import { ToastService } from '../../shared/toast';
           <strong>{{ 'pf.home.agentControlCenter' | t }}</strong>
           <span class="muted small">{{ 'pf.home.liveSessionsApprovalQueueDegraded' | t }}</span>
         </a>
+        <a class="card navcard" data-lift routerLink="/pf/diagnostics">
+          <strong>{{ 'pf.home.diagnostics' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.diagnosticsSub' | t }}</span>
+        </a>
         <a class="card navcard" data-lift routerLink="/pf/intelligence">
           <strong>{{ 'pf.home.productIntelligence' | t }}</strong>
           <span class="muted small">{{ 'pf.home.sessionQualityDecisionsFinOps' | t }}</span>

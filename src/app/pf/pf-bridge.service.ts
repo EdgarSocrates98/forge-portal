@@ -46,6 +46,52 @@ export interface BridgeProvider {
   capabilities: { name: string; state: string }[];
 }
 
+export interface McpCheck {
+  check: string;
+  state: 'ok' | 'warn' | 'error';
+  detail?: string;
+  class?: 'host' | 'mcp' | 'credential' | 'provider' | 'network' | 'config' | '';
+}
+
+export interface McpDoctorItem {
+  server_id: string;
+  name: string;
+  state: 'ok' | 'warn' | 'error';
+  checks: McpCheck[];
+  corrective: string[];
+}
+
+export interface McpDoctorReport {
+  schema: 'forge/MCPDoctorReport/1';
+  generated_at: string;
+  items: McpDoctorItem[];
+}
+
+export interface DiagnosticReport {
+  schema: 'forge/DiagnosticReport/1';
+  generated_at: string;
+  bridge: { version: string; state_dir: string; pf_verify_mode: string };
+  providers: {
+    id: string;
+    name: string;
+    installed: boolean;
+    executable: string | null;
+    version: string | null;
+    authentication: string;
+    protocol: string;
+    capabilities: Record<string, string>;
+    mcp_health: Record<string, unknown>;
+    last_test: unknown;
+    last_error: unknown;
+    next_action: string;
+  }[];
+  sessions: { active: number; tracked: number };
+  approvals: { pending: number };
+  budgets: Record<string, unknown>;
+  mcp_servers: McpDoctorItem[];
+  checks: { name: string; state: string; detail?: string; mode?: string }[];
+}
+
 export interface BridgeDevice {
   device_id: string;
   device_name: string;
@@ -183,6 +229,15 @@ export class PfBridge {
 
   providers() {
     return this.get<{ items: BridgeProvider[] }>('/providers').pipe(map((r) => r.items));
+  }
+  diagnostics(): Observable<DiagnosticReport> {
+    return this.get<DiagnosticReport>('/diagnostics');
+  }
+  mcpDoctor(): Observable<McpDoctorReport> {
+    return this.get<McpDoctorReport>('/mcp/doctor');
+  }
+  mcpSetHealth(serverId: string, health: string) {
+    return this.post<Record<string, unknown>>(`/mcp/${serverId}/health`, { health });
   }
   createSession(provider: string, productId?: string) {
     return this.post<BridgeSession>('/agent-sessions', {
