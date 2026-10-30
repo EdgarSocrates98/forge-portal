@@ -481,11 +481,16 @@ export class PfChatPage implements OnInit, OnDestroy {
   async pair(ev: Event): Promise<void> {
     ev.preventDefault();
     this.pairError.set(null);
-    this.bridge.setPairing(this.pairTok(), this.pairUrl());
     try {
+      // §25.6 — master token is exchanged once for a scoped session token;
+      // the master itself is never persisted by this client.
+      await firstValueFrom(
+        this.bridge.pair(this.pairTok(), this.pairUrl()),
+      );
+      this.pairTok.set(''); // drop the master from the field immediately
       await this.bootstrap();
       this.paired.set(true);
-      this.toast.show('Bridge paired', 'success');
+      this.toast.show('Bridge paired — session token issued', 'success');
     } catch {
       this.pairError.set('pairing failed — check token and that the bridge is running');
     }

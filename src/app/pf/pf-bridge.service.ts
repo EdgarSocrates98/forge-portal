@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { ApiError } from '../core/api/api.error';
 
 export interface BridgeEvent {
@@ -46,8 +46,43 @@ export interface BridgeProvider {
   capabilities: { name: string; state: string }[];
 }
 
+export interface BridgeDevice {
+  device_id: string;
+  device_name: string;
+  scopes: string[];
+  created_at: number;
+  expires_at: number;
+  last_seen: number;
+}
+
+export interface ApprovalRequest {
+  approval_id: string;
+  session_id: string;
+  actor: string;
+  resource: string;
+  action: string;
+  scope: string;
+  risk: string;
+  expires_at: number;
+  state: string;
+}
+
+export interface ApprovalGrant {
+  resolved: boolean;
+  granted: boolean;
+  approval_id: string;
+  approval_token?: string;
+  expires_at?: number;
+}
+
+/** Result of a mutation that may need a bound approval token (§25.4). */
+export type FileOpResult =
+  | { kind: 'ok'; body: Record<string, unknown> }
+  | { kind: 'approval-required'; request: ApprovalRequest };
+
 const BRIDGE_URL_KEY = 'fab.baseUrl';
-const BRIDGE_TOKEN_KEY = 'fab.pairToken';
+const BRIDGE_SESSION_KEY = 'fab.sessionToken';
+const BRIDGE_DEVICE_KEY = 'fab.deviceId';
 
 function read(key: string): string | null {
   try {
@@ -57,18 +92,64 @@ function read(key: string): string | null {
   }
 }
 
-/** Client for the Forge Agent Bridge LOCAL service (127.0.0.1, paired). */
+function nonce(): string {
+  return globalThis.crypto?.randomUUID?.() ??
+    `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+/**
+ * Client for the Forge Agent Bridge LOCAL service (127.0.0.1, paired).
+ *
+ * Security model (Cycle 25): the master pair token is used ONCE, at pairing,
+ * via POST /pair/exchange — it is never persisted. What lives in storage is
+ * a scoped, expiring session token bound to this device; it can be revoked
+ * via /pair/devices/{id} and expires server-side.
+ */
 @Injectable({ providedIn: 'root' })
 export class PfBridge {
   private readonly http = inject(HttpClient);
   readonly baseUrl = signal(read(BRIDGE_URL_KEY) ?? 'http://127.0.0.1:8471');
-  readonly token = signal(read(BRIDGE_TOKEN_KEY) ?? '');
+  /** Paired session token (NOT the master pair token). */
+  readonly token = signal(read(BRIDGE_SESSION_KEY) ?? '');
+  readonly deviceId = signal(read(BRIDGE_DEVICE_KEY) ?? '');
 
+  /**
+   * Pair this device: exchange the master pair token for a scoped session
+   * token. The master token is held only for this call's duration.
+   */
+  pair(pairToken: string, baseUrl?: string,
+       deviceName = 'forge-portal'): Observable<BridgeDevice> {
+    if (baseUrl) this.baseUrl.set(baseUrl.trim().replace(/\/+$/, ''));
+    return this.http
+      .post<{ session_token: string; device: BridgeDevice }>(
+        this.url('/pair/exchange'),
+        { pair_token: pairToken, device_name: deviceName,
+          scopes: ['agent'] })
+      .pipe(
+        map((r) => {
+          this.token.set(r.session_token);
+          this.deviceId.set(r.device.device_id);
+          try {
+            globalThis.localStorage?.setItem(BRIDGE_SESSION_KEY, r.session_token);
+            globalThis.localStorage?.setItem(BRIDGE_DEVICE_KEY, r.device.device_id);
+            globalThis.localStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
+            // legacy master-token key — purge it: masters never persist here
+            globalThis.localStorage?.removeItem('fab.pairToken');
+          } catch {
+            /* storage unavailable */
+          }
+          return r.device;
+        }),
+        catchError((e) => this.fail(e)),
+      );
+  }
+
+  /** Legacy entry point kept for callers passing a session token directly. */
   setPairing(token: string, baseUrl?: string): void {
     this.token.set(token.trim());
     if (baseUrl) this.baseUrl.set(baseUrl.trim().replace(/\/+$/, ''));
     try {
-      globalThis.localStorage?.setItem(BRIDGE_TOKEN_KEY, this.token());
+      globalThis.localStorage?.setItem(BRIDGE_SESSION_KEY, this.token());
       globalThis.localStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
     } catch {
       /* storage unavailable */
@@ -79,7 +160,11 @@ export class PfBridge {
     return `${this.baseUrl()}${p}`;
   }
   private headers(): Record<string, string> {
-    return { Authorization: `Bearer ${this.token()}`, 'Content-Type': 'application/json' };
+    return { Authorization: `Bearer ${this.token()}`,
+             'Content-Type': 'application/json' };
+  }
+  private mutateHeaders(): Record<string, string> {
+    return { ...this.headers(), 'X-FAB-Nonce': nonce() };
   }
   private fail(e: unknown): never {
     if (e instanceof HttpErrorResponse) throw new ApiError(e.status, e.error?.error);
@@ -87,7 +172,7 @@ export class PfBridge {
   }
   private post<T>(p: string, body: unknown): Observable<T> {
     return this.http
-      .post<T>(this.url(p), body, { headers: this.headers() })
+      .post<T>(this.url(p), body, { headers: this.mutateHeaders() })
       .pipe(catchError((e) => this.fail(e)));
   }
   private get<T>(p: string): Observable<T> {
@@ -130,7 +215,7 @@ export class PfBridge {
   patchSession(sessionId: string, meta: Partial<BridgeSessionMeta>) {
     return this.http
       .patch<{ meta: BridgeSessionMeta }>(this.url(`/agent-sessions/${sessionId}`), meta, {
-        headers: this.headers(),
+        headers: this.mutateHeaders(),
       })
       .pipe(catchError((e) => this.fail(e)));
   }
@@ -138,7 +223,7 @@ export class PfBridge {
     return this.http
       .delete<{ closed: boolean; archived: boolean }>(
         this.url(`/agent-sessions/${sessionId}`),
-        { headers: this.headers() },
+        { headers: this.mutateHeaders() },
       )
       .pipe(catchError((e) => this.fail(e)));
   }
@@ -160,6 +245,34 @@ export class PfBridge {
       `/agent-sessions/${sessionId}/artifacts`, { provider }).pipe(
         map((r) => r.items));
   }
+
+  // -- approval tokens (§25.4) ------------------------------------------
+  pendingApprovals(sessionId = '') {
+    return this.get<{ items: ApprovalRequest[] }>(
+      `/approvals?session_id=${sessionId}`).pipe(map((r) => r.items));
+  }
+  resolveApproval(approvalId: string, approved: boolean) {
+    return this.post<ApprovalGrant>(`/approvals/${approvalId}/resolve`,
+      { approved });
+  }
+
+  // -- pairing management (§25.6) ----------------------------------------
+  devices() {
+    return this.get<{ items: BridgeDevice[] }>('/pair/devices').pipe(
+      map((r) => r.items));
+  }
+  revokeDevice(deviceId: string) {
+    return this.http
+      .delete<{ revoked: boolean }>(this.url(`/pair/devices/${deviceId}`),
+        { headers: this.mutateHeaders() })
+      .pipe(catchError((e) => this.fail(e)));
+  }
+  rotatePair(pairToken: string) {
+    return this.post<{ rotated: boolean; pair_token: string }>(
+      '/pair/rotate', { pair_token: pairToken });
+  }
+
+  // -- files --------------------------------------------------------------
   fileList(path = '.') {
     return this.post<{ items: BridgeFileEntry[]; root: string }>(
       '/files/list', { path });
@@ -174,6 +287,48 @@ export class PfBridge {
   fileHistory(path: string) {
     return this.post<{ items: { version: string; size: number }[] }>(
       '/files/history', { path });
+  }
+
+  /**
+   * Upload with the §25.4 approval protocol:
+   * 1st attempt (no token) → approval-required result;
+   * caller resolves via resolveApproval() → retries with approval_token.
+   */
+  fileUpload(path: string, contentB64: string,
+             approvalToken = '', sessionId = ''): Observable<FileOpResult> {
+    return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
+      '/files/upload',
+      { path, content_b64: contentB64,
+        approval_token: approvalToken, session_id: sessionId }).pipe(
+        map((r) => ({ kind: 'ok' as const, body: r })),
+        catchError((e) => {
+          const body = (e instanceof HttpErrorResponse ? e.error : null) as
+            { approval_request?: ApprovalRequest } | null;
+          if (body?.approval_request) {
+            return of({ kind: 'approval-required' as const,
+                        request: body.approval_request });
+          }
+          return this.fail(e);
+        }),
+      );
+  }
+  fileRestore(path: string, version: string,
+              approvalToken = '', sessionId = ''): Observable<FileOpResult> {
+    return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
+      '/files/restore',
+      { path, version, approval_token: approvalToken,
+        session_id: sessionId }).pipe(
+        map((r) => ({ kind: 'ok' as const, body: r })),
+        catchError((e) => {
+          const body = (e instanceof HttpErrorResponse ? e.error : null) as
+            { approval_request?: ApprovalRequest } | null;
+          if (body?.approval_request) {
+            return of({ kind: 'approval-required' as const,
+                        request: body.approval_request });
+          }
+          return this.fail(e);
+        }),
+      );
   }
 }
 
