@@ -14,12 +14,27 @@ export interface BridgeEvent {
   provider: string;
 }
 
+export interface BridgeSessionMeta {
+  title?: string;
+  product_id?: string | null;
+  workspace_id?: string | null;
+  favorite?: boolean;
+  archived?: boolean;
+  visibility?: string;
+  notes?: string;
+  provider?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface BridgeSession {
   id: string;
   provider: string;
   state: string;
   product_id?: string | null;
   resumable?: boolean;
+  provider_session_ref?: string | null;
+  meta?: BridgeSessionMeta;
 }
 
 export interface BridgeProvider {
@@ -105,6 +120,39 @@ export class PfBridge {
   cancel(sessionId: string, provider: string) {
     return this.post<{ cancelled: boolean }>(`/agent-sessions/${sessionId}/cancel`, {
       provider,
+    });
+  }
+  listSessions() {
+    return this.get<{ items: BridgeSession[] }>('/agent-sessions').pipe(
+      map((r) => r.items),
+    );
+  }
+  patchSession(sessionId: string, meta: Partial<BridgeSessionMeta>) {
+    return this.http
+      .patch<{ meta: BridgeSessionMeta }>(this.url(`/agent-sessions/${sessionId}`), meta, {
+        headers: this.headers(),
+      })
+      .pipe(catchError((e) => this.fail(e)));
+  }
+  deleteSession(sessionId: string) {
+    return this.http
+      .delete<{ closed: boolean; archived: boolean }>(
+        this.url(`/agent-sessions/${sessionId}`),
+        { headers: this.headers() },
+      )
+      .pipe(catchError((e) => this.fail(e)));
+  }
+  resumeSession(sessionRef: string, provider: string) {
+    return this.post<BridgeSession>('/agent-sessions/_/resume', {
+      session_ref: sessionRef,
+      provider,
+    });
+  }
+  approve(sessionId: string, provider: string, approvalId: string, approved: boolean) {
+    return this.post<{ resolved: boolean }>(`/agent-sessions/${sessionId}/approve`, {
+      provider,
+      approval_id: approvalId,
+      approved,
     });
   }
 }
