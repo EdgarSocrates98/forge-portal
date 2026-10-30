@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
@@ -32,7 +40,9 @@ import { ToastService } from '../../../shared/toast';
     }
 
     @if (loading()) {
-      <div role="status" aria-label="loading knowledge"><ui-skeleton kind="card" [lines]="3" /></div>
+      <div role="status" aria-label="loading knowledge">
+        <ui-skeleton kind="card" [lines]="3" />
+      </div>
     } @else {
       <div class="stats">
         <div class="stat">
@@ -43,9 +53,9 @@ import { ToastService } from '../../../shared/toast';
           }
         </div>
         <div class="stat">
-          <span class="stat__value">{{ health()?.sources?.indexed ?? '—' }}/{{
-            health()?.sources?.total ?? '—'
-          }}</span>
+          <span class="stat__value"
+            >{{ health()?.sources?.indexed ?? '—' }}/{{ health()?.sources?.total ?? '—' }}</span
+          >
           <span class="stat__label">Sources indexed</span>
         </div>
         <div class="stat">
@@ -141,10 +151,7 @@ import { ToastService } from '../../../shared/toast';
           @if (answer(); as a) {
             <div class="answer fg-enter" aria-live="polite">
               <div class="answer__head">
-                <ui-state-badge
-                  [state]="synthBadge(a.synthesis)"
-                  [labelOverride]="a.synthesis"
-                />
+                <ui-state-badge [state]="synthBadge(a.synthesis)" [labelOverride]="a.synthesis" />
                 <span class="muted small">{{ a.citations.length }} citation(s)</span>
               </div>
               @if (a.answer) {

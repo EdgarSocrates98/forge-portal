@@ -133,8 +133,8 @@ import { ToastService } from '../../../shared/toast';
       <section class="card">
         <h2>Impact analysis</h2>
         <p class="muted small">
-          What breaks if an entity changes? BFS over the relation graph — entities are
-          created by extraction and API imports.
+          What breaks if an entity changes? BFS over the relation graph — entities are created by
+          extraction and API imports.
         </p>
         <form class="iform" (submit)="runImpact($event)">
           <input

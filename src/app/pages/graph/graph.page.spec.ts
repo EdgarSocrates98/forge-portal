@@ -929,10 +929,7 @@ describe('GraphPage — lf-0023 views explorer scope', () => {
 
     // merged model: two providers → a pill each, with real counts
     const pills = [...el.querySelectorAll('[data-provider]')] as HTMLButtonElement[];
-    expect(pills.map((p) => p.dataset['provider']).sort()).toEqual([
-      'api-forge',
-      'the-forge',
-    ]);
+    expect(pills.map((p) => p.dataset['provider']).sort()).toEqual(['api-forge', 'the-forge']);
     const merged = c.fed()!.nodes.length;
     expect(c.providerCount()).toBe(2);
 

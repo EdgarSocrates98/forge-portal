@@ -56,8 +56,8 @@ import { ToastService } from '../../shared/toast';
             spellcheck="false"
           />
           <small class="muted"
-            >Sent as <code>Authorization: Bearer …</code> on every private route. Stored in
-            this browser only (<code>pf.token</code>).</small
+            >Sent as <code>Authorization: Bearer …</code> on every private route. Stored in this
+            browser only (<code>pf.token</code>).</small
           >
         </label>
         <div class="fg-row">
@@ -116,8 +116,8 @@ import { ToastService } from '../../shared/toast';
           <p>{{ e.body.message }}</p>
           @if (!e.transport && e.status === 0) {
             <p class="muted small">
-              A CORS or mixed-content refusal reaches the app as a network failure — check
-              the engine's CORS policy for this origin.
+              A CORS or mixed-content refusal reaches the app as a network failure — check the
+              engine's CORS policy for this origin.
             </p>
           }
         </div>

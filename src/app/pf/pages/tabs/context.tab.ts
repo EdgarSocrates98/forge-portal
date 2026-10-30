@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
@@ -146,8 +154,8 @@ import { UiSkeleton } from '../../../shared/skeleton';
           </table>
           @if ((c.entities?.length ?? 0) > topEntities().length) {
             <p class="muted small">
-              Showing {{ topEntities().length }} of {{ c.entities!.length }} entities — see
-              the Knowledge tab for the full graph.
+              Showing {{ topEntities().length }} of {{ c.entities!.length }} entities — see the
+              Knowledge tab for the full graph.
             </p>
           }
         } @else {

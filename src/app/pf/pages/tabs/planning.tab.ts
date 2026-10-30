@@ -2,13 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } fro
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
-import {
-  PfDecision,
-  PfInitiative,
-  PfPrd,
-  PfPrioritizeResult,
-  PfRoadmap,
-} from '../../pf.models';
+import { PfDecision, PfInitiative, PfPrd, PfPrioritizeResult, PfRoadmap } from '../../pf.models';
 import { EmptyState } from '../../../shared/empty-state';
 import { ErrorState } from '../../../shared/error-state';
 import { StateBadge } from '../../../shared/state-badge';
@@ -165,12 +159,16 @@ const LANE_LABEL: Record<string, string> = {
           <div class="lanes">
             @for (lane of laneOrder; track lane) {
               <div class="lane">
-                <h3>{{ laneLabel(lane) }} <span class="muted">({{ lanes[lane]?.length ?? 0 }})</span></h3>
+                <h3>
+                  {{ laneLabel(lane) }} <span class="muted">({{ lanes[lane]?.length ?? 0 }})</span>
+                </h3>
                 @for (item of lanes[lane] ?? []; track item.id) {
                   <div class="litem">
                     <strong>{{ item.title ?? item.id }}</strong>
-                    <span class="muted small">score {{ item.priority_score ?? 0 }} ·
-                      {{ item.evidence_count ?? 0 }} evidence</span>
+                    <span class="muted small"
+                      >score {{ item.priority_score ?? 0 }} ·
+                      {{ item.evidence_count ?? 0 }} evidence</span
+                    >
                   </div>
                 } @empty {
                   <p class="muted small">—</p>

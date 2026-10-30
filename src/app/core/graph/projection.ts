@@ -61,8 +61,7 @@ export interface ViewInfo {
   merged: boolean;
 }
 
-const txt = (v: unknown): string | null =>
-  typeof v === 'string' && v.trim() ? v.trim() : null;
+const txt = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v.trim() : null);
 
 const obj = (v: unknown): Record<string, unknown> | null =>
   v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : null;

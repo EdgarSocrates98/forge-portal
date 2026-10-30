@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { PfApi } from '../pf-api.service';
@@ -61,7 +68,11 @@ import { ToastService } from '../../shared/toast';
           (input)="domain.set($any($event.target).value)"
           placeholder="Domain (optional)"
         />
-        <button class="btn btn--primary" type="submit" [disabled]="busy() || !ws() || !name().trim()">
+        <button
+          class="btn btn--primary"
+          type="submit"
+          [disabled]="busy() || !ws() || !name().trim()"
+        >
           Create
         </button>
       </form>
@@ -226,9 +237,7 @@ export class PfProductsPage implements OnInit {
     return f === null ? items : items.filter((p) => p.workspace_id === f);
   });
 
-  private readonly wsMap = computed(
-    () => new Map(this.workspaces().map((w) => [w.id, w.name])),
-  );
+  private readonly wsMap = computed(() => new Map(this.workspaces().map((w) => [w.id, w.name])));
 
   wsName(id: string): string | null {
     return this.wsMap().get(id) ?? null;

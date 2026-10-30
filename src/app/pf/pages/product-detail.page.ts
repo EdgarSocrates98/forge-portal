@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { PfApi } from '../pf-api.service';

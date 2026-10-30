@@ -195,7 +195,12 @@ const storage = (): Storage | null => {
           <ul class="views">
             @for (v of b.views; track $index) {
               <li>
-                <button class="btn" type="button" data-action="open-view" (click)="openView($index)">
+                <button
+                  class="btn"
+                  type="button"
+                  data-action="open-view"
+                  (click)="openView($index)"
+                >
                   <ui-icon name="graph" [size]="14" />{{ viewName(v) }}
                 </button>
                 <span class="muted">
@@ -339,10 +344,10 @@ const storage = (): Storage | null => {
                 </select>
               }
               <span class="muted" data-section="stats">
-                {{ g.nodes.length }} {{ 'graph.legend.nodes' | t }} ·
-                {{ g.edges.length }} {{ 'graph.legend.edges' | t }} ·
-                {{ componentCount() }} {{ 'graph.stats.components' | t }} ·
-                {{ providerCount() }} {{ 'graph.stats.providers' | t }}
+                {{ g.nodes.length }} {{ 'graph.legend.nodes' | t }} · {{ g.edges.length }}
+                {{ 'graph.legend.edges' | t }} · {{ componentCount() }}
+                {{ 'graph.stats.components' | t }} · {{ providerCount() }}
+                {{ 'graph.stats.providers' | t }}
               </span>
             </div>
             @if (projProviders().length > 1) {
@@ -2127,9 +2132,7 @@ export class GraphPage {
       return n ? `${n.kind} · ${n.id}` : h.id;
     }
     const e = g.edges.find((x) => x.id === h.id);
-    return e
-      ? `${e.kind} · ${e.prov ?? SOURCE_ENDPOINT[e.evidence]}`
-      : h.id;
+    return e ? `${e.kind} · ${e.prov ?? SOURCE_ENDPOINT[e.evidence]}` : h.id;
   }
 
   evidenceState(src: FedSource): SourceAvailability {

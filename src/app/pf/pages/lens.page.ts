@@ -36,8 +36,12 @@ import { UiSkeleton } from '../../shared/skeleton';
       <section class="card" aria-labelledby="lens-ctx">
         <h2 id="lens-ctx">Session context health</h2>
         <div class="row">
-          <select class="input" [value]="sid()" (change)="pick($any($event.target).value)"
-            aria-label="Session to inspect">
+          <select
+            class="input"
+            [value]="sid()"
+            (change)="pick($any($event.target).value)"
+            aria-label="Session to inspect"
+          >
             <option value="">— choose session —</option>
             @for (s of sessions(); track s.id) {
               <option [value]="s.id">{{ s.meta?.title || s.id }}</option>
@@ -53,7 +57,9 @@ import { UiSkeleton } from '../../shared/skeleton';
               <dd>
                 <ul>
                   @for (i of health()!.issues!; track $index) {
-                    <li><strong>{{ i.kind }}</strong> — {{ i.detail }}</li>
+                    <li>
+                      <strong>{{ i.kind }}</strong> — {{ i.detail }}
+                    </li>
                   }
                 </ul>
               </dd>
@@ -64,8 +70,7 @@ import { UiSkeleton } from '../../shared/skeleton';
             }
           </dl>
         } @else if (sid() && !loading()) {
-          <ui-empty title="Unbound session"
-            hint="No product context is bound to this session." />
+          <ui-empty title="Unbound session" hint="No product context is bound to this session." />
         }
       </section>
 
@@ -97,20 +102,25 @@ import { UiSkeleton } from '../../shared/skeleton';
       <form class="row" (submit)="route($event)">
         <label class="field">
           <span>Required capabilities (comma-separated)</span>
-          <input class="input mono" [value]="req()"
-            (input)="req.set($any($event.target).value)" placeholder="chat,streaming" />
+          <input
+            class="input mono"
+            [value]="req()"
+            (input)="req.set($any($event.target).value)"
+            placeholder="chat,streaming"
+          />
         </label>
         <label class="field">
           <span>Privacy</span>
-          <select class="input" [value]="privacy()"
-            (change)="privacy.set($any($event.target).value)">
+          <select
+            class="input"
+            [value]="privacy()"
+            (change)="privacy.set($any($event.target).value)"
+          >
             <option value="local-ok">local-ok</option>
             <option value="local-only">local-only</option>
           </select>
         </label>
-        <button class="btn" type="submit" [disabled]="routing()">
-          Route
-        </button>
+        <button class="btn" type="submit" [disabled]="routing()">Route</button>
       </form>
       @if (routeResult()) {
         <p>
@@ -119,7 +129,12 @@ import { UiSkeleton } from '../../shared/skeleton';
         </p>
         <table class="tbl" aria-label="Routing candidates">
           <thead>
-            <tr><th scope="col">Provider</th><th scope="col">Score</th><th scope="col">Eligible</th><th scope="col">Reasons</th></tr>
+            <tr>
+              <th scope="col">Provider</th>
+              <th scope="col">Score</th>
+              <th scope="col">Eligible</th>
+              <th scope="col">Reasons</th>
+            </tr>
           </thead>
           <tbody>
             @for (c of routeResult()!.candidates; track c.provider) {
@@ -142,11 +157,33 @@ import { UiSkeleton } from '../../shared/skeleton';
     }
   `,
   styles: `
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
-    .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; }
-    .kv dt { font-weight: 600; } .kv dd { margin: 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: end;
+      flex-wrap: wrap;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 14px;
+    }
+    .kv dt {
+      font-weight: 600;
+    }
+    .kv dd {
+      margin: 0;
+    }
   `,
 })
 export class PfLensPage implements OnInit {
@@ -192,7 +229,7 @@ export class PfLensPage implements OnInit {
     this.health.set(null);
     if (!id) return;
     try {
-      this.health.set(await firstValueFrom(this.bridge.intelContextHealth(id)) ?? null);
+      this.health.set((await firstValueFrom(this.bridge.intelContextHealth(id))) ?? null);
     } catch (e) {
       this.err.set(e as ApiError);
     }
@@ -206,8 +243,10 @@ export class PfLensPage implements OnInit {
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean);
-      this.routeResult.set(await firstValueFrom(
-        this.bridge.intelRoute({ required, privacy: this.privacy() })) ?? null);
+      this.routeResult.set(
+        (await firstValueFrom(this.bridge.intelRoute({ required, privacy: this.privacy() }))) ??
+          null,
+      );
     } catch (e) {
       this.err.set(e as ApiError);
     } finally {

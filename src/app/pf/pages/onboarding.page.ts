@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { PfApi } from '../pf-api.service';
@@ -64,9 +71,7 @@ const STEPS: { id: StepId; label: string }[] = [
       @for (s of steps; track s.id; let i = $index) {
         <li
           class="stepper__step"
-          [attr.data-state]="
-            i < stepIndex() ? 'done' : i === stepIndex() ? 'active' : null
-          "
+          [attr.data-state]="i < stepIndex() ? 'done' : i === stepIndex() ? 'active' : null"
           [attr.aria-current]="i === stepIndex() ? 'step' : null"
         >
           <span class="stepper__dot">{{ i < stepIndex() ? '✓' : i + 1 }}</span>
@@ -115,11 +120,7 @@ const STEPS: { id: StepId; label: string }[] = [
             }
             <div class="actions">
               <button class="btn" (click)="checkHealth()">Check connection</button>
-              <button
-                class="btn btn--primary"
-                [disabled]="!health()"
-                (click)="next()"
-              >
+              <button class="btn btn--primary" [disabled]="!health()" (click)="next()">
                 Continue
               </button>
             </div>
@@ -216,9 +217,9 @@ const STEPS: { id: StepId; label: string }[] = [
           <section class="card">
             <h2>4 · Product goal</h2>
             <p class="muted">
-              A short statement of what this product must learn or decide. It is saved
-              as your first knowledge document in the Import step — the engine has no
-              separate goal field, so nothing here is pretend-persisted.
+              A short statement of what this product must learn or decide. It is saved as your first
+              knowledge document in the Import step — the engine has no separate goal field, so
+              nothing here is pretend-persisted.
             </p>
             <textarea
               class="textarea"
@@ -242,8 +243,8 @@ const STEPS: { id: StepId; label: string }[] = [
           <section class="card">
             <h2>5 · Knowledge sources</h2>
             <p class="muted">
-              Register where product knowledge lives — a doc directory, a repo, a wiki.
-              The locator is a path/URI; credentials never go here.
+              Register where product knowledge lives — a doc directory, a repo, a wiki. The locator
+              is a path/URI; credentials never go here.
             </p>
             <form class="stack" (submit)="registerSource($event)">
               <label class="field">
@@ -352,8 +353,8 @@ const STEPS: { id: StepId; label: string }[] = [
                 </div>
               </div>
               <p class="muted">
-                This is the live <code>productforge/ProductContextPackage/v1</code> the
-                engine assembled for
+                This is the live <code>productforge/ProductContextPackage/v1</code> the engine
+                assembled for
                 <strong>{{ c.product.name }}</strong>
                 — generated {{ c.generated_at ?? '—' }}.
               </p>
@@ -728,11 +729,7 @@ export class PfOnboardingPage implements OnInit {
     this.busy.set(true);
     this.stepError.set(null);
     try {
-      this.product.set(
-        await firstValueFrom(
-          this.api.createProduct(this.pidBody(name)),
-        ),
-      );
+      this.product.set(await firstValueFrom(this.api.createProduct(this.pidBody(name))));
       this.toast.show(`Product "${name}" created`, 'success');
       this.next();
     } catch (e) {

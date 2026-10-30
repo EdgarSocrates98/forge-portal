@@ -17,8 +17,7 @@ export const PF_ROUTES: Routes = [
   },
   {
     path: 'products/:pid',
-    loadComponent: () =>
-      import('./pages/product-detail.page').then((m) => m.PfProductDetailPage),
+    loadComponent: () => import('./pages/product-detail.page').then((m) => m.PfProductDetailPage),
   },
   {
     path: 'settings',
@@ -30,13 +29,11 @@ export const PF_ROUTES: Routes = [
   },
   {
     path: 'control-center',
-    loadComponent: () =>
-      import('./pages/control-center.page').then((m) => m.PfControlCenterPage),
+    loadComponent: () => import('./pages/control-center.page').then((m) => m.PfControlCenterPage),
   },
   {
     path: 'compare',
-    loadComponent: () =>
-      import('./pages/compare.page').then((m) => m.PfComparePage),
+    loadComponent: () => import('./pages/compare.page').then((m) => m.PfComparePage),
   },
   {
     path: 'lens',
@@ -44,23 +41,19 @@ export const PF_ROUTES: Routes = [
   },
   {
     path: 'artifacts',
-    loadComponent: () =>
-      import('./pages/artifact-studio.page').then((m) => m.PfArtifactStudioPage),
+    loadComponent: () => import('./pages/artifact-studio.page').then((m) => m.PfArtifactStudioPage),
   },
   {
     path: 'workflows',
-    loadComponent: () =>
-      import('./pages/workflow.page').then((m) => m.PfWorkflowPage),
+    loadComponent: () => import('./pages/workflow.page').then((m) => m.PfWorkflowPage),
   },
   {
     path: 'templates',
-    loadComponent: () =>
-      import('./pages/templates.page').then((m) => m.PfTemplatesPage),
+    loadComponent: () => import('./pages/templates.page').then((m) => m.PfTemplatesPage),
   },
   {
     path: 'intelligence',
-    loadComponent: () =>
-      import('./pages/intel-actions.page').then((m) => m.PfIntelActionsPage),
+    loadComponent: () => import('./pages/intel-actions.page').then((m) => m.PfIntelActionsPage),
   },
   {
     path: 'onboarding',

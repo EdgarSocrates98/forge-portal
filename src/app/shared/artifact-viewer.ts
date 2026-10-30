@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MdLitePipe } from './md-lite.pipe';
 import { UiIcon } from './icon';
 
@@ -21,14 +16,19 @@ import { UiIcon } from './icon';
   template: `
     <div class="av" [attr.data-kind]="kind()">
       @switch (kind()) {
-        @case ('markdown') { <div class="md" [innerHTML]="text() | mdLite"></div> }
+        @case ('markdown') {
+          <div class="md" [innerHTML]="text() | mdLite"></div>
+        }
         @case ('csv') {
           <table>
             @for (row of csvRows(); track $index) {
               <tr>
                 @for (c of row; track $index) {
-                  @if ($first) { <th scope="col">{{ c }}</th> }
-                  @else { <td>{{ c }}</td> }
+                  @if ($first) {
+                    <th scope="col">{{ c }}</th>
+                  } @else {
+                    <td>{{ c }}</td>
+                  }
                 }
               </tr>
             }
@@ -40,8 +40,11 @@ import { UiIcon } from './icon';
           }</code></pre>
         }
         @case ('image') {
-          @if (src()) { <img [src]="src()" [alt]="name()" /> }
-          @else { <p class="muted">image — download to view</p> }
+          @if (src()) {
+            <img [src]="src()" [alt]="name()" />
+          } @else {
+            <p class="muted">image — download to view</p>
+          }
         }
         @case ('binary') {
           <div class="bin">
@@ -57,29 +60,73 @@ import { UiIcon } from './icon';
           <pre class="code" [attr.data-lang]="kind()"><code>{{ text() }}</code></pre>
         }
       }
-      @if (truncated()) { <p class="muted small">preview truncated</p> }
+      @if (truncated()) {
+        <p class="muted small">preview truncated</p>
+      }
     </div>
   `,
   styles: `
-    .av { display: block; }
-    .code, .diff { font-family: var(--font-mono); font-size: var(--font-xs);
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 6px; padding: var(--space-2); overflow-x: auto;
-      white-space: pre; margin: 0; }
-    .diff span { display: block; }
-    .diff span[data-s='+'] { color: var(--ok, #22c55e); }
-    .diff span[data-s='-'] { color: var(--error); }
-    .diff span[data-s='@'] { color: var(--fg-muted); }
-    table { border-collapse: collapse; font-size: var(--font-xs); width: 100%; }
-    th, td { border: 1px solid var(--border); padding: 2px var(--space-2);
-      text-align: left; }
-    th { background: var(--bg-hover); font-weight: 600; }
-    img { max-width: 100%; border-radius: 6px; }
-    .bin { display: grid; gap: var(--space-2); justify-items: center;
-      padding: var(--space-4); }
-    .bin p { margin: 0; }
-    .muted { color: var(--fg-muted); }
-    .small { font-size: var(--font-xs); }
+    .av {
+      display: block;
+    }
+    .code,
+    .diff {
+      font-family: var(--font-mono);
+      font-size: var(--font-xs);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: var(--space-2);
+      overflow-x: auto;
+      white-space: pre;
+      margin: 0;
+    }
+    .diff span {
+      display: block;
+    }
+    .diff span[data-s='+'] {
+      color: var(--ok, #22c55e);
+    }
+    .diff span[data-s='-'] {
+      color: var(--error);
+    }
+    .diff span[data-s='@'] {
+      color: var(--fg-muted);
+    }
+    table {
+      border-collapse: collapse;
+      font-size: var(--font-xs);
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 2px var(--space-2);
+      text-align: left;
+    }
+    th {
+      background: var(--bg-hover);
+      font-weight: 600;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .bin {
+      display: grid;
+      gap: var(--space-2);
+      justify-items: center;
+      padding: var(--space-4);
+    }
+    .bin p {
+      margin: 0;
+    }
+    .muted {
+      color: var(--fg-muted);
+    }
+    .small {
+      font-size: var(--font-xs);
+    }
   `,
 })
 export class ArtifactViewer {
@@ -88,7 +135,7 @@ export class ArtifactViewer {
   readonly text = input<string>('');
   readonly name = input<string>('');
   readonly truncated = input(false);
-  readonly src = input<string | null>(null);        // data-URL for images
+  readonly src = input<string | null>(null); // data-URL for images
   readonly downloadHref = input<string | null>(null);
 
   readonly csvRows = computed(() =>
@@ -103,8 +150,7 @@ export class ArtifactViewer {
       .split('\n')
       .map((t) => ({
         t,
-        s: t.startsWith('+') ? '+' : t.startsWith('-') ? '-'
-          : t.startsWith('@') ? '@' : ' ',
+        s: t.startsWith('+') ? '+' : t.startsWith('-') ? '-' : t.startsWith('@') ? '@' : ' ',
       })),
   );
 }

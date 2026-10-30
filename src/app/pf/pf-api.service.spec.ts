@@ -44,9 +44,9 @@ describe('PfApi', () => {
 
   it('unwraps a forge/PortalApi/1 envelope', async () => {
     const p = firstValueFrom(api.health());
-    http.expectOne(`${BASE}/health`).flush(
-      envelope<PfHealth>({ status: 'ok', forge_id: 'product-forge', version: '1.0' }),
-    );
+    http
+      .expectOne(`${BASE}/health`)
+      .flush(envelope<PfHealth>({ status: 'ok', forge_id: 'product-forge', version: '1.0' }));
     expect((await p).status).toBe('ok');
   });
 

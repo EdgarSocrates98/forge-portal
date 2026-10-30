@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { BridgeEvent, BridgeSession, PfBridge } from '../pf-bridge.service';
 import { ApiError } from '../../core/api/api.error';
@@ -33,8 +40,12 @@ interface DiffRow {
     <section class="card pickers">
       <label class="field">
         <span>Session A</span>
-        <select class="input" [value]="leftId()" (change)="pick($any($event.target).value, 'l')"
-          aria-label="Left session">
+        <select
+          class="input"
+          [value]="leftId()"
+          (change)="pick($any($event.target).value, 'l')"
+          aria-label="Left session"
+        >
           <option value="">— choose —</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id" [selected]="s.id === leftId()">
@@ -45,8 +56,12 @@ interface DiffRow {
       </label>
       <label class="field">
         <span>Session B</span>
-        <select class="input" [value]="rightId()" (change)="pick($any($event.target).value, 'r')"
-          aria-label="Right session">
+        <select
+          class="input"
+          [value]="rightId()"
+          (change)="pick($any($event.target).value, 'r')"
+          aria-label="Right session"
+        >
           <option value="">— choose —</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id" [selected]="s.id === rightId()">
@@ -55,9 +70,7 @@ interface DiffRow {
           }
         </select>
       </label>
-      <button class="btn" (click)="compare()" [disabled]="!leftId() || !rightId()">
-        Compare
-      </button>
+      <button class="btn" (click)="compare()" [disabled]="!leftId() || !rightId()">Compare</button>
     </section>
 
     @if (err()) {
@@ -103,24 +116,56 @@ interface DiffRow {
         </div>
       </section>
     } @else if (compared()) {
-      <ui-empty title="No events to compare"
-        hint="Both sessions have empty recorded timelines." />
+      <ui-empty title="No events to compare" hint="Both sessions have empty recorded timelines." />
     }
   `,
   styles: `
-    .pickers { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
-    .diff { display: grid; }
-    .diff-head { display: grid; grid-template-columns: 1fr 1fr;
-      font-weight: 600; padding: 6px 8px; border-bottom: 2px solid var(--line,#333); }
-    .diff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-      border-bottom: 1px solid var(--line,#2a2a2a); }
-    .cell { padding: 6px 8px; display: flex; gap: 8px; align-items: baseline;
-      min-width: 0; overflow: hidden; }
-    .diff-same { opacity: .65; }
-    .diff-diverged { background: color-mix(in srgb, #d69e2e 12%, transparent); }
-    .diff-left-only { background: color-mix(in srgb, #3182ce 12%, transparent); }
-    .diff-right-only { background: color-mix(in srgb, #38a169 12%, transparent); }
-    .seq { min-width: 42px; color: var(--muted); }
+    .pickers {
+      display: flex;
+      gap: 12px;
+      align-items: end;
+      flex-wrap: wrap;
+    }
+    .diff {
+      display: grid;
+    }
+    .diff-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      font-weight: 600;
+      padding: 6px 8px;
+      border-bottom: 2px solid var(--line, #333);
+    }
+    .diff-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--line, #2a2a2a);
+    }
+    .cell {
+      padding: 6px 8px;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .diff-same {
+      opacity: 0.65;
+    }
+    .diff-diverged {
+      background: color-mix(in srgb, #d69e2e 12%, transparent);
+    }
+    .diff-left-only {
+      background: color-mix(in srgb, #3182ce 12%, transparent);
+    }
+    .diff-right-only {
+      background: color-mix(in srgb, #38a169 12%, transparent);
+    }
+    .seq {
+      min-width: 42px;
+      color: var(--muted);
+    }
   `,
 })
 export class PfComparePage implements OnInit {
@@ -142,7 +187,7 @@ export class PfComparePage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.sessions.set(await firstValueFrom(this.bridge.listSessions()) ?? []);
+      this.sessions.set((await firstValueFrom(this.bridge.listSessions())) ?? []);
     } catch (e) {
       this.err.set(e as ApiError);
     }
@@ -156,8 +201,7 @@ export class PfComparePage implements OnInit {
     if (!this.leftId() || !this.rightId()) return;
     this.loading.set(true);
     this.err.set(null);
-    const provOf = (id: string) =>
-      this.sessions().find((s) => s.id === id)?.provider ?? 'fake';
+    const provOf = (id: string) => this.sessions().find((s) => s.id === id)?.provider ?? 'fake';
     try {
       const [l, r] = await Promise.all([
         firstValueFrom(this.bridge.events(this.leftId(), provOf(this.leftId()))),
@@ -180,8 +224,7 @@ export class PfComparePage implements OnInit {
       const l = a[i];
       const r = b[i];
       if (l && r) {
-        const same = l.type === r.type &&
-          JSON.stringify(l.payload) === JSON.stringify(r.payload);
+        const same = l.type === r.type && JSON.stringify(l.payload) === JSON.stringify(r.payload);
         rows.push({ kind: same ? 'same' : 'diverged', left: l, right: r });
       } else if (l) {
         rows.push({ kind: 'left-only', left: l });

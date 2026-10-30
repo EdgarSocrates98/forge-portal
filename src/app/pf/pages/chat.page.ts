@@ -30,7 +30,8 @@ import { ToastService } from '../../shared/toast';
 import { UiSkeleton } from '../../shared/skeleton';
 
 interface ChatItem {
-  kind: 'user' | 'assistant' | 'tool' | 'approval' | 'system' | 'usage' | 'plan' | 'artifact' | 'error';
+  kind:
+    'user' | 'assistant' | 'tool' | 'approval' | 'system' | 'usage' | 'plan' | 'artifact' | 'error';
   text: string;
   meta?: string;
   approvalId?: string;
@@ -55,13 +56,21 @@ const TEMPLATES = [
   imports: [ArtifactViewer, EmptyState, ErrorState, MdLitePipe, PageHeader, StateBadge, UiSkeleton],
   template: `
     <div class="studio" [attr.data-mode]="mode()">
-      <ui-page-header title="Chat Studio"
-        subtitle="Multi-agent sessions over the paired local Forge Agent Bridge.">
+      <ui-page-header
+        title="Chat Studio"
+        subtitle="Multi-agent sessions over the paired local Forge Agent Bridge."
+      >
         <div class="modes" role="tablist" aria-label="Experience mode">
           @for (m of modes; track m) {
-            <button class="mode" [attr.data-active]="mode() === m || null"
-                    role="tab" [attr.aria-selected]="mode() === m"
-                    (click)="mode.set(m)">{{ m }}</button>
+            <button
+              class="mode"
+              [attr.data-active]="mode() === m || null"
+              role="tab"
+              [attr.aria-selected]="mode() === m"
+              (click)="mode.set(m)"
+            >
+              {{ m }}
+            </button>
           }
         </div>
       </ui-page-header>
@@ -74,13 +83,25 @@ const TEMPLATES = [
             <code>~/.forge-bridge/pair.token</code>. Localhost only — never a public URL.
           </p>
           <form class="fg-row" (submit)="pair($event)">
-            <input class="input" [value]="pairTok()" (input)="pairTok.set($any($event.target).value)"
-                   placeholder="pair token" aria-label="Bridge pairing token" />
-            <input class="input url" [value]="pairUrl()" (input)="pairUrl.set($any($event.target).value)"
-                   placeholder="http://127.0.0.1:8471" aria-label="Bridge URL" />
+            <input
+              class="input"
+              [value]="pairTok()"
+              (input)="pairTok.set($any($event.target).value)"
+              placeholder="pair token"
+              aria-label="Bridge pairing token"
+            />
+            <input
+              class="input url"
+              [value]="pairUrl()"
+              (input)="pairUrl.set($any($event.target).value)"
+              placeholder="http://127.0.0.1:8471"
+              aria-label="Bridge URL"
+            />
             <button class="btn btn--primary" type="submit">Pair</button>
           </form>
-          @if (pairError(); as pe) { <p class="err" role="alert">{{ pe }}</p> }
+          @if (pairError(); as pe) {
+            <p class="err" role="alert">{{ pe }}</p>
+          }
         </section>
       } @else {
         <div class="layout">
@@ -89,15 +110,25 @@ const TEMPLATES = [
               <h3>Sessions</h3>
               <button class="btn btn--mini" (click)="reloadSessions()">↻</button>
             </div>
-            <input class="input" [value]="q()" (input)="q.set($any($event.target).value)"
-                   placeholder="Search…" aria-label="Search sessions" />
+            <input
+              class="input"
+              [value]="q()"
+              (input)="q.set($any($event.target).value)"
+              placeholder="Search…"
+              aria-label="Search sessions"
+            />
             <div class="side__list">
               @for (s of filteredSessions(); track s.id) {
-                <button class="sess" [attr.data-sel]="session()?.id === s.id || null"
-                        (click)="selectSession(s)">
+                <button
+                  class="sess"
+                  [attr.data-sel]="session()?.id === s.id || null"
+                  (click)="selectSession(s)"
+                >
                   <span class="sess__t">
                     {{ s.meta?.title || s.id }}
-                    @if (s.meta?.favorite) { <span aria-label="favorite">★</span> }
+                    @if (s.meta?.favorite) {
+                      <span aria-label="favorite">★</span>
+                    }
                   </span>
                   <span class="muted small">{{ s.provider }} · {{ s.state }}</span>
                 </button>
@@ -108,9 +139,13 @@ const TEMPLATES = [
             </div>
             <details class="new" [open]="!sessions().length">
               <summary>New session</summary>
-              <label class="lbl">Provider
-                <select class="input" [value]="provider()"
-                        (change)="provider.set($any($event.target).value)">
+              <label class="lbl"
+                >Provider
+                <select
+                  class="input"
+                  [value]="provider()"
+                  (change)="provider.set($any($event.target).value)"
+                >
                   @for (p of providers(); track p.id) {
                     <option [value]="p.id" [disabled]="!p.executable && p.id !== 'fake'">
                       {{ p.name }}{{ p.executable || p.id === 'fake' ? '' : ' (unavailable)' }}
@@ -118,9 +153,13 @@ const TEMPLATES = [
                   }
                 </select>
               </label>
-              <label class="lbl">Product
-                <select class="input" [value]="productId()"
-                        (change)="productId.set($any($event.target).value)">
+              <label class="lbl"
+                >Product
+                <select
+                  class="input"
+                  [value]="productId()"
+                  (change)="productId.set($any($event.target).value)"
+                >
                   <option value="">— none —</option>
                   @for (p of products(); track p.id) {
                     <option [value]="p.id">{{ p.name }}</option>
@@ -151,7 +190,9 @@ const TEMPLATES = [
                 <button class="btn btn--mini danger" (click)="archive()">archive</button>
               </div>
             }
-            @if (loading()) { <ui-skeleton kind="text" [lines]="4" /> }
+            @if (loading()) {
+              <ui-skeleton kind="text" [lines]="4" />
+            }
             <div class="timeline" #tl aria-live="polite">
               @for (it of filteredItems(); track $index) {
                 @switch (it.kind) {
@@ -162,7 +203,9 @@ const TEMPLATES = [
                       @if (!it.resolved) {
                         <div class="acts">
                           <button class="btn btn--mini" (click)="approve(it, true)">Approve</button>
-                          <button class="btn btn--mini danger" (click)="approve(it, false)">Deny</button>
+                          <button class="btn btn--mini danger" (click)="approve(it, false)">
+                            Deny
+                          </button>
                         </div>
                       } @else {
                         <span class="muted small">resolved</span>
@@ -179,11 +222,15 @@ const TEMPLATES = [
                     <div class="msg" [attr.data-k]="it.kind">
                       <span class="msg__k">
                         {{ it.kind }}
-                        @if (mode() === 'advanced' && it.seq) { <code>#{{ it.seq }}</code> }
+                        @if (mode() === 'advanced' && it.seq) {
+                          <code>#{{ it.seq }}</code>
+                        }
                       </span>
                       <div class="msg__b" [innerHTML]="it.text | mdLite"></div>
                       <div class="msg__f">
-                        @if (it.meta) { <span class="muted small">{{ it.meta }}</span> }
+                        @if (it.meta) {
+                          <span class="muted small">{{ it.meta }}</span>
+                        }
                         @if (it.kind === 'assistant') {
                           <button class="copy" (click)="copy(it.text)">copy</button>
                           @if (session()?.product_id) {
@@ -213,14 +260,22 @@ const TEMPLATES = [
               }
             </div>
             <form class="composer" (submit)="send($event)">
-              <textarea class="input" rows="2"
-                        [value]="draft()" (input)="draft.set($any($event.target).value)"
-                        (keydown.enter)="enterSend($event)"
-                        placeholder="Ask the agent… (Enter sends, Shift+Enter new line)"
-                        [disabled]="!session()" aria-label="Prompt"></textarea>
+              <textarea
+                class="input"
+                rows="2"
+                [value]="draft()"
+                (input)="draft.set($any($event.target).value)"
+                (keydown.enter)="enterSend($event)"
+                placeholder="Ask the agent… (Enter sends, Shift+Enter new line)"
+                [disabled]="!session()"
+                aria-label="Prompt"
+              ></textarea>
               <div class="composer__acts">
-                <button class="btn btn--primary" type="submit"
-                        [disabled]="busy() || !session() || !draft().trim()">
+                <button
+                  class="btn btn--primary"
+                  type="submit"
+                  [disabled]="busy() || !session() || !draft().trim()"
+                >
                   {{ busy() ? 'Running…' : 'Send' }}
                 </button>
                 @if (lastError()) {
@@ -253,7 +308,9 @@ const TEMPLATES = [
               </div>
             }
             <div class="ctx__blk">
-              <h4>Workspace files <button class="btn btn--mini" (click)="loadFiles()">↻</button></h4>
+              <h4>
+                Workspace files <button class="btn btn--mini" (click)="loadFiles()">↻</button>
+              </h4>
               @for (f of files(); track f.name) {
                 <button class="flink mono small" (click)="openEntry(f)">
                   {{ f.dir ? '📁' : '📄' }} {{ f.name }}
@@ -283,10 +340,17 @@ const TEMPLATES = [
           </aside>
         </div>
       }
-      @if (error(); as e) { <ui-error [error]="e" (retry)="bootstrap()" /> }
+      @if (error(); as e) {
+        <ui-error [error]="e" (retry)="bootstrap()" />
+      }
       @if (preview(); as pv) {
-        <div class="ovl" role="dialog" aria-modal="true"
-             aria-label="File preview" (keydown.escape)="preview.set(null)">
+        <div
+          class="ovl"
+          role="dialog"
+          aria-modal="true"
+          aria-label="File preview"
+          (keydown.escape)="preview.set(null)"
+        >
           <div class="ovl__c">
             <div class="ovl__h">
               <strong class="mono">{{ pv.path }}</strong>
@@ -294,89 +358,286 @@ const TEMPLATES = [
               <span class="spacer"></span>
               <button class="btn btn--mini" (click)="preview.set(null)">close</button>
             </div>
-            <ui-artifact [kind]="pv.kind === 'text' ? extKind(pv.path) : pv.kind"
-                         [text]="pv.preview ?? ''" [name]="pv.path"
-                         [truncated]="pv.truncated ?? false" />
+            <ui-artifact
+              [kind]="pv.kind === 'text' ? extKind(pv.path) : pv.kind"
+              [text]="pv.preview ?? ''"
+              [name]="pv.path"
+              [truncated]="pv.truncated ?? false"
+            />
           </div>
         </div>
       }
     </div>
   `,
   styles: `
-    .studio { display: grid; gap: var(--space-4); }
-    .modes { display: flex; gap: var(--space-1); }
-    .mode { border: 1px solid var(--border); background: none; border-radius: 999px;
-      padding: 2px var(--space-3); font: inherit; font-size: var(--font-sm); cursor: pointer;
-      color: var(--fg-muted); }
-    .mode[data-active] { background: var(--accent, var(--fg)); color: var(--bg); }
-    .card { border: 1px solid var(--border); border-radius: var(--radius-md);
-      padding: var(--space-4); background: var(--bg-card, var(--bg-hover)); }
-    .layout { display: grid; grid-template-columns: 16rem 1fr 14rem;
-      gap: var(--space-4); align-items: start; }
-    .side, .ctx { display: grid; gap: var(--space-2); align-content: start;
-      max-height: 40rem; overflow-y: auto; }
-    .side h3, .ctx h3, .ctx h4 { margin: 0; font-size: var(--font-md); }
-    .side__head { display: flex; justify-content: space-between; align-items: center; }
-    .side__list { display: grid; gap: var(--space-1); }
-    .sess { display: grid; text-align: left; border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);
-      background: none; font: inherit; color: inherit; cursor: pointer; }
-    .sess:hover { background: var(--bg-hover); }
-    .sess[data-sel] { border-color: var(--accent, var(--fg)); }
-    .sess__t { font-weight: 600; font-size: var(--font-sm); }
-    .new { border-top: 1px solid var(--border); padding-top: var(--space-2); }
-    .new summary { cursor: pointer; font-size: var(--font-sm); }
-    .lbl { display: grid; gap: 2px; font-size: var(--font-xs); color: var(--fg-muted);
-      margin: var(--space-2) 0; }
-    .main { display: grid; gap: var(--space-3); min-height: 28rem; }
-    .sessbar { display: flex; align-items: center; gap: var(--space-2);
-      border-bottom: 1px solid var(--border); padding-bottom: var(--space-2); }
-    .spacer { flex: 1; }
-    .timeline { display: grid; gap: var(--space-2); max-height: 30rem;
-      overflow-y: auto; padding-right: var(--space-1); }
-    .msg { border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);
-      max-width: 88%; }
-    .msg__b { font-size: var(--font-sm); }
-    .msg__b :deep(pre) { font-family: var(--font-mono); font-size: var(--font-xs);
-      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-      padding: var(--space-2); overflow: auto; }
-    .msg__k { font-size: var(--font-xs); text-transform: uppercase;
-      color: var(--fg-muted); display: block; margin-bottom: 2px; }
-    .msg__f { display: flex; gap: var(--space-2); align-items: center; }
-    .msg[data-k='user'] { background: var(--accent, var(--border)); justify-self: end;
-      margin-left: auto; }
-    .msg[data-k='assistant'] { background: var(--bg-hover); border: 1px solid var(--border); }
-    .msg[data-k='tool'], .msg[data-k='plan'], .msg.plan { background: none;
-      border: 1px dashed var(--border); font-size: var(--font-xs); }
-    .msg[data-k='usage'], .msg[data-k='system'] { background: none;
-      font-size: var(--font-xs); color: var(--fg-muted); }
-    .msg[data-k='error'] { border: 1px solid var(--error); font-size: var(--font-sm); }
-    .msg.approval { border: 1px solid var(--warn, var(--error)); }
-    .msg.approval .acts { display: flex; gap: var(--space-2); margin-top: var(--space-2); }
-    .copy { border: none; background: none; color: var(--fg-muted);
-      font-size: var(--font-xs); cursor: pointer; }
-    .copy:hover { color: var(--fg); }
-    .tpls { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-    .tpl { border: 1px solid var(--border); background: none; border-radius: 999px;
-      padding: 2px var(--space-2); font: inherit; font-size: var(--font-xs);
-      color: var(--fg-muted); cursor: pointer; }
-    .tpl:hover { border-color: var(--accent, var(--fg)); color: var(--fg); }
-    .composer { display: flex; gap: var(--space-2); align-items: end; }
-    .composer .input { flex: 1; resize: vertical; font: inherit; }
-    .composer__acts { display: grid; gap: var(--space-1); }
-    .raw pre, .mono { font-family: var(--font-mono); }
-    .raw pre { font-size: var(--font-xs); max-height: 12rem; overflow: auto; }
-    .ctx__blk { border-top: 1px solid var(--border); padding-top: var(--space-2); }
-    .muted { color: var(--fg-muted); }
-    .small { font-size: var(--font-xs); }
-    .err, .danger { color: var(--error); }
-    .err { font-size: var(--font-sm); margin: var(--space-2) 0 0; }
-    .studio[data-mode='simple'] .side, .studio[data-mode='simple'] .ctx { display: none; }
-    .studio[data-mode='simple'] .layout { grid-template-columns: 1fr; }
-    .studio[data-mode='visual'] .ctx { display: none; }
-    .studio[data-mode='visual'] .layout { grid-template-columns: 16rem 1fr; }
+    .studio {
+      display: grid;
+      gap: var(--space-4);
+    }
+    .modes {
+      display: flex;
+      gap: var(--space-1);
+    }
+    .mode {
+      border: 1px solid var(--border);
+      background: none;
+      border-radius: 999px;
+      padding: 2px var(--space-3);
+      font: inherit;
+      font-size: var(--font-sm);
+      cursor: pointer;
+      color: var(--fg-muted);
+    }
+    .mode[data-active] {
+      background: var(--accent, var(--fg));
+      color: var(--bg);
+    }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      background: var(--bg-card, var(--bg-hover));
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 16rem 1fr 14rem;
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .side,
+    .ctx {
+      display: grid;
+      gap: var(--space-2);
+      align-content: start;
+      max-height: 40rem;
+      overflow-y: auto;
+    }
+    .side h3,
+    .ctx h3,
+    .ctx h4 {
+      margin: 0;
+      font-size: var(--font-md);
+    }
+    .side__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .side__list {
+      display: grid;
+      gap: var(--space-1);
+    }
+    .sess {
+      display: grid;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      background: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+    .sess:hover {
+      background: var(--bg-hover);
+    }
+    .sess[data-sel] {
+      border-color: var(--accent, var(--fg));
+    }
+    .sess__t {
+      font-weight: 600;
+      font-size: var(--font-sm);
+    }
+    .new {
+      border-top: 1px solid var(--border);
+      padding-top: var(--space-2);
+    }
+    .new summary {
+      cursor: pointer;
+      font-size: var(--font-sm);
+    }
+    .lbl {
+      display: grid;
+      gap: 2px;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      margin: var(--space-2) 0;
+    }
+    .main {
+      display: grid;
+      gap: var(--space-3);
+      min-height: 28rem;
+    }
+    .sessbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--space-2);
+    }
+    .spacer {
+      flex: 1;
+    }
+    .timeline {
+      display: grid;
+      gap: var(--space-2);
+      max-height: 30rem;
+      overflow-y: auto;
+      padding-right: var(--space-1);
+    }
+    .msg {
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      max-width: 88%;
+    }
+    .msg__b {
+      font-size: var(--font-sm);
+    }
+    .msg__b :deep(pre) {
+      font-family: var(--font-mono);
+      font-size: var(--font-xs);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: var(--space-2);
+      overflow: auto;
+    }
+    .msg__k {
+      font-size: var(--font-xs);
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .msg__f {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+    }
+    .msg[data-k='user'] {
+      background: var(--accent, var(--border));
+      justify-self: end;
+      margin-left: auto;
+    }
+    .msg[data-k='assistant'] {
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+    }
+    .msg[data-k='tool'],
+    .msg[data-k='plan'],
+    .msg.plan {
+      background: none;
+      border: 1px dashed var(--border);
+      font-size: var(--font-xs);
+    }
+    .msg[data-k='usage'],
+    .msg[data-k='system'] {
+      background: none;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+    }
+    .msg[data-k='error'] {
+      border: 1px solid var(--error);
+      font-size: var(--font-sm);
+    }
+    .msg.approval {
+      border: 1px solid var(--warn, var(--error));
+    }
+    .msg.approval .acts {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    .copy {
+      border: none;
+      background: none;
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+      cursor: pointer;
+    }
+    .copy:hover {
+      color: var(--fg);
+    }
+    .tpls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    .tpl {
+      border: 1px solid var(--border);
+      background: none;
+      border-radius: 999px;
+      padding: 2px var(--space-2);
+      font: inherit;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      cursor: pointer;
+    }
+    .tpl:hover {
+      border-color: var(--accent, var(--fg));
+      color: var(--fg);
+    }
+    .composer {
+      display: flex;
+      gap: var(--space-2);
+      align-items: end;
+    }
+    .composer .input {
+      flex: 1;
+      resize: vertical;
+      font: inherit;
+    }
+    .composer__acts {
+      display: grid;
+      gap: var(--space-1);
+    }
+    .raw pre,
+    .mono {
+      font-family: var(--font-mono);
+    }
+    .raw pre {
+      font-size: var(--font-xs);
+      max-height: 12rem;
+      overflow: auto;
+    }
+    .ctx__blk {
+      border-top: 1px solid var(--border);
+      padding-top: var(--space-2);
+    }
+    .muted {
+      color: var(--fg-muted);
+    }
+    .small {
+      font-size: var(--font-xs);
+    }
+    .err,
+    .danger {
+      color: var(--error);
+    }
+    .err {
+      font-size: var(--font-sm);
+      margin: var(--space-2) 0 0;
+    }
+    .studio[data-mode='simple'] .side,
+    .studio[data-mode='simple'] .ctx {
+      display: none;
+    }
+    .studio[data-mode='simple'] .layout {
+      grid-template-columns: 1fr;
+    }
+    .studio[data-mode='visual'] .ctx {
+      display: none;
+    }
+    .studio[data-mode='visual'] .layout {
+      grid-template-columns: 16rem 1fr;
+    }
     @media (max-width: 1100px) {
-      .layout { grid-template-columns: 1fr !important; } .ctx { display: none; }
+      .layout {
+        grid-template-columns: 1fr !important;
+      }
+      .ctx {
+        display: none;
+      }
     }
   `,
 })
@@ -431,9 +692,7 @@ export class PfChatPage implements OnInit, OnDestroy {
       .sort((a, b) => Number(b.meta?.favorite ?? false) - Number(a.meta?.favorite ?? false));
   });
   readonly filteredItems = computed(() =>
-    this.q() && !this.session()
-      ? this.items()
-      : this.items(),
+    this.q() && !this.session() ? this.items() : this.items(),
   );
   readonly usage = computed(() => {
     const evs = this.lastEvents().filter((e) => e.type === 'usage.updated');
@@ -445,9 +704,10 @@ export class PfChatPage implements OnInit, OnDestroy {
     const evs = this.lastEvents().filter((e) => e.type === 'plan.updated');
     if (!evs.length) return null;
     const entries = (evs[evs.length - 1].payload['entries'] as unknown[]) ?? [];
-    return entries
-      .map((e) => `- ${typeof e === 'string' ? e : JSON.stringify(e)}`)
-      .join('\n') || 'plan updated';
+    return (
+      entries.map((e) => `- ${typeof e === 'string' ? e : JSON.stringify(e)}`).join('\n') ||
+      'plan updated'
+    );
   });
   readonly artifacts = computed(() =>
     this.lastEvents()
@@ -489,9 +749,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     try {
       // §25.6 — master token is exchanged once for a scoped session token;
       // the master itself is never persisted by this client.
-      await firstValueFrom(
-        this.bridge.pair(this.pairTok(), this.pairUrl()),
-      );
+      await firstValueFrom(this.bridge.pair(this.pairTok(), this.pairUrl()));
       this.pairTok.set(''); // drop the master from the field immediately
       await this.bootstrap();
       this.paired.set(true);
@@ -514,7 +772,7 @@ export class PfChatPage implements OnInit, OnDestroy {
       this.session.set(s);
       this.items.set([{ kind: 'system', text: `session ${s.id} started (${s.provider})` }]);
       this.seenSeq.clear();
-      this.startStream(s.id);           // §29.3 SSE primary, poll fallback
+      this.startStream(s.id); // §29.3 SSE primary, poll fallback
       await this.reloadSessions();
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
@@ -529,9 +787,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.seenSeq.clear();
     if (s.product_id) void this.loadCtxEntities(s.product_id);
     if (s.state === 'closed') {
-      this.items.set([
-        { kind: 'system', text: 'session closed — metadata only' },
-      ]);
+      this.items.set([{ kind: 'system', text: 'session closed — metadata only' }]);
       return;
     }
     await this.pullEvents(s);
@@ -622,9 +878,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     const s = this.session();
     if (!s || !it.approvalId) return;
     try {
-      await firstValueFrom(
-        this.bridge.approve(s.id, s.provider, it.approvalId, approved),
-      );
+      await firstValueFrom(this.bridge.approve(s.id, s.provider, it.approvalId, approved));
       it.resolved = true;
       this.items.update((l) => [
         ...l,
@@ -660,8 +914,16 @@ export class PfChatPage implements OnInit, OnDestroy {
   extKind(path: string): string {
     const ext = path.split('.').pop()?.toLowerCase() ?? '';
     const map: Record<string, string> = {
-      md: 'markdown', json: 'json', yaml: 'yaml', yml: 'yaml', csv: 'csv',
-      sql: 'sql', py: 'python', diff: 'diff', patch: 'diff', html: 'html',
+      md: 'markdown',
+      json: 'json',
+      yaml: 'yaml',
+      yml: 'yaml',
+      csv: 'csv',
+      sql: 'sql',
+      py: 'python',
+      diff: 'diff',
+      patch: 'diff',
+      html: 'html',
     };
     return map[ext] ?? 'text';
   }
@@ -732,11 +994,14 @@ export class PfChatPage implements OnInit, OnDestroy {
           this.renderEvents([e]);
         }
       },
-      error: () => { this.streaming.set(false); this.streamAbort = null; },
+      error: () => {
+        this.streaming.set(false);
+        this.streamAbort = null;
+      },
       complete: () => {
         this.streaming.set(false);
         const s = this.session();
-        if (s && s.state !== 'closed') this.startStream(s.id);  // re-arm cursor
+        if (s && s.state !== 'closed') this.startStream(s.id); // re-arm cursor
       },
     });
   }

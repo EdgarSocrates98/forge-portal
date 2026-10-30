@@ -10,7 +10,13 @@ interface WorkflowNode {
 }
 
 const NODE_KINDS: WorkflowNode['kind'][] = [
-  'trigger', 'prompt', 'tool', 'approval', 'decision', 'output'];
+  'trigger',
+  'prompt',
+  'tool',
+  'approval',
+  'decision',
+  'output',
+];
 
 const TEMPLATES: { name: string; nodes: Omit<WorkflowNode, 'id'>[] }[] = [
   {
@@ -78,28 +84,55 @@ let nextId = 1;
         <h2 id="wf-canvas">Canvas</h2>
         <ol class="canvas" aria-label="Workflow nodes">
           @for (n of nodes(); track n.id; let i = $index) {
-            <li class="node node-{{ n.kind }}" tabindex="0"
-              [attr.aria-label]="n.kind + ': ' + n.label">
+            <li
+              class="node node-{{ n.kind }}"
+              tabindex="0"
+              [attr.aria-label]="n.kind + ': ' + n.label"
+            >
               <header>
                 <span class="kind">{{ n.kind }}</span>
-                <input class="label-input" [value]="n.label"
+                <input
+                  class="label-input"
+                  [value]="n.label"
                   (input)="rename(n.id, $any($event.target).value)"
-                  [attr.aria-label]="'Rename ' + n.kind + ' node'" />
+                  [attr.aria-label]="'Rename ' + n.kind + ' node'"
+                />
               </header>
               <div class="node-actions">
-                <button class="btn btn--mini" (click)="move(i, -1)"
-                  [disabled]="i === 0" aria-label="Move up">↑</button>
-                <button class="btn btn--mini" (click)="move(i, 1)"
-                  [disabled]="i === nodes().length - 1" aria-label="Move down">↓</button>
-                <button class="btn btn--mini btn--danger" (click)="remove(n.id)"
-                  aria-label="Remove node">✕</button>
+                <button
+                  class="btn btn--mini"
+                  (click)="move(i, -1)"
+                  [disabled]="i === 0"
+                  aria-label="Move up"
+                >
+                  ↑
+                </button>
+                <button
+                  class="btn btn--mini"
+                  (click)="move(i, 1)"
+                  [disabled]="i === nodes().length - 1"
+                  aria-label="Move down"
+                >
+                  ↓
+                </button>
+                <button
+                  class="btn btn--mini btn--danger"
+                  (click)="remove(n.id)"
+                  aria-label="Remove node"
+                >
+                  ✕
+                </button>
               </div>
             </li>
           }
         </ol>
         <form class="add" (submit)="add($event)">
-          <select class="input" [value]="newKind()"
-            (change)="newKind.set($any($event.target).value)" aria-label="Node kind">
+          <select
+            class="input"
+            [value]="newKind()"
+            (change)="newKind.set($any($event.target).value)"
+            aria-label="Node kind"
+          >
             @for (k of kinds; track k) {
               <option [value]="k">{{ k }}</option>
             }
@@ -116,26 +149,87 @@ let nextId = 1;
     </div>
   `,
   styles: `
-    .tpls { display: flex; gap: 8px; flex-wrap: wrap; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .canvas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-    .node { border: 1px solid var(--line,#333); border-left-width: 4px;
-      border-radius: 8px; padding: 8px 10px; }
-    .node header { display: flex; gap: 8px; align-items: center; }
-    .kind { font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
-      padding: 2px 8px; border-radius: 999px; background: var(--chip-bg,#2a2a2a); }
-    .node-approval { border-left-color: #d69e2e; }
-    .node-decision { border-left-color: #805ad5; }
-    .node-tool { border-left-color: #3182ce; }
-    .node-output { border-left-color: #38a169; }
-    .node-trigger { border-left-color: #e53e3e; }
-    .label-input { flex: 1; background: transparent; border: none;
-      color: inherit; font: inherit; }
-    .node-actions { display: flex; gap: 6px; margin-top: 6px; }
-    .add { display: flex; gap: 8px; margin-top: 12px; }
-    .doc { white-space: pre-wrap; max-height: 420px; overflow: auto;
-      padding: 10px; background: var(--code-bg,#161616); border-radius: 6px; }
+    .tpls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .canvas {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .node {
+      border: 1px solid var(--line, #333);
+      border-left-width: 4px;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .node header {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .kind {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--chip-bg, #2a2a2a);
+    }
+    .node-approval {
+      border-left-color: #d69e2e;
+    }
+    .node-decision {
+      border-left-color: #805ad5;
+    }
+    .node-tool {
+      border-left-color: #3182ce;
+    }
+    .node-output {
+      border-left-color: #38a169;
+    }
+    .node-trigger {
+      border-left-color: #e53e3e;
+    }
+    .label-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: inherit;
+      font: inherit;
+    }
+    .node-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .add {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .doc {
+      white-space: pre-wrap;
+      max-height: 420px;
+      overflow: auto;
+      padding: 10px;
+      background: var(--code-bg, #161616);
+      border-radius: 6px;
+    }
   `,
 })
 export class PfWorkflowPage {
@@ -145,16 +239,21 @@ export class PfWorkflowPage {
   readonly nodes = signal<WorkflowNode[]>([]);
   readonly newKind = signal<WorkflowNode['kind']>('prompt');
 
-  readonly doc = computed(() => JSON.stringify(
-    {
-      schema: 'forge/AgentWorkflow/v1',
-      stages: this.nodes().map((n, i) => ({
-        order: i + 1, kind: n.kind, label: n.label, config: n.config,
-      })),
-    },
-    null,
-    1,
-  ));
+  readonly doc = computed(() =>
+    JSON.stringify(
+      {
+        schema: 'forge/AgentWorkflow/v1',
+        stages: this.nodes().map((n, i) => ({
+          order: i + 1,
+          kind: n.kind,
+          label: n.label,
+          config: n.config,
+        })),
+      },
+      null,
+      1,
+    ),
+  );
 
   apply(name: string): void {
     const t = TEMPLATES.find((x) => x.name === name);
@@ -169,15 +268,19 @@ export class PfWorkflowPage {
 
   add(ev: Event): void {
     ev.preventDefault();
-    this.nodes.update((xs) => [...xs, {
-      id: `n${nextId++}`, kind: this.newKind(),
-      label: `${this.newKind()} stage`, config: {},
-    }]);
+    this.nodes.update((xs) => [
+      ...xs,
+      {
+        id: `n${nextId++}`,
+        kind: this.newKind(),
+        label: `${this.newKind()} stage`,
+        config: {},
+      },
+    ]);
   }
 
   rename(id: string, label: string): void {
-    this.nodes.update((xs) =>
-      xs.map((n) => (n.id === id ? { ...n, label } : n)));
+    this.nodes.update((xs) => xs.map((n) => (n.id === id ? { ...n, label } : n)));
   }
 
   move(i: number, dir: number): void {

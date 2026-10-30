@@ -44,7 +44,13 @@ export const KIND_STYLE: Record<KnownFedNodeKind, { color: string; shape: GraphN
  *  kind-string hash picks a slot, so the same kind always paints the
  *  same color across renders (no clock, no random). */
 const FALLBACK_KIND_COLORS = [
-  '#0e7490', '#7c3aed', '#1d5fd1', '#0f8a4c', '#b45309', '#c026d3', '#64748b',
+  '#0e7490',
+  '#7c3aed',
+  '#1d5fd1',
+  '#0f8a4c',
+  '#b45309',
+  '#c026d3',
+  '#64748b',
 ] as const;
 
 export function kindStyle(k: FedNodeKind): { color: string; shape: GraphNodeShape } {

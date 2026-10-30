@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import {
-  ApprovalRequest,
-  BridgeSession,
-  DegradedMode,
-  PfBridge,
-} from '../pf-bridge.service';
+import { ApprovalRequest, BridgeSession, DegradedMode, PfBridge } from '../pf-bridge.service';
 import { ApiError } from '../../core/api/api.error';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
@@ -42,9 +44,7 @@ import { UiSkeleton } from '../../shared/skeleton';
             No authenticated provider is available. Allowed:
             {{ mode()!.allowed_operations.join('; ') }}.
           </p>
-          <p class="muted">
-            Never auto-executed: {{ mode()!.forbidden_operations.join('; ') }}.
-          </p>
+          <p class="muted">Never auto-executed: {{ mode()!.forbidden_operations.join('; ') }}.</p>
         </section>
       }
 
@@ -56,10 +56,7 @@ import { UiSkeleton } from '../../shared/skeleton';
           @if (loading()) {
             <ui-skeleton [lines]="4" />
           } @else if (sessions().length === 0) {
-            <ui-empty
-              title="No sessions"
-              hint="Start one from Chat."
-            />
+            <ui-empty title="No sessions" hint="Start one from Chat." />
           } @else {
             <table class="tbl" aria-label="Agent sessions">
               <thead>
@@ -119,23 +116,23 @@ import { UiSkeleton } from '../../shared/skeleton';
                   <div>
                     <strong>{{ a.action }}</strong>
                     <span class="mono muted"> {{ a.resource }}</span>
-                    <small class="muted">
-                      — {{ a.actor }} · {{ a.scope }}/{{ a.risk }}</small
-                    >
+                    <small class="muted"> — {{ a.actor }} · {{ a.scope }}/{{ a.risk }}</small>
                   </div>
                   <div class="actions">
                     <button
                       class="btn btn--mini"
                       (click)="resolve(a, true)"
                       [attr.aria-label]="'Approve ' + a.action"
-                      >Approve</button
                     >
+                      Approve
+                    </button>
                     <button
                       class="btn btn--mini btn--danger"
                       (click)="resolve(a, false)"
                       [attr.aria-label]="'Deny ' + a.action"
-                      >Deny</button
                     >
+                      Deny
+                    </button>
                   </div>
                 </li>
               }
@@ -158,20 +155,58 @@ import { UiSkeleton } from '../../shared/skeleton';
     }
   `,
   styles: `
-    .grid { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
-    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .banner { border-left: 4px solid var(--warn, #b7791f); }
-    .queue { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-    .queue-item { display: flex; justify-content: space-between; gap: 12px;
-      align-items: center; padding: 8px; border: 1px solid var(--line, #333);
-      border-radius: 6px; }
-    .actions { display: flex; gap: 6px; }
-    .ellipsis { max-width: 220px; overflow: hidden; text-overflow: ellipsis;
-      white-space: nowrap; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip { display: inline-flex; gap: 8px; align-items: center;
-      padding: 4px 10px; border: 1px solid var(--line, #333);
-      border-radius: 999px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .banner {
+      border-left: 4px solid var(--warn, #b7791f);
+    }
+    .queue {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .queue-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line, #333);
+      border-radius: 6px;
+    }
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+    .ellipsis {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 4px 10px;
+      border: 1px solid var(--line, #333);
+      border-radius: 999px;
+    }
   `,
 })
 export class PfControlCenterPage implements OnInit {
@@ -228,8 +263,7 @@ export class PfControlCenterPage implements OnInit {
     try {
       await firstValueFrom(this.bridge.resolveApproval(a.approval_id, approved));
       this.toast.show(approved ? 'Approved' : 'Denied');
-      this.approvals.update((xs) =>
-        xs.filter((x) => x.approval_id !== a.approval_id));
+      this.approvals.update((xs) => xs.filter((x) => x.approval_id !== a.approval_id));
     } catch (e) {
       this.toast.show((e as Error).message, 'error');
     }

@@ -93,8 +93,9 @@ function read(key: string): string | null {
 }
 
 function nonce(): string {
-  return globalThis.crypto?.randomUUID?.() ??
-    `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  );
 }
 
 /**
@@ -117,14 +118,14 @@ export class PfBridge {
    * Pair this device: exchange the master pair token for a scoped session
    * token. The master token is held only for this call's duration.
    */
-  pair(pairToken: string, baseUrl?: string,
-       deviceName = 'forge-portal'): Observable<BridgeDevice> {
+  pair(pairToken: string, baseUrl?: string, deviceName = 'forge-portal'): Observable<BridgeDevice> {
     if (baseUrl) this.baseUrl.set(baseUrl.trim().replace(/\/+$/, ''));
     return this.http
-      .post<{ session_token: string; device: BridgeDevice }>(
-        this.url('/pair/exchange'),
-        { pair_token: pairToken, device_name: deviceName,
-          scopes: ['agent'] })
+      .post<{ session_token: string; device: BridgeDevice }>(this.url('/pair/exchange'), {
+        pair_token: pairToken,
+        device_name: deviceName,
+        scopes: ['agent'],
+      })
       .pipe(
         map((r) => {
           this.token.set(r.session_token);
@@ -160,8 +161,7 @@ export class PfBridge {
     return `${this.baseUrl()}${p}`;
   }
   private headers(): Record<string, string> {
-    return { Authorization: `Bearer ${this.token()}`,
-             'Content-Type': 'application/json' };
+    return { Authorization: `Bearer ${this.token()}`, 'Content-Type': 'application/json' };
   }
   private mutateHeaders(): Record<string, string> {
     return { ...this.headers(), 'X-FAB-Nonce': nonce() };
@@ -208,9 +208,7 @@ export class PfBridge {
     });
   }
   listSessions() {
-    return this.get<{ items: BridgeSession[] }>('/agent-sessions').pipe(
-      map((r) => r.items),
-    );
+    return this.get<{ items: BridgeSession[] }>('/agent-sessions').pipe(map((r) => r.items));
   }
   patchSession(sessionId: string, meta: Partial<BridgeSessionMeta>) {
     return this.http
@@ -221,10 +219,9 @@ export class PfBridge {
   }
   deleteSession(sessionId: string) {
     return this.http
-      .delete<{ closed: boolean; archived: boolean }>(
-        this.url(`/agent-sessions/${sessionId}`),
-        { headers: this.mutateHeaders() },
-      )
+      .delete<{ closed: boolean; archived: boolean }>(this.url(`/agent-sessions/${sessionId}`), {
+        headers: this.mutateHeaders(),
+      })
       .pipe(catchError((e) => this.fail(e)));
   }
   resumeSession(sessionRef: string, provider: string) {
@@ -245,8 +242,12 @@ export class PfBridge {
    * Authorization headers. Yields ordered, deduped events; resumes from
    * `afterSeq` cursor on reconnect. Aborts via the returned controller.
    */
-  streamEvents(sessionId: string, afterSeq = 0): {
-    events: Observable<BridgeEvent>; abort: () => void;
+  streamEvents(
+    sessionId: string,
+    afterSeq = 0,
+  ): {
+    events: Observable<BridgeEvent>;
+    abort: () => void;
   } {
     const ctrl = new AbortController();
     const events = new Observable<BridgeEvent>((sub) => {
@@ -256,9 +257,11 @@ export class PfBridge {
         try {
           const resp = await fetch(
             this.url(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
-            { headers: { Authorization: `Bearer ${this.token()}`,
-                         Accept: 'text/event-stream' },
-              signal: ctrl.signal });
+            {
+              headers: { Authorization: `Bearer ${this.token()}`, Accept: 'text/event-stream' },
+              signal: ctrl.signal,
+            },
+          );
           if (!resp.ok || !resp.body) {
             sub.error(new ApiError(resp.status));
             return;
@@ -273,18 +276,17 @@ export class PfBridge {
             const frames = buf.split('\n\n');
             buf = frames.pop() ?? '';
             for (const frame of frames) {
-              const dataLine = frame.split('\n')
-                .find((l) => l.startsWith('data: '));
+              const dataLine = frame.split('\n').find((l) => l.startsWith('data: '));
               if (!dataLine || dataLine.startsWith('data: hb')) continue;
               const ev = JSON.parse(dataLine.slice(6)) as BridgeEvent;
-              if (seen.has(ev.seq)) continue;   // §26.6 dedup
+              if (seen.has(ev.seq)) continue; // §26.6 dedup
               seen.add(ev.seq);
               cursor = Math.max(cursor, ev.seq);
               sub.next(ev);
             }
           }
-          sub.complete();   // server closed the bounded stream — caller
-                            // re-arms with `cursor` for gap-free reconnect
+          sub.complete(); // server closed the bounded stream — caller
+          // re-arms with `cursor` for gap-free reconnect
         } catch (e) {
           if (!ctrl.signal.aborted) sub.error(e instanceof Error ? e : new ApiError(0));
         }
@@ -295,52 +297,50 @@ export class PfBridge {
   }
 
   artifacts(sessionId: string, provider: string) {
-    return this.post<{ items: BridgeArtifact[] }>(
-      `/agent-sessions/${sessionId}/artifacts`, { provider }).pipe(
-        map((r) => r.items));
+    return this.post<{ items: BridgeArtifact[] }>(`/agent-sessions/${sessionId}/artifacts`, {
+      provider,
+    }).pipe(map((r) => r.items));
   }
 
   // -- approval tokens (§25.4) ------------------------------------------
   pendingApprovals(sessionId = '') {
-    return this.get<{ items: ApprovalRequest[] }>(
-      `/approvals?session_id=${sessionId}`).pipe(map((r) => r.items));
+    return this.get<{ items: ApprovalRequest[] }>(`/approvals?session_id=${sessionId}`).pipe(
+      map((r) => r.items),
+    );
   }
   resolveApproval(approvalId: string, approved: boolean) {
-    return this.post<ApprovalGrant>(`/approvals/${approvalId}/resolve`,
-      { approved });
+    return this.post<ApprovalGrant>(`/approvals/${approvalId}/resolve`, { approved });
   }
 
   // -- pairing management (§25.6) ----------------------------------------
   devices() {
-    return this.get<{ items: BridgeDevice[] }>('/pair/devices').pipe(
-      map((r) => r.items));
+    return this.get<{ items: BridgeDevice[] }>('/pair/devices').pipe(map((r) => r.items));
   }
   revokeDevice(deviceId: string) {
     return this.http
-      .delete<{ revoked: boolean }>(this.url(`/pair/devices/${deviceId}`),
-        { headers: this.mutateHeaders() })
+      .delete<{ revoked: boolean }>(this.url(`/pair/devices/${deviceId}`), {
+        headers: this.mutateHeaders(),
+      })
       .pipe(catchError((e) => this.fail(e)));
   }
   rotatePair(pairToken: string) {
-    return this.post<{ rotated: boolean; pair_token: string }>(
-      '/pair/rotate', { pair_token: pairToken });
+    return this.post<{ rotated: boolean; pair_token: string }>('/pair/rotate', {
+      pair_token: pairToken,
+    });
   }
 
   // -- files --------------------------------------------------------------
   fileList(path = '.') {
-    return this.post<{ items: BridgeFileEntry[]; root: string }>(
-      '/files/list', { path });
+    return this.post<{ items: BridgeFileEntry[]; root: string }>('/files/list', { path });
   }
   filePreview(path: string) {
     return this.post<BridgeFilePreview>('/files/preview', { path });
   }
   fileDownload(path: string) {
-    return this.post<{ path: string; content_b64: string }>(
-      '/files/download', { path });
+    return this.post<{ path: string; content_b64: string }>('/files/download', { path });
   }
   fileHistory(path: string) {
-    return this.post<{ items: { version: string; size: number }[] }>(
-      '/files/history', { path });
+    return this.post<{ items: { version: string; size: number }[] }>('/files/history', { path });
   }
 
   /**
@@ -348,47 +348,58 @@ export class PfBridge {
    * 1st attempt (no token) → approval-required result;
    * caller resolves via resolveApproval() → retries with approval_token.
    */
-  fileUpload(path: string, contentB64: string,
-             approvalToken = '', sessionId = ''): Observable<FileOpResult> {
+  fileUpload(
+    path: string,
+    contentB64: string,
+    approvalToken = '',
+    sessionId = '',
+  ): Observable<FileOpResult> {
     return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
       '/files/upload',
-      { path, content_b64: contentB64,
-        approval_token: approvalToken, session_id: sessionId }).pipe(
-        map((r) => ({ kind: 'ok' as const, body: r })),
-        catchError((e) => {
-          const body = (e instanceof HttpErrorResponse ? e.error : null) as
-            { approval_request?: ApprovalRequest } | null;
-          if (body?.approval_request) {
-            return of({ kind: 'approval-required' as const,
-                        request: body.approval_request });
-          }
-          return this.fail(e);
-        }),
-      );
+      { path, content_b64: contentB64, approval_token: approvalToken, session_id: sessionId },
+    ).pipe(
+      map((r) => ({ kind: 'ok' as const, body: r })),
+      catchError((e) => {
+        const body = (e instanceof HttpErrorResponse ? e.error : null) as {
+          approval_request?: ApprovalRequest;
+        } | null;
+        if (body?.approval_request) {
+          return of({ kind: 'approval-required' as const, request: body.approval_request });
+        }
+        return this.fail(e);
+      }),
+    );
   }
-  fileRestore(path: string, version: string,
-              approvalToken = '', sessionId = ''): Observable<FileOpResult> {
+  fileRestore(
+    path: string,
+    version: string,
+    approvalToken = '',
+    sessionId = '',
+  ): Observable<FileOpResult> {
     return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
       '/files/restore',
-      { path, version, approval_token: approvalToken,
-        session_id: sessionId }).pipe(
-        map((r) => ({ kind: 'ok' as const, body: r })),
-        catchError((e) => {
-          const body = (e instanceof HttpErrorResponse ? e.error : null) as
-            { approval_request?: ApprovalRequest } | null;
-          if (body?.approval_request) {
-            return of({ kind: 'approval-required' as const,
-                        request: body.approval_request });
-          }
-          return this.fail(e);
-        }),
-      );
+      { path, version, approval_token: approvalToken, session_id: sessionId },
+    ).pipe(
+      map((r) => ({ kind: 'ok' as const, body: r })),
+      catchError((e) => {
+        const body = (e instanceof HttpErrorResponse ? e.error : null) as {
+          approval_request?: ApprovalRequest;
+        } | null;
+        if (body?.approval_request) {
+          return of({ kind: 'approval-required' as const, request: body.approval_request });
+        }
+        return this.fail(e);
+      }),
+    );
   }
 
   // -- Part IX: deterministic intelligence (§13.x, read-only) ------------
   intelRoute(opts: {
-    task_type?: string; required?: string[]; privacy?: string;
-    prefer?: string; max_cost_usd?: number;
+    task_type?: string;
+    required?: string[];
+    privacy?: string;
+    prefer?: string;
+    max_cost_usd?: number;
   }) {
     return this.post<ProviderRouting>('/intel/route', opts);
   }
@@ -402,8 +413,9 @@ export class PfBridge {
     return this.get<ReplayDossier>(`/intel/${sessionId}/replay`);
   }
   intelDecisions(sessionId: string) {
-    return this.get<{ items: DecisionRecord[] }>(
-      `/intel/${sessionId}/decisions`).pipe(map((r) => r.items));
+    return this.get<{ items: DecisionRecord[] }>(`/intel/${sessionId}/decisions`).pipe(
+      map((r) => r.items),
+    );
   }
   intelFinops() {
     return this.get<AgentFinOps>('/intel/finops');
@@ -417,69 +429,104 @@ export class PfBridge {
 
   // -- backups (§28.6) ----------------------------------------------------
   backup() {
-    return this.post<{ backup: string; files: number;
-                        excluded: string[] }>('/backup', {});
+    return this.post<{ backup: string; files: number; excluded: string[] }>('/backup', {});
   }
   restoreBackup(path: string, approvalToken = '') {
-    return this.post<Record<string, unknown> & {
-      approval_request?: ApprovalRequest;
-      restore?: { restored: string[]; refused: string[] } | string }>(
-      '/backup/restore', { path, approval_token: approvalToken });
+    return this.post<
+      Record<string, unknown> & {
+        approval_request?: ApprovalRequest;
+        restore?: { restored: string[]; refused: string[] } | string;
+      }
+    >('/backup/restore', { path, approval_token: approvalToken });
   }
 }
 
 export interface ProviderRouting {
-  schema: string; task_type: string; required: string[];
-  candidates: { provider: string; score: number; eligible: boolean;
-                reasons: string[]; auth_state?: string }[];
-  selected: string | null; note: string;
+  schema: string;
+  task_type: string;
+  required: string[];
+  candidates: {
+    provider: string;
+    score: number;
+    eligible: boolean;
+    reasons: string[];
+    auth_state?: string;
+  }[];
+  selected: string | null;
+  note: string;
 }
 
 export interface SessionQuality {
   schema: string;
-  axes: Record<string, { score?: number; note?: string;
-                         [k: string]: unknown }>;
-  overall: number; note: string;
+  axes: Record<string, { score?: number; note?: string; [k: string]: unknown }>;
+  overall: number;
+  note: string;
 }
 
 export interface ContextHealth {
-  schema: string; state: string; issues?: { kind: string; detail: string }[];
-  coverage?: Record<string, unknown>; note?: string;
+  schema: string;
+  state: string;
+  issues?: { kind: string; detail: string }[];
+  coverage?: Record<string, unknown>;
+  note?: string;
   [k: string]: unknown;
 }
 
 export interface ReplayDossier {
   schema: string;
-  inputs: BridgeEvent[]; tools: BridgeEvent[];
-  approvals: BridgeEvent[]; errors: BridgeEvent[];
-  context_version?: number | null; event_count: number;
-  replay_mode: string; note: string;
+  inputs: BridgeEvent[];
+  tools: BridgeEvent[];
+  approvals: BridgeEvent[];
+  errors: BridgeEvent[];
+  context_version?: number | null;
+  event_count: number;
+  replay_mode: string;
+  note: string;
 }
 
 export interface DecisionRecord {
-  schema: string; session_id: string; product_id: string;
-  decision: string; reason?: string; evidence?: string[];
-  owner?: string; decided_at?: string; [k: string]: unknown;
+  schema: string;
+  session_id: string;
+  product_id: string;
+  decision: string;
+  reason?: string;
+  evidence?: string[];
+  owner?: string;
+  decided_at?: string;
+  [k: string]: unknown;
 }
 
 export interface AgentFinOps {
   schema: string;
-  by_scope: { scope: string; value: string; tokens_in: number;
-              tokens_out: number; estimated: boolean;
-              windows?: Record<string, unknown> }[];
-  limits: Record<string, unknown>; note: string;
+  by_scope: {
+    scope: string;
+    value: string;
+    tokens_in: number;
+    tokens_out: number;
+    estimated: boolean;
+    windows?: Record<string, unknown>;
+  }[];
+  limits: Record<string, unknown>;
+  note: string;
 }
 
 export interface DegradedMode {
-  schema: string; degraded: boolean; available_providers: string[];
-  allowed_operations: string[]; forbidden_operations: string[];
+  schema: string;
+  degraded: boolean;
+  available_providers: string[];
+  allowed_operations: string[];
+  forbidden_operations: string[];
   note?: string;
 }
 
 export interface WorkspaceIntelligence {
-  schema: string; sessions?: number; bound_contexts?: number;
-  mcp_servers?: number; budget_limits?: number;
-  items?: Record<string, unknown>[]; [k: string]: unknown;
+  schema: string;
+  sessions?: number;
+  bound_contexts?: number;
+  mcp_servers?: number;
+  budget_limits?: number;
+  items?: Record<string, unknown>[];
+  [k: string]: unknown;
 }
 
 export interface BridgeArtifact {

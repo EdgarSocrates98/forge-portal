@@ -33,8 +33,12 @@ import { UiSkeleton } from '../../shared/skeleton';
     <div class="grid">
       <section class="card" aria-labelledby="as-artifacts">
         <h2 id="as-artifacts">Session artifacts</h2>
-        <select class="input" [value]="sid()" (change)="pick($any($event.target).value)"
-          aria-label="Session for artifacts">
+        <select
+          class="input"
+          [value]="sid()"
+          (change)="pick($any($event.target).value)"
+          aria-label="Session for artifacts"
+        >
           <option value="">— choose session —</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id">{{ s.meta?.title || s.id }}</option>
@@ -51,24 +55,33 @@ import { UiSkeleton } from '../../shared/skeleton';
             }
           </ul>
         } @else if (sid()) {
-          <ui-empty title="No artifacts"
-            hint="This session emitted no artifact events." />
+          <ui-empty title="No artifacts" hint="This session emitted no artifact events." />
         }
       </section>
 
       <section class="card" aria-labelledby="as-files">
         <h2 id="as-files">Workspace files</h2>
         <div class="crumbs mono" aria-label="Breadcrumb">
-          <button class="btn btn--mini" (click)="up()" [disabled]="path() === '.'"
-            aria-label="Parent directory">..</button>
+          <button
+            class="btn btn--mini"
+            (click)="up()"
+            [disabled]="path() === '.'"
+            aria-label="Parent directory"
+          >
+            ..
+          </button>
           <span>{{ path() }}</span>
         </div>
         @if (files().length) {
           <ul class="list" role="listbox" aria-label="Files">
             @for (f of files(); track f.name) {
-              <li role="option" tabindex="0"
-                (click)="open(f)" (keydown.enter)="open(f)"
-                [class.sel]="preview()?.path === join(f.name)">
+              <li
+                role="option"
+                tabindex="0"
+                (click)="open(f)"
+                (keydown.enter)="open(f)"
+                [class.sel]="preview()?.path === join(f.name)"
+              >
                 <span>{{ f.dir ? '📁' : '📄' }}</span>
                 <span class="mono">{{ f.name }}</span>
                 <small class="muted">{{ f.size ?? '' }}{{ f.dir ? '' : ' B' }}</small>
@@ -99,16 +112,48 @@ import { UiSkeleton } from '../../shared/skeleton';
     }
   `,
   styles: `
-    .grid { display: grid; grid-template-columns: 2fr 3fr; gap: 16px; }
-    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 4px; }
-    .list li { display: flex; gap: 10px; align-items: baseline; padding: 6px 8px;
-      border-radius: 6px; cursor: pointer; }
-    .list li:hover, .list li:focus-visible, .list li.sel {
-      background: var(--hover, #1f1f1f); outline: none; }
-    .crumbs { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
-    .preview { margin-top: 14px; border-top: 1px solid var(--line,#333);
-      padding-top: 10px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .list {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 4px;
+    }
+    .list li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .list li:hover,
+    .list li:focus-visible,
+    .list li.sel {
+      background: var(--hover, #1f1f1f);
+      outline: none;
+    }
+    .crumbs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .preview {
+      margin-top: 14px;
+      border-top: 1px solid var(--line, #333);
+      padding-top: 10px;
+    }
   `,
 })
 export class PfArtifactStudioPage implements OnInit {
@@ -125,7 +170,7 @@ export class PfArtifactStudioPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      this.sessions.set(await firstValueFrom(this.bridge.listSessions()) ?? []);
+      this.sessions.set((await firstValueFrom(this.bridge.listSessions())) ?? []);
       await this.browse();
     } catch (e) {
       this.err.set(e as ApiError);
@@ -141,7 +186,8 @@ export class PfArtifactStudioPage implements OnInit {
     try {
       const s = this.sessions().find((x) => x.id === id);
       this.artifacts.set(
-        await firstValueFrom(this.bridge.artifacts(id, s?.provider ?? 'fake')) ?? []);
+        (await firstValueFrom(this.bridge.artifacts(id, s?.provider ?? 'fake'))) ?? [],
+      );
     } catch (e) {
       this.err.set(e as ApiError);
     }
@@ -160,7 +206,7 @@ export class PfArtifactStudioPage implements OnInit {
       return;
     }
     try {
-      this.preview.set(await firstValueFrom(this.bridge.filePreview(p)) ?? null);
+      this.preview.set((await firstValueFrom(this.bridge.filePreview(p))) ?? null);
     } catch (e) {
       this.err.set(e as ApiError);
     }

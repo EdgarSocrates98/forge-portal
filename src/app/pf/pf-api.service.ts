@@ -101,15 +101,19 @@ export class PfApi {
   }
 
   private get<T>(path: string): Observable<T> {
-    return this.http
-      .get<ApiEnvelope<T>>(this.url(path), { headers: this.authHeaders() })
-      .pipe(map((env) => this.unwrap(env)), catchError((e) => this.fail(e)));
+    return this.http.get<ApiEnvelope<T>>(this.url(path), { headers: this.authHeaders() }).pipe(
+      map((env) => this.unwrap(env)),
+      catchError((e) => this.fail(e)),
+    );
   }
 
   private post<T>(path: string, body: unknown): Observable<T> {
     return this.http
       .post<ApiEnvelope<T>>(this.url(path), body, { headers: this.authHeaders() })
-      .pipe(map((env) => this.unwrap(env)), catchError((e) => this.fail(e)));
+      .pipe(
+        map((env) => this.unwrap(env)),
+        catchError((e) => this.fail(e)),
+      );
   }
 
   private authHeaders(): Record<string, string> {
@@ -187,24 +191,19 @@ export class PfApi {
     return this.post<PfDocument>(`/products/${encodeURIComponent(pid)}/documents`, input);
   }
   knowledgeSources(pid: string) {
-    return this.get<PfList<PfKnowledgeSource>>(
-      `/products/${encodeURIComponent(pid)}/sources`,
-    );
+    return this.get<PfList<PfKnowledgeSource>>(`/products/${encodeURIComponent(pid)}/sources`);
   }
   createKnowledgeSource(
     pid: string,
     input: { name: string; type?: string; locator?: string; classification?: string },
   ) {
-    return this.post<PfKnowledgeSource>(
-      `/products/${encodeURIComponent(pid)}/sources`,
-      input,
-    );
+    return this.post<PfKnowledgeSource>(`/products/${encodeURIComponent(pid)}/sources`, input);
   }
   knowledgeQuery(pid: string, question: string, limit = 8) {
-    return this.post<PfKnowledgeAnswer>(
-      `/products/${encodeURIComponent(pid)}/knowledge/query`,
-      { question, limit },
-    );
+    return this.post<PfKnowledgeAnswer>(`/products/${encodeURIComponent(pid)}/knowledge/query`, {
+      question,
+      limit,
+    });
   }
   knowledgeExtract(pid: string) {
     return this.post<{ entities: number; relations: number; kinds?: Record<string, number> }>(
@@ -293,15 +292,12 @@ export class PfApi {
     );
   }
   validateQuery(pid: string, statement: string, dialect = 'sql') {
-    return this.post<PfQueryValidation>(
-      `/products/${encodeURIComponent(pid)}/queries/validate`,
-      { statement, dialect },
-    );
+    return this.post<PfQueryValidation>(`/products/${encodeURIComponent(pid)}/queries/validate`, {
+      statement,
+      dialect,
+    });
   }
-  executeQuery(
-    pid: string,
-    input: { source_id: string; statement: string; row_limit?: number },
-  ) {
+  executeQuery(pid: string, input: { source_id: string; statement: string; row_limit?: number }) {
     return this.post<PfQueryRun>(`/products/${encodeURIComponent(pid)}/queries/execute`, {
       row_limit: 200,
       ...input,
@@ -378,18 +374,12 @@ export class PfApi {
     return this.post<PfMetric>(`/products/${encodeURIComponent(pid)}/metrics`, input);
   }
   nlQuery(pid: string, input: { question: string; source_id?: string }) {
-    return this.post<PfNlQueryResult>(
-      `/products/${encodeURIComponent(pid)}/queries/nl`,
-      input,
-    );
+    return this.post<PfNlQueryResult>(`/products/${encodeURIComponent(pid)}/queries/nl`, input);
   }
   experiments(pid: string) {
     return this.get<PfList<PfExperiment>>(`/products/${encodeURIComponent(pid)}/experiments`);
   }
-  createExperiment(
-    pid: string,
-    input: { title: string; hypothesis?: string; design?: string },
-  ) {
+  createExperiment(pid: string, input: { title: string; hypothesis?: string; design?: string }) {
     return this.post<PfExperiment>(`/products/${encodeURIComponent(pid)}/experiments`, input);
   }
   concludeExperiment(
@@ -434,10 +424,7 @@ export class PfApi {
     return this.get<{ delegates: PfDelegate[] }>('/delegates');
   }
   callDelegate(did: string, input: { workflow: string; args?: string[]; product_id?: string }) {
-    return this.post<PfDelegateCallResult>(
-      `/delegates/${encodeURIComponent(did)}/call`,
-      input,
-    );
+    return this.post<PfDelegateCallResult>(`/delegates/${encodeURIComponent(did)}/call`, input);
   }
 
   // -- reports ---------------------------------------------------------------------
@@ -455,10 +442,7 @@ export class PfApi {
     return this.get<PfList<PfApiSpec>>(`/products/${encodeURIComponent(pid)}/apis`);
   }
   importApi(pid: string, input: { name?: string; spec: string }) {
-    return this.post<PfApiImportResult>(
-      `/products/${encodeURIComponent(pid)}/apis/import`,
-      input,
-    );
+    return this.post<PfApiImportResult>(`/products/${encodeURIComponent(pid)}/apis/import`, input);
   }
   impact(pid: string, entityId: string) {
     return this.get<PfImpact>(

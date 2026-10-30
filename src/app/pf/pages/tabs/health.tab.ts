@@ -53,8 +53,8 @@ const DIM_ORDER = [
         <div class="hero__meta">
           <h2>Product health</h2>
           <p class="muted">
-            Weakest dimension: <strong>{{ h.weakest_dimension }}</strong> — deterministic
-            scoring; expand any bar to see the evidence behind it.
+            Weakest dimension: <strong>{{ h.weakest_dimension }}</strong> — deterministic scoring;
+            expand any bar to see the evidence behind it.
           </p>
         </div>
       </section>
@@ -62,7 +62,11 @@ const DIM_ORDER = [
       <section class="dims">
         @for (d of dims(); track d.name) {
           <div class="dim card" [attr.data-weakest]="d.name === h.weakest_dimension || null">
-            <button class="dim__head" (click)="toggle(d.name)" [attr.aria-expanded]="open() === d.name">
+            <button
+              class="dim__head"
+              (click)="toggle(d.name)"
+              [attr.aria-expanded]="open() === d.name"
+            >
               <span class="dim__name">{{ d.name }}</span>
               <span class="dim__bar" [attr.data-tier]="tier(d.score)">
                 <span class="dim__fill" [style.width.%]="d.score"></span>
@@ -86,47 +90,139 @@ const DIM_ORDER = [
     }
   `,
   styles: `
-    .card { border: 1px solid var(--border); border-radius: var(--radius-md);
-      background: var(--bg-card, var(--bg-hover)); }
-    .hero { display: flex; gap: var(--space-5); align-items: center;
-      padding: var(--space-4); margin-bottom: var(--space-4); }
-    .hero__meta h2 { margin: 0 0 var(--space-1); font-size: var(--font-lg); font-weight: 650; }
-    .hero__meta p { margin: 0; }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card, var(--bg-hover));
+    }
+    .hero {
+      display: flex;
+      gap: var(--space-5);
+      align-items: center;
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .hero__meta h2 {
+      margin: 0 0 var(--space-1);
+      font-size: var(--font-lg);
+      font-weight: 650;
+    }
+    .hero__meta p {
+      margin: 0;
+    }
     .ring {
       --p: 0;
-      width: 7rem; height: 7rem; flex: 0 0 auto; border-radius: 50%;
-      display: grid; place-items: center; position: relative;
+      width: 7rem;
+      height: 7rem;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
       background: conic-gradient(var(--ok) calc(var(--p) * 1%), var(--border) 0);
     }
-    .ring::before { content: ''; position: absolute; inset: 10px; border-radius: 50%;
-      background: var(--bg-card, var(--bg-hover)); }
-    .ring__n { position: relative; font-size: var(--font-xl); font-weight: 700; }
-    .ring__l { position: relative; font-size: var(--font-xs); color: var(--fg-muted);
-      margin-top: 2.2rem; margin-left: -1.4rem; }
-    .ring[data-tier='warn'] { background: conic-gradient(var(--warn, #d97706) calc(var(--p) * 1%), var(--border) 0); }
-    .ring[data-tier='error'] { background: conic-gradient(var(--error) calc(var(--p) * 1%), var(--border) 0); }
-    .dims { display: grid; gap: var(--space-2); }
-    .dim { overflow: hidden; }
-    .dim[data-weakest] { border-color: var(--warn, #d97706); }
-    .dim__head { display: grid; grid-template-columns: 8rem 1fr 3rem; gap: var(--space-3);
-      align-items: center; width: 100%; padding: var(--space-3) var(--space-4);
-      background: none; border: 0; cursor: pointer; text-align: left;
-      font: inherit; color: inherit; }
-    .dim__head:hover { background: var(--bg-hover); }
-    .dim__name { font-weight: 600; text-transform: capitalize; }
-    .dim__bar { height: 8px; border-radius: 999px; background: var(--border); overflow: hidden; }
-    .dim__fill { display: block; height: 100%; border-radius: 999px;
-      background: var(--ok); transition: width 0.4s ease; }
-    .dim__bar[data-tier='warn'] .dim__fill { background: var(--warn, #d97706); }
-    .dim__bar[data-tier='error'] .dim__fill { background: var(--error); }
-    .dim__score { font-variant-numeric: tabular-nums; font-weight: 650; text-align: right; }
-    .ev { margin: 0; padding: 0 var(--space-4) var(--space-3); list-style: none;
-      display: grid; gap: var(--space-1); font-size: var(--font-sm); }
-    .ev li[data-neg] { color: var(--error); }
-    .chip { font-size: var(--font-xs); border: 1px solid var(--border);
-      border-radius: 999px; padding: 0 var(--space-2); margin-right: var(--space-1);
-      color: var(--fg-muted); }
-    .muted { color: var(--fg-muted); }
+    .ring::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background: var(--bg-card, var(--bg-hover));
+    }
+    .ring__n {
+      position: relative;
+      font-size: var(--font-xl);
+      font-weight: 700;
+    }
+    .ring__l {
+      position: relative;
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      margin-top: 2.2rem;
+      margin-left: -1.4rem;
+    }
+    .ring[data-tier='warn'] {
+      background: conic-gradient(var(--warn, #d97706) calc(var(--p) * 1%), var(--border) 0);
+    }
+    .ring[data-tier='error'] {
+      background: conic-gradient(var(--error) calc(var(--p) * 1%), var(--border) 0);
+    }
+    .dims {
+      display: grid;
+      gap: var(--space-2);
+    }
+    .dim {
+      overflow: hidden;
+    }
+    .dim[data-weakest] {
+      border-color: var(--warn, #d97706);
+    }
+    .dim__head {
+      display: grid;
+      grid-template-columns: 8rem 1fr 3rem;
+      gap: var(--space-3);
+      align-items: center;
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      background: none;
+      border: 0;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+    }
+    .dim__head:hover {
+      background: var(--bg-hover);
+    }
+    .dim__name {
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .dim__bar {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .dim__fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--ok);
+      transition: width 0.4s ease;
+    }
+    .dim__bar[data-tier='warn'] .dim__fill {
+      background: var(--warn, #d97706);
+    }
+    .dim__bar[data-tier='error'] .dim__fill {
+      background: var(--error);
+    }
+    .dim__score {
+      font-variant-numeric: tabular-nums;
+      font-weight: 650;
+      text-align: right;
+    }
+    .ev {
+      margin: 0;
+      padding: 0 var(--space-4) var(--space-3);
+      list-style: none;
+      display: grid;
+      gap: var(--space-1);
+      font-size: var(--font-sm);
+    }
+    .ev li[data-neg] {
+      color: var(--error);
+    }
+    .chip {
+      font-size: var(--font-xs);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 var(--space-2);
+      margin-right: var(--space-1);
+      color: var(--fg-muted);
+    }
+    .muted {
+      color: var(--fg-muted);
+    }
   `,
 })
 export class PfHealthTab implements OnInit {

@@ -34,8 +34,12 @@ import { UiSkeleton } from '../../shared/skeleton';
     <section class="card">
       <label class="field">
         <span>Session</span>
-        <select class="input" [value]="sid()" (change)="pick($any($event.target).value)"
-          aria-label="Session to analyze">
+        <select
+          class="input"
+          [value]="sid()"
+          (change)="pick($any($event.target).value)"
+          aria-label="Session to analyze"
+        >
           <option value="">— choose —</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id">{{ s.meta?.title || s.id }} ({{ s.provider }})</option>
@@ -57,7 +61,13 @@ import { UiSkeleton } from '../../shared/skeleton';
               Overall: <strong class="mono">{{ quality()!.overall }}</strong>
             </p>
             <table class="tbl" aria-label="Quality axes">
-              <thead><tr><th scope="col">Axis</th><th scope="col">Score</th><th scope="col">Detail</th></tr></thead>
+              <thead>
+                <tr>
+                  <th scope="col">Axis</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Detail</th>
+                </tr>
+              </thead>
               <tbody>
                 @for (ax of axes(); track ax[0]) {
                   <tr>
@@ -80,16 +90,18 @@ import { UiSkeleton } from '../../shared/skeleton';
               @for (d of decisions(); track $index) {
                 <li>
                   <strong>{{ d.decision }}</strong>
-                  @if (d.reason) { <p class="muted">{{ d.reason }}</p> }
-                  <small class="muted">
-                    {{ d.owner || '—' }} · {{ d.decided_at || '' }}</small
-                  >
+                  @if (d.reason) {
+                    <p class="muted">{{ d.reason }}</p>
+                  }
+                  <small class="muted"> {{ d.owner || '—' }} · {{ d.decided_at || '' }}</small>
                 </li>
               }
             </ul>
           } @else {
-            <ui-empty title="No decisions extracted"
-              hint="Decision-shaped events will appear here." />
+            <ui-empty
+              title="No decisions extracted"
+              hint="Decision-shaped events will appear here."
+            />
           }
         </section>
       </div>
@@ -100,7 +112,13 @@ import { UiSkeleton } from '../../shared/skeleton';
           @if (f.by_scope.length) {
             <table class="tbl" aria-label="Usage by scope">
               <thead>
-                <tr><th scope="col">Scope</th><th scope="col">Key</th><th scope="col">Tokens in</th><th scope="col">Tokens out</th><th scope="col">Basis</th></tr>
+                <tr>
+                  <th scope="col">Scope</th>
+                  <th scope="col">Key</th>
+                  <th scope="col">Tokens in</th>
+                  <th scope="col">Tokens out</th>
+                  <th scope="col">Basis</th>
+                </tr>
               </thead>
               <tbody>
                 @for (r of f.by_scope; track r.scope + ':' + r.value) {
@@ -109,30 +127,59 @@ import { UiSkeleton } from '../../shared/skeleton';
                     <td class="mono">{{ r.value }}</td>
                     <td class="mono">{{ r.tokens_in }}</td>
                     <td class="mono">{{ r.tokens_out }}</td>
-                    <td><ui-state-badge
-                      [state]="r.estimated ? 'estimated' : 'reported'"
-                      [labelOverride]="r.estimated ? 'estimated' : 'reported'" /></td>
+                    <td>
+                      <ui-state-badge
+                        [state]="r.estimated ? 'estimated' : 'reported'"
+                        [labelOverride]="r.estimated ? 'estimated' : 'reported'"
+                      />
+                    </td>
                   </tr>
                 }
               </tbody>
             </table>
             <p class="muted small">{{ f.note }}</p>
           } @else {
-            <ui-empty title="No usage recorded"
-              hint="Token usage appears once sessions record usage events." />
+            <ui-empty
+              title="No usage recorded"
+              hint="Token usage appears once sessions record usage events."
+            />
           }
         }
       </section>
     }
   `,
   styles: `
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-    .overall { font-size: 18px; }
-    .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-    .list li { padding: 8px; border: 1px solid var(--line,#333); border-radius: 6px; }
-    .list p { margin: 4px 0 0; }
-    .small { font-size: 12px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .overall {
+      font-size: 18px;
+    }
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .list li {
+      padding: 8px;
+      border: 1px solid var(--line, #333);
+      border-radius: 6px;
+    }
+    .list p {
+      margin: 4px 0 0;
+    }
+    .small {
+      font-size: 12px;
+    }
   `,
 })
 export class PfIntelActionsPage implements OnInit {
@@ -182,9 +229,13 @@ export class PfIntelActionsPage implements OnInit {
   }
 
   axDetail(ax: Record<string, unknown>): string {
-    return Object.entries(ax)
-      .filter(([k]) => k !== 'score' && k !== 'note')
-      .map(([k, v]) => `${k}=${v}`)
-      .join(' · ') || (ax['note'] as string) || '';
+    return (
+      Object.entries(ax)
+        .filter(([k]) => k !== 'score' && k !== 'note')
+        .map(([k, v]) => `${k}=${v}`)
+        .join(' · ') ||
+      (ax['note'] as string) ||
+      ''
+    );
   }
 }

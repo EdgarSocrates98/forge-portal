@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
@@ -47,7 +55,9 @@ const CONNECTORS = [
     }
 
     @if (loading()) {
-      <div role="status" aria-label="loading analytics"><ui-skeleton kind="card" [lines]="3" /></div>
+      <div role="status" aria-label="loading analytics">
+        <ui-skeleton kind="card" [lines]="3" />
+      </div>
     } @else {
       <section class="card">
         <h2>Data sources</h2>
@@ -216,11 +226,7 @@ const CONNECTORS = [
                 <option [value]="s.id">{{ s.name }} ({{ s.connector ?? '?' }})</option>
               }
             </select>
-            <button
-              class="btn"
-              type="submit"
-              [disabled]="qbusy() || !sql().trim()"
-            >
+            <button class="btn" type="submit" [disabled]="qbusy() || !sql().trim()">
               {{ qbusy() === 'validate' ? 'Validating…' : 'Validate' }}
             </button>
             <button
@@ -330,7 +336,11 @@ const CONNECTORS = [
               <option [value]="s.id">{{ s.name }}</option>
             }
           </select>
-          <button class="btn btn--primary" type="submit" [disabled]="nlBusy() || !nlQuestion().trim()">
+          <button
+            class="btn btn--primary"
+            type="submit"
+            [disabled]="nlBusy() || !nlQuestion().trim()"
+          >
             {{ nlBusy() ? 'Resolving…' : 'Ask' }}
           </button>
         </form>
@@ -339,7 +349,9 @@ const CONNECTORS = [
             <div class="fg-row" data-wrap>
               <ui-state-badge
                 [state]="nl.ok ? 'ok' : 'warn'"
-                [labelOverride]="nl.ok ? nl.via ?? 'resolved' : nl.reason ?? 'needs clarification'"
+                [labelOverride]="
+                  nl.ok ? (nl.via ?? 'resolved') : (nl.reason ?? 'needs clarification')
+                "
               />
               @if (nl.metric) {
                 <span class="muted small">catalog metric: {{ nl.metric.name }}</span>
@@ -409,8 +421,12 @@ const CONNECTORS = [
             <tbody>
               @for (m of metrics(); track m.id) {
                 <tr>
-                  <td><strong>{{ m.name }}</strong></td>
-                  <td><code>{{ m.formula }}</code></td>
+                  <td>
+                    <strong>{{ m.name }}</strong>
+                  </td>
+                  <td>
+                    <code>{{ m.formula }}</code>
+                  </td>
                   <td class="muted small">{{ m.dimensions?.join(', ') || '—' }}</td>
                   <td class="muted small">{{ sourceName(m.source_id) }}</td>
                 </tr>
@@ -418,7 +434,10 @@ const CONNECTORS = [
             </tbody>
           </table>
         } @else {
-          <ui-empty icon="inbox" title="No catalog metrics — NL questions fall back to heuristics" />
+          <ui-empty
+            icon="inbox"
+            title="No catalog metrics — NL questions fall back to heuristics"
+          />
         }
       </section>
     }
@@ -610,9 +629,7 @@ export class PfAnalyticsTab implements OnInit {
       this.sources.set(ds.items ?? []);
       if (!this.execSource() && ds.items?.length) this.execSource.set(ds.items[0].id);
       if (!this.nlSource() && ds.items?.length) this.nlSource.set(ds.items[0].id);
-      this.metrics.set(
-        (await firstValueFrom(this.api.metrics(this.pid()))).items ?? [],
-      );
+      this.metrics.set((await firstValueFrom(this.api.metrics(this.pid()))).items ?? []);
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {

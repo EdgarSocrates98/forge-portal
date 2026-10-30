@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
@@ -105,8 +113,15 @@ import { ToastService } from '../../../shared/toast';
                   }
                   <span class="muted small">v{{ a.version ?? 1 }}</span>
                 </div>
-                <button class="icon-btn" (click)="toggle(a.id)" [attr.aria-label]="'Toggle details'">
-                  <ui-icon [name]="openId() === a.id ? 'chevron-left' : 'chevron-right'" [size]="15" />
+                <button
+                  class="icon-btn"
+                  (click)="toggle(a.id)"
+                  [attr.aria-label]="'Toggle details'"
+                >
+                  <ui-icon
+                    [name]="openId() === a.id ? 'chevron-left' : 'chevron-right'"
+                    [size]="15"
+                  />
                 </button>
               </header>
               @if (a.mission) {
@@ -140,7 +155,9 @@ import { ToastService } from '../../../shared/toast';
                       <div>
                         <dt>Last eval</dt>
                         <dd>
-                          {{ a.eval_summary!.passed ?? '—' }}/{{ a.eval_summary!.total ?? '—' }}
+                          {{ a.eval_summary!.passed ?? '—' }}/{{
+                            a.eval_summary!.total ?? '—'
+                          }}
                           passed · score {{ score(a) }}
                           @if (a.eval_summary!.at) {
                             <span class="muted small"> · {{ a.eval_summary!.at }}</span>
@@ -192,16 +209,15 @@ import { ToastService } from '../../../shared/toast';
                           [state]="rep.score >= 0.5 ? 'ok' : 'warn'"
                           [labelOverride]="'eval score ' + rep.score"
                         />
-                        <span class="muted small">{{ rep.passed }}/{{ rep.total }} cases passed</span>
+                        <span class="muted small"
+                          >{{ rep.passed }}/{{ rep.total }} cases passed</span
+                        >
                       </div>
                       @if (rep.results?.length) {
                         <ul class="cases">
                           @for (r of rep.results; track r.case) {
                             <li [attr.data-pass]="r.passed || null">
-                              <ui-icon
-                                [name]="r.passed ? 'check' : 'alert'"
-                                [size]="13"
-                              />
+                              <ui-icon [name]="r.passed ? 'check' : 'alert'" [size]="13" />
                               {{ r.case }}
                             </li>
                           }
@@ -260,7 +276,11 @@ import { ToastService } from '../../../shared/toast';
           }
         </div>
       } @else if (!error()) {
-        <ui-empty icon="agents" title="No agents defined" hint="Create one from a template above." />
+        <ui-empty
+          icon="agents"
+          title="No agents defined"
+          hint="Create one from a template above."
+        />
       }
     }
   `,

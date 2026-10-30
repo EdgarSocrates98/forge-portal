@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { PfApi } from '../pf-api.service';
@@ -109,9 +116,7 @@ import { ToastService } from '../../shared/toast';
             placeholder="New workspace name"
             required
           />
-          <button class="btn" type="submit" [disabled]="busy() || !wsName().trim()">
-            Create
-          </button>
+          <button class="btn" type="submit" [disabled]="busy() || !wsName().trim()">Create</button>
         </form>
       </section>
 

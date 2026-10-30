@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
@@ -69,7 +77,9 @@ interface DraftWidget {
           </div>
 
           <fieldset class="wcomposer">
-            <legend class="muted small">Compose widgets (bound to a data source + statement)</legend>
+            <legend class="muted small">
+              Compose widgets (bound to a data source + statement)
+            </legend>
             @for (w of draftWidgets(); track $index; let i = $index) {
               <div class="wdraft">
                 <span class="chip">{{ w.type }}</span>
@@ -134,7 +144,11 @@ interface DraftWidget {
           </fieldset>
 
           <div>
-            <button class="btn btn--primary" type="submit" [disabled]="busy() || !dashName().trim()">
+            <button
+              class="btn btn--primary"
+              type="submit"
+              [disabled]="busy() || !dashName().trim()"
+            >
               Create dashboard
             </button>
           </div>
@@ -154,11 +168,7 @@ interface DraftWidget {
                   }
                 </div>
                 <span class="fg-pill">{{ d.widgets?.length ?? 0 }} widget(s)</span>
-                <button
-                  class="btn"
-                  [disabled]="renderingId() === d.id"
-                  (click)="render(d)"
-                >
+                <button class="btn" [disabled]="renderingId() === d.id" (click)="render(d)">
                   {{ renderingId() === d.id ? 'Rendering…' : 'Render' }}
                 </button>
               </header>
@@ -177,7 +187,9 @@ interface DraftWidget {
                         <header class="widget__head">
                           <strong>{{ w.title || w.type }}</strong>
                           <ui-state-badge
-                            [state]="w.state === 'ok' ? 'ok' : w.state === 'error' ? 'error' : 'unverified'"
+                            [state]="
+                              w.state === 'ok' ? 'ok' : w.state === 'error' ? 'error' : 'unverified'
+                            "
                             [labelOverride]="w.state"
                           />
                         </header>
@@ -191,7 +203,11 @@ interface DraftWidget {
                             }
                             @case ('bar_chart') {
                               @if (w.data.labels?.length) {
-                                <div class="bars" role="img" [attr.aria-label]="w.title ?? 'bar chart'">
+                                <div
+                                  class="bars"
+                                  role="img"
+                                  [attr.aria-label]="w.title ?? 'bar chart'"
+                                >
                                   @for (l of w.data.labels!; track l; let i = $index) {
                                     <div class="bars__row">
                                       <span class="bars__label" [title]="l">{{ l }}</span>
@@ -199,7 +215,9 @@ interface DraftWidget {
                                         class="bars__bar"
                                         [style.width.%]="barWidth(w, i)"
                                       ></span>
-                                      <span class="bars__val">{{ w.data.series?.[0]?.values?.[i] ?? '—' }}</span>
+                                      <span class="bars__val">{{
+                                        w.data.series?.[0]?.values?.[i] ?? '—'
+                                      }}</span>
                                     </div>
                                   }
                                 </div>
@@ -454,9 +472,7 @@ export class PfDashboardsTab implements OnInit {
   readonly wSource = signal('');
   readonly wStatement = signal('');
 
-  private readonly sourceMap = computed(
-    () => new Map(this.sources().map((s) => [s.id, s.name])),
-  );
+  private readonly sourceMap = computed(() => new Map(this.sources().map((s) => [s.id, s.name])));
 
   sourceName(id: string): string {
     return this.sourceMap().get(id) ?? id;
