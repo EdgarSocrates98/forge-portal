@@ -384,6 +384,102 @@ export class PfBridge {
         }),
       );
   }
+
+  // -- Part IX: deterministic intelligence (§13.x, read-only) ------------
+  intelRoute(opts: {
+    task_type?: string; required?: string[]; privacy?: string;
+    prefer?: string; max_cost_usd?: number;
+  }) {
+    return this.post<ProviderRouting>('/intel/route', opts);
+  }
+  intelQuality(sessionId: string) {
+    return this.get<SessionQuality>(`/intel/${sessionId}/quality`);
+  }
+  intelContextHealth(sessionId: string) {
+    return this.get<ContextHealth>(`/intel/${sessionId}/context-health`);
+  }
+  intelReplay(sessionId: string) {
+    return this.get<ReplayDossier>(`/intel/${sessionId}/replay`);
+  }
+  intelDecisions(sessionId: string) {
+    return this.get<{ items: DecisionRecord[] }>(
+      `/intel/${sessionId}/decisions`).pipe(map((r) => r.items));
+  }
+  intelFinops() {
+    return this.get<AgentFinOps>('/intel/finops');
+  }
+  intelMode() {
+    return this.get<DegradedMode>('/intel/mode');
+  }
+  intelWorkspace() {
+    return this.get<WorkspaceIntelligence>('/intel/workspace');
+  }
+
+  // -- backups (§28.6) ----------------------------------------------------
+  backup() {
+    return this.post<{ backup: string; files: number;
+                        excluded: string[] }>('/backup', {});
+  }
+  restoreBackup(path: string, approvalToken = '') {
+    return this.post<Record<string, unknown> & {
+      approval_request?: ApprovalRequest;
+      restore?: { restored: string[]; refused: string[] } | string }>(
+      '/backup/restore', { path, approval_token: approvalToken });
+  }
+}
+
+export interface ProviderRouting {
+  schema: string; task_type: string; required: string[];
+  candidates: { provider: string; score: number; eligible: boolean;
+                reasons: string[]; auth_state?: string }[];
+  selected: string | null; note: string;
+}
+
+export interface SessionQuality {
+  schema: string;
+  axes: Record<string, { score?: number; note?: string;
+                         [k: string]: unknown }>;
+  overall: number; note: string;
+}
+
+export interface ContextHealth {
+  schema: string; state: string; issues?: { kind: string; detail: string }[];
+  coverage?: Record<string, unknown>; note?: string;
+  [k: string]: unknown;
+}
+
+export interface ReplayDossier {
+  schema: string;
+  inputs: BridgeEvent[]; tools: BridgeEvent[];
+  approvals: BridgeEvent[]; errors: BridgeEvent[];
+  context_version?: number | null; event_count: number;
+  replay_mode: string; note: string;
+}
+
+export interface DecisionRecord {
+  schema: string; session_id: string; product_id: string;
+  decision: string; reason?: string; evidence?: string[];
+  owner?: string; decided_at?: string; [k: string]: unknown;
+}
+
+export interface AgentFinOps {
+  schema: string;
+  by_scope: { scope: string; value: string; tokens_in: number;
+              tokens_out: number; estimated: boolean;
+              windows?: Record<string, unknown> }[];
+  limits: Record<string, unknown>; note: string;
+}
+
+export interface DegradedMode {
+  schema: string; degraded: boolean; available_providers: string[];
+  allowed_operations: string[]; forbidden_operations: string[];
+  note?: string;
+}
+
+export interface WorkspaceIntelligence {
+  schema: string; sessions?: number; bound_contexts?: number;
+  mcp_servers?: number; budget_limits?: number;
+  items?: Record<string, unknown>[]; [k: string]: unknown;
 }
 
 export interface BridgeArtifact {

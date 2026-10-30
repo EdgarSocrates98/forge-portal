@@ -168,6 +168,46 @@ import { ToastService } from '../../shared/toast';
 
     <section>
       <header class="card__head section-head">
+        <h2>Agentic workspace</h2>
+      </header>
+      <nav class="navgrid" aria-label="Agentic workspace surfaces">
+        <a class="card navcard" data-lift routerLink="/pf/chat">
+          <strong>Chat</strong>
+          <span class="muted small">Provider sessions with streaming, tools and approvals</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/control-center">
+          <strong>Agent Control Center</strong>
+          <span class="muted small">Live sessions, approval queue, degraded-mode banner</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/intelligence">
+          <strong>Product Intelligence</strong>
+          <span class="muted small">Session quality, decisions, FinOps</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/lens">
+          <strong>Forge Lens</strong>
+          <span class="muted small">Context health, workspace intel, provider routing</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/compare">
+          <strong>Session Compare</strong>
+          <span class="muted small">Diff two sessions' event timelines</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/artifacts">
+          <strong>Artifact Studio</strong>
+          <span class="muted small">Session artifacts and workspace files</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/workflows">
+          <strong>Workflow Builder</strong>
+          <span class="muted small">Design-time agent pipelines</span>
+        </a>
+        <a class="card navcard" data-lift routerLink="/pf/templates">
+          <strong>Agent Templates</strong>
+          <span class="muted small">Curated starting points with risk gates</span>
+        </a>
+      </nav>
+    </section>
+
+    <section>
+      <header class="card__head section-head">
         <h2>Products</h2>
         <a class="btn btn--mini" routerLink="/pf/products">Manage</a>
       </header>
@@ -245,6 +285,22 @@ import { ToastService } from '../../shared/toast';
       gap: var(--space-4);
       grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
       margin-bottom: var(--space-5);
+    }
+    .navgrid {
+      display: grid;
+      gap: var(--space-3);
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+      margin-bottom: var(--space-5);
+    }
+    .navcard {
+      display: grid;
+      gap: 4px;
+      padding: var(--space-3) var(--space-4);
+      text-decoration: none;
+      color: inherit;
+    }
+    .navcard:hover {
+      border-color: var(--accent);
     }
     .card__head {
       display: flex;
