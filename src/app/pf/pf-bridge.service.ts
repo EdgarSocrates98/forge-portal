@@ -155,4 +155,48 @@ export class PfBridge {
       approved,
     });
   }
+  artifacts(sessionId: string, provider: string) {
+    return this.post<{ items: BridgeArtifact[] }>(
+      `/agent-sessions/${sessionId}/artifacts`, { provider }).pipe(
+        map((r) => r.items));
+  }
+  fileList(path = '.') {
+    return this.post<{ items: BridgeFileEntry[]; root: string }>(
+      '/files/list', { path });
+  }
+  filePreview(path: string) {
+    return this.post<BridgeFilePreview>('/files/preview', { path });
+  }
+  fileDownload(path: string) {
+    return this.post<{ path: string; content_b64: string }>(
+      '/files/download', { path });
+  }
+  fileHistory(path: string) {
+    return this.post<{ items: { version: string; size: number }[] }>(
+      '/files/history', { path });
+  }
+}
+
+export interface BridgeArtifact {
+  event_id: string;
+  type: string;
+  seq: number;
+  path?: string;
+  name?: string;
+}
+
+export interface BridgeFileEntry {
+  name: string;
+  dir: boolean;
+  size: number | null;
+  kind: string;
+}
+
+export interface BridgeFilePreview {
+  path: string;
+  kind: string;
+  size: number;
+  preview: string | null;
+  truncated?: boolean;
+  note?: string;
 }

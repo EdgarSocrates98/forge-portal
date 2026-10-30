@@ -10,6 +10,8 @@ import {
 import { firstValueFrom } from 'rxjs';
 import {
   BridgeEvent,
+  BridgeFileEntry,
+  BridgeFilePreview,
   BridgeProvider,
   BridgeSession,
   PfBridge,
@@ -19,6 +21,7 @@ import { PfProduct } from '../pf.models';
 import { ApiError } from '../../core/api/api.error';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
+import { ArtifactViewer } from '../../shared/artifact-viewer';
 import { ConfirmService } from '../../shared/confirm-dialog';
 import { MdLitePipe } from '../../shared/md-lite.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -49,7 +52,7 @@ const TEMPLATES = [
   selector: 'pf-chat-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, MdLitePipe, PageHeader, StateBadge, UiSkeleton],
+  imports: [ArtifactViewer, EmptyState, ErrorState, MdLitePipe, PageHeader, StateBadge, UiSkeleton],
   template: `
     <div class="studio" [attr.data-mode]="mode()">
       <ui-page-header title="Chat Studio"
@@ -183,6 +186,11 @@ const TEMPLATES = [
                         @if (it.meta) { <span class="muted small">{{ it.meta }}</span> }
                         @if (it.kind === 'assistant') {
                           <button class="copy" (click)="copy(it.text)">copy</button>
+                          @if (session()?.product_id) {
+                            <button class="copy" (click)="saveToKnowledge(it.text)">
+                              +knowledge
+                            </button>
+                          }
                         }
                       </div>
                     </div>
@@ -240,7 +248,26 @@ const TEMPLATES = [
               <div class="ctx__blk">
                 <h4>Artifacts</h4>
                 @for (a of artifacts(); track a) {
-                  <p class="mono small">{{ a }}</p>
+                  <button class="flink mono small" (click)="openFile(a)">{{ a }}</button>
+                }
+              </div>
+            }
+            <div class="ctx__blk">
+              <h4>Workspace files <button class="btn btn--mini" (click)="loadFiles()">↻</button></h4>
+              @for (f of files(); track f.name) {
+                <button class="flink mono small" (click)="openEntry(f)">
+                  {{ f.dir ? '📁' : '📄' }} {{ f.name }}
+                </button>
+              }
+              @if (!files().length) {
+                <button class="btn btn--mini" (click)="loadFiles()">browse workspace</button>
+              }
+            </div>
+            @if (ctxEntities().length) {
+              <div class="ctx__blk">
+                <h4>Insert product context</h4>
+                @for (e of ctxEntities(); track e) {
+                  <button class="flink small" (click)="insertRef(e)">{{ e }}</button>
                 }
               </div>
             }
@@ -257,6 +284,22 @@ const TEMPLATES = [
         </div>
       }
       @if (error(); as e) { <ui-error [error]="e" (retry)="bootstrap()" /> }
+      @if (preview(); as pv) {
+        <div class="ovl" role="dialog" aria-modal="true"
+             aria-label="File preview" (keydown.escape)="preview.set(null)">
+          <div class="ovl__c">
+            <div class="ovl__h">
+              <strong class="mono">{{ pv.path }}</strong>
+              <span class="muted small">{{ pv.kind }} · {{ pv.size }}B</span>
+              <span class="spacer"></span>
+              <button class="btn btn--mini" (click)="preview.set(null)">close</button>
+            </div>
+            <ui-artifact [kind]="pv.kind === 'text' ? extKind(pv.path) : pv.kind"
+                         [text]="pv.preview ?? ''" [name]="pv.path"
+                         [truncated]="pv.truncated ?? false" />
+          </div>
+        </div>
+      }
     </div>
   `,
   styles: `
@@ -280,8 +323,7 @@ const TEMPLATES = [
       background: none; font: inherit; color: inherit; cursor: pointer; }
     .sess:hover { background: var(--bg-hover); }
     .sess[data-sel] { border-color: var(--accent, var(--fg)); }
-    .sess__t { font-weight: 600; font-size: var(--font-sm);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sess__t { font-weight: 600; font-size: var(--font-sm); }
     .new { border-top: 1px solid var(--border); padding-top: var(--space-2); }
     .new summary { cursor: pointer; font-size: var(--font-sm); }
     .lbl { display: grid; gap: 2px; font-size: var(--font-xs); color: var(--fg-muted);
@@ -295,10 +337,10 @@ const TEMPLATES = [
     .msg { border-radius: var(--radius-md); padding: var(--space-2) var(--space-3);
       max-width: 88%; }
     .msg__b { font-size: var(--font-sm); }
-    .msg__b :deep(pre.md-code) { font-family: var(--font-mono); font-size: var(--font-xs);
+    .msg__b :deep(pre) { font-family: var(--font-mono); font-size: var(--font-xs);
       background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-      padding: var(--space-2); overflow-x: auto; }
-    .msg__k { font-size: var(--font-xs); text-transform: uppercase; letter-spacing: 0.05em;
+      padding: var(--space-2); overflow: auto; }
+    .msg__k { font-size: var(--font-xs); text-transform: uppercase;
       color: var(--fg-muted); display: block; margin-bottom: 2px; }
     .msg__f { display: flex; gap: var(--space-2); align-items: center; }
     .msg[data-k='user'] { background: var(--accent, var(--border)); justify-self: end;
@@ -327,15 +369,14 @@ const TEMPLATES = [
     .ctx__blk { border-top: 1px solid var(--border); padding-top: var(--space-2); }
     .muted { color: var(--fg-muted); }
     .small { font-size: var(--font-xs); }
-    .err { color: var(--error); font-size: var(--font-sm); margin: var(--space-2) 0 0; }
-    .danger { color: var(--error); }
+    .err, .danger { color: var(--error); }
+    .err { font-size: var(--font-sm); margin: var(--space-2) 0 0; }
     .studio[data-mode='simple'] .side, .studio[data-mode='simple'] .ctx { display: none; }
     .studio[data-mode='simple'] .layout { grid-template-columns: 1fr; }
     .studio[data-mode='visual'] .ctx { display: none; }
     .studio[data-mode='visual'] .layout { grid-template-columns: 16rem 1fr; }
     @media (max-width: 1100px) {
-      .layout { grid-template-columns: 1fr !important; }
-      .ctx { display: none; }
+      .layout { grid-template-columns: 1fr !important; } .ctx { display: none; }
     }
   `,
 })
@@ -367,6 +408,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly error = signal<ApiError | null>(null);
   readonly lastError = signal<string | null>(null);
   readonly rawJson = computed(() => JSON.stringify(this.lastEvents(), null, 2));
+  readonly files = signal<BridgeFileEntry[]>([]);
+  readonly preview = signal<BridgeFilePreview | null>(null);
+  readonly ctxEntities = signal<string[]>([]);
   private readonly seenSeq = new Set<number>();
   private poll: ReturnType<typeof setInterval> | null = null;
 
@@ -472,6 +516,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.session.set(s);
     this.items.set([]);
     this.seenSeq.clear();
+    if (s.product_id) void this.loadCtxEntities(s.product_id);
     if (s.state === 'closed') {
       this.items.set([
         { kind: 'system', text: 'session closed — metadata only' },
@@ -576,6 +621,75 @@ export class PfChatPage implements OnInit, OnDestroy {
       ]);
     } catch {
       this.toast.show('approval not supported by provider', 'error');
+    }
+  }
+
+  async loadFiles(): Promise<void> {
+    try {
+      const r = await firstValueFrom(this.bridge.fileList('.'));
+      this.files.set(r.items);
+    } catch {
+      this.toast.show('file listing unavailable', 'error');
+    }
+  }
+
+  async openEntry(f: BridgeFileEntry): Promise<void> {
+    if (f.dir) return;
+    await this.openFile(f.name);
+  }
+
+  async openFile(path: string): Promise<void> {
+    try {
+      this.preview.set(await firstValueFrom(this.bridge.filePreview(path)));
+    } catch {
+      this.toast.show(`cannot preview ${path}`, 'error');
+    }
+  }
+
+  extKind(path: string): string {
+    const ext = path.split('.').pop()?.toLowerCase() ?? '';
+    const map: Record<string, string> = {
+      md: 'markdown', json: 'json', yaml: 'yaml', yml: 'yaml', csv: 'csv',
+      sql: 'sql', py: 'python', diff: 'diff', patch: 'diff', html: 'html',
+    };
+    return map[ext] ?? 'text';
+  }
+
+  insertRef(e: string): void {
+    this.draft.update((d) => `${d}${d && !d.endsWith(' ') ? ' ' : ''}${e} `);
+  }
+
+  async saveToKnowledge(text: string): Promise<void> {
+    const s = this.session();
+    const pid = s?.product_id;
+    if (!s || !pid) return;
+    const title = globalThis.prompt?.('Knowledge capture title', 'Chat discovery');
+    if (title == null) return;
+    try {
+      await firstValueFrom(
+        this.api.importDocument(pid, {
+          title,
+          content: `<!-- captured-from: chat-session:${s.id} review:required -->\n\n${text}`,
+        }),
+      );
+      this.toast.show('saved to product knowledge (review required)', 'success');
+    } catch {
+      this.toast.show('knowledge capture failed', 'error');
+    }
+  }
+
+  private async loadCtxEntities(pid: string): Promise<void> {
+    try {
+      const [docs, mets] = await Promise.all([
+        firstValueFrom(this.api.documents(pid)).catch(() => ({ items: [] })),
+        firstValueFrom(this.api.metrics(pid)).catch(() => ({ items: [] })),
+      ]);
+      this.ctxEntities.set([
+        ...docs.items.map((d) => `@doc:${d.title}`),
+        ...mets.items.map((m) => `@metric:${m.name}`),
+      ]);
+    } catch {
+      this.ctxEntities.set([]);
     }
   }
 

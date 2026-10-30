@@ -1946,3 +1946,42 @@ tr[data-selected] td {
 .rp__flow {
   overflow-wrap: anywhere;
 }
+
+/* Chat Studio — artifact/file overlay + link-buttons (global, shared) */
+.flink {
+  border: none;
+  background: none;
+  color: var(--fg);
+  font-size: var(--font-xs);
+  cursor: pointer;
+  text-align: left;
+  padding: 1px 0;
+}
+.flink:hover {
+  text-decoration: underline;
+}
+.ovl {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 45%);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+}
+.ovl__c {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  max-width: min(56rem, 92vw);
+  max-height: 84vh;
+  overflow-y: auto;
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+}
+.ovl__h {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
