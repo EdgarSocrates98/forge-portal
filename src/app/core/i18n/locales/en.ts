@@ -17,6 +17,7 @@ export const EN: Record<string, string> = {
   'nav.tasks': 'Tasks',
   'nav.graph': 'Graph Studio',
   'nav.knowledge': 'Knowledge',
+  'nav.productForge': 'Product Forge',
   'nav.settings': 'Settings',
   'nav.section.overview': 'Overview',
   'nav.section.explore': 'Explore',

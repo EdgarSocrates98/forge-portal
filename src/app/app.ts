@@ -39,6 +39,7 @@ const NAV: NavEntry[] = [
       { route: '/skills', label: 'nav.skills', icon: 'skills' },
       { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
       { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
+      { route: '/pf', label: 'nav.productForge', icon: 'gem' },
       { route: '/match', label: 'nav.match', icon: 'compass' },
     ],
   },

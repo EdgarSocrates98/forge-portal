@@ -83,6 +83,7 @@ describe('App shell', () => {
       '/skills',
       '/mcp',
       '/knowledge',
+      '/pf',
       '/match',
       '/tasks',
       '/install',

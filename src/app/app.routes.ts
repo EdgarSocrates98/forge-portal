@@ -87,5 +87,9 @@ export const routes: Routes = [
     path: 'settings',
     loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
   },
+  {
+    path: 'pf',
+    loadChildren: () => import('./pf/pf.routes').then((m) => m.PF_ROUTES),
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

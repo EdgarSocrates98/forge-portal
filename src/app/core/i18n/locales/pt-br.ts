@@ -15,6 +15,7 @@ export const PT_BR: Record<string, string> = {
   'nav.tasks': 'Tarefas',
   'nav.graph': 'Graph Studio',
   'nav.knowledge': 'Conhecimento',
+  'nav.productForge': 'Product Forge',
   'nav.settings': 'Configurações',
   'nav.section.overview': 'Visão geral',
   'nav.section.explore': 'Explorar',
