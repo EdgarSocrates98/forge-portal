@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,7 +31,7 @@ interface DiffRow {
   selector: 'page-pf-compare',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader, UiSkeleton, EmptyState, ErrorState],
+  imports: [PageHeader, UiSkeleton, EmptyState, ErrorState, TPipe],
   template: `
     <ui-page-header
       title="Session Compare"
@@ -39,14 +40,14 @@ interface DiffRow {
 
     <section class="card pickers">
       <label class="field">
-        <span>Session A</span>
+        <span>{{ 'pf.compare.sessionA' | t }}</span>
         <select
           class="input"
           [value]="leftId()"
           (change)="pick($any($event.target).value, 'l')"
           aria-label="Left session"
         >
-          <option value="">— choose —</option>
+          <option value="">{{ 'pf.compare.choose' | t }}</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id" [selected]="s.id === leftId()">
               {{ s.meta?.title || s.id }} ({{ s.provider }})
@@ -55,14 +56,14 @@ interface DiffRow {
         </select>
       </label>
       <label class="field">
-        <span>Session B</span>
+        <span>{{ 'pf.compare.sessionB' | t }}</span>
         <select
           class="input"
           [value]="rightId()"
           (change)="pick($any($event.target).value, 'r')"
           aria-label="Right session"
         >
-          <option value="">— choose —</option>
+          <option value="">{{ 'pf.compare.choose' | t }}</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id" [selected]="s.id === rightId()">
               {{ s.meta?.title || s.id }} ({{ s.provider }})
@@ -70,7 +71,9 @@ interface DiffRow {
           }
         </select>
       </label>
-      <button class="btn" (click)="compare()" [disabled]="!leftId() || !rightId()">Compare</button>
+      <button class="btn" (click)="compare()" [disabled]="!leftId() || !rightId()">
+        {{ 'pf.compare.compare' | t }}
+      </button>
     </section>
 
     @if (err()) {

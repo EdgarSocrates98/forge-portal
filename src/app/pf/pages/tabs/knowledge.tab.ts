@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,7 +34,7 @@ import { ToastService } from '../../../shared/toast';
   selector: 'pf-knowledge-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -47,7 +48,7 @@ import { ToastService } from '../../../shared/toast';
       <div class="stats">
         <div class="stat">
           <span class="stat__value">{{ health()?.score ?? '—' }}</span>
-          <span class="stat__label">Knowledge health</span>
+          <span class="stat__label">{{ 'pf.knowledge.knowledgeHealth' | t }}</span>
           @if (health()?.warnings?.length) {
             <span class="stat__hint">{{ health()!.warnings![0] }}</span>
           }
@@ -56,18 +57,18 @@ import { ToastService } from '../../../shared/toast';
           <span class="stat__value"
             >{{ health()?.sources?.indexed ?? '—' }}/{{ health()?.sources?.total ?? '—' }}</span
           >
-          <span class="stat__label">Sources indexed</span>
+          <span class="stat__label">{{ 'pf.knowledge.sourcesIndexed' | t }}</span>
         </div>
         <div class="stat">
           <span class="stat__value">{{ health()?.entities?.total ?? '—' }}</span>
-          <span class="stat__label">Entities</span>
+          <span class="stat__label">{{ 'pf.knowledge.entities' | t }}</span>
           @if (health()?.entities?.provisional) {
             <span class="stat__hint">{{ health()!.entities!.provisional }} provisional</span>
           }
         </div>
         <div class="stat">
           <span class="stat__value">{{ graph()?.stats?.nodes ?? '—' }}</span>
-          <span class="stat__label">Graph nodes</span>
+          <span class="stat__label">{{ 'pf.knowledge.graphNodes' | t }}</span>
           @if (graph()?.stats?.edges !== undefined) {
             <span class="stat__hint">{{ graph()!.stats!.edges }} edges</span>
           }
@@ -76,10 +77,10 @@ import { ToastService } from '../../../shared/toast';
 
       <div class="cols">
         <section class="card">
-          <h2>Import document</h2>
+          <h2>{{ 'pf.knowledge.importDocument' | t }}</h2>
           <form class="stack" (submit)="importDoc($event)">
             <label class="field">
-              <span>Title</span>
+              <span>{{ 'pf.knowledge.title' | t }}</span>
               <input
                 class="input"
                 [value]="docTitle()"
@@ -89,7 +90,7 @@ import { ToastService } from '../../../shared/toast';
               />
             </label>
             <label class="field">
-              <span>Content</span>
+              <span>{{ 'pf.knowledge.content' | t }}</span>
               <textarea
                 class="textarea"
                 rows="7"
@@ -126,10 +127,10 @@ import { ToastService } from '../../../shared/toast';
         </section>
 
         <section class="card">
-          <h2>Ask the knowledge base</h2>
+          <h2>{{ 'pf.knowledge.askTheKnowledgeBase' | t }}</h2>
           <form class="stack" (submit)="ask($event)">
             <label class="field">
-              <span>Question</span>
+              <span>{{ 'pf.knowledge.question' | t }}</span>
               <textarea
                 class="textarea"
                 rows="3"
@@ -170,7 +171,7 @@ import { ToastService } from '../../../shared/toast';
                   }
                 </ul>
               } @else {
-                <p class="muted small">No chunks matched — import documents first.</p>
+                <p class="muted small">{{ 'pf.knowledge.noChunksMatchedImportDocuments' | t }}</p>
               }
             </div>
           }
@@ -178,15 +179,15 @@ import { ToastService } from '../../../shared/toast';
       </div>
 
       <section class="card">
-        <h2>Documents</h2>
+        <h2>{{ 'pf.knowledge.documents' | t }}</h2>
         @if (docs().length) {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Status</th>
-                <th scope="col">Chunks</th>
-                <th scope="col">Imported</th>
+                <th scope="col">{{ 'pf.knowledge.title' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.status' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.chunks' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.imported' | t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -214,15 +215,15 @@ import { ToastService } from '../../../shared/toast';
       </section>
 
       <section class="card">
-        <h2>Knowledge sources</h2>
+        <h2>{{ 'pf.knowledge.knowledgeSources' | t }}</h2>
         @if (sources().length) {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Locator</th>
-                <th scope="col">Status</th>
+                <th scope="col">{{ 'pf.knowledge.name' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.type' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.locator' | t }}</th>
+                <th scope="col">{{ 'pf.knowledge.status' | t }}</th>
               </tr>
             </thead>
             <tbody>

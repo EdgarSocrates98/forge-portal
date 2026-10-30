@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
@@ -18,7 +19,7 @@ import { ToastService } from '../../../shared/toast';
   selector: 'pf-reports-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [EmptyState, ErrorState, UiIcon, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -29,7 +30,7 @@ import { ToastService } from '../../../shared/toast';
     } @else {
       <section class="card">
         <header class="rhead">
-          <h2>Reports</h2>
+          <h2>{{ 'pf.reports.reports' | t }}</h2>
           <button class="btn btn--primary" [disabled]="generating()" (click)="generate()">
             {{ generating() ? 'Generating…' : 'Generate executive report' }}
           </button>
@@ -66,16 +67,16 @@ import { ToastService } from '../../../shared/toast';
       </section>
 
       <section class="card">
-        <h2>Audit trail</h2>
+        <h2>{{ 'pf.reports.auditTrail' | t }}</h2>
         @if (audit().length) {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">When</th>
-                <th scope="col">Action</th>
-                <th scope="col">Resource</th>
-                <th scope="col">Actor</th>
-                <th scope="col">Correlation</th>
+                <th scope="col">{{ 'pf.reports.when' | t }}</th>
+                <th scope="col">{{ 'pf.reports.action' | t }}</th>
+                <th scope="col">{{ 'pf.reports.resource' | t }}</th>
+                <th scope="col">{{ 'pf.reports.actor' | t }}</th>
+                <th scope="col">{{ 'pf.reports.correlation' | t }}</th>
               </tr>
             </thead>
             <tbody>

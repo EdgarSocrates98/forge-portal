@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +28,7 @@ import { UiSkeleton } from '../../shared/skeleton';
   selector: 'page-pf-control-center',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState],
+  imports: [RouterLink, PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState, TPipe],
   template: `
     <ui-page-header
       title="Agent Control Center"
@@ -39,7 +40,7 @@ import { UiSkeleton } from '../../shared/skeleton';
     } @else {
       @if (mode() && mode()!.degraded) {
         <section class="card banner" role="alert" aria-live="polite">
-          <h2>Degraded mode</h2>
+          <h2>{{ 'pf.controlCenter.degradedMode' | t }}</h2>
           <p class="muted">
             No authenticated provider is available. Allowed:
             {{ mode()!.allowed_operations.join('; ') }}.
@@ -61,10 +62,10 @@ import { UiSkeleton } from '../../shared/skeleton';
             <table class="tbl" aria-label="Agent sessions">
               <thead>
                 <tr>
-                  <th scope="col">Session</th>
-                  <th scope="col">Provider</th>
-                  <th scope="col">State</th>
-                  <th scope="col">Resumable</th>
+                  <th scope="col">{{ 'pf.controlCenter.session' | t }}</th>
+                  <th scope="col">{{ 'pf.controlCenter.provider' | t }}</th>
+                  <th scope="col">{{ 'pf.controlCenter.state' | t }}</th>
+                  <th scope="col">{{ 'pf.controlCenter.resumable' | t }}</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -82,7 +83,7 @@ import { UiSkeleton } from '../../shared/skeleton';
                         class="btn btn--mini"
                         [routerLink]="['/pf/chat']"
                         [queryParams]="{ session: s.id }"
-                        >Open</a
+                        >{{ 'pf.controlCenter.open' | t }}</a
                       >
                       <button
                         class="btn btn--mini"
@@ -108,7 +109,7 @@ import { UiSkeleton } from '../../shared/skeleton';
           @if (loading()) {
             <ui-skeleton [lines]="3" />
           } @else if (approvals().length === 0) {
-            <p class="muted">Queue is clear.</p>
+            <p class="muted">{{ 'pf.controlCenter.queueIsClear' | t }}</p>
           } @else {
             <ul class="queue" aria-label="Approval queue">
               @for (a of approvals(); track a.approval_id) {
@@ -142,7 +143,7 @@ import { UiSkeleton } from '../../shared/skeleton';
       </div>
 
       <section class="card" aria-labelledby="cc-providers">
-        <h2 id="cc-providers">Providers</h2>
+        <h2 id="cc-providers">{{ 'pf.controlCenter.providers' | t }}</h2>
         <div class="chips" role="list">
           @for (p of providers(); track p.id) {
             <span class="chip" role="listitem">

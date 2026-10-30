@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -60,7 +61,7 @@ const STEPS: { id: StepId; label: string }[] = [
   selector: 'page-pf-onboarding',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, PageHeader, StateBadge, UiIcon, UiSkeleton],
+  imports: [RouterLink, PageHeader, StateBadge, UiIcon, UiSkeleton, TPipe],
   template: `
     <ui-page-header
       title="Onboarding"
@@ -96,7 +97,7 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 1 · engine profile ------------------------------------------------- -->
         @case ('profile') {
           <section class="card">
-            <h2>1 · Engine profile</h2>
+            <h2>{{ 'pf.onboarding.1EngineProfile' | t }}</h2>
             <p class="muted">
               The Studio talks to a Product Forge engine at
               <code>{{ api.baseUrl() }}</code> — check it is reachable before going on.
@@ -109,17 +110,20 @@ const STEPS: { id: StepId; label: string }[] = [
             } @else if (healthErr()) {
               <p class="bad">
                 Engine unreachable — configure it in
-                <a routerLink="/pf/settings">engine settings</a> first.
+                <a routerLink="/pf/settings">{{ 'pf.onboarding.engineSettings' | t }}</a> first.
               </p>
             }
             @if (!api.token()) {
               <p class="warn">
                 No API token configured — private routes will return 401. Set it in
-                <a routerLink="/pf/settings">engine settings</a>.
+                <a routerLink="/pf/settings">{{ 'pf.onboarding.engineSettings' | t }}</a
+                >.
               </p>
             }
             <div class="actions">
-              <button class="btn" (click)="checkHealth()">Check connection</button>
+              <button class="btn" (click)="checkHealth()">
+                {{ 'pf.onboarding.checkConnection' | t }}
+              </button>
               <button class="btn btn--primary" [disabled]="!health()" (click)="next()">
                 Continue
               </button>
@@ -130,7 +134,7 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 2 · workspace ------------------------------------------------------- -->
         @case ('workspace') {
           <section class="card">
-            <h2>2 · Workspace</h2>
+            <h2>{{ 'pf.onboarding.2Workspace' | t }}</h2>
             @if (workspaces().length) {
               <div class="pick" role="radiogroup" aria-label="Pick a workspace">
                 @for (w of workspaces(); track w.id) {
@@ -146,7 +150,7 @@ const STEPS: { id: StepId; label: string }[] = [
                 }
               </div>
             } @else {
-              <p class="muted">No workspaces yet — create one:</p>
+              <p class="muted">{{ 'pf.onboarding.noWorkspacesYetCreateOne' | t }}</p>
             }
             <form class="inline" (submit)="createWorkspace($event)">
               <input
@@ -161,7 +165,7 @@ const STEPS: { id: StepId; label: string }[] = [
               </button>
             </form>
             <div class="actions">
-              <button class="btn" (click)="back()">Back</button>
+              <button class="btn" (click)="back()">{{ 'pf.onboarding.back' | t }}</button>
               <button class="btn btn--primary" [disabled]="!wsId()" (click)="next()">
                 Continue
               </button>
@@ -172,10 +176,10 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 3 · product --------------------------------------------------------- -->
         @case ('product') {
           <section class="card">
-            <h2>3 · Product</h2>
+            <h2>{{ 'pf.onboarding.3Product' | t }}</h2>
             <form class="stack" (submit)="createProduct($event)">
               <label class="field">
-                <span>Name</span>
+                <span>{{ 'pf.onboarding.name' | t }}</span>
                 <input
                   class="input"
                   [value]="pName()"
@@ -185,7 +189,7 @@ const STEPS: { id: StepId; label: string }[] = [
                 />
               </label>
               <label class="field">
-                <span>Domain</span>
+                <span>{{ 'pf.onboarding.domain' | t }}</span>
                 <input
                   class="input"
                   [value]="pDomain()"
@@ -194,7 +198,7 @@ const STEPS: { id: StepId; label: string }[] = [
                 />
               </label>
               <label class="field">
-                <span>Description</span>
+                <span>{{ 'pf.onboarding.description' | t }}</span>
                 <input
                   class="input"
                   [value]="pDesc()"
@@ -203,7 +207,9 @@ const STEPS: { id: StepId; label: string }[] = [
                 />
               </label>
               <div class="actions">
-                <button class="btn" type="button" (click)="back()">Back</button>
+                <button class="btn" type="button" (click)="back()">
+                  {{ 'pf.onboarding.back' | t }}
+                </button>
                 <button class="btn btn--primary" type="submit" [disabled]="!pName().trim()">
                   Create product
                 </button>
@@ -215,7 +221,7 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 4 · goal -------------------------------------------------------------- -->
         @case ('goal') {
           <section class="card">
-            <h2>4 · Product goal</h2>
+            <h2>{{ 'pf.onboarding.4ProductGoal' | t }}</h2>
             <p class="muted">
               A short statement of what this product must learn or decide. It is saved as your first
               knowledge document in the Import step — the engine has no separate goal field, so
@@ -229,8 +235,10 @@ const STEPS: { id: StepId; label: string }[] = [
               placeholder="e.g. Understand which billing events predict churn and rank the top retention initiatives."
             ></textarea>
             <div class="actions">
-              <button class="btn" (click)="back()">Back</button>
-              <button class="btn" (click)="goal.set(''); next()">Skip</button>
+              <button class="btn" (click)="back()">{{ 'pf.onboarding.back' | t }}</button>
+              <button class="btn" (click)="goal.set(''); next()">
+                {{ 'pf.onboarding.skip' | t }}
+              </button>
               <button class="btn btn--primary" [disabled]="!goal().trim()" (click)="next()">
                 Continue
               </button>
@@ -241,14 +249,14 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 5 · sources ------------------------------------------------------------ -->
         @case ('sources') {
           <section class="card">
-            <h2>5 · Knowledge sources</h2>
+            <h2>{{ 'pf.onboarding.5KnowledgeSources' | t }}</h2>
             <p class="muted">
               Register where product knowledge lives — a doc directory, a repo, a wiki. The locator
               is a path/URI; credentials never go here.
             </p>
             <form class="stack" (submit)="registerSource($event)">
               <label class="field">
-                <span>Name</span>
+                <span>{{ 'pf.onboarding.name' | t }}</span>
                 <input
                   class="input"
                   [value]="srcName()"
@@ -276,16 +284,22 @@ const STEPS: { id: StepId; label: string }[] = [
                 />
               </div>
               <div class="actions">
-                <button class="btn" type="button" (click)="back()">Back</button>
-                <button class="btn" type="button" (click)="next()">Skip</button>
+                <button class="btn" type="button" (click)="back()">
+                  {{ 'pf.onboarding.back' | t }}
+                </button>
+                <button class="btn" type="button" (click)="next()">
+                  {{ 'pf.onboarding.skip' | t }}
+                </button>
                 <button class="btn btn--primary" type="submit" [disabled]="!srcName().trim()">
                   Register source
                 </button>
               </div>
             </form>
             @if (sourceRegistered()) {
-              <p class="ok">Source registered — continue when ready.</p>
-              <button class="btn btn--primary" (click)="next()">Continue</button>
+              <p class="ok">{{ 'pf.onboarding.sourceRegisteredContinueWhenReady' | t }}</p>
+              <button class="btn btn--primary" (click)="next()">
+                {{ 'pf.onboarding.continue' | t }}
+              </button>
             }
           </section>
         }
@@ -293,10 +307,10 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 6 · import ------------------------------------------------------------- -->
         @case ('import') {
           <section class="card">
-            <h2>6 · First document</h2>
+            <h2>{{ 'pf.onboarding.6FirstDocument' | t }}</h2>
             <form class="stack" (submit)="importDoc($event)">
               <label class="field">
-                <span>Title</span>
+                <span>{{ 'pf.onboarding.title' | t }}</span>
                 <input
                   class="input"
                   [value]="docTitle()"
@@ -305,7 +319,7 @@ const STEPS: { id: StepId; label: string }[] = [
                 />
               </label>
               <label class="field">
-                <span>Content</span>
+                <span>{{ 'pf.onboarding.content' | t }}</span>
                 <textarea
                   class="textarea"
                   rows="7"
@@ -315,8 +329,12 @@ const STEPS: { id: StepId; label: string }[] = [
                 ></textarea>
               </label>
               <div class="actions">
-                <button class="btn" type="button" (click)="back()">Back</button>
-                <button class="btn" type="button" (click)="next()">Skip</button>
+                <button class="btn" type="button" (click)="back()">
+                  {{ 'pf.onboarding.back' | t }}
+                </button>
+                <button class="btn" type="button" (click)="next()">
+                  {{ 'pf.onboarding.skip' | t }}
+                </button>
                 <button
                   class="btn btn--primary"
                   type="submit"
@@ -328,7 +346,9 @@ const STEPS: { id: StepId; label: string }[] = [
             </form>
             @if (doc(); as d) {
               <p class="ok">Imported "{{ d.title }}" — {{ d.chunk_count ?? 0 }} chunks indexed.</p>
-              <button class="btn btn--primary" (click)="next()">Continue</button>
+              <button class="btn btn--primary" (click)="next()">
+                {{ 'pf.onboarding.continue' | t }}
+              </button>
             }
           </section>
         }
@@ -336,20 +356,20 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 7 · context -------------------------------------------------------------- -->
         @case ('context') {
           <section class="card">
-            <h2>7 · Context package</h2>
+            <h2>{{ 'pf.onboarding.7ContextPackage' | t }}</h2>
             @if (ctx(); as c) {
               <div class="stats">
                 <div class="stat">
                   <span class="stat__value">{{ c.sources?.length ?? 0 }}</span>
-                  <span class="stat__label">Sources</span>
+                  <span class="stat__label">{{ 'pf.onboarding.sources' | t }}</span>
                 </div>
                 <div class="stat">
                   <span class="stat__value">{{ c.entities?.length ?? 0 }}</span>
-                  <span class="stat__label">Entities</span>
+                  <span class="stat__label">{{ 'pf.onboarding.entities' | t }}</span>
                 </div>
                 <div class="stat">
                   <span class="stat__value">{{ c.data_sources?.length ?? 0 }}</span>
-                  <span class="stat__label">Data sources</span>
+                  <span class="stat__label">{{ 'pf.onboarding.dataSources' | t }}</span>
                 </div>
               </div>
               <p class="muted">
@@ -359,10 +379,12 @@ const STEPS: { id: StepId; label: string }[] = [
                 — generated {{ c.generated_at ?? '—' }}.
               </p>
             } @else {
-              <button class="btn" (click)="loadContext()">Load context package</button>
+              <button class="btn" (click)="loadContext()">
+                {{ 'pf.onboarding.loadContextPackage' | t }}
+              </button>
             }
             <div class="actions">
-              <button class="btn" (click)="back()">Back</button>
+              <button class="btn" (click)="back()">{{ 'pf.onboarding.back' | t }}</button>
               <button class="btn btn--primary" [disabled]="!ctx()" (click)="next()">
                 Continue
               </button>
@@ -373,37 +395,39 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 8 · review ----------------------------------------------------------------- -->
         @case ('review') {
           <section class="card">
-            <h2>8 · Review</h2>
+            <h2>{{ 'pf.onboarding.8Review' | t }}</h2>
             <dl class="kv">
               <div>
-                <dt>Workspace</dt>
+                <dt>{{ 'pf.onboarding.workspace' | t }}</dt>
                 <dd>
                   {{ wsNameOf(wsId()) }} <code class="muted small">{{ wsId() }}</code>
                 </dd>
               </div>
               <div>
-                <dt>Product</dt>
+                <dt>{{ 'pf.onboarding.product' | t }}</dt>
                 <dd>
                   {{ product()?.name ?? '—' }}
                   <code class="muted small">{{ product()?.id }}</code>
                 </dd>
               </div>
               <div>
-                <dt>Goal</dt>
+                <dt>{{ 'pf.onboarding.goal' | t }}</dt>
                 <dd>{{ goal() || '—' }}</dd>
               </div>
               <div>
-                <dt>Source</dt>
+                <dt>{{ 'pf.onboarding.source' | t }}</dt>
                 <dd>{{ srcName() || '— skipped' }}</dd>
               </div>
               <div>
-                <dt>Document</dt>
+                <dt>{{ 'pf.onboarding.document' | t }}</dt>
                 <dd>{{ doc()?.title ?? '— skipped' }}</dd>
               </div>
             </dl>
             <div class="actions">
-              <button class="btn" (click)="back()">Back</button>
-              <button class="btn btn--primary" (click)="next()">Continue</button>
+              <button class="btn" (click)="back()">{{ 'pf.onboarding.back' | t }}</button>
+              <button class="btn btn--primary" (click)="next()">
+                {{ 'pf.onboarding.continue' | t }}
+              </button>
             </div>
           </section>
         }
@@ -411,7 +435,7 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 9 · initial agent ------------------------------------------------------------ -->
         @case ('agent') {
           <section class="card">
-            <h2>9 · Initial agent</h2>
+            <h2>{{ 'pf.onboarding.9InitialAgent' | t }}</h2>
             @if (templates().length) {
               <div class="pick" role="radiogroup" aria-label="Pick a template">
                 @for (t of templates(); track t.name) {
@@ -442,13 +466,13 @@ const STEPS: { id: StepId; label: string }[] = [
                 </button>
               </form>
             } @else {
-              <p class="muted">The engine reported no templates — skip for now.</p>
+              <p class="muted">{{ 'pf.onboarding.theEngineReportedNoTemplates' | t }}</p>
             }
             @if (agentCreated()) {
-              <p class="ok">Agent created — eval it and publish from the Agents tab.</p>
+              <p class="ok">{{ 'pf.onboarding.agentCreatedEvalItAnd' | t }}</p>
             }
             <div class="actions">
-              <button class="btn" (click)="back()">Back</button>
+              <button class="btn" (click)="back()">{{ 'pf.onboarding.back' | t }}</button>
               <button class="btn btn--primary" (click)="next()">
                 {{ agentCreated() ? 'Finish' : 'Skip & finish' }}
               </button>
@@ -459,7 +483,7 @@ const STEPS: { id: StepId; label: string }[] = [
         <!-- 10 · done ------------------------------------------------------------------------ -->
         @case ('home') {
           <section class="card done">
-            <h2>Product Forge is set up</h2>
+            <h2>{{ 'pf.onboarding.productForgeIsSetUp' | t }}</h2>
             <p class="muted">
               <strong>{{ product()?.name }}</strong> is live in the engine with
               {{ ctx()?.entities?.length ?? 0 }} entities and
@@ -472,7 +496,7 @@ const STEPS: { id: StepId; label: string }[] = [
                   <ui-icon name="chevron-right" [size]="14" />
                 </a>
               }
-              <a class="btn" routerLink="/pf">Studio home</a>
+              <a class="btn" routerLink="/pf">{{ 'pf.onboarding.studioHome' | t }}</a>
             </div>
           </section>
         }

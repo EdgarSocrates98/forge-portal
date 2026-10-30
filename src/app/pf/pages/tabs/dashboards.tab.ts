@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -44,7 +45,7 @@ interface DraftWidget {
   selector: 'pf-dashboards-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -56,7 +57,7 @@ interface DraftWidget {
       </div>
     } @else {
       <section class="card">
-        <h2>New dashboard</h2>
+        <h2>{{ 'pf.dashboards.newDashboard' | t }}</h2>
         <form class="stack" (submit)="createDashboard($event)">
           <div class="fg-row" data-wrap>
             <input
@@ -120,7 +121,7 @@ interface DraftWidget {
                 (change)="wSource.set($any($event.target).value)"
                 aria-label="Data source"
               >
-                <option value="" disabled>Data source…</option>
+                <option value="" disabled>{{ 'pf.dashboards.dataSource' | t }}</option>
                 @for (s of sources(); track s.id) {
                   <option [value]="s.id">{{ s.name }}</option>
                 }
@@ -222,7 +223,9 @@ interface DraftWidget {
                                   }
                                 </div>
                               } @else {
-                                <p class="muted small">Chart returned no data points.</p>
+                                <p class="muted small">
+                                  {{ 'pf.dashboards.chartReturnedNoDataPoints' | t }}
+                                </p>
                               }
                             }
                             @default {
@@ -248,7 +251,7 @@ interface DraftWidget {
                                   </table>
                                 </div>
                               } @else {
-                                <p class="muted small">0 rows.</p>
+                                <p class="muted small">{{ 'pf.dashboards.0Rows' | t }}</p>
                               }
                             }
                           }

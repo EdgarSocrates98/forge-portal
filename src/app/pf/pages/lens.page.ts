@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -25,7 +26,7 @@ import { UiSkeleton } from '../../shared/skeleton';
   selector: 'page-pf-lens',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState],
+  imports: [PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState, TPipe],
   template: `
     <ui-page-header
       title="Forge Lens"
@@ -34,7 +35,7 @@ import { UiSkeleton } from '../../shared/skeleton';
 
     <div class="grid">
       <section class="card" aria-labelledby="lens-ctx">
-        <h2 id="lens-ctx">Session context health</h2>
+        <h2 id="lens-ctx">{{ 'pf.lens.sessionContextHealth' | t }}</h2>
         <div class="row">
           <select
             class="input"
@@ -42,7 +43,7 @@ import { UiSkeleton } from '../../shared/skeleton';
             (change)="pick($any($event.target).value)"
             aria-label="Session to inspect"
           >
-            <option value="">— choose session —</option>
+            <option value="">{{ 'pf.lens.chooseSession' | t }}</option>
             @for (s of sessions(); track s.id) {
               <option [value]="s.id">{{ s.meta?.title || s.id }}</option>
             }
@@ -50,10 +51,10 @@ import { UiSkeleton } from '../../shared/skeleton';
         </div>
         @if (health()) {
           <dl class="kv">
-            <dt>State</dt>
+            <dt>{{ 'pf.lens.state' | t }}</dt>
             <dd><ui-state-badge [state]="health()!.state" /></dd>
             @if (health()!.issues?.length) {
-              <dt>Issues</dt>
+              <dt>{{ 'pf.lens.issues' | t }}</dt>
               <dd>
                 <ul>
                   @for (i of health()!.issues!; track $index) {
@@ -65,7 +66,7 @@ import { UiSkeleton } from '../../shared/skeleton';
               </dd>
             }
             @if (health()!.note) {
-              <dt>Note</dt>
+              <dt>{{ 'pf.lens.note' | t }}</dt>
               <dd class="muted">{{ health()!.note }}</dd>
             }
           </dl>
@@ -75,16 +76,16 @@ import { UiSkeleton } from '../../shared/skeleton';
       </section>
 
       <section class="card" aria-labelledby="lens-ws">
-        <h2 id="lens-ws">Workspace intelligence</h2>
+        <h2 id="lens-ws">{{ 'pf.lens.workspaceIntelligence' | t }}</h2>
         @if (workspace()) {
           <dl class="kv">
-            <dt>Sessions</dt>
+            <dt>{{ 'pf.lens.sessions' | t }}</dt>
             <dd class="mono">{{ workspace()!.sessions ?? '—' }}</dd>
-            <dt>Bound contexts</dt>
+            <dt>{{ 'pf.lens.boundContexts' | t }}</dt>
             <dd class="mono">{{ workspace()!.bound_contexts ?? '—' }}</dd>
-            <dt>Federated MCP servers</dt>
+            <dt>{{ 'pf.lens.federatedMCPServers' | t }}</dt>
             <dd class="mono">{{ workspace()!.mcp_servers ?? '—' }}</dd>
-            <dt>Budget limits</dt>
+            <dt>{{ 'pf.lens.budgetLimits' | t }}</dt>
             <dd class="mono">{{ workspace()!.budget_limits ?? '—' }}</dd>
           </dl>
         }
@@ -98,10 +99,10 @@ import { UiSkeleton } from '../../shared/skeleton';
     </div>
 
     <section class="card" aria-labelledby="lens-route">
-      <h2 id="lens-route">Provider routing</h2>
+      <h2 id="lens-route">{{ 'pf.lens.providerRouting' | t }}</h2>
       <form class="row" (submit)="route($event)">
         <label class="field">
-          <span>Required capabilities (comma-separated)</span>
+          <span>{{ 'pf.lens.requiredCapabilitiesCommaSeparated' | t }}</span>
           <input
             class="input mono"
             [value]="req()"
@@ -110,17 +111,17 @@ import { UiSkeleton } from '../../shared/skeleton';
           />
         </label>
         <label class="field">
-          <span>Privacy</span>
+          <span>{{ 'pf.lens.privacy' | t }}</span>
           <select
             class="input"
             [value]="privacy()"
             (change)="privacy.set($any($event.target).value)"
           >
-            <option value="local-ok">local-ok</option>
-            <option value="local-only">local-only</option>
+            <option value="local-ok">{{ 'pf.lens.localOk' | t }}</option>
+            <option value="local-only">{{ 'pf.lens.localOnly' | t }}</option>
           </select>
         </label>
-        <button class="btn" type="submit" [disabled]="routing()">Route</button>
+        <button class="btn" type="submit" [disabled]="routing()">{{ 'pf.lens.route' | t }}</button>
       </form>
       @if (routeResult()) {
         <p>
@@ -130,10 +131,10 @@ import { UiSkeleton } from '../../shared/skeleton';
         <table class="tbl" aria-label="Routing candidates">
           <thead>
             <tr>
-              <th scope="col">Provider</th>
-              <th scope="col">Score</th>
-              <th scope="col">Eligible</th>
-              <th scope="col">Reasons</th>
+              <th scope="col">{{ 'pf.lens.provider' | t }}</th>
+              <th scope="col">{{ 'pf.lens.score' | t }}</th>
+              <th scope="col">{{ 'pf.lens.eligible' | t }}</th>
+              <th scope="col">{{ 'pf.lens.reasons' | t }}</th>
             </tr>
           </thead>
           <tbody>

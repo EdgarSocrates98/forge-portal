@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -48,7 +49,7 @@ const CONNECTORS = [
   selector: 'pf-analytics-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -60,7 +61,7 @@ const CONNECTORS = [
       </div>
     } @else {
       <section class="card">
-        <h2>Data sources</h2>
+        <h2>{{ 'pf.analytics.dataSources' | t }}</h2>
         <form class="dsform" (submit)="createSource($event)">
           <input
             class="input"
@@ -103,11 +104,13 @@ const CONNECTORS = [
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Connector</th>
-                <th scope="col">Status</th>
-                <th scope="col">Last verified</th>
-                <th scope="col"><span class="sr-only">Actions</span></th>
+                <th scope="col">{{ 'pf.analytics.name' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.connector' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.status' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.lastVerified' | t }}</th>
+                <th scope="col">
+                  <span class="sr-only">{{ 'pf.analytics.actions' | t }}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -204,7 +207,10 @@ const CONNECTORS = [
       </section>
 
       <section class="card">
-        <h2>SQL workbench <span class="muted small">— read-only, engine-validated</span></h2>
+        <h2>
+          {{ 'pf.analytics.sqlWorkbench' | t
+          }}<span class="muted small">{{ 'pf.analytics.readOnlyEngineValidated' | t }}</span>
+        </h2>
         <form class="stack" (submit)="runQuery($event, 'validate')">
           <textarea
             class="textarea mono"
@@ -221,7 +227,7 @@ const CONNECTORS = [
               (change)="execSource.set($any($event.target).value)"
               aria-label="Execute against data source"
             >
-              <option value="" disabled>Source for execution…</option>
+              <option value="" disabled>{{ 'pf.analytics.sourceForExecution' | t }}</option>
               @for (s of sources(); track s.id) {
                 <option [value]="s.id">{{ s.name }} ({{ s.connector ?? '?' }})</option>
               }
@@ -310,14 +316,17 @@ const CONNECTORS = [
                 </table>
               </div>
             } @else if (r.status === 'completed') {
-              <p class="muted small">Query completed with 0 rows.</p>
+              <p class="muted small">{{ 'pf.analytics.queryCompletedWith0Rows' | t }}</p>
             }
           </div>
         }
       </section>
 
       <section class="card">
-        <h2>Ask in plain language <span class="muted small">— semantic metrics first</span></h2>
+        <h2>
+          {{ 'pf.analytics.askInPlainLanguage' | t
+          }}<span class="muted small">{{ 'pf.analytics.semanticMetricsFirst' | t }}</span>
+        </h2>
         <form class="fg-row nlform" (submit)="askNl($event)">
           <input
             class="input"
@@ -368,7 +377,10 @@ const CONNECTORS = [
       </section>
 
       <section class="card">
-        <h2>Metrics catalog <span class="muted small">— KPIs as data, not guesses</span></h2>
+        <h2>
+          {{ 'pf.analytics.metricsCatalog' | t
+          }}<span class="muted small">{{ 'pf.analytics.kpisAsDataNotGuesses' | t }}</span>
+        </h2>
         <form class="fg-row metricform" (submit)="createMetric($event)">
           <input
             class="input"
@@ -399,7 +411,7 @@ const CONNECTORS = [
             (change)="mSource.set($any($event.target).value)"
             aria-label="Metric data source"
           >
-            <option value="">No source binding</option>
+            <option value="">{{ 'pf.analytics.noSourceBinding' | t }}</option>
             @for (s of sources(); track s.id) {
               <option [value]="s.id">{{ s.name }}</option>
             }
@@ -412,10 +424,10 @@ const CONNECTORS = [
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Formula</th>
-                <th scope="col">Dimensions</th>
-                <th scope="col">Source</th>
+                <th scope="col">{{ 'pf.analytics.name' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.formula' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.dimensions' | t }}</th>
+                <th scope="col">{{ 'pf.analytics.source' | t }}</th>
               </tr>
             </thead>
             <tbody>

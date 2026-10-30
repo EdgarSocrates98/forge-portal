@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
@@ -20,7 +21,7 @@ import { ToastService } from '../../shared/toast';
   selector: 'page-pf-settings',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, PageHeader, StateBadge, UiSkeleton],
+  imports: [RouterLink, PageHeader, StateBadge, UiSkeleton, TPipe],
   template: `
     <ui-page-header
       title="Engine settings"
@@ -28,10 +29,10 @@ import { ToastService } from '../../shared/toast';
     />
 
     <section class="card">
-      <h2>Connection</h2>
+      <h2>{{ 'pf.settings.connection' | t }}</h2>
       <form class="stack" (submit)="save($event)">
         <label class="field">
-          <span>Base URL</span>
+          <span>{{ 'pf.settings.baseURL' | t }}</span>
           <input
             class="input mono"
             [value]="baseUrl()"
@@ -45,7 +46,7 @@ import { ToastService } from '../../shared/toast';
           >
         </label>
         <label class="field">
-          <span>API token</span>
+          <span>{{ 'pf.settings.apiToken' | t }}</span>
           <input
             class="input mono"
             type="password"
@@ -61,7 +62,7 @@ import { ToastService } from '../../shared/toast';
           >
         </label>
         <div class="fg-row">
-          <button class="btn btn--primary" type="submit">Save</button>
+          <button class="btn btn--primary" type="submit">{{ 'pf.settings.save' | t }}</button>
           <button class="btn" type="button" [disabled]="testing()" (click)="test()">
             {{ testing() ? 'Testing…' : 'Test connection' }}
           </button>
@@ -70,13 +71,13 @@ import { ToastService } from '../../shared/toast';
     </section>
 
     <section class="card">
-      <h2>Status</h2>
+      <h2>{{ 'pf.settings.status' | t }}</h2>
       @if (testing()) {
         <div role="status" aria-label="testing"><ui-skeleton kind="text" [lines]="2" /></div>
       } @else if (health(); as h) {
         <dl class="kv">
           <div>
-            <dt>Health</dt>
+            <dt>{{ 'pf.settings.health' | t }}</dt>
             <dd>
               <ui-state-badge
                 [state]="h.status === 'healthy' ? 'ok' : 'warn'"
@@ -85,19 +86,19 @@ import { ToastService } from '../../shared/toast';
             </dd>
           </div>
           <div>
-            <dt>Forge</dt>
+            <dt>{{ 'pf.settings.forge' | t }}</dt>
             <dd>
               {{ h.forge_id }} <code>v{{ h.version }}</code>
             </dd>
           </div>
           @if (h.uptime_s !== undefined) {
             <div>
-              <dt>Uptime</dt>
+              <dt>{{ 'pf.settings.uptime' | t }}</dt>
               <dd>{{ h.uptime_s }}s</dd>
             </div>
           }
           <div>
-            <dt>Token</dt>
+            <dt>{{ 'pf.settings.token' | t }}</dt>
             <dd>
               @if (api.token()) {
                 <ui-state-badge state="ok" labelOverride="configured" />
@@ -122,11 +123,13 @@ import { ToastService } from '../../shared/toast';
           }
         </div>
       } @else {
-        <p class="muted">Not tested yet — save, then run “Test connection”.</p>
+        <p class="muted">{{ 'pf.settings.notTestedYetSaveThen' | t }}</p>
       }
     </section>
 
-    <p class="muted small back"><a routerLink="/pf">← Back to Product Forge Studio</a></p>
+    <p class="muted small back">
+      <a routerLink="/pf">{{ 'pf.settings.backToProductForgeStudio' | t }}</a>
+    </p>
   `,
   styles: `
     .card {

@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
@@ -17,7 +18,7 @@ import { ToastService } from '../../../shared/toast';
   selector: 'pf-apis-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, UiSkeleton],
+  imports: [EmptyState, ErrorState, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -27,7 +28,7 @@ import { ToastService } from '../../../shared/toast';
       <div role="status" aria-label="loading apis"><ui-skeleton kind="card" [lines]="3" /></div>
     } @else {
       <section class="card">
-        <h2>Import API spec</h2>
+        <h2>{{ 'pf.apis.importAPISpec' | t }}</h2>
         <form class="stack" (submit)="importSpec($event)">
           <div class="fg-row" data-wrap>
             <input
@@ -65,15 +66,17 @@ import { ToastService } from '../../../shared/toast';
       </section>
 
       <section class="card">
-        <h2>Registered APIs</h2>
+        <h2>{{ 'pf.apis.registeredAPIs' | t }}</h2>
         @if (apis().length) {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">API</th>
-                <th scope="col">Kind</th>
-                <th scope="col">Operations</th>
-                <th scope="col"><span class="sr-only">Details</span></th>
+                <th scope="col">{{ 'pf.apis.api' | t }}</th>
+                <th scope="col">{{ 'pf.apis.kind' | t }}</th>
+                <th scope="col">{{ 'pf.apis.operations' | t }}</th>
+                <th scope="col">
+                  <span class="sr-only">{{ 'pf.apis.details' | t }}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -117,7 +120,7 @@ import { ToastService } from '../../../shared/toast';
                           }
                         </ul>
                       } @else {
-                        <p class="muted small">Surface parsed with 0 operations.</p>
+                        <p class="muted small">{{ 'pf.apis.surfaceParsedWith0Operations' | t }}</p>
                       }
                     </td>
                   </tr>
@@ -131,7 +134,7 @@ import { ToastService } from '../../../shared/toast';
       </section>
 
       <section class="card">
-        <h2>Impact analysis</h2>
+        <h2>{{ 'pf.apis.impactAnalysis' | t }}</h2>
         <p class="muted small">
           What breaks if an entity changes? BFS over the relation graph — entities are created by
           extraction and API imports.
@@ -159,10 +162,10 @@ import { ToastService } from '../../../shared/toast';
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">Entity</th>
-                    <th scope="col">Kind</th>
-                    <th scope="col">Depth</th>
-                    <th scope="col">Via</th>
+                    <th scope="col">{{ 'pf.apis.entity' | t }}</th>
+                    <th scope="col">{{ 'pf.apis.kind' | t }}</th>
+                    <th scope="col">{{ 'pf.apis.depth' | t }}</th>
+                    <th scope="col">{{ 'pf.apis.via' | t }}</th>
                   </tr>
                 </thead>
                 <tbody>

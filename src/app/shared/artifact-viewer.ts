@@ -1,3 +1,4 @@
+import { TPipe } from '../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MdLitePipe } from './md-lite.pipe';
 import { UiIcon } from './icon';
@@ -12,7 +13,7 @@ import { UiIcon } from './icon';
   selector: 'ui-artifact',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MdLitePipe, UiIcon],
+  imports: [MdLitePipe, UiIcon, TPipe],
   template: `
     <div class="av" [attr.data-kind]="kind()">
       @switch (kind()) {
@@ -43,16 +44,18 @@ import { UiIcon } from './icon';
           @if (src()) {
             <img [src]="src()" [alt]="name()" />
           } @else {
-            <p class="muted">image — download to view</p>
+            <p class="muted">{{ 'pf.artifactViewer.imageDownloadToView' | t }}</p>
           }
         }
         @case ('binary') {
           <div class="bin">
             <ui-icon name="folder" />
             <p>{{ name() || 'binary artifact' }}</p>
-            <p class="muted">preview not rendered — use download</p>
+            <p class="muted">{{ 'pf.artifactViewer.previewNotRenderedUseDownload' | t }}</p>
             @if (downloadHref()) {
-              <a class="btn btn--mini" [href]="downloadHref()" [download]="name()">download</a>
+              <a class="btn btn--mini" [href]="downloadHref()" [download]="name()">{{
+                'pf.artifactViewer.download' | t
+              }}</a>
             }
           </div>
         }
@@ -61,7 +64,7 @@ import { UiIcon } from './icon';
         }
       }
       @if (truncated()) {
-        <p class="muted small">preview truncated</p>
+        <p class="muted small">{{ 'pf.artifactViewer.previewTruncated' | t }}</p>
       }
     </div>
   `,

@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,7 +30,7 @@ import { ToastService } from '../../shared/toast';
   selector: 'page-pf-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [RouterLink, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, TPipe],
   template: `
     <ui-page-header title="Product Forge Studio" [subtitle]="subtitle()">
       <a class="btn" routerLink="/pf/onboarding">
@@ -45,7 +46,7 @@ import { ToastService } from '../../shared/toast';
     <section class="card engine">
       <div class="fg-row fg-spread" data-wrap>
         <div class="fg-row">
-          <span class="engine__label">Engine</span>
+          <span class="engine__label">{{ 'pf.home.engine' | t }}</span>
           <code class="engine__url">{{ api.baseUrl() }}</code>
         </div>
         <div class="fg-row">
@@ -61,7 +62,7 @@ import { ToastService } from '../../shared/toast';
             <ui-state-badge state="UNVERIFIED" />
           }
           @if (!api.token()) {
-            <span class="fg-pill" data-tone="warning">no token</span>
+            <span class="fg-pill" data-tone="warning">{{ 'pf.home.noToken' | t }}</span>
           }
           <button class="btn btn--mini" (click)="loadAll()">
             <ui-icon name="refresh" [size]="13" />
@@ -73,9 +74,11 @@ import { ToastService } from '../../shared/toast';
         <p class="engine__warn">
           {{ he.body.message }}
           @if (he.body.code === 'PF-UNAUTHORIZED') {
-            — set the engine token in <a routerLink="/pf/settings">settings</a>.
+            — set the engine token in <a routerLink="/pf/settings">{{ 'pf.home.settings' | t }}</a
+            >.
           } @else {
-            — check the base URL in <a routerLink="/pf/settings">settings</a>.
+            — check the base URL in <a routerLink="/pf/settings">{{ 'pf.home.settings' | t }}</a
+            >.
           }
         </p>
       }
@@ -83,14 +86,14 @@ import { ToastService } from '../../shared/toast';
 
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="loadAll()">
-        <a class="btn" routerLink="/pf/settings">Open engine settings</a>
+        <a class="btn" routerLink="/pf/settings">{{ 'pf.home.openEngineSettings' | t }}</a>
       </ui-error>
     }
 
     <div class="grid2">
       <section class="card">
         <header class="card__head">
-          <h2>Workspaces</h2>
+          <h2>{{ 'pf.home.workspaces' | t }}</h2>
         </header>
         @if (loading()) {
           <div role="status" aria-label="loading"><ui-skeleton kind="row" [lines]="2" /></div>
@@ -107,7 +110,7 @@ import { ToastService } from '../../shared/toast';
           <ui-empty icon="folder" title="No workspaces yet" />
         }
         <form class="inline-form" (submit)="createWorkspace($event)">
-          <label class="sr-only" for="pf-ws-name">Workspace name</label>
+          <label class="sr-only" for="pf-ws-name">{{ 'pf.home.workspaceName' | t }}</label>
           <input
             id="pf-ws-name"
             class="input"
@@ -116,31 +119,33 @@ import { ToastService } from '../../shared/toast';
             placeholder="New workspace name"
             required
           />
-          <button class="btn" type="submit" [disabled]="busy() || !wsName().trim()">Create</button>
+          <button class="btn" type="submit" [disabled]="busy() || !wsName().trim()">
+            {{ 'pf.home.create' | t }}
+          </button>
         </form>
       </section>
 
       <section class="card">
         <header class="card__head">
-          <h2>New product</h2>
+          <h2>{{ 'pf.home.newProduct' | t }}</h2>
         </header>
         <form class="stack" (submit)="createProduct($event)">
           <label class="field">
-            <span>Workspace</span>
+            <span>{{ 'pf.home.workspace' | t }}</span>
             <select
               class="select"
               [value]="productWs()"
               (change)="productWs.set($any($event.target).value)"
               required
             >
-              <option value="" disabled>Select a workspace</option>
+              <option value="" disabled>{{ 'pf.home.selectAWorkspace' | t }}</option>
               @for (w of workspaces(); track w.id) {
                 <option [value]="w.id">{{ w.name }}</option>
               }
             </select>
           </label>
           <label class="field">
-            <span>Product name</span>
+            <span>{{ 'pf.home.productName' | t }}</span>
             <input
               class="input"
               [value]="productName()"
@@ -150,7 +155,10 @@ import { ToastService } from '../../shared/toast';
             />
           </label>
           <label class="field">
-            <span>Domain <small class="muted">(optional)</small></span>
+            <span
+              >{{ 'pf.home.domain' | t
+              }}<small class="muted">{{ 'pf.home.optional' | t }}</small></span
+            >
             <input
               class="input"
               [value]="productDomain()"
@@ -173,48 +181,48 @@ import { ToastService } from '../../shared/toast';
 
     <section>
       <header class="card__head section-head">
-        <h2>Agentic workspace</h2>
+        <h2>{{ 'pf.home.agenticWorkspace' | t }}</h2>
       </header>
       <nav class="navgrid" aria-label="Agentic workspace surfaces">
         <a class="card navcard" data-lift routerLink="/pf/chat">
-          <strong>Chat</strong>
-          <span class="muted small">Provider sessions with streaming, tools and approvals</span>
+          <strong>{{ 'pf.home.chat' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.providerSessionsWithStreamingTools' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/control-center">
-          <strong>Agent Control Center</strong>
-          <span class="muted small">Live sessions, approval queue, degraded-mode banner</span>
+          <strong>{{ 'pf.home.agentControlCenter' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.liveSessionsApprovalQueueDegraded' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/intelligence">
-          <strong>Product Intelligence</strong>
-          <span class="muted small">Session quality, decisions, FinOps</span>
+          <strong>{{ 'pf.home.productIntelligence' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.sessionQualityDecisionsFinOps' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/lens">
-          <strong>Forge Lens</strong>
-          <span class="muted small">Context health, workspace intel, provider routing</span>
+          <strong>{{ 'pf.home.forgeLens' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.contextHealthWorkspaceIntelProvider' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/compare">
-          <strong>Session Compare</strong>
-          <span class="muted small">Diff two sessions' event timelines</span>
+          <strong>{{ 'pf.home.sessionCompare' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.diffTwoSessionsEventTimelines' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/artifacts">
-          <strong>Artifact Studio</strong>
-          <span class="muted small">Session artifacts and workspace files</span>
+          <strong>{{ 'pf.home.artifactStudio' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.sessionArtifactsAndWorkspaceFiles' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/workflows">
-          <strong>Workflow Builder</strong>
-          <span class="muted small">Design-time agent pipelines</span>
+          <strong>{{ 'pf.home.workflowBuilder' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.designTimeAgentPipelines' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/templates">
-          <strong>Agent Templates</strong>
-          <span class="muted small">Curated starting points with risk gates</span>
+          <strong>{{ 'pf.home.agentTemplates' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.curatedStartingPointsWithRisk' | t }}</span>
         </a>
       </nav>
     </section>
 
     <section>
       <header class="card__head section-head">
-        <h2>Products</h2>
-        <a class="btn btn--mini" routerLink="/pf/products">Manage</a>
+        <h2>{{ 'pf.home.products' | t }}</h2>
+        <a class="btn btn--mini" routerLink="/pf/products">{{ 'pf.home.manage' | t }}</a>
       </header>
       @if (loading()) {
         <div role="status" aria-label="loading"><ui-skeleton kind="card" [lines]="3" /></div>
@@ -247,7 +255,7 @@ import { ToastService } from '../../shared/toast';
           title="No products yet"
           hint="Create a workspace and a product above, or run the onboarding wizard."
         >
-          <a class="btn" routerLink="/pf/onboarding">Start onboarding</a>
+          <a class="btn" routerLink="/pf/onboarding">{{ 'pf.home.startOnboarding' | t }}</a>
         </ui-empty>
       }
     </section>

@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +37,7 @@ const DIM_ORDER = [
   selector: 'pf-health-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, UiSkeleton],
+  imports: [EmptyState, ErrorState, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -51,7 +52,7 @@ const DIM_ORDER = [
           <span class="ring__l">/ 100</span>
         </div>
         <div class="hero__meta">
-          <h2>Product health</h2>
+          <h2>{{ 'pf.health.productHealth' | t }}</h2>
           <p class="muted">
             Weakest dimension: <strong>{{ h.weakest_dimension }}</strong> — deterministic scoring;
             expand any bar to see the evidence behind it.

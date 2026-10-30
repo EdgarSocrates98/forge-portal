@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -75,6 +76,7 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     PfApisTab,
     PfHealthTab,
     PfReportsTab,
+    TPipe,
   ],
   template: `
     <header class="head">
@@ -98,7 +100,7 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
         } @else if (loading()) {
           <ui-skeleton kind="text" [lines]="1" />
         } @else {
-          <h2>Product</h2>
+          <h2>{{ 'pf.productDetail.product' | t }}</h2>
         }
       </div>
     </header>

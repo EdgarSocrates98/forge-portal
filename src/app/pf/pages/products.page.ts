@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +28,7 @@ import { ToastService } from '../../shared/toast';
   selector: 'page-pf-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton],
+  imports: [RouterLink, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, TPipe],
   template: `
     <ui-page-header title="Products" subtitle="Product Forge engine catalog">
       <button class="btn" (click)="load()">
@@ -41,7 +42,7 @@ import { ToastService } from '../../shared/toast';
     }
 
     <section class="card">
-      <h2 class="h">New product</h2>
+      <h2 class="h">{{ 'pf.products.newProduct' | t }}</h2>
       <form class="inline" (submit)="create($event)">
         <select
           class="select"
@@ -50,7 +51,7 @@ import { ToastService } from '../../shared/toast';
           [attr.aria-label]="'Workspace'"
           required
         >
-          <option value="" disabled>Workspace…</option>
+          <option value="" disabled>{{ 'pf.products.workspace' | t }}</option>
           @for (w of workspaces(); track w.id) {
             <option [value]="w.id">{{ w.name }}</option>
           }

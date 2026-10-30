@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -24,7 +25,7 @@ import { UiSkeleton } from '../../shared/skeleton';
   selector: 'page-pf-intel-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState],
+  imports: [PageHeader, StateBadge, UiSkeleton, EmptyState, ErrorState, TPipe],
   template: `
     <ui-page-header
       title="Product Intelligence"
@@ -33,14 +34,14 @@ import { UiSkeleton } from '../../shared/skeleton';
 
     <section class="card">
       <label class="field">
-        <span>Session</span>
+        <span>{{ 'pf.intelActions.session' | t }}</span>
         <select
           class="input"
           [value]="sid()"
           (change)="pick($any($event.target).value)"
           aria-label="Session to analyze"
         >
-          <option value="">— choose —</option>
+          <option value="">{{ 'pf.intelActions.choose' | t }}</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id">{{ s.meta?.title || s.id }} ({{ s.provider }})</option>
           }
@@ -55,7 +56,7 @@ import { UiSkeleton } from '../../shared/skeleton';
     } @else {
       <div class="grid">
         <section class="card" aria-labelledby="ia-quality">
-          <h2 id="ia-quality">Session quality</h2>
+          <h2 id="ia-quality">{{ 'pf.intelActions.sessionQuality' | t }}</h2>
           @if (quality()) {
             <p class="overall">
               Overall: <strong class="mono">{{ quality()!.overall }}</strong>
@@ -63,9 +64,9 @@ import { UiSkeleton } from '../../shared/skeleton';
             <table class="tbl" aria-label="Quality axes">
               <thead>
                 <tr>
-                  <th scope="col">Axis</th>
-                  <th scope="col">Score</th>
-                  <th scope="col">Detail</th>
+                  <th scope="col">{{ 'pf.intelActions.axis' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.score' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.detail' | t }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,7 +85,7 @@ import { UiSkeleton } from '../../shared/skeleton';
         </section>
 
         <section class="card" aria-labelledby="ia-decisions">
-          <h2 id="ia-decisions">Decisions</h2>
+          <h2 id="ia-decisions">{{ 'pf.intelActions.decisions' | t }}</h2>
           @if (decisions().length) {
             <ul class="list">
               @for (d of decisions(); track $index) {
@@ -107,17 +108,17 @@ import { UiSkeleton } from '../../shared/skeleton';
       </div>
 
       <section class="card" aria-labelledby="ia-finops">
-        <h2 id="ia-finops">Workspace FinOps</h2>
+        <h2 id="ia-finops">{{ 'pf.intelActions.workspaceFinOps' | t }}</h2>
         @if (finops(); as f) {
           @if (f.by_scope.length) {
             <table class="tbl" aria-label="Usage by scope">
               <thead>
                 <tr>
-                  <th scope="col">Scope</th>
-                  <th scope="col">Key</th>
-                  <th scope="col">Tokens in</th>
-                  <th scope="col">Tokens out</th>
-                  <th scope="col">Basis</th>
+                  <th scope="col">{{ 'pf.intelActions.scope' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.key' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.tokensIn' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.tokensOut' | t }}</th>
+                  <th scope="col">{{ 'pf.intelActions.basis' | t }}</th>
                 </tr>
               </thead>
               <tbody>

@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { PfApi } from '../../pf-api.service';
@@ -27,7 +28,7 @@ const LANE_LABEL: Record<string, string> = {
   selector: 'pf-planning-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -37,7 +38,7 @@ const LANE_LABEL: Record<string, string> = {
       <div role="status" aria-label="loading planning"><ui-skeleton kind="card" [lines]="3" /></div>
     } @else {
       <section class="card">
-        <h2>Initiatives</h2>
+        <h2>{{ 'pf.planning.initiatives' | t }}</h2>
         <form class="iform" (submit)="createInitiative($event)">
           <input
             class="input"
@@ -63,10 +64,12 @@ const LANE_LABEL: Record<string, string> = {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Initiative</th>
-                <th scope="col">Status</th>
-                <th scope="col">Priority</th>
-                <th scope="col"><span class="sr-only">Actions</span></th>
+                <th scope="col">{{ 'pf.planning.initiative' | t }}</th>
+                <th scope="col">{{ 'pf.planning.status' | t }}</th>
+                <th scope="col">{{ 'pf.planning.priority' | t }}</th>
+                <th scope="col">
+                  <span class="sr-only">{{ 'pf.planning.actions' | t }}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -103,7 +106,9 @@ const LANE_LABEL: Record<string, string> = {
                   <tr>
                     <td colspan="4">
                       <form class="rice fg-enter" (submit)="prioritize(i, $event)">
-                        <span class="muted small rice__label">RICE factors</span>
+                        <span class="muted small rice__label">{{
+                          'pf.planning.riceFactors' | t
+                        }}</span>
                         @for (f of riceFields; track f.key) {
                           <label class="rice__f">
                             <span>{{ f.label }}</span>
@@ -115,7 +120,9 @@ const LANE_LABEL: Record<string, string> = {
                             />
                           </label>
                         }
-                        <button class="btn btn--primary btn--mini" type="submit">Score</button>
+                        <button class="btn btn--primary btn--mini" type="submit">
+                          {{ 'pf.planning.score' | t }}
+                        </button>
                         @if (scoreResults()[i.id]; as r) {
                           <span class="fg-pill" data-tone="info">score {{ r.score }}</span>
                           @for (m of methodsOf(r); track m.name) {
@@ -154,7 +161,7 @@ const LANE_LABEL: Record<string, string> = {
       </section>
 
       <section class="card">
-        <h2>Roadmap</h2>
+        <h2>{{ 'pf.planning.roadmap' | t }}</h2>
         @if (roadmap()?.lanes; as lanes) {
           <div class="lanes">
             @for (lane of laneOrder; track lane) {
@@ -183,14 +190,14 @@ const LANE_LABEL: Record<string, string> = {
               {{ roadmap()!.generated_at ?? '—' }}
             </p>
           }
-          <button class="btn btn--mini" (click)="load()">Regenerate</button>
+          <button class="btn btn--mini" (click)="load()">{{ 'pf.planning.regenerate' | t }}</button>
         } @else {
           <ui-empty icon="graph" title="No roadmap data" />
         }
       </section>
 
       <section class="card">
-        <h2>Decisions</h2>
+        <h2>{{ 'pf.planning.decisions' | t }}</h2>
         <form class="iform" (submit)="createDecision($event)">
           <input
             class="input"

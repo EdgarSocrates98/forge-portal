@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,7 +26,7 @@ import { UiSkeleton } from '../../../shared/skeleton';
   selector: 'pf-context-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -38,43 +39,43 @@ import { UiSkeleton } from '../../../shared/skeleton';
       <div class="stats stagger">
         <div class="stat">
           <span class="stat__value">{{ count(c.sources) }}</span>
-          <span class="stat__label">Knowledge sources</span>
+          <span class="stat__label">{{ 'pf.context.knowledgeSources' | t }}</span>
         </div>
         <div class="stat">
           <span class="stat__value">{{ count(c.entities) }}</span>
-          <span class="stat__label">Entities</span>
+          <span class="stat__label">{{ 'pf.context.entities' | t }}</span>
         </div>
         <div class="stat">
           <span class="stat__value">{{ count(c.agents) }}</span>
-          <span class="stat__label">Agents</span>
+          <span class="stat__label">{{ 'pf.context.agents' | t }}</span>
         </div>
         <div class="stat">
           <span class="stat__value">{{ count(c.data_sources) }}</span>
-          <span class="stat__label">Data sources</span>
+          <span class="stat__label">{{ 'pf.context.dataSources' | t }}</span>
         </div>
       </div>
 
       <section class="card">
-        <h2>Product</h2>
+        <h2>{{ 'pf.context.product' | t }}</h2>
         <dl class="kv">
           <div>
-            <dt>Name</dt>
+            <dt>{{ 'pf.context.name' | t }}</dt>
             <dd>{{ c.product.name }}</dd>
           </div>
           <div>
-            <dt>Id</dt>
+            <dt>{{ 'pf.context.id' | t }}</dt>
             <dd>
               <code>{{ c.product.id }}</code>
             </dd>
           </div>
           <div>
-            <dt>Workspace</dt>
+            <dt>{{ 'pf.context.workspace' | t }}</dt>
             <dd>
               <code>{{ c.product.workspace_id }}</code>
             </dd>
           </div>
           <div>
-            <dt>Status</dt>
+            <dt>{{ 'pf.context.status' | t }}</dt>
             <dd>
               <ui-state-badge
                 [state]="c.product.status === 'active' ? 'ACTIVE' : 'muted'"
@@ -83,16 +84,16 @@ import { UiSkeleton } from '../../../shared/skeleton';
             </dd>
           </div>
           <div>
-            <dt>Domain</dt>
+            <dt>{{ 'pf.context.domain' | t }}</dt>
             <dd>{{ c.product.domain || '—' }}</dd>
           </div>
           <div>
-            <dt>Description</dt>
+            <dt>{{ 'pf.context.description' | t }}</dt>
             <dd>{{ c.product.description || '—' }}</dd>
           </div>
           @if (c.product.tags?.length) {
             <div>
-              <dt>Tags</dt>
+              <dt>{{ 'pf.context.tags' | t }}</dt>
               <dd class="tagrow">
                 @for (t of c.product.tags; track t) {
                   <span class="chip">{{ t }}</span>
@@ -101,7 +102,7 @@ import { UiSkeleton } from '../../../shared/skeleton';
             </div>
           }
           <div>
-            <dt>Package</dt>
+            <dt>{{ 'pf.context.package' | t }}</dt>
             <dd>
               <code>{{ c.schema ?? 'productforge/ProductContextPackage/v1' }}</code>
               @if (c.generated_at) {
@@ -113,7 +114,7 @@ import { UiSkeleton } from '../../../shared/skeleton';
       </section>
 
       <section class="card">
-        <h2>Entity inventory</h2>
+        <h2>{{ 'pf.context.entityInventory' | t }}</h2>
         @if (entityKinds().length) {
           <div class="kindrow">
             @for (k of entityKinds(); track k.kind) {
@@ -123,10 +124,10 @@ import { UiSkeleton } from '../../../shared/skeleton';
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Entity</th>
-                <th scope="col">Kind</th>
-                <th scope="col">Confidence</th>
-                <th scope="col">Provisional</th>
+                <th scope="col">{{ 'pf.context.entity' | t }}</th>
+                <th scope="col">{{ 'pf.context.kind' | t }}</th>
+                <th scope="col">{{ 'pf.context.confidence' | t }}</th>
+                <th scope="col">{{ 'pf.context.provisional' | t }}</th>
               </tr>
             </thead>
             <tbody>

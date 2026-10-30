@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
@@ -73,7 +74,7 @@ const TEMPLATES: AgentTemplate[] = [
   selector: 'page-pf-templates',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader, StateBadge],
+  imports: [PageHeader, StateBadge, TPipe],
   template: `
     <ui-page-header
       title="Agent Templates"
@@ -89,18 +90,22 @@ const TEMPLATES: AgentTemplate[] = [
           </header>
           <p class="goal">{{ t.goal }}</p>
           <dl class="kv">
-            <dt>Persona</dt>
+            <dt>{{ 'pf.templates.persona' | t }}</dt>
             <dd class="mono">{{ t.persona }}</dd>
-            <dt>Tools</dt>
+            <dt>{{ 'pf.templates.tools' | t }}</dt>
             <dd class="mono">{{ t.tools.join(', ') }}</dd>
-            <dt>Eval gate</dt>
+            <dt>{{ 'pf.templates.evalGate' | t }}</dt>
             <dd class="mono">≥ {{ t.evalThreshold.toFixed(2) }}</dd>
-            <dt>Capabilities</dt>
+            <dt>{{ 'pf.templates.capabilities' | t }}</dt>
             <dd>{{ t.capabilities.join(' · ') }}</dd>
           </dl>
-          <p class="boundary"><strong>Boundary:</strong> {{ t.boundary }}</p>
+          <p class="boundary">
+            <strong>{{ 'pf.templates.boundary' | t }}</strong> {{ t.boundary }}
+          </p>
           <div class="actions">
-            <button class="btn btn--mini" (click)="copy(t)">Copy spec</button>
+            <button class="btn btn--mini" (click)="copy(t)">
+              {{ 'pf.templates.copySpec' | t }}
+            </button>
           </div>
         </article>
       }

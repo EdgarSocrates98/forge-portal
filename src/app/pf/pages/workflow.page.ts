@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { PageHeader } from '../../shared/page-header';
 import { ToastService } from '../../shared/toast';
@@ -60,7 +61,7 @@ let nextId = 1;
   selector: 'page-pf-workflow',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader],
+  imports: [PageHeader, TPipe],
   template: `
     <ui-page-header
       title="Workflow Builder"
@@ -68,20 +69,20 @@ let nextId = 1;
     />
 
     <section class="card">
-      <h2>Start from a template</h2>
+      <h2>{{ 'pf.workflow.startFromATemplate' | t }}</h2>
       <div class="tpls" role="list">
         @for (t of templates; track t.name) {
           <button class="btn" role="listitem" (click)="apply(t.name)">
             {{ t.name }}
           </button>
         }
-        <button class="btn btn--mini" (click)="clear()">Blank</button>
+        <button class="btn btn--mini" (click)="clear()">{{ 'pf.workflow.blank' | t }}</button>
       </div>
     </section>
 
     <div class="grid">
       <section class="card" aria-labelledby="wf-canvas">
-        <h2 id="wf-canvas">Canvas</h2>
+        <h2 id="wf-canvas">{{ 'pf.workflow.canvas' | t }}</h2>
         <ol class="canvas" aria-label="Workflow nodes">
           @for (n of nodes(); track n.id; let i = $index) {
             <li
@@ -137,14 +138,14 @@ let nextId = 1;
               <option [value]="k">{{ k }}</option>
             }
           </select>
-          <button class="btn" type="submit">Add stage</button>
+          <button class="btn" type="submit">{{ 'pf.workflow.addStage' | t }}</button>
         </form>
       </section>
 
       <section class="card" aria-labelledby="wf-json">
-        <h2 id="wf-json">Workflow document</h2>
+        <h2 id="wf-json">{{ 'pf.workflow.workflowDocument' | t }}</h2>
         <pre class="mono doc" aria-label="Workflow JSON">{{ doc() }}</pre>
-        <button class="btn btn--mini" (click)="copy()">Copy JSON</button>
+        <button class="btn btn--mini" (click)="copy()">{{ 'pf.workflow.copyJSON' | t }}</button>
       </section>
     </div>
   `,

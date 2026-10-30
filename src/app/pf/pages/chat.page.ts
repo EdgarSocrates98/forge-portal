@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -53,7 +54,16 @@ const TEMPLATES = [
   selector: 'pf-chat-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ArtifactViewer, EmptyState, ErrorState, MdLitePipe, PageHeader, StateBadge, UiSkeleton],
+  imports: [
+    ArtifactViewer,
+    EmptyState,
+    ErrorState,
+    MdLitePipe,
+    PageHeader,
+    StateBadge,
+    UiSkeleton,
+    TPipe,
+  ],
   template: `
     <div class="studio" [attr.data-mode]="mode()">
       <ui-page-header
@@ -77,7 +87,7 @@ const TEMPLATES = [
 
       @if (!paired()) {
         <section class="pair card">
-          <h2>Pair with your local bridge</h2>
+          <h2>{{ 'pf.chat.pairWithYourLocalBridge' | t }}</h2>
           <p class="muted">
             Run <code>forge-bridge serve</code>, then paste the pairing token from
             <code>~/.forge-bridge/pair.token</code>. Localhost only — never a public URL.
@@ -97,7 +107,7 @@ const TEMPLATES = [
               placeholder="http://127.0.0.1:8471"
               aria-label="Bridge URL"
             />
-            <button class="btn btn--primary" type="submit">Pair</button>
+            <button class="btn btn--primary" type="submit">{{ 'pf.chat.pair' | t }}</button>
           </form>
           @if (pairError(); as pe) {
             <p class="err" role="alert">{{ pe }}</p>
@@ -107,7 +117,7 @@ const TEMPLATES = [
         <div class="layout">
           <aside class="side card" aria-label="Sessions">
             <div class="side__head">
-              <h3>Sessions</h3>
+              <h3>{{ 'pf.chat.sessions' | t }}</h3>
               <button class="btn btn--mini" (click)="reloadSessions()">↻</button>
             </div>
             <input
@@ -138,7 +148,7 @@ const TEMPLATES = [
               }
             </div>
             <details class="new" [open]="!sessions().length">
-              <summary>New session</summary>
+              <summary>{{ 'pf.chat.newSession' | t }}</summary>
               <label class="lbl"
                 >Provider
                 <select
@@ -160,7 +170,7 @@ const TEMPLATES = [
                   [value]="productId()"
                   (change)="productId.set($any($event.target).value)"
                 >
-                  <option value="">— none —</option>
+                  <option value="">{{ 'pf.chat.none' | t }}</option>
                   @for (p of products(); track p.id) {
                     <option [value]="p.id">{{ p.name }}</option>
                   }
@@ -180,14 +190,18 @@ const TEMPLATES = [
                 <span class="muted small">{{ s.provider }}</span>
                 <span class="spacer"></span>
                 @if (s.resumable && s.provider_session_ref) {
-                  <button class="btn btn--mini" (click)="resumeCopy(s)">ref</button>
+                  <button class="btn btn--mini" (click)="resumeCopy(s)">
+                    {{ 'pf.chat.ref' | t }}
+                  </button>
                 }
                 <button class="btn btn--mini" (click)="toggleFav()">
                   {{ s.meta?.favorite ? '★' : '☆' }}
                 </button>
-                <button class="btn btn--mini" (click)="rename()">rename</button>
-                <button class="btn btn--mini" (click)="cancel()">cancel</button>
-                <button class="btn btn--mini danger" (click)="archive()">archive</button>
+                <button class="btn btn--mini" (click)="rename()">{{ 'pf.chat.rename' | t }}</button>
+                <button class="btn btn--mini" (click)="cancel()">{{ 'pf.chat.cancel' | t }}</button>
+                <button class="btn btn--mini danger" (click)="archive()">
+                  {{ 'pf.chat.archive' | t }}
+                </button>
               </div>
             }
             @if (loading()) {
@@ -198,23 +212,25 @@ const TEMPLATES = [
                 @switch (it.kind) {
                   @case ('approval') {
                     <div class="msg approval">
-                      <span class="msg__k">approval requested</span>
+                      <span class="msg__k">{{ 'pf.chat.approvalRequested' | t }}</span>
                       <p>{{ it.text }}</p>
                       @if (!it.resolved) {
                         <div class="acts">
-                          <button class="btn btn--mini" (click)="approve(it, true)">Approve</button>
+                          <button class="btn btn--mini" (click)="approve(it, true)">
+                            {{ 'pf.chat.approve' | t }}
+                          </button>
                           <button class="btn btn--mini danger" (click)="approve(it, false)">
                             Deny
                           </button>
                         </div>
                       } @else {
-                        <span class="muted small">resolved</span>
+                        <span class="muted small">{{ 'pf.chat.resolved' | t }}</span>
                       }
                     </div>
                   }
                   @case ('plan') {
                     <div class="msg plan">
-                      <span class="msg__k">plan update</span>
+                      <span class="msg__k">{{ 'pf.chat.planUpdate' | t }}</span>
                       <div [innerHTML]="it.text | mdLite"></div>
                     </div>
                   }
@@ -232,7 +248,9 @@ const TEMPLATES = [
                           <span class="muted small">{{ it.meta }}</span>
                         }
                         @if (it.kind === 'assistant') {
-                          <button class="copy" (click)="copy(it.text)">copy</button>
+                          <button class="copy" (click)="copy(it.text)">
+                            {{ 'pf.chat.copy' | t }}
+                          </button>
                           @if (session()?.product_id) {
                             <button class="copy" (click)="saveToKnowledge(it.text)">
                               +knowledge
@@ -279,29 +297,31 @@ const TEMPLATES = [
                   {{ busy() ? 'Running…' : 'Send' }}
                 </button>
                 @if (lastError()) {
-                  <button class="btn btn--mini" type="button" (click)="retry()">retry</button>
+                  <button class="btn btn--mini" type="button" (click)="retry()">
+                    {{ 'pf.chat.retry' | t }}
+                  </button>
                 }
               </div>
             </form>
           </section>
 
           <aside class="ctx card" aria-label="Context">
-            <h3>Context</h3>
+            <h3>{{ 'pf.chat.context' | t }}</h3>
             @if (usage(); as u) {
               <div class="ctx__blk">
-                <h4>Usage</h4>
+                <h4>{{ 'pf.chat.usage' | t }}</h4>
                 <p class="mono small">in {{ u.in }} · out {{ u.out }}</p>
               </div>
             }
             @if (plan(); as pl) {
               <div class="ctx__blk">
-                <h4>Plan</h4>
+                <h4>{{ 'pf.chat.plan' | t }}</h4>
                 <div class="small" [innerHTML]="pl | mdLite"></div>
               </div>
             }
             @if (artifacts().length) {
               <div class="ctx__blk">
-                <h4>Artifacts</h4>
+                <h4>{{ 'pf.chat.artifacts' | t }}</h4>
                 @for (a of artifacts(); track a) {
                   <button class="flink mono small" (click)="openFile(a)">{{ a }}</button>
                 }
@@ -317,12 +337,14 @@ const TEMPLATES = [
                 </button>
               }
               @if (!files().length) {
-                <button class="btn btn--mini" (click)="loadFiles()">browse workspace</button>
+                <button class="btn btn--mini" (click)="loadFiles()">
+                  {{ 'pf.chat.browseWorkspace' | t }}
+                </button>
               }
             </div>
             @if (ctxEntities().length) {
               <div class="ctx__blk">
-                <h4>Insert product context</h4>
+                <h4>{{ 'pf.chat.insertProductContext' | t }}</h4>
                 @for (e of ctxEntities(); track e) {
                   <button class="flink small" (click)="insertRef(e)">{{ e }}</button>
                 }
@@ -330,7 +352,7 @@ const TEMPLATES = [
             }
             @if (session()?.product_id; as pid) {
               <div class="ctx__blk">
-                <h4>Product</h4>
+                <h4>{{ 'pf.chat.product' | t }}</h4>
                 <p class="small mono">{{ pid }}</p>
               </div>
             }
@@ -356,7 +378,9 @@ const TEMPLATES = [
               <strong class="mono">{{ pv.path }}</strong>
               <span class="muted small">{{ pv.kind }} · {{ pv.size }}B</span>
               <span class="spacer"></span>
-              <button class="btn btn--mini" (click)="preview.set(null)">close</button>
+              <button class="btn btn--mini" (click)="preview.set(null)">
+                {{ 'pf.chat.close' | t }}
+              </button>
             </div>
             <ui-artifact
               [kind]="pv.kind === 'text' ? extKind(pv.path) : pv.kind"

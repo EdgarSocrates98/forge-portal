@@ -1,3 +1,4 @@
+import { TPipe } from '../../../core/i18n/i18n.pipe';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,7 +30,7 @@ import { ToastService } from '../../../shared/toast';
   selector: 'pf-agents-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton],
+  imports: [EmptyState, ErrorState, StateBadge, UiIcon, UiSkeleton, TPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -39,7 +40,7 @@ import { ToastService } from '../../../shared/toast';
       <div role="status" aria-label="loading agents"><ui-skeleton kind="card" [lines]="3" /></div>
     } @else {
       <section class="card">
-        <h2>New agent from template</h2>
+        <h2>{{ 'pf.agents.newAgentFromTemplate' | t }}</h2>
         @if (templates().length) {
           <div class="tpls">
             @for (t of templates(); track t.name) {
@@ -132,13 +133,13 @@ import { ToastService } from '../../../shared/toast';
                 <div class="agent__body fg-enter">
                   <dl class="kv">
                     <div>
-                      <dt>Template</dt>
+                      <dt>{{ 'pf.agents.template' | t }}</dt>
                       <dd>
                         <code>{{ a.template ?? 'custom' }}</code>
                       </dd>
                     </div>
                     <div>
-                      <dt>Tools allowed</dt>
+                      <dt>{{ 'pf.agents.toolsAllowed' | t }}</dt>
                       <dd>
                         @if (a.tools_allowed?.length) {
                           {{ a.tools_allowed!.join(', ') }}
@@ -148,12 +149,12 @@ import { ToastService } from '../../../shared/toast';
                       </dd>
                     </div>
                     <div>
-                      <dt>Knowledge scope</dt>
+                      <dt>{{ 'pf.agents.knowledgeScope' | t }}</dt>
                       <dd>{{ (a.knowledge_scope ?? []).join(', ') || '—' }}</dd>
                     </div>
                     @if (a.eval_summary) {
                       <div>
-                        <dt>Last eval</dt>
+                        <dt>{{ 'pf.agents.lastEval' | t }}</dt>
                         <dd>
                           {{ a.eval_summary!.passed ?? '—' }}/{{
                             a.eval_summary!.total ?? '—'

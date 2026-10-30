@@ -1,3 +1,4 @@
+import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -23,7 +24,7 @@ import { UiSkeleton } from '../../shared/skeleton';
   selector: 'page-pf-artifact-studio',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeader, UiSkeleton, EmptyState, ErrorState, ArtifactViewer],
+  imports: [PageHeader, UiSkeleton, EmptyState, ErrorState, ArtifactViewer, TPipe],
   template: `
     <ui-page-header
       title="Artifact Studio"
@@ -32,14 +33,14 @@ import { UiSkeleton } from '../../shared/skeleton';
 
     <div class="grid">
       <section class="card" aria-labelledby="as-artifacts">
-        <h2 id="as-artifacts">Session artifacts</h2>
+        <h2 id="as-artifacts">{{ 'pf.artifactStudio.sessionArtifacts' | t }}</h2>
         <select
           class="input"
           [value]="sid()"
           (change)="pick($any($event.target).value)"
           aria-label="Session for artifacts"
         >
-          <option value="">— choose session —</option>
+          <option value="">{{ 'pf.artifactStudio.chooseSession' | t }}</option>
           @for (s of sessions(); track s.id) {
             <option [value]="s.id">{{ s.meta?.title || s.id }}</option>
           }
@@ -60,7 +61,7 @@ import { UiSkeleton } from '../../shared/skeleton';
       </section>
 
       <section class="card" aria-labelledby="as-files">
-        <h2 id="as-files">Workspace files</h2>
+        <h2 id="as-files">{{ 'pf.artifactStudio.workspaceFiles' | t }}</h2>
         <div class="crumbs mono" aria-label="Breadcrumb">
           <button
             class="btn btn--mini"
