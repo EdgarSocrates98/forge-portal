@@ -16,6 +16,7 @@ import { PfDashboardsTab } from './tabs/dashboards.tab';
 import { PfPlanningTab } from './tabs/planning.tab';
 import { PfApisTab } from './tabs/apis.tab';
 import { PfReportsTab } from './tabs/reports.tab';
+import { PfHealthTab } from './tabs/health.tab';
 
 type PfTabId =
   | 'context'
@@ -25,7 +26,8 @@ type PfTabId =
   | 'dashboards'
   | 'planning'
   | 'apis'
-  | 'reports';
+  | 'reports'
+  | 'health';
 
 const TABS: { id: PfTabId; label: string; icon: string }[] = [
   { id: 'context', label: 'Context', icon: 'gem' },
@@ -36,6 +38,7 @@ const TABS: { id: PfTabId; label: string; icon: string }[] = [
   { id: 'planning', label: 'Planning', icon: 'tasks' },
   { id: 'apis', label: 'APIs', icon: 'mcp' },
   { id: 'reports', label: 'Reports', icon: 'diff' },
+  { id: 'health', label: 'Health', icon: 'shield-check' },
 ];
 
 const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
@@ -62,6 +65,7 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     PfDashboardsTab,
     PfPlanningTab,
     PfApisTab,
+    PfHealthTab,
     PfReportsTab,
   ],
   template: `
@@ -133,6 +137,9 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
         }
         @case ('reports') {
           <pf-reports-tab [pid]="pid()" />
+        }
+        @case ('health') {
+          <pf-health-tab [pid]="pid()" />
         }
       }
     }

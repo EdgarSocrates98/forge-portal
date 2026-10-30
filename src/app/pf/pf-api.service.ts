@@ -21,6 +21,7 @@ import {
   PfDelegateCallResult,
   PfDocument,
   PfEvalReport,
+  PfExperiment,
   PfGraph,
   PfHealth,
   PfImpact,
@@ -29,9 +30,13 @@ import {
   PfKnowledgeHealth,
   PfKnowledgeSource,
   PfList,
+  PfMeeting,
+  PfMetric,
+  PfNlQueryResult,
   PfPrd,
   PfPrioritizeResult,
   PfProduct,
+  PfProductHealth,
   PfQueryRun,
   PfQueryValidation,
   PfReport,
@@ -358,6 +363,64 @@ export class PfApi {
   ) {
     return this.post<PfDecision>(`/products/${encodeURIComponent(pid)}/decisions`, input);
   }
+  // -- product intelligence (Cycle 17) -----------------------------------------
+
+  productHealth(pid: string) {
+    return this.get<PfProductHealth>(`/products/${encodeURIComponent(pid)}/health`);
+  }
+  metrics(pid: string) {
+    return this.get<PfList<PfMetric>>(`/products/${encodeURIComponent(pid)}/metrics`);
+  }
+  createMetric(
+    pid: string,
+    input: { name: string; formula: string; source_id?: string; dimensions?: string[] },
+  ) {
+    return this.post<PfMetric>(`/products/${encodeURIComponent(pid)}/metrics`, input);
+  }
+  nlQuery(pid: string, input: { question: string; source_id?: string }) {
+    return this.post<PfNlQueryResult>(
+      `/products/${encodeURIComponent(pid)}/queries/nl`,
+      input,
+    );
+  }
+  experiments(pid: string) {
+    return this.get<PfList<PfExperiment>>(`/products/${encodeURIComponent(pid)}/experiments`);
+  }
+  createExperiment(
+    pid: string,
+    input: { title: string; hypothesis?: string; design?: string },
+  ) {
+    return this.post<PfExperiment>(`/products/${encodeURIComponent(pid)}/experiments`, input);
+  }
+  concludeExperiment(
+    pid: string,
+    eid: string,
+    input: { results: Record<string, number>; record_decision?: boolean },
+  ) {
+    return this.post<{ outcome: string; status: string; decision_refs: string[] }>(
+      `/products/${encodeURIComponent(pid)}/experiments/${encodeURIComponent(eid)}/conclude`,
+      input,
+    );
+  }
+  meetings(pid: string) {
+    return this.get<PfList<PfMeeting>>(`/products/${encodeURIComponent(pid)}/meetings`);
+  }
+  createMeeting(pid: string, input: { title: string; transcript: string }) {
+    return this.post<PfMeeting>(`/products/${encodeURIComponent(pid)}/meetings`, input);
+  }
+  extractMeeting(pid: string, mid: string) {
+    return this.post<{ draft_items: PfMeeting['draft_items']; status: string }>(
+      `/products/${encodeURIComponent(pid)}/meetings/${encodeURIComponent(mid)}/extract`,
+      {},
+    );
+  }
+  publishMeeting(pid: string, mid: string) {
+    return this.post<{ published_refs: string[]; status: string }>(
+      `/products/${encodeURIComponent(pid)}/meetings/${encodeURIComponent(mid)}/publish`,
+      { reviewed: true },
+    );
+  }
+
   audit(productId?: string, limit = 100) {
     const q = new URLSearchParams();
     if (productId) q.set('product_id', productId);

@@ -4,6 +4,8 @@ import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
 import {
   PfDataSource,
+  PfMetric,
+  PfNlQueryResult,
   PfQueryRun,
   PfQueryValidation,
   PfSourceSchema,
@@ -307,6 +309,118 @@ const CONNECTORS = [
           </div>
         }
       </section>
+
+      <section class="card">
+        <h2>Ask in plain language <span class="muted small">— semantic metrics first</span></h2>
+        <form class="fg-row nlform" (submit)="askNl($event)">
+          <input
+            class="input"
+            [value]="nlQuestion()"
+            (input)="nlQuestion.set($any($event.target).value)"
+            placeholder="e.g. total revenue by region"
+            aria-label="Natural language question"
+          />
+          <select
+            class="select"
+            [value]="nlSource()"
+            (change)="nlSource.set($any($event.target).value)"
+            aria-label="Data source for NL query"
+          >
+            @for (s of sources(); track s.id) {
+              <option [value]="s.id">{{ s.name }}</option>
+            }
+          </select>
+          <button class="btn btn--primary" type="submit" [disabled]="nlBusy() || !nlQuestion().trim()">
+            {{ nlBusy() ? 'Resolving…' : 'Ask' }}
+          </button>
+        </form>
+        @if (nlResult(); as nl) {
+          <div class="panel fg-enter" [attr.data-ok]="nl.ok || null" aria-live="polite">
+            <div class="fg-row" data-wrap>
+              <ui-state-badge
+                [state]="nl.ok ? 'ok' : 'warn'"
+                [labelOverride]="nl.ok ? nl.via ?? 'resolved' : nl.reason ?? 'needs clarification'"
+              />
+              @if (nl.metric) {
+                <span class="muted small">catalog metric: {{ nl.metric.name }}</span>
+              }
+            </div>
+            @if (nl.sql) {
+              <pre class="sqlout">{{ nl.sql }}</pre>
+              <button class="btn btn--mini" (click)="loadIntoWorkbench(nl.sql!)">
+                Load into workbench
+              </button>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="card">
+        <h2>Metrics catalog <span class="muted small">— KPIs as data, not guesses</span></h2>
+        <form class="fg-row metricform" (submit)="createMetric($event)">
+          <input
+            class="input"
+            [value]="mName()"
+            (input)="mName.set($any($event.target).value)"
+            placeholder="Metric name"
+            required
+            aria-label="Metric name"
+          />
+          <input
+            class="input"
+            [value]="mFormula()"
+            (input)="mFormula.set($any($event.target).value)"
+            placeholder="Formula — e.g. SUM(revenue)"
+            required
+            aria-label="Metric formula"
+          />
+          <input
+            class="input"
+            [value]="mDims()"
+            (input)="mDims.set($any($event.target).value)"
+            placeholder="Dimensions — comma-separated (optional)"
+            aria-label="Metric dimensions"
+          />
+          <select
+            class="select"
+            [value]="mSource()"
+            (change)="mSource.set($any($event.target).value)"
+            aria-label="Metric data source"
+          >
+            <option value="">No source binding</option>
+            @for (s of sources(); track s.id) {
+              <option [value]="s.id">{{ s.name }}</option>
+            }
+          </select>
+          <button class="btn" type="submit" [disabled]="!mName().trim() || !mFormula().trim()">
+            Add metric
+          </button>
+        </form>
+        @if (metrics().length) {
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Formula</th>
+                <th scope="col">Dimensions</th>
+                <th scope="col">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of metrics(); track m.id) {
+                <tr>
+                  <td><strong>{{ m.name }}</strong></td>
+                  <td><code>{{ m.formula }}</code></td>
+                  <td class="muted small">{{ m.dimensions?.join(', ') || '—' }}</td>
+                  <td class="muted small">{{ sourceName(m.source_id) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <ui-empty icon="inbox" title="No catalog metrics — NL questions fall back to heuristics" />
+        }
+      </section>
     }
   `,
   styles: `
@@ -420,6 +534,30 @@ const CONNECTORS = [
     .small {
       font-size: var(--font-xs);
     }
+    .nlform,
+    .metricform {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-3);
+    }
+    .nlform .input {
+      flex: 1 1 16rem;
+    }
+    .metricform .input {
+      flex: 1 1 12rem;
+    }
+    .sqlout {
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: var(--font-sm);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
   `,
 })
 export class PfAnalyticsTab implements OnInit {
@@ -450,6 +588,16 @@ export class PfAnalyticsTab implements OnInit {
   readonly validation = signal<PfQueryValidation | null>(null);
   readonly run = signal<PfQueryRun | null>(null);
 
+  readonly metrics = signal<PfMetric[]>([]);
+  readonly nlQuestion = signal('');
+  readonly nlSource = signal('');
+  readonly nlBusy = signal(false);
+  readonly nlResult = signal<PfNlQueryResult | null>(null);
+  readonly mName = signal('');
+  readonly mFormula = signal('');
+  readonly mDims = signal('');
+  readonly mSource = signal('');
+
   ngOnInit(): void {
     void this.load();
   }
@@ -461,6 +609,10 @@ export class PfAnalyticsTab implements OnInit {
       const ds = await firstValueFrom(this.api.dataSources(this.pid()));
       this.sources.set(ds.items ?? []);
       if (!this.execSource() && ds.items?.length) this.execSource.set(ds.items[0].id);
+      if (!this.nlSource() && ds.items?.length) this.nlSource.set(ds.items[0].id);
+      this.metrics.set(
+        (await firstValueFrom(this.api.metrics(this.pid()))).items ?? [],
+      );
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -559,6 +711,62 @@ export class PfAnalyticsTab implements OnInit {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.schemaLoading.set(false);
+    }
+  }
+
+  sourceName(id: string | null | undefined): string {
+    if (!id) return '—';
+    return this.sources().find((s) => s.id === id)?.name ?? id;
+  }
+
+  loadIntoWorkbench(sql: string): void {
+    this.sql.set(sql);
+  }
+
+  async askNl(ev: Event): Promise<void> {
+    ev.preventDefault();
+    const q = this.nlQuestion().trim();
+    if (!q || this.nlBusy()) return;
+    this.nlBusy.set(true);
+    this.nlResult.set(null);
+    try {
+      this.nlResult.set(
+        await firstValueFrom(
+          this.api.nlQuery(this.pid(), { question: q, source_id: this.nlSource() || undefined }),
+        ),
+      );
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.nlBusy.set(false);
+    }
+  }
+
+  async createMetric(ev: Event): Promise<void> {
+    ev.preventDefault();
+    const name = this.mName().trim();
+    const formula = this.mFormula().trim();
+    if (!name || !formula) return;
+    try {
+      const dimensions = this.mDims()
+        .split(',')
+        .map((d) => d.trim())
+        .filter(Boolean);
+      await firstValueFrom(
+        this.api.createMetric(this.pid(), {
+          name,
+          formula,
+          source_id: this.mSource() || undefined,
+          dimensions: dimensions.length ? dimensions : undefined,
+        }),
+      );
+      this.mName.set('');
+      this.mFormula.set('');
+      this.mDims.set('');
+      this.toast.show(`Metric "${name}" added to catalog`, 'success');
+      await this.load();
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
     }
   }
 

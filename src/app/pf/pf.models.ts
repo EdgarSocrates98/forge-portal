@@ -374,6 +374,60 @@ export interface PfDecision {
   created_at?: string;
 }
 
+export interface PfHealthDimension {
+  score: number;
+  evidence: { kind: string; detail: string; weight?: number }[];
+}
+
+export interface PfProductHealth {
+  schema: string;
+  product_id: string;
+  overall: number;
+  weakest_dimension: string;
+  dimensions: Record<string, PfHealthDimension>;
+  note?: string;
+}
+
+export interface PfMetric {
+  id: string;
+  name: string;
+  formula: string;
+  source_id?: string | null;
+  dimensions?: string[];
+  granularity?: string;
+  owner?: string;
+}
+
+export interface PfNlQueryResult {
+  ok: boolean;
+  sql?: string;
+  via?: string;
+  reason?: string;
+  metric?: { id: string; name: string };
+  tables_available?: string[];
+}
+
+export interface PfExperiment {
+  id: string;
+  title: string;
+  hypothesis?: string;
+  status?: string;
+  outcome?: string;
+  success_metrics?: string[];
+  guardrails?: Record<string, number>;
+  baseline?: Record<string, number>;
+  results?: Record<string, number>;
+}
+
+export interface PfMeeting {
+  id: string;
+  title: string;
+  status?: string;
+  transcript?: string;
+  draft_items?: { kind: string; text: string; line: number }[];
+  published_refs?: string[];
+}
+
 export interface PfApiSpec {
   id: string;
   product_id?: string;
