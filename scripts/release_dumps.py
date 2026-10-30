@@ -43,12 +43,11 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import tomllib
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from email.parser import Parser
 from pathlib import Path
-
-import tomllib
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKSPACE = ROOT.parent  # the forjas/ parent holding sibling checkouts
@@ -168,7 +167,7 @@ UNRESOLVED = "unresolved"
 
 
 def utcnow() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+    return datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def sha256_file(path: Path) -> str:

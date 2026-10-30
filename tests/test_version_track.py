@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "portal_core"))
 
-import forge_portal  # noqa: E402
+import forge_portal
 
 
 def test_package_json_matches_portal_version():
@@ -18,6 +18,6 @@ def test_package_json_matches_portal_version():
 
 def test_vendor_uses_canonical_version():
     sys.path.insert(0, str(ROOT / "scripts"))
-    import vendor  # noqa: E402
+    import vendor
 
     assert vendor.PORTAL_VERSION == forge_portal.PORTAL_VERSION

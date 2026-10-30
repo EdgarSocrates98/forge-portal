@@ -32,7 +32,7 @@ ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
 # (vendored verbatim para dentro dos pacotes; package.json é validado
 # contra ela por teste para não abrir trilha dupla de novo).
 sys.path.insert(0, str(ROOT / "portal_core"))
-from forge_portal import PORTAL_VERSION  # noqa: E402
+from forge_portal import PORTAL_VERSION
 
 # sibling repo → package dir that receives _forge_portal.py
 FORGES: dict[str, str | dict[str, str]] = {

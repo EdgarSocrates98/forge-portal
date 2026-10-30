@@ -35,7 +35,7 @@ import json
 import sys
 import time
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -102,7 +102,7 @@ _STATUSES = ("ok", "completed", "started", "failed", "skipped")
 
 
 def _iso(dt: datetime) -> str:
-    return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    return dt.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
 def synth_events(n: int) -> list[dict]:
@@ -110,7 +110,7 @@ def synth_events(n: int) -> list[dict]:
     correlation group, every 3rd placed event carrying a real
     duration/span pair, every 13th timestamp-less (unplaced), every
     17th uncorrelated — the shapes the renderer must handle."""
-    base = datetime(2026, 10, 1, 12, 0, 0, tzinfo=timezone.utc)
+    base = datetime(2026, 10, 1, 12, 0, 0, tzinfo=UTC)
     groups = max(1, n // 8)
     out = []
     for i in range(n):
@@ -138,7 +138,7 @@ def synth_events(n: int) -> list[dict]:
 def synth_tasks(n: int, base_events: int) -> list[dict]:
     """TaskExecution-shaped records, correlation-linked to the same
     synthetic stream — the tasks page replay path stays real."""
-    base = datetime(2026, 10, 1, 12, 0, 0, tzinfo=timezone.utc)
+    base = datetime(2026, 10, 1, 12, 0, 0, tzinfo=UTC)
     stages = ("completed", "completed", "completed", "failed", "running")
     return [
         {

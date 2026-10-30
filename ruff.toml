@@ -1,0 +1,11 @@
+# Ruff configuration — Forge Portal.
+target-version = "py311"
+line-length = 110
+
+[lint.per-file-ignores]
+# portal_core/forge_portal.py is the vendored canonical portal-runtime file:
+# byte-identical copies live in the consumer forge repositories and the
+# drift test (tests/test_independence.py) enforces that parity. Style-only
+# rewrites here would silently drift every downstream copy, so lint fixes
+# on this file are applied upstream and vendored, never in-place.
+"portal_core/forge_portal.py" = ["ALL"]

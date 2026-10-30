@@ -290,7 +290,11 @@ def test_inventory_schema_fields() -> None:
     assert doc["commit"]["sha"] is not None
     assert len(doc["commit"]["sha"]) == 40
     assert doc["package"]["name"] == "forge-portal-app"
-    assert doc["package"]["version"] == "0.1.0"
+    # asserted against the real manifest, not a pinned literal — version bumps
+    # must not silently break the inventory contract test.
+    import json as _json
+    expected = _json.loads((ROOT / "package.json").read_text())["version"]
+    assert doc["package"]["version"] == expected
     assert doc["package"]["ecosystem"] == "npm"
     assert doc["platform"]["system"]
     assert doc["platform"]["python"]
