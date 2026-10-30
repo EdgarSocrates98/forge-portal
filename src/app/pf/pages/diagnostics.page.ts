@@ -66,12 +66,12 @@ import { UiSkeleton } from '../../shared/skeleton';
           <table class="tbl">
             <thead>
               <tr>
-                <th>{{ 'pf.diagnostics.colProvider' | t }}</th>
-                <th>{{ 'pf.diagnostics.colInstalled' | t }}</th>
-                <th>{{ 'pf.diagnostics.colAuth' | t }}</th>
-                <th>{{ 'pf.diagnostics.colProtocol' | t }}</th>
-                <th>{{ 'pf.diagnostics.colCaps' | t }}</th>
-                <th>{{ 'pf.diagnostics.colNext' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colProvider' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colInstalled' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colAuth' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colProtocol' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colCaps' | t }}</th>
+                <th scope="col">{{ 'pf.diagnostics.colNext' | t }}</th>
               </tr>
             </thead>
             <tbody>
