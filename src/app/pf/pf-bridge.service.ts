@@ -240,6 +240,60 @@ export class PfBridge {
       approved,
     });
   }
+  /**
+   * True streaming (§26.6/§29.3): fetch+reader SSE — EventSource can't send
+   * Authorization headers. Yields ordered, deduped events; resumes from
+   * `afterSeq` cursor on reconnect. Aborts via the returned controller.
+   */
+  streamEvents(sessionId: string, afterSeq = 0): {
+    events: Observable<BridgeEvent>; abort: () => void;
+  } {
+    const ctrl = new AbortController();
+    const events = new Observable<BridgeEvent>((sub) => {
+      let cursor = afterSeq;
+      const seen = new Set<number>();
+      const pump = async (): Promise<void> => {
+        try {
+          const resp = await fetch(
+            this.url(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
+            { headers: { Authorization: `Bearer ${this.token()}`,
+                         Accept: 'text/event-stream' },
+              signal: ctrl.signal });
+          if (!resp.ok || !resp.body) {
+            sub.error(new ApiError(resp.status));
+            return;
+          }
+          const reader = resp.body.getReader();
+          const dec = new TextDecoder();
+          let buf = '';
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buf += dec.decode(value, { stream: true });
+            const frames = buf.split('\n\n');
+            buf = frames.pop() ?? '';
+            for (const frame of frames) {
+              const dataLine = frame.split('\n')
+                .find((l) => l.startsWith('data: '));
+              if (!dataLine || dataLine.startsWith('data: hb')) continue;
+              const ev = JSON.parse(dataLine.slice(6)) as BridgeEvent;
+              if (seen.has(ev.seq)) continue;   // §26.6 dedup
+              seen.add(ev.seq);
+              cursor = Math.max(cursor, ev.seq);
+              sub.next(ev);
+            }
+          }
+          sub.complete();   // server closed the bounded stream — caller
+                            // re-arms with `cursor` for gap-free reconnect
+        } catch (e) {
+          if (!ctrl.signal.aborted) sub.error(e instanceof Error ? e : new ApiError(0));
+        }
+      };
+      void pump();
+    });
+    return { events, abort: () => ctrl.abort() };
+  }
+
   artifacts(sessionId: string, provider: string) {
     return this.post<{ items: BridgeArtifact[] }>(
       `/agent-sessions/${sessionId}/artifacts`, { provider }).pipe(

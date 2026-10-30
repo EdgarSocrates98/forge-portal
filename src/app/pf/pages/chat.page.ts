@@ -413,6 +413,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly ctxEntities = signal<string[]>([]);
   private readonly seenSeq = new Set<number>();
   private poll: ReturnType<typeof setInterval> | null = null;
+  private streamAbort: (() => void) | null = null;
+  private streamSeq = 0;
+  readonly streaming = signal(false);
 
   readonly filteredSessions = computed(() => {
     const term = this.q().toLowerCase();
@@ -459,6 +462,8 @@ export class PfChatPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.poll) clearInterval(this.poll);
+    this.streamAbort?.();
+    this.streamAbort = null;
   }
 
   async bootstrap(): Promise<void> {
@@ -509,6 +514,7 @@ export class PfChatPage implements OnInit, OnDestroy {
       this.session.set(s);
       this.items.set([{ kind: 'system', text: `session ${s.id} started (${s.provider})` }]);
       this.seenSeq.clear();
+      this.startStream(s.id);           // §29.3 SSE primary, poll fallback
       await this.reloadSessions();
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
@@ -711,12 +717,39 @@ export class PfChatPage implements OnInit, OnDestroy {
     }
   }
 
+  /** §29.3 — SSE is primary; a bounded stream close re-arms with the seq
+   *  cursor (gap-free). Polling remains as fallback while no stream. */
+  private startStream(sessionId: string): void {
+    this.streamAbort?.();
+    const { events, abort } = this.bridge.streamEvents(sessionId, this.streamSeq);
+    this.streamAbort = abort;
+    this.streaming.set(true);
+    events.subscribe({
+      next: (e) => {
+        this.streamSeq = Math.max(this.streamSeq, e.seq);
+        if (!this.seenSeq.has(e.seq)) {
+          this.seenSeq.add(e.seq);
+          this.renderEvents([e]);
+        }
+      },
+      error: () => { this.streaming.set(false); this.streamAbort = null; },
+      complete: () => {
+        this.streaming.set(false);
+        const s = this.session();
+        if (s && s.state !== 'closed') this.startStream(s.id);  // re-arm cursor
+      },
+    });
+  }
+
   private armPoll(): void {
     if (this.poll) clearInterval(this.poll);
     this.poll = setInterval(() => {
       const s = this.session();
-      if (s && !this.busy() && s.state !== 'closed') void this.pullEvents(s);
-    }, 1500);
+      // poll only while the SSE path is down (fallback, not primary)
+      if (s && !this.busy() && s.state !== 'closed' && !this.streaming()) {
+        void this.pullEvents(s);
+      }
+    }, 2500);
   }
 
   private async pullEvents(s: BridgeSession): Promise<void> {
