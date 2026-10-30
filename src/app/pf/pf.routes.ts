@@ -25,6 +25,10 @@ export const PF_ROUTES: Routes = [
     loadComponent: () => import('./pages/settings.page').then((m) => m.PfSettingsPage),
   },
   {
+    path: 'chat',
+    loadComponent: () => import('./pages/chat.page').then((m) => m.PfChatPage),
+  },
+  {
     path: 'onboarding',
     loadComponent: () => import('./pages/onboarding.page').then((m) => m.PfOnboardingPage),
   },
