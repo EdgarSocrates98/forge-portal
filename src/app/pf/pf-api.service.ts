@@ -168,7 +168,7 @@ export class PfApi {
     return this.get<PfList<PfWorkspace>>('/workspaces');
   }
   createWorkspace(input: { name: string; description?: string }) {
-    return this.post<PfWorkspace>('/workspaces', input);
+    return this.post<PfWorkspace>('/workspaces', { ...input, confirm: 'create' });
   }
 
   products(workspaceId?: string) {
@@ -182,7 +182,7 @@ export class PfApi {
     domain?: string;
     tags?: string[];
   }) {
-    return this.post<PfProduct>('/products', input);
+    return this.post<PfProduct>('/products', { ...input, confirm: 'create' });
   }
   product(pid: string) {
     return this.get<PfProduct>(`/products/${encodeURIComponent(pid)}`);
@@ -342,12 +342,15 @@ export class PfApi {
     return this.get<PfList<PfInitiative>>(`/products/${encodeURIComponent(pid)}/initiatives`);
   }
   createInitiative(pid: string, input: { title: string; hypothesis?: string }) {
-    return this.post<PfInitiative>(`/products/${encodeURIComponent(pid)}/initiatives`, input);
+    return this.post<PfInitiative>(`/products/${encodeURIComponent(pid)}/initiatives`, {
+      ...input,
+      confirm: 'create',
+    });
   }
   prioritizeInitiative(pid: string, iid: string, factors: Record<string, unknown>) {
     return this.post<PfPrioritizeResult>(
       `/products/${encodeURIComponent(pid)}/initiatives/${encodeURIComponent(iid)}/prioritize`,
-      { factors },
+      { factors, confirm: 'prioritize' },
     );
   }
   generatePrd(pid: string, iid: string) {
@@ -363,19 +366,25 @@ export class PfApi {
     return this.get<PfBoard>(`/products/${encodeURIComponent(pid)}/board`);
   }
   createTask(pid: string, input: { title: string; description?: string; priority?: string }) {
-    return this.post<PfTask>(`/products/${encodeURIComponent(pid)}/tasks`, input);
+    return this.post<PfTask>(`/products/${encodeURIComponent(pid)}/tasks`, {
+      ...input,
+      confirm: 'create',
+    });
   }
   moveTask(pid: string, taskId: string, columnId: string, position = 0, expectedVersion?: number) {
     return this.post<PfTask>(
       `/products/${encodeURIComponent(pid)}/tasks/${encodeURIComponent(taskId)}/move`,
-      { column_id: columnId, position, expected_version: expectedVersion },
+      { column_id: columnId, position, expected_version: expectedVersion, confirm: 'move' },
     );
   }
   createTaskProposal(
     pid: string,
     input: { source?: string; session_id?: string; tasks: Record<string, unknown>[] },
   ) {
-    return this.post<PfTaskProposal>(`/products/${encodeURIComponent(pid)}/task-proposals`, input);
+    return this.post<PfTaskProposal>(`/products/${encodeURIComponent(pid)}/task-proposals`, {
+      ...input,
+      confirm: 'create',
+    });
   }
   taskProposals(pid: string) {
     return this.get<{ items: PfTaskProposal[] }>(
@@ -385,13 +394,13 @@ export class PfApi {
   approveTaskProposal(pid: string, proposalId: string) {
     return this.post<PfTaskProposal>(
       `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
-      { approved: true },
+      { approved: true, confirm: 'decide' },
     );
   }
   rejectTaskProposal(pid: string, proposalId: string) {
     return this.post<PfTaskProposal>(
       `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
-      { approved: false },
+      { approved: false, confirm: 'decide' },
     );
   }
   decisions(pid: string) {
