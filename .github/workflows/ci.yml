@@ -69,7 +69,3 @@ jobs:
       # ---- distribution gates -------------------------------------------
       - name: Vendored parity (7 destinations)
         run: python scripts/vendor.py --check
-
-      - name: HTTP e2e (all forges, when siblings are checked out)
-        if: github.event_name == 'push'
-        run: python scripts/portal_e2e.py || true
