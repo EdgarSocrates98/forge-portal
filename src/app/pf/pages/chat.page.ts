@@ -87,13 +87,12 @@ const TEMPLATES = [
 
       @if (!paired()) {
         <section class="pair card">
-          <h2>Conectando ao workspace local</h2>
+          <h2>{{ 'pf.chat.connecting' | t }}</h2>
           <p class="muted">
-            O Product Forge inicia e autentica o Bridge automaticamente. Você não precisa copiar
-            tokens ou configurar portas.
+            {{ 'pf.chat.autoConnectDescription' | t }}
           </p>
           <button class="btn btn--primary" type="button" (click)="autoPair()">
-            Tentar novamente
+            {{ 'pf.chat.tryAgain' | t }}
           </button>
           @if (pairError(); as pe) {
             <p class="err" role="alert">{{ pe }}</p>
@@ -345,7 +344,7 @@ const TEMPLATES = [
                   [disabled]="!latestAssistant()"
                   (click)="proposeLatestTask(pid)"
                 >
-                  Transformar resposta em tarefa
+                  {{ 'pf.chat.proposeTask' | t }}
                 </button>
                 @if (proposalState(); as state) {
                   <p class="small muted">{{ state }}</p>
