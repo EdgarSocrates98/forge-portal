@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PfApi } from '../pf-api.service';
-import { PfProduct, PfRoadmap } from '../pf.models';
+import { PfBoard, PfProduct } from '../pf.models';
 import { PageHeader } from '../../shared/page-header';
 import { ToastService } from '../../shared/toast';
 import { TPipe } from '../../core/i18n/i18n.pipe';
@@ -29,38 +29,38 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
         <input
           name="title"
           [(ngModel)]="newTitle"
-          [placeholder]="'pf.boards.newInitiative' | t"
+          placeholder="Nova tarefa"
           required
         /><button class="btn btn--primary">
           {{ 'pf.boards.add' | t }}
         </button>
       </form>
     </section>
-    @if (roadmap(); as r) {
+    @if (board(); as b) {
       <div class="board-grid">
-        @for (lane of lanes; track lane.key) {
+        @for (lane of b.board.columns; track lane.id) {
           <section class="card lane">
             <header>
-              <h2>{{ lane.label }}</h2>
-              <span>{{ r.lanes?.[lane.key]?.length || 0 }}</span>
+              <h2>{{ lane.name }}</h2>
+              <span>{{ tasksIn(lane.id).length }}</span>
             </header>
-            @for (item of r.lanes?.[lane.key] || []; track item.id) {
-              <article>
-                <strong>{{ item.title }}</strong
-                ><small
-                  >{{ 'pf.boards.score' | t }} {{ item.priority_score || 0 }} ·
-                  {{ item.evidence_count || 0 }} {{ 'pf.boards.evidence' | t }}</small
-                >
+            @for (task of tasksIn(lane.id); track task.id) {
+              <article class="task">
+                <strong>{{ task.title }}</strong>
+                <small>{{ task.priority || 'medium' }} · {{ task.type || 'task' }}</small>
+                <button class="btn btn--mini" (click)="advance(task.id, lane.id)">
+                  Mover adiante
+                </button>
               </article>
             }
-            @if (!r.lanes?.[lane.key]?.length) {
+            @if (!tasksIn(lane.id).length) {
               <p class="muted">{{ 'pf.boards.emptyLane' | t }}</p>
             }
           </section>
         }
       </div>
     } @else {
-      <p class="muted">{{ 'pf.boards.noProduct' | t }}</p>
+      <p class="muted">{{ error() || ('pf.boards.noProduct' | t) }}</p>
     }
   `,
   styles: [
@@ -120,6 +120,9 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
         border-radius: 0.6rem;
         background: color-mix(in srgb, var(--surface, #101525) 75%, white 5%);
       }
+      .task button {
+        justify-self: start;
+      }
       small,
       .muted {
         opacity: 0.7;
@@ -148,15 +151,9 @@ export class PfBoardsPage implements OnInit {
   private readonly toast = inject(ToastService);
   readonly products = signal<PfProduct[]>([]);
   readonly productId = signal('');
-  readonly roadmap = signal<PfRoadmap | null>(null);
+  readonly board = signal<PfBoard | null>(null);
   readonly error = signal('');
   newTitle = '';
-  readonly lanes = [
-    { key: 'later', label: 'Propostas' },
-    { key: 'next', label: 'Prioridades' },
-    { key: 'now', label: 'Em execução' },
-    { key: 'done', label: 'Concluído' },
-  ] as const;
 
   ngOnInit(): void {
     this.api.products().subscribe({
@@ -171,19 +168,31 @@ export class PfBoardsPage implements OnInit {
     this.productId.set(id);
     if (id)
       this.api
-        .roadmap(id)
-        .subscribe({ next: (r) => this.roadmap.set(r), error: (e) => this.fail(e) });
+        .board(id)
+        .subscribe({ next: (r) => this.board.set(r), error: (e) => this.fail(e) });
   }
   create(ev: Event): void {
     ev.preventDefault();
     const id = this.productId();
     if (!id || !this.newTitle.trim()) return;
-    this.api.createInitiative(id, { title: this.newTitle.trim() }).subscribe({
+    this.api.createTask(id, { title: this.newTitle.trim() }).subscribe({
       next: () => {
         this.newTitle = '';
         this.select(id);
         this.toast.show('Iniciativa criada', 'success');
       },
+      error: (e) => this.fail(e),
+    });
+  }
+  tasksIn(columnId: string) {
+    return (this.board()?.tasks || []).filter((task) => task.column_id === columnId);
+  }
+  advance(taskId: string, currentColumn: string): void {
+    const columns = this.board()?.board.columns || [];
+    const next = columns[columns.findIndex((column) => column.id === currentColumn) + 1];
+    if (!next || !this.productId()) return;
+    this.api.moveTask(this.productId(), taskId, next.id).subscribe({
+      next: () => this.select(this.productId()),
       error: (e) => this.fail(e),
     });
   }

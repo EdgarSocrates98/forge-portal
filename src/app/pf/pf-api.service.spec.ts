@@ -6,7 +6,7 @@ import { PfApi, PF_BASE_URL_KEY, PF_TOKEN_KEY } from './pf-api.service';
 import { ApiError } from '../core/api/api.error';
 import { PfHealth } from './pf.models';
 
-const BASE = 'http://127.0.0.1:8470/api/v1';
+const BASE = '/api/v1';
 
 function envelope<T>(data: T): Record<string, unknown> {
   return { schema: 'forge/PortalApi/1', correlation_id: 'c-1', data };
@@ -28,6 +28,8 @@ describe('PfApi', () => {
 
   beforeEach(() => {
     try {
+      sessionStorage.removeItem(PF_BASE_URL_KEY);
+      sessionStorage.removeItem(PF_TOKEN_KEY);
       localStorage.removeItem(PF_BASE_URL_KEY);
       localStorage.removeItem(PF_TOKEN_KEY);
     } catch {
@@ -87,8 +89,9 @@ describe('PfApi', () => {
     api.setBaseUrl('http://engine:9000/');
     api.setToken('t');
     expect(api.baseUrl()).toBe('http://engine:9000');
-    expect(localStorage.getItem(PF_BASE_URL_KEY)).toBe('http://engine:9000');
-    expect(localStorage.getItem(PF_TOKEN_KEY)).toBe('t');
+    expect(sessionStorage.getItem(PF_BASE_URL_KEY)).toBe('http://engine:9000');
+    expect(sessionStorage.getItem(PF_TOKEN_KEY)).toBe('t');
+    expect(localStorage.getItem(PF_TOKEN_KEY)).toBeNull();
     const p = firstValueFrom(api.health());
     http.expectOne('http://engine:9000/api/v1/health').flush(envelope({ status: 'ok' }));
     await p;

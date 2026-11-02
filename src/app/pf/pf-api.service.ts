@@ -5,6 +5,7 @@ import { ApiEnvelope, ApiErrorBody } from '../core/api/api.models';
 import { ApiError } from '../core/api/api.error';
 import {
   PfAgent,
+  PfBoard,
   PfAgentRun,
   PfAgentTemplate,
   PfApiImportResult,
@@ -41,6 +42,7 @@ import {
   PfQueryValidation,
   PfReport,
   PfRoadmap,
+  PfTask,
   PfSourceSchema,
   PfVerifyResult,
   PfWorkspace,
@@ -48,11 +50,14 @@ import {
 
 export const PF_BASE_URL_KEY = 'pf.baseUrl';
 export const PF_TOKEN_KEY = 'pf.token';
-export const PF_DEFAULT_BASE_URL = 'http://127.0.0.1:8470';
+/** Empty means the installed gateway's own origin. A URL is an advanced
+ * developer override only; production should not expose API bearer tokens or
+ * service ports to the browser. */
+export const PF_DEFAULT_BASE_URL = '';
 
 function readStored(key: string): string | null {
   try {
-    return globalThis.localStorage?.getItem(key) ?? null;
+    return globalThis.sessionStorage?.getItem(key) ?? null;
   } catch {
     return null;
   }
@@ -60,8 +65,11 @@ function readStored(key: string): string | null {
 
 function writeStored(key: string, value: string | null): void {
   try {
-    if (value === null) globalThis.localStorage?.removeItem(key);
-    else globalThis.localStorage?.setItem(key, value);
+    if (value === null) globalThis.sessionStorage?.removeItem(key);
+    else globalThis.sessionStorage?.setItem(key, value);
+    // Remove tokens written by pre-gateway builds. They must not survive a
+    // browser restart or remain available under the old persistent key.
+    globalThis.localStorage?.removeItem(key);
   } catch {
     // storage unavailable — in-memory value still applies for the session
   }
@@ -349,6 +357,18 @@ export class PfApi {
   }
   roadmap(pid: string) {
     return this.get<PfRoadmap>(`/products/${encodeURIComponent(pid)}/roadmap`);
+  }
+  board(pid: string) {
+    return this.get<PfBoard>(`/products/${encodeURIComponent(pid)}/board`);
+  }
+  createTask(pid: string, input: { title: string; description?: string; priority?: string }) {
+    return this.post<PfTask>(`/products/${encodeURIComponent(pid)}/tasks`, input);
+  }
+  moveTask(pid: string, taskId: string, columnId: string, position = 0) {
+    return this.post<PfTask>(
+      `/products/${encodeURIComponent(pid)}/tasks/${encodeURIComponent(taskId)}/move`,
+      { column_id: columnId, position },
+    );
   }
   decisions(pid: string) {
     return this.get<PfList<PfDecision>>(`/products/${encodeURIComponent(pid)}/decisions`);
