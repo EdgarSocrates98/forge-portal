@@ -16,6 +16,10 @@ export const PF_ROUTES: Routes = [
     loadComponent: () => import('./pages/products.page').then((m) => m.PfProductsPage),
   },
   {
+    path: 'boards',
+    loadComponent: () => import('./pages/boards.page').then((m) => m.PfBoardsPage),
+  },
+  {
     path: 'products/:pid',
     loadComponent: () => import('./pages/product-detail.page').then((m) => m.PfProductDetailPage),
   },

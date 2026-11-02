@@ -1,0 +1,422 @@
+
+=== DIRECTORY TREE (max depth 3, source files only) ===
+.angular
+.angular/cache
+.angular/cache/22.2.2
+.angular/cache/22.2.2/forge-portal-app
+.editorconfig
+.env
+.github
+.github/CODEOWNERS
+.github/ISSUE_TEMPLATE
+.github/ISSUE_TEMPLATE/bug_report.md
+.github/ISSUE_TEMPLATE/feature_request.md
+.github/PULL_REQUEST_TEMPLATE.md
+.github/workflows
+.github/workflows/ci.yml
+.gitignore
+.prettierrc
+.pytest_cache
+.pytest_cache/.gitignore
+.pytest_cache/CACHEDIR.TAG
+.pytest_cache/README.md
+.pytest_cache/v
+.pytest_cache/v/cache
+.pytest_cache/v/cache/lastfailed
+.pytest_cache/v/cache/nodeids
+.pytest_cache/v/cache/stepwise
+.ruff_cache
+.ruff_cache/.gitignore
+.ruff_cache/0.16.0
+.ruff_cache/0.16.0/13321518350420068396
+.ruff_cache/0.16.0/17986881524223775803
+.ruff_cache/0.16.0/2135844490144565921
+.ruff_cache/0.16.0/3150835204243491930
+.ruff_cache/0.16.0/4576613851383919469
+.ruff_cache/0.16.0/5151655560825118148
+.ruff_cache/0.16.0/6534214937782999068
+.ruff_cache/0.16.0/8607727532251463040
+.ruff_cache/0.17.1
+.ruff_cache/0.17.1/10305802576873189425
+.ruff_cache/0.17.1/1379328839143804004
+.ruff_cache/0.17.1/16101107719453097871
+.ruff_cache/0.17.1/17902693692245942894
+.ruff_cache/0.17.3
+.ruff_cache/0.17.3/10225021545322501541
+.ruff_cache/0.17.3/10898886741002547388
+.ruff_cache/0.17.3/16581084573270286257
+.ruff_cache/0.17.3/2620767996064166589
+.ruff_cache/0.17.3/2640384167171457824
+.ruff_cache/0.17.3/4455087289243760115
+.ruff_cache/0.17.3/446137824016467807
+.ruff_cache/0.17.3/5733004821143683488
+.ruff_cache/CACHEDIR.TAG
+.tokensave
+.tokensave/branch-meta.json
+.tokensave/config.json
+.tokensave/tokensave.db
+.tokensave/tokensave.db-shm
+.tokensave/tokensave.db-wal
+.vscode
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/tasks.json
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+README.md
+SECURITY.md
+SUPPORT.md
+angular.json
+docs
+docs/account-environment.md
+docs/architecture
+docs/architecture/ecosystem-independence-validation.md
+docs/architecture/frontend.md
+docs/architecture/graph-studio-2.1.md
+docs/assets
+docs/assets/logo.png
+docs/audits
+docs/audits/a11y-cycle6.md
+docs/audits/a11y-manual-checklist.md
+docs/audits/agentic-capabilities-inventory.md
+docs/audits/forge-2.2.2-dump
+docs/audits/forge-2.2.2-dump/checksums.sha256
+docs/audits/forge-2.2.2-dump/keyboard-e2e-evidence.json
+docs/audits/forge-2.2.2-dump/phase1-install-results.json
+docs/audits/forge-2.2.2-dump/release-inventory.json
+docs/audits/forge-2.2.2-dump/release-summary.md
+docs/audits/forge-2.2.2-dump/sdist-wheel-results.json
+docs/audits/forge-2.2.2-dump/vendor-integrity.json
+docs/audits/forge-2.2.2-ecosystem-baseline.md
+docs/audits/forge-portal-nextgen-baseline.md
+docs/audits/portal-2.1-baseline.md
+docs/audits/portal-2.2-baseline.md
+docs/audits/portal-2.2-telemetry-matrix.md
+docs/audits/portal-2.2-vendor-matrix.md
+docs/audits/security-cycle6.md
+docs/codebase
+docs/codebase/.codebase-scan.txt
+docs/design
+docs/design/captures
+docs/design/captures/cycle1
+docs/design/captures/cycle6
+docs/design/portal-2.1-personalization.md
+docs/design/portal-2.1-ux-review.md
+docs/design/tokens.md
+docs/engineering-excellence
+docs/engineering-excellence/ux-readiness.md
+docs/fase0
+docs/fase0/architecture.md
+docs/fase0/capability-map.md
+docs/fase0/contracts.md
+docs/fase0/distribution-plan.md
+docs/fase0/security-matrix.md
+docs/fase1
+docs/fase1/angular-shell-report.md
+docs/fase2
+docs/fase2/server-report.md
+docs/fase9-release-report.md
+docs/final-hardening
+docs/final-hardening/baseline.md
+docs/final-hardening/fase1-portal-core.md
+docs/final-hardening/fase9-release.md
+docs/graph
+docs/graph/portal-parity.md
+docs/graph/renderer-decision.md
+docs/homologation
+docs/homologation/README.md
+docs/homologation/cycle-4-matrix.json
+docs/homologation/cycle-4-matrix.md
+docs/homologation/public-package-e2e-report.md
+docs/homologation/public-package-runtime-matrix.md
+docs/installation
+docs/installation/README.md
+docs/installation/federation-onboarding.md
+docs/knowledge
+docs/knowledge/assistant-eval.md
+docs/knowledge/search-benchmark.md
+docs/observability
+docs/observability/execution-events.md
+docs/perf
+docs/perf/bundle-baseline.md
+docs/perf/execution-rendering-report.md
+docs/perf/graph-federation-report.md
+docs/perf/graph-public-package-validation.md
+docs/perf/graph-scale-report.md
+docs/perf/portal-2.1-benchmarks.md
+docs/release
+docs/release/README.md
+docs/release/cycle-2.2.1-package-baseline.md
+docs/release/dump-schemas.md
+docs/release/sdist-wheel-reproducibility.md
+docs/release/version-consistency-matrix.md
+docs/reports
+docs/reports/forge-2.2.1-release-certification.md
+docs/reports/forge-2.2.2-final-report.md
+docs/reports/forge-2.2.2-independent-certification.md
+docs/reports/forge-portal-nextgen-completion.md
+docs/reports/portal-2.1-final-homologation.md
+docs/reports/portal-2.1-independent-review.md
+docs/reports/portal-2.2-certification.md
+docs/reports/portal-2.2-cycle5-ux-a11y.md
+docs/roadmap
+docs/roadmap/BASELINE_AUDIT.md
+docs/roadmap/C4_BRIDGE_ADR.md
+docs/roadmap/C5_SECURITY_MATRIX.md
+docs/roadmap/CYCLE_C3_REPORT.md
+docs/roadmap/CYCLE_C4_REPORT.md
+docs/roadmap/CYCLE_C5_REPORT.md
+docs/security
+docs/security/portal-2.1-review.md
+docs/security/publishing-workflow-review.md
+docs/security/release-dumps-review.md
+docs/testing
+docs/testing/README.md
+docs/ux
+docs/ux/execution-keyboard-validation.md
+e2e
+e2e/artifacts
+e2e/artifacts/01-dashboard.png
+e2e/artifacts/02-language-toggle.png
+e2e/artifacts/03-install-plan.png
+e2e/artifacts/04-install-applied.png
+e2e/artifacts/05-command-palette.png
+e2e/artifacts/05-config-center.png
+e2e/artifacts/06-explorer.png
+e2e/artifacts/06-task-plan.png
+e2e/artifacts/07-forge-detail.png
+e2e/artifacts/07-mobile.png
+e2e/artifacts/08-execution-timeline.png
+e2e/artifacts/08-offline.png
+e2e/artifacts/08-palette-search.png
+e2e/artifacts/09-execution-replay.png
+e2e/artifacts/10-execution-inspector.png
+e2e/artifacts/16-graph-select.png
+e2e/artifacts/17-theme-light.png
+e2e/artifacts/18-graph-canvas.png
+e2e/artifacts/19-graph-canvas-select.png
+e2e/artifacts/20-graph-canvas-shared-selection.png
+e2e/artifacts/20-registry-ops.png
+e2e/artifacts/21-registry-plan.png
+
+=== STACK DETECTION (manifest files) ===
+
+--- package-lock.json ---
+{
+  "name": "forge-portal-app",
+  "version": "0.1.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "forge-portal-app",
+      "version": "0.1.0",
+      "license": "MIT",
+      "dependencies": {
+        "@angular/common": "^22.2.0",
+        "@angular/compiler": "^22.2.0",
+        "@angular/core": "^22.2.0",
+        "@angular/forms": "^22.2.0",
+        "@angular/platform-browser": "^22.2.0",
+        "@angular/router": "^22.2.0",
+        "cytoscape": "^3.34.3",
+        "rxjs": "~7.8.0",
+        "tslib": "^2.3.0"
+      },
+      "devDependencies": {
+        "@angular/build": "^22.2.2",
+        "@angular/cli": "^22.2.2",
+        "@angular/compiler-cli": "^22.2.0",
+        "axe-core": "^4.14.0",
+        "jsdom": "^30.0.0",
+        "prettier": "^3.8.1",
+        "typescript": "~6.0.2",
+        "vitest": "^5.0.0"
+      }
+    },
+    "node_modules/@ampproject/remapping": {
+      "version": "2.3.0",
+      "resolved": "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.3.0.tgz",
+      "integrity": "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "@jridgewell/gen-mapping": "^0.3.5",
+        "@jridgewell/trace-mapping": "^0.3.24"
+      },
+      "engines": {
+        "node": ">=6.0.0"
+      }
+    },
+    "node_modules/@angular-devkit/architect": {
+      "version": "0.2202.2",
+      "resolved": "https://registry.npmjs.org/@angular-devkit/architect/-/architect-0.2202.2.tgz",
+      "integrity": "sha512-7ScBo47haHyRGG5M5ZEpbhwHgO2LEDbCLwNCjpjwhtRFDIEmAFbULM1OQjIybN3x+wOyY1kWRK7KvihCbs371g==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "@angular-devkit/core": "22.2.2",
+        "rxjs": "7.8.2"
+      },
+      "bin": {
+        "architect": "bin/cli.js"
+      },
+      "engines": {
+        "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
+        "npm": "^6.11.0 || ^7.5.6 || >=8.0.0",
+        "yarn": ">= 1.13.0"
+      }
+    },
+    "node_modules/@angular-devkit/core": {
+      "version": "22.2.2",
+      "resolved": "https://registry.npmjs.org/@angular-devkit/core/-/core-22.2.2.tgz",
+      "integrity": "sha512-iQexb5xUON9AkTzvBiMftrHWLguIlYv6M/BOH/sj7U5L8eOPMu8N269WF74xPo4n/X5tusFLqniGI0zolT2Sjg==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "ajv": "8.20.0",
+        "ajv-formats": "3.0.1",
+        "jsonc-parser": "3.3.1",
+        "picomatch": "4.0.7",
+        "rxjs": "7.8.2",
+        "source-map": "0.8.0"
+      },
+      "engines": {
+
+[TRUNCATED] Showing first 80 of 6954 lines.
+--- package.json ---
+{
+  "name": "forge-portal-app",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "packageManager": "npm@12.0.2",
+  "dependencies": {
+    "@angular/common": "^22.2.0",
+    "@angular/compiler": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "@angular/platform-browser": "^22.2.0",
+    "@angular/router": "^22.2.0",
+    "cytoscape": "^3.34.3",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.2.2",
+    "@angular/cli": "^22.2.2",
+    "@angular/compiler-cli": "^22.2.0",
+    "axe-core": "^4.14.0",
+    "jsdom": "^30.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
+  },
+  "license": "MIT"
+}
+
+
+=== ENTRY POINTS ===
+Found: src/main.ts
+
+=== LINTING AND FORMATTING CONFIG ===
+Found: .prettierrc
+Found: .editorconfig
+Found: tsconfig.json
+
+=== ENVIRONMENT VARIABLE TEMPLATES ===
+No .env.example or .env.template found. Identify required environment variables by searching the code and config for environment variable reads.
+
+=== TODO / FIXME / HACK (production code only, test dirs excluded) ===
+None found.
+
+=== GIT RECENT COMMITS (last 20) ===
+e63592d fix(a11y): th scope=col on diagnostics table (CI a11y gate)
+552f710 fix: ruff-clean e2e streaming spec (CI lint gate)
+0e45d40 feat: unified Diagnostic Center + MCP Doctor UI (§30.2)
+9841d77 test(e2e): chat streaming spec — UI prompt, SSE dedup, cancel (Chromium)
+8ed434b ci: pin runner to ubuntu-24.04 — playwright can't install on 26.04
+c89a048 i18n: pipe all pf/* template prose through | t (CI parity gate)
+5fb4544 ci: fix Format check — prettier --write on 30 files
+4570b77 ci: fix ruff failures (E402/I001/UP017/RUF100); ruff.toml excludes vendored canonical forge_portal.py (byte-parity); unpin stale version literal in inventory test
+3dd21e6 feat(pf): Cycle 29 agentic workspace surfaces
+b3928ee Cycle 26.6/29.3: true SSE streaming — fetch+reader (auth header), seq dedup, cursor re-arm, poll only as fallback
+27e57a4 Cycle 25: paired session tokens — master exchanged once via /pair/exchange, scoped device token persisted, nonce on mutations, approval-token file ops
+3ac402c feat(pf): Chat Studio workspace surfaces — Cycle 22
+a4d77e1 feat(pf): Chat Studio full surface — Cycle 20 acceptance
+cbe9035 feat(pf): Chat Studio — paired agent sessions over Forge Agent Bridge
+59075c0 feat(pf): Health tab + semantic metrics/NL surfaces in Analytics
+2e37ccd feat(pf): Product Forge Studio module — 15 surfaces, onboarding wizard
+2dca5cf Release/2.2.2 certification (#59)
+7e6ec93 docs(release): Cycle 2.2.2 consumer verification + release-freeze certification (#58)
+4250556 docs(release): forge 2.2.1 release certification — 7 PyPI + npm verified (#57)
+00e6893 docs(release): forge 2.2.1 release certification — 7 PyPI + npm verified (#56)
+
+=== HIGH-CHURN FILES (last 90 days, top 20) ===
+  25 src/app/core/i18n/locales/pt-br.ts
+  24 src/app/core/i18n/locales/en.ts
+  15 src/app/pages/graph/graph.page.ts
+  13 src/app/app.ts
+  13 e2e/artifacts/07-mobile.png
+  13 e2e/artifacts/route-hosts.png
+  13 e2e/artifacts/route-mcp.png
+  12 e2e/test_browser_e2e.py
+  12 e2e/artifacts/01-dashboard.png
+  12 e2e/artifacts/05-command-palette.png
+  11 src/styles.css
+  11 src/app/app.spec.ts
+  11 e2e/artifacts/route-forges.png
+  11 e2e/artifacts/route-forges/self.png
+  10 src/app/pages/graph/graph.page.spec.ts
+  10 e2e/artifacts/17-theme-light.png
+  10 src/app/pages/tasks/tasks.page.ts
+  10 e2e/artifacts/06-explorer.png
+  10 e2e/artifacts/07-forge-detail.png
+  10 e2e/artifacts/08-offline.png
+
+=== MONOREPO SIGNALS ===
+No monorepo signals detected.
+
+=== CODE METRICS ===
+Total files scanned: 934
+Total lines of code: 157971
+
+Files by language:
+  Other: 746
+  TypeScript: 158
+  Python: 28
+  JavaScript: 2
+
+Top 10 largest files:
+.tokensave/tokensave.db: 21424.0KB
+graphify-out/graph.json: 3815.0KB
+graphify-out/2026-10-30/graph.json: 3814.3KB
+graphify-out/2026-10-29/graph.json: 3554.2KB
+graphify-out/2026-10-21/graph.json: 3212.4KB
+graphify-out/2026-10-18/graph.json: 3145.3KB
+graphify-out/2026-10-20/graph.json: 3144.3KB
+graphify-out/graph.html: 3117.7KB
+graphify-out/2026-10-17/graph.json: 2414.0KB
+docs/assets/logo.png: 1800.2KB
+
+=== CI/CD PIPELINES ===
+CI/CD: GitHub Actions
+
+=== CONTAINERS & ORCHESTRATION ===
+No containerization configs detected.
+
+=== SECURITY & COMPLIANCE ===
+Security: SECURITY.md
+
+=== PERFORMANCE & TESTING ===
+No performance testing configs detected.
+
+=== SCAN COMPLETE ===
