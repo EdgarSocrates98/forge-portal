@@ -43,6 +43,7 @@ import {
   PfReport,
   PfRoadmap,
   PfTask,
+  PfTaskProposal,
   PfSourceSchema,
   PfVerifyResult,
   PfWorkspace,
@@ -374,20 +375,23 @@ export class PfApi {
     pid: string,
     input: { source?: string; session_id?: string; tasks: Record<string, unknown>[] },
   ) {
-    return this.post<Record<string, unknown>>(
-      `/products/${encodeURIComponent(pid)}/task-proposals`,
-      input,
-    );
+    return this.post<PfTaskProposal>(`/products/${encodeURIComponent(pid)}/task-proposals`, input);
   }
   taskProposals(pid: string) {
-    return this.get<{ items: Record<string, unknown>[] }>(
+    return this.get<{ items: PfTaskProposal[] }>(
       `/products/${encodeURIComponent(pid)}/task-proposals`,
     );
   }
   approveTaskProposal(pid: string, proposalId: string) {
-    return this.post<Record<string, unknown>>(
+    return this.post<PfTaskProposal>(
       `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
       { approved: true },
+    );
+  }
+  rejectTaskProposal(pid: string, proposalId: string) {
+    return this.post<PfTaskProposal>(
+      `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
+      { approved: false },
     );
   }
   decisions(pid: string) {

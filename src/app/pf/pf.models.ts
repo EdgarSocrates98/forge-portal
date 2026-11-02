@@ -36,6 +36,17 @@ export interface PfProduct {
   updated_at?: string;
 }
 
+export interface PfTaskProposal {
+  id: string;
+  product_id: string;
+  source?: string;
+  session_id?: string;
+  state: 'proposed' | 'approved' | 'rejected';
+  tasks: { title: string; description?: string; priority?: string }[];
+  task_ids?: string[];
+  created_at?: string;
+}
+
 export interface PfList<T> {
   items: T[];
 }
