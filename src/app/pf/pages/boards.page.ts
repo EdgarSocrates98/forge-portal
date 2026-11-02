@@ -4,23 +4,21 @@ import { PfApi } from '../pf-api.service';
 import { PfProduct, PfRoadmap } from '../pf.models';
 import { PageHeader } from '../../shared/page-header';
 import { ToastService } from '../../shared/toast';
+import { TPipe } from '../../core/i18n/i18n.pipe';
 
 @Component({
   selector: 'page-pf-boards',
   standalone: true,
-  imports: [FormsModule, PageHeader],
+  imports: [FormsModule, PageHeader, TPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ui-page-header
-      title="Boards & roadmaps"
-      subtitle="Priorize iniciativas com rastreabilidade do contexto à execução."
-    />
+    <ui-page-header [title]="'pf.boards.title' | t" [subtitle]="'pf.boards.subtitle' | t" />
     @if (error()) {
       <p class="bad" role="alert">{{ error() }}</p>
     }
     <section class="toolbar card">
       <label
-        >Produto
+        >{{ 'pf.boards.product' | t }}
         <select [ngModel]="productId()" (ngModelChange)="select($event)">
           @for (p of products(); track p.id) {
             <option [value]="p.id">{{ p.name }}</option>
@@ -28,10 +26,13 @@ import { ToastService } from '../../shared/toast';
         </select></label
       >
       <form (submit)="create($event)">
-        <input name="title" [(ngModel)]="newTitle" placeholder="Nova iniciativa" required /><button
-          class="btn btn--primary"
-        >
-          Adicionar
+        <input
+          name="title"
+          [(ngModel)]="newTitle"
+          [placeholder]="'pf.boards.newInitiative' | t"
+          required
+        /><button class="btn btn--primary">
+          {{ 'pf.boards.add' | t }}
         </button>
       </form>
     </section>
@@ -47,19 +48,19 @@ import { ToastService } from '../../shared/toast';
               <article>
                 <strong>{{ item.title }}</strong
                 ><small
-                  >Score {{ item.priority_score || 0 }} ·
-                  {{ item.evidence_count || 0 }} evidências</small
+                  >{{ 'pf.boards.score' | t }} {{ item.priority_score || 0 }} ·
+                  {{ item.evidence_count || 0 }} {{ 'pf.boards.evidence' | t }}</small
                 >
               </article>
             }
             @if (!r.lanes?.[lane.key]?.length) {
-              <p class="muted">Nenhuma iniciativa nesta etapa.</p>
+              <p class="muted">{{ 'pf.boards.emptyLane' | t }}</p>
             }
           </section>
         }
       </div>
     } @else {
-      <p class="muted">Crie ou selecione um produto para carregar o roadmap.</p>
+      <p class="muted">{{ 'pf.boards.noProduct' | t }}</p>
     }
   `,
   styles: [

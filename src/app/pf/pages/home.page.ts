@@ -185,10 +185,8 @@ import { ToastService } from '../../shared/toast';
       </header>
       <nav class="navgrid" aria-label="Agentic workspace surfaces">
         <a class="card navcard" data-lift routerLink="/pf/boards">
-          <strong>Boards &amp; roadmaps</strong>
-          <span class="muted small"
-            >Transforme contexto em prioridades visíveis e rastreáveis.</span
-          >
+          <strong>{{ 'pf.home.boardsRoadmaps' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.boardsRoadmapsSub' | t }}</span>
         </a>
         <a class="card navcard" data-lift routerLink="/pf/chat">
           <strong>{{ 'pf.home.chat' | t }}</strong>
