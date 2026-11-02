@@ -132,7 +132,7 @@ const BRIDGE_DEVICE_KEY = 'fab.deviceId';
 
 function read(key: string): string | null {
   try {
-    return globalThis.localStorage?.getItem(key) ?? null;
+    return globalThis.sessionStorage?.getItem(key) ?? null;
   } catch {
     return null;
   }
@@ -177,9 +177,9 @@ export class PfBridge {
           this.token.set(r.session_token);
           this.deviceId.set(r.device.device_id);
           try {
-            globalThis.localStorage?.setItem(BRIDGE_SESSION_KEY, r.session_token);
-            globalThis.localStorage?.setItem(BRIDGE_DEVICE_KEY, r.device.device_id);
-            globalThis.localStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
+            globalThis.sessionStorage?.setItem(BRIDGE_SESSION_KEY, r.session_token);
+            globalThis.sessionStorage?.setItem(BRIDGE_DEVICE_KEY, r.device.device_id);
+            globalThis.sessionStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
             // legacy master-token key — purge it: masters never persist here
             globalThis.localStorage?.removeItem('fab.pairToken');
           } catch {
@@ -196,8 +196,8 @@ export class PfBridge {
     this.token.set(token.trim());
     if (baseUrl) this.baseUrl.set(baseUrl.trim().replace(/\/+$/, ''));
     try {
-      globalThis.localStorage?.setItem(BRIDGE_SESSION_KEY, this.token());
-      globalThis.localStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
+      globalThis.sessionStorage?.setItem(BRIDGE_SESSION_KEY, this.token());
+      globalThis.sessionStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
     } catch {
       /* storage unavailable */
     }
@@ -205,6 +205,30 @@ export class PfBridge {
 
   private url(p: string): string {
     return `${this.baseUrl()}${p}`;
+  }
+  /** Managed Product Forge gateway bootstrap; manual token entry is fallback only. */
+  bootstrap(): Observable<BridgeDevice> {
+    return this.http
+      .post<{ session_token: string; device: BridgeDevice; base_url: string }>(
+        '/api/v1/bridge/bootstrap',
+        { confirm: 'bootstrap' },
+      )
+      .pipe(
+        map((r) => {
+          this.baseUrl.set(r.base_url.replace(/\/+$/, ''));
+          this.token.set(r.session_token);
+          this.deviceId.set(r.device.device_id);
+          try {
+            globalThis.sessionStorage?.setItem(BRIDGE_SESSION_KEY, r.session_token);
+            globalThis.sessionStorage?.setItem(BRIDGE_DEVICE_KEY, r.device.device_id);
+            globalThis.sessionStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
+          } catch {
+            /* storage unavailable — memory-only session remains usable */
+          }
+          return r.device;
+        }),
+        catchError((e) => this.fail(e)),
+      );
   }
   private headers(): Record<string, string> {
     return { Authorization: `Bearer ${this.token()}`, 'Content-Type': 'application/json' };

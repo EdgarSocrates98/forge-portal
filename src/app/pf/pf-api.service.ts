@@ -364,10 +364,30 @@ export class PfApi {
   createTask(pid: string, input: { title: string; description?: string; priority?: string }) {
     return this.post<PfTask>(`/products/${encodeURIComponent(pid)}/tasks`, input);
   }
-  moveTask(pid: string, taskId: string, columnId: string, position = 0) {
+  moveTask(pid: string, taskId: string, columnId: string, position = 0, expectedVersion?: number) {
     return this.post<PfTask>(
       `/products/${encodeURIComponent(pid)}/tasks/${encodeURIComponent(taskId)}/move`,
-      { column_id: columnId, position },
+      { column_id: columnId, position, expected_version: expectedVersion },
+    );
+  }
+  createTaskProposal(
+    pid: string,
+    input: { source?: string; session_id?: string; tasks: Record<string, unknown>[] },
+  ) {
+    return this.post<Record<string, unknown>>(
+      `/products/${encodeURIComponent(pid)}/task-proposals`,
+      input,
+    );
+  }
+  taskProposals(pid: string) {
+    return this.get<{ items: Record<string, unknown>[] }>(
+      `/products/${encodeURIComponent(pid)}/task-proposals`,
+    );
+  }
+  approveTaskProposal(pid: string, proposalId: string) {
+    return this.post<Record<string, unknown>>(
+      `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
+      { approved: true },
     );
   }
   decisions(pid: string) {

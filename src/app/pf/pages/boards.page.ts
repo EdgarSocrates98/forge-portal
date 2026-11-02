@@ -36,13 +36,22 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
     @if (board(); as b) {
       <div class="board-grid">
         @for (lane of b.board.columns; track lane.id) {
-          <section class="card lane">
+          <section
+            class="card lane"
+            (dragover)="$event.preventDefault()"
+            (drop)="drop($event, lane.id)"
+          >
             <header>
               <h2>{{ lane.name }}</h2>
               <span>{{ tasksIn(lane.id).length }}</span>
             </header>
             @for (task of tasksIn(lane.id); track task.id) {
-              <article class="task">
+              <article
+                class="task"
+                draggable="true"
+                (dragstart)="dragging.set(task.id)"
+                (dragend)="dragging.set(null)"
+              >
                 <strong>{{ task.title }}</strong>
                 <small>{{ task.priority || 'medium' }} · {{ task.type || 'task' }}</small>
                 <button class="btn btn--mini" (click)="advance(task.id, lane.id)">
@@ -95,6 +104,9 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
       }
       .lane {
         min-height: 13rem;
+      }
+      .lane:hover {
+        outline: 1px solid color-mix(in srgb, var(--accent, #b7f36b) 45%, transparent);
       }
       .lane header {
         display: flex;
@@ -150,6 +162,7 @@ export class PfBoardsPage implements OnInit {
   readonly productId = signal('');
   readonly board = signal<PfBoard | null>(null);
   readonly error = signal('');
+  readonly dragging = signal<string | null>(null);
   newTitle = '';
 
   ngOnInit(): void {
@@ -186,8 +199,22 @@ export class PfBoardsPage implements OnInit {
     const columns = this.board()?.board.columns || [];
     const next = columns[columns.findIndex((column) => column.id === currentColumn) + 1];
     if (!next || !this.productId()) return;
-    this.api.moveTask(this.productId(), taskId, next.id).subscribe({
+    const task = this.board()?.tasks.find((item) => item.id === taskId);
+    this.api.moveTask(this.productId(), taskId, next.id, 0, task?.version).subscribe({
       next: () => this.select(this.productId()),
+      error: (e) => this.fail(e),
+    });
+  }
+  drop(ev: DragEvent, columnId: string): void {
+    ev.preventDefault();
+    const taskId = this.dragging();
+    const task = this.board()?.tasks.find((item) => item.id === taskId);
+    if (!taskId || !task || !this.productId()) return;
+    this.api.moveTask(this.productId(), taskId, columnId, 0, task.version).subscribe({
+      next: () => {
+        this.dragging.set(null);
+        this.select(this.productId());
+      },
       error: (e) => this.fail(e),
     });
   }

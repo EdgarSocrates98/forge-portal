@@ -87,28 +87,14 @@ const TEMPLATES = [
 
       @if (!paired()) {
         <section class="pair card">
-          <h2>{{ 'pf.chat.pairWithYourLocalBridge' | t }}</h2>
+          <h2>Conectando ao workspace local</h2>
           <p class="muted">
-            Run <code>forge-bridge serve</code>, then paste the pairing token from
-            <code>~/.forge-bridge/pair.token</code>. Localhost only — never a public URL.
+            O Product Forge inicia e autentica o Bridge automaticamente. Você não precisa copiar
+            tokens ou configurar portas.
           </p>
-          <form class="fg-row" (submit)="pair($event)">
-            <input
-              class="input"
-              [value]="pairTok()"
-              (input)="pairTok.set($any($event.target).value)"
-              placeholder="pair token"
-              aria-label="Bridge pairing token"
-            />
-            <input
-              class="input url"
-              [value]="pairUrl()"
-              (input)="pairUrl.set($any($event.target).value)"
-              placeholder="http://127.0.0.1:8471"
-              aria-label="Bridge URL"
-            />
-            <button class="btn btn--primary" type="submit">{{ 'pf.chat.pair' | t }}</button>
-          </form>
+          <button class="btn btn--primary" type="button" (click)="autoPair()">
+            Tentar novamente
+          </button>
           @if (pairError(); as pe) {
             <p class="err" role="alert">{{ pe }}</p>
           }
@@ -354,6 +340,16 @@ const TEMPLATES = [
               <div class="ctx__blk">
                 <h4>{{ 'pf.chat.product' | t }}</h4>
                 <p class="small mono">{{ pid }}</p>
+                <button
+                  class="btn btn--mini"
+                  [disabled]="!latestAssistant()"
+                  (click)="proposeLatestTask(pid)"
+                >
+                  Transformar resposta em tarefa
+                </button>
+                @if (proposalState(); as state) {
+                  <p class="small muted">{{ state }}</p>
+                }
               </div>
             }
             @if (!usage() && !plan() && !artifacts().length && !session()?.product_id) {
@@ -675,9 +671,8 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly modes = ['simple', 'visual', 'advanced'] as const;
   readonly mode = signal<'simple' | 'visual' | 'advanced'>('visual');
   readonly paired = signal(false);
-  readonly pairTok = signal('');
-  readonly pairUrl = signal('http://127.0.0.1:8471');
   readonly pairError = signal<string | null>(null);
+  readonly proposalState = signal<string | null>(null);
   readonly providers = signal<BridgeProvider[]>([]);
   readonly provider = signal('fake');
   readonly products = signal<PfProduct[]>([]);
@@ -701,6 +696,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   private streamAbort: (() => void) | null = null;
   private streamSeq = 0;
   readonly streaming = signal(false);
+  readonly latestAssistant = computed(
+    () => [...this.items()].reverse().find((item) => item.kind === 'assistant')?.text ?? '',
+  );
 
   readonly filteredSessions = computed(() => {
     const term = this.q().toLowerCase();
@@ -740,8 +738,24 @@ export class PfChatPage implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    this.paired.set(!!this.bridge.token());
-    if (this.paired()) void this.bootstrap();
+    if (this.bridge.token()) {
+      this.paired.set(true);
+      void this.bootstrap();
+    } else {
+      void this.autoPair();
+    }
+  }
+
+  async autoPair(): Promise<void> {
+    try {
+      await firstValueFrom(this.bridge.bootstrap());
+      this.paired.set(true);
+      await this.bootstrap();
+    } catch {
+      this.pairError.set(
+        'Não foi possível conectar ao Bridge local. Verifique se o Product Forge está instalado e tente novamente.',
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -767,19 +781,21 @@ export class PfChatPage implements OnInit, OnDestroy {
     }
   }
 
-  async pair(ev: Event): Promise<void> {
-    ev.preventDefault();
-    this.pairError.set(null);
+  async proposeLatestTask(pid: string): Promise<void> {
+    const title = this.latestAssistant().replace(/\s+/g, ' ').trim().slice(0, 120);
+    if (!title) return;
     try {
-      // §25.6 — master token is exchanged once for a scoped session token;
-      // the master itself is never persisted by this client.
-      await firstValueFrom(this.bridge.pair(this.pairTok(), this.pairUrl()));
-      this.pairTok.set(''); // drop the master from the field immediately
-      await this.bootstrap();
-      this.paired.set(true);
-      this.toast.show('Bridge paired — session token issued', 'success');
+      await firstValueFrom(
+        this.api.createTaskProposal(pid, {
+          source: 'chat',
+          session_id: this.session()?.id,
+          tasks: [{ title, description: this.latestAssistant() }],
+        }),
+      );
+      this.proposalState.set('Proposta criada — aguardando aprovação.');
+      this.toast.show('Proposta de tarefa criada para revisão', 'success');
     } catch {
-      this.pairError.set('pairing failed — check token and that the bridge is running');
+      this.proposalState.set('Não foi possível criar a proposta.');
     }
   }
 
