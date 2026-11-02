@@ -101,6 +101,12 @@ export interface BridgeDevice {
   last_seen: number;
 }
 
+interface GatewayEnvelope<T> {
+  schema: 'forge/PortalApi/1';
+  data?: T;
+  error?: { code?: string; message?: string; [key: string]: unknown };
+}
+
 export interface ApprovalRequest {
   approval_id: string;
   session_id: string;
@@ -206,26 +212,38 @@ export class PfBridge {
   private url(p: string): string {
     return `${this.baseUrl()}${p}`;
   }
-  /** Managed Product Forge gateway bootstrap; manual token entry is fallback only. */
+  /** Managed Product Forge gateway bootstrap; no browser token is returned. */
   bootstrap(): Observable<BridgeDevice> {
     return this.http
-      .post<{ session_token: string; device: BridgeDevice; base_url: string }>(
+      .post<GatewayEnvelope<{ connected: boolean; device?: BridgeDevice }>>(
         '/api/v1/bridge/bootstrap',
         { confirm: 'bootstrap' },
       )
       .pipe(
         map((r) => {
-          this.baseUrl.set(r.base_url.replace(/\/+$/, ''));
-          this.token.set(r.session_token);
-          this.deviceId.set(r.device.device_id);
+          if (r.schema !== 'forge/PortalApi/1' || r.error || !r.data?.connected) {
+            throw new ApiError(503, r.error);
+          }
+          this.baseUrl.set('');
+          this.token.set('');
+          this.deviceId.set(r.data.device?.device_id ?? 'gateway');
           try {
-            globalThis.sessionStorage?.setItem(BRIDGE_SESSION_KEY, r.session_token);
-            globalThis.sessionStorage?.setItem(BRIDGE_DEVICE_KEY, r.device.device_id);
-            globalThis.sessionStorage?.setItem(BRIDGE_URL_KEY, this.baseUrl());
+            globalThis.sessionStorage?.removeItem(BRIDGE_SESSION_KEY);
+            globalThis.sessionStorage?.setItem(BRIDGE_DEVICE_KEY, this.deviceId());
+            globalThis.sessionStorage?.removeItem(BRIDGE_URL_KEY);
           } catch {
             /* storage unavailable — memory-only session remains usable */
           }
-          return r.device;
+          return (
+            r.data.device ?? {
+              device_id: 'gateway',
+              device_name: 'Product Forge gateway',
+              scopes: ['agent'],
+              created_at: Date.now(),
+              expires_at: 0,
+              last_seen: Date.now(),
+            }
+          );
         }),
         catchError((e) => this.fail(e)),
       );
@@ -251,66 +269,93 @@ export class PfBridge {
       .pipe(catchError((e) => this.fail(e)));
   }
 
+  private gatewayUrl(p: string): string {
+    return `/api/v1/bridge${p}`;
+  }
+
+  private gatewayPost<T>(p: string, body: unknown): Observable<T> {
+    return this.http
+      .post<GatewayEnvelope<T>>(this.gatewayUrl(p), body, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .pipe(
+        map((r) => this.unwrapGateway(r)),
+        catchError((e) => this.fail(e)),
+      );
+  }
+
+  private gatewayGet<T>(p: string): Observable<T> {
+    return this.http.get<GatewayEnvelope<T>>(this.gatewayUrl(p)).pipe(
+      map((r) => this.unwrapGateway(r)),
+      catchError((e) => this.fail(e)),
+    );
+  }
+
+  private unwrapGateway<T>(r: GatewayEnvelope<T>): T {
+    if (r?.schema !== 'forge/PortalApi/1') throw new ApiError(0, { code: 'FAB-BAD-ENVELOPE' });
+    if (r.error) throw new ApiError(200, r.error);
+    if (r.data === undefined) throw new ApiError(0, { code: 'FAB-EMPTY-DATA' });
+    return r.data;
+  }
+
   providers() {
-    return this.get<{ items: BridgeProvider[] }>('/providers').pipe(map((r) => r.items));
+    return this.gatewayGet<{ items: BridgeProvider[] }>('/providers').pipe(map((r) => r.items));
   }
   diagnostics(): Observable<DiagnosticReport> {
-    return this.get<DiagnosticReport>('/diagnostics');
+    return this.gatewayGet<DiagnosticReport>('/diagnostics');
   }
   mcpDoctor(): Observable<McpDoctorReport> {
-    return this.get<McpDoctorReport>('/mcp/doctor');
+    return this.gatewayGet<McpDoctorReport>('/mcp/doctor');
   }
   mcpSetHealth(serverId: string, health: string) {
-    return this.post<Record<string, unknown>>(`/mcp/${serverId}/health`, { health });
+    return this.gatewayPost<Record<string, unknown>>(`/mcp/${serverId}/health`, { health });
   }
   createSession(provider: string, productId?: string) {
-    return this.post<BridgeSession>('/agent-sessions', {
+    return this.gatewayPost<BridgeSession>('/agent-sessions', {
       provider,
       product_id: productId ?? null,
     });
   }
   prompt(sessionId: string, provider: string, text: string) {
-    return this.post<{ accepted: boolean }>(`/agent-sessions/${sessionId}/prompt`, {
+    return this.gatewayPost<{ accepted: boolean }>(`/agent-sessions/${sessionId}/prompt`, {
       text,
       provider,
     });
   }
   events(sessionId: string, provider: string, afterSeq = 0) {
-    return this.post<{ items: BridgeEvent[] }>(`/agent-sessions/${sessionId}/events`, {
+    return this.gatewayPost<{ items: BridgeEvent[] }>(`/agent-sessions/${sessionId}/events`, {
       provider,
       after_seq: afterSeq,
     });
   }
   cancel(sessionId: string, provider: string) {
-    return this.post<{ cancelled: boolean }>(`/agent-sessions/${sessionId}/cancel`, {
+    return this.gatewayPost<{ cancelled: boolean }>(`/agent-sessions/${sessionId}/cancel`, {
       provider,
     });
   }
   listSessions() {
-    return this.get<{ items: BridgeSession[] }>('/agent-sessions').pipe(map((r) => r.items));
+    return this.gatewayGet<{ items: BridgeSession[] }>('/agent-sessions').pipe(map((r) => r.items));
   }
   patchSession(sessionId: string, meta: Partial<BridgeSessionMeta>) {
-    return this.http
-      .patch<{ meta: BridgeSessionMeta }>(this.url(`/agent-sessions/${sessionId}`), meta, {
-        headers: this.mutateHeaders(),
-      })
-      .pipe(catchError((e) => this.fail(e)));
+    return this.gatewayPost<{ meta: BridgeSessionMeta }>(`/agent-sessions/${sessionId}`, {
+      ...meta,
+      _method: 'PATCH',
+    });
   }
   deleteSession(sessionId: string) {
-    return this.http
-      .delete<{ closed: boolean; archived: boolean }>(this.url(`/agent-sessions/${sessionId}`), {
-        headers: this.mutateHeaders(),
-      })
-      .pipe(catchError((e) => this.fail(e)));
+    return this.gatewayPost<{ closed: boolean; archived: boolean }>(
+      `/agent-sessions/${sessionId}`,
+      { _method: 'DELETE' },
+    );
   }
   resumeSession(sessionRef: string, provider: string) {
-    return this.post<BridgeSession>('/agent-sessions/_/resume', {
+    return this.gatewayPost<BridgeSession>('/agent-sessions/_/resume', {
       session_ref: sessionRef,
       provider,
     });
   }
   approve(sessionId: string, provider: string, approvalId: string, approved: boolean) {
-    return this.post<{ resolved: boolean }>(`/agent-sessions/${sessionId}/approve`, {
+    return this.gatewayPost<{ resolved: boolean }>(`/agent-sessions/${sessionId}/approve`, {
       provider,
       approval_id: approvalId,
       approved,
@@ -335,11 +380,8 @@ export class PfBridge {
       const pump = async (): Promise<void> => {
         try {
           const resp = await fetch(
-            this.url(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
-            {
-              headers: { Authorization: `Bearer ${this.token()}`, Accept: 'text/event-stream' },
-              signal: ctrl.signal,
-            },
+            this.gatewayUrl(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
+            { headers: { Accept: 'text/event-stream' }, signal: ctrl.signal },
           );
           if (!resp.ok || !resp.body) {
             sub.error(new ApiError(resp.status));
@@ -376,50 +418,50 @@ export class PfBridge {
   }
 
   artifacts(sessionId: string, provider: string) {
-    return this.post<{ items: BridgeArtifact[] }>(`/agent-sessions/${sessionId}/artifacts`, {
+    return this.gatewayPost<{ items: BridgeArtifact[] }>(`/agent-sessions/${sessionId}/artifacts`, {
       provider,
     }).pipe(map((r) => r.items));
   }
 
   // -- approval tokens (§25.4) ------------------------------------------
   pendingApprovals(sessionId = '') {
-    return this.get<{ items: ApprovalRequest[] }>(`/approvals?session_id=${sessionId}`).pipe(
+    return this.gatewayGet<{ items: ApprovalRequest[] }>(`/approvals?session_id=${sessionId}`).pipe(
       map((r) => r.items),
     );
   }
   resolveApproval(approvalId: string, approved: boolean) {
-    return this.post<ApprovalGrant>(`/approvals/${approvalId}/resolve`, { approved });
+    return this.gatewayPost<ApprovalGrant>(`/approvals/${approvalId}/resolve`, { approved });
   }
 
   // -- pairing management (§25.6) ----------------------------------------
   devices() {
-    return this.get<{ items: BridgeDevice[] }>('/pair/devices').pipe(map((r) => r.items));
+    return this.gatewayGet<{ items: BridgeDevice[] }>('/pair/devices').pipe(map((r) => r.items));
   }
   revokeDevice(deviceId: string) {
-    return this.http
-      .delete<{ revoked: boolean }>(this.url(`/pair/devices/${deviceId}`), {
-        headers: this.mutateHeaders(),
-      })
-      .pipe(catchError((e) => this.fail(e)));
+    return this.gatewayPost<{ revoked: boolean }>(`/pair/devices/${deviceId}`, {
+      _method: 'DELETE',
+    });
   }
   rotatePair(pairToken: string) {
-    return this.post<{ rotated: boolean; pair_token: string }>('/pair/rotate', {
+    return this.gatewayPost<{ rotated: boolean; pair_token: string }>('/pair/rotate', {
       pair_token: pairToken,
     });
   }
 
   // -- files --------------------------------------------------------------
   fileList(path = '.') {
-    return this.post<{ items: BridgeFileEntry[]; root: string }>('/files/list', { path });
+    return this.gatewayPost<{ items: BridgeFileEntry[]; root: string }>('/files/list', { path });
   }
   filePreview(path: string) {
-    return this.post<BridgeFilePreview>('/files/preview', { path });
+    return this.gatewayPost<BridgeFilePreview>('/files/preview', { path });
   }
   fileDownload(path: string) {
-    return this.post<{ path: string; content_b64: string }>('/files/download', { path });
+    return this.gatewayPost<{ path: string; content_b64: string }>('/files/download', { path });
   }
   fileHistory(path: string) {
-    return this.post<{ items: { version: string; size: number }[] }>('/files/history', { path });
+    return this.gatewayPost<{ items: { version: string; size: number }[] }>('/files/history', {
+      path,
+    });
   }
 
   /**
@@ -433,7 +475,7 @@ export class PfBridge {
     approvalToken = '',
     sessionId = '',
   ): Observable<FileOpResult> {
-    return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
+    return this.gatewayPost<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
       '/files/upload',
       { path, content_b64: contentB64, approval_token: approvalToken, session_id: sessionId },
     ).pipe(
@@ -455,7 +497,7 @@ export class PfBridge {
     approvalToken = '',
     sessionId = '',
   ): Observable<FileOpResult> {
-    return this.post<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
+    return this.gatewayPost<Record<string, unknown> & { approval_request?: ApprovalRequest }>(
       '/files/restore',
       { path, version, approval_token: approvalToken, session_id: sessionId },
     ).pipe(
@@ -480,38 +522,38 @@ export class PfBridge {
     prefer?: string;
     max_cost_usd?: number;
   }) {
-    return this.post<ProviderRouting>('/intel/route', opts);
+    return this.gatewayPost<ProviderRouting>('/intel/route', opts);
   }
   intelQuality(sessionId: string) {
-    return this.get<SessionQuality>(`/intel/${sessionId}/quality`);
+    return this.gatewayGet<SessionQuality>(`/intel/${sessionId}/quality`);
   }
   intelContextHealth(sessionId: string) {
-    return this.get<ContextHealth>(`/intel/${sessionId}/context-health`);
+    return this.gatewayGet<ContextHealth>(`/intel/${sessionId}/context-health`);
   }
   intelReplay(sessionId: string) {
-    return this.get<ReplayDossier>(`/intel/${sessionId}/replay`);
+    return this.gatewayGet<ReplayDossier>(`/intel/${sessionId}/replay`);
   }
   intelDecisions(sessionId: string) {
-    return this.get<{ items: DecisionRecord[] }>(`/intel/${sessionId}/decisions`).pipe(
+    return this.gatewayGet<{ items: DecisionRecord[] }>(`/intel/${sessionId}/decisions`).pipe(
       map((r) => r.items),
     );
   }
   intelFinops() {
-    return this.get<AgentFinOps>('/intel/finops');
+    return this.gatewayGet<AgentFinOps>('/intel/finops');
   }
   intelMode() {
-    return this.get<DegradedMode>('/intel/mode');
+    return this.gatewayGet<DegradedMode>('/intel/mode');
   }
   intelWorkspace() {
-    return this.get<WorkspaceIntelligence>('/intel/workspace');
+    return this.gatewayGet<WorkspaceIntelligence>('/intel/workspace');
   }
 
   // -- backups (§28.6) ----------------------------------------------------
   backup() {
-    return this.post<{ backup: string; files: number; excluded: string[] }>('/backup', {});
+    return this.gatewayPost<{ backup: string; files: number; excluded: string[] }>('/backup', {});
   }
   restoreBackup(path: string, approvalToken = '') {
-    return this.post<
+    return this.gatewayPost<
       Record<string, unknown> & {
         approval_request?: ApprovalRequest;
         restore?: { restored: string[]; refused: string[] } | string;
