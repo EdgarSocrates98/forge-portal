@@ -234,10 +234,16 @@ export class PfBridge {
           } catch {
             /* storage unavailable — memory-only session remains usable */
           }
-          return r.data.device ?? {
-            device_id: 'gateway', device_name: 'Product Forge gateway', scopes: ['agent'],
-            created_at: Date.now(), expires_at: 0, last_seen: Date.now(),
-          };
+          return (
+            r.data.device ?? {
+              device_id: 'gateway',
+              device_name: 'Product Forge gateway',
+              scopes: ['agent'],
+              created_at: Date.now(),
+              expires_at: 0,
+              last_seen: Date.now(),
+            }
+          );
         }),
         catchError((e) => this.fail(e)),
       );
@@ -269,14 +275,20 @@ export class PfBridge {
 
   private gatewayPost<T>(p: string, body: unknown): Observable<T> {
     return this.http
-      .post<GatewayEnvelope<T>>(this.gatewayUrl(p), body, { headers: { 'Content-Type': 'application/json' } })
-      .pipe(map((r) => this.unwrapGateway(r)), catchError((e) => this.fail(e)));
+      .post<GatewayEnvelope<T>>(this.gatewayUrl(p), body, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .pipe(
+        map((r) => this.unwrapGateway(r)),
+        catchError((e) => this.fail(e)),
+      );
   }
 
   private gatewayGet<T>(p: string): Observable<T> {
-    return this.http
-      .get<GatewayEnvelope<T>>(this.gatewayUrl(p))
-      .pipe(map((r) => this.unwrapGateway(r)), catchError((e) => this.fail(e)));
+    return this.http.get<GatewayEnvelope<T>>(this.gatewayUrl(p)).pipe(
+      map((r) => this.unwrapGateway(r)),
+      catchError((e) => this.fail(e)),
+    );
   }
 
   private unwrapGateway<T>(r: GatewayEnvelope<T>): T {
@@ -325,10 +337,16 @@ export class PfBridge {
     return this.gatewayGet<{ items: BridgeSession[] }>('/agent-sessions').pipe(map((r) => r.items));
   }
   patchSession(sessionId: string, meta: Partial<BridgeSessionMeta>) {
-    return this.gatewayPost<{ meta: BridgeSessionMeta }>(`/agent-sessions/${sessionId}`, { ...meta, _method: 'PATCH' });
+    return this.gatewayPost<{ meta: BridgeSessionMeta }>(`/agent-sessions/${sessionId}`, {
+      ...meta,
+      _method: 'PATCH',
+    });
   }
   deleteSession(sessionId: string) {
-    return this.gatewayPost<{ closed: boolean; archived: boolean }>(`/agent-sessions/${sessionId}`, { _method: 'DELETE' });
+    return this.gatewayPost<{ closed: boolean; archived: boolean }>(
+      `/agent-sessions/${sessionId}`,
+      { _method: 'DELETE' },
+    );
   }
   resumeSession(sessionRef: string, provider: string) {
     return this.gatewayPost<BridgeSession>('/agent-sessions/_/resume', {
@@ -420,7 +438,9 @@ export class PfBridge {
     return this.gatewayGet<{ items: BridgeDevice[] }>('/pair/devices').pipe(map((r) => r.items));
   }
   revokeDevice(deviceId: string) {
-    return this.gatewayPost<{ revoked: boolean }>(`/pair/devices/${deviceId}`, { _method: 'DELETE' });
+    return this.gatewayPost<{ revoked: boolean }>(`/pair/devices/${deviceId}`, {
+      _method: 'DELETE',
+    });
   }
   rotatePair(pairToken: string) {
     return this.gatewayPost<{ rotated: boolean; pair_token: string }>('/pair/rotate', {
@@ -439,7 +459,9 @@ export class PfBridge {
     return this.gatewayPost<{ path: string; content_b64: string }>('/files/download', { path });
   }
   fileHistory(path: string) {
-    return this.gatewayPost<{ items: { version: string; size: number }[] }>('/files/history', { path });
+    return this.gatewayPost<{ items: { version: string; size: number }[] }>('/files/history', {
+      path,
+    });
   }
 
   /**

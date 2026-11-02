@@ -764,8 +764,9 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.error.set(null);
     try {
       this.providers.set(await firstValueFrom(this.bridge.providers()));
-      const available = this.providers().find((p) => p.installed && p.auth_state !== 'blocked')
-        ?? this.providers().find((p) => p.id !== 'fake' && p.executable);
+      const available =
+        this.providers().find((p) => p.installed && p.auth_state !== 'blocked') ??
+        this.providers().find((p) => p.id !== 'fake' && p.executable);
       if (!this.provider() || (this.provider() === 'fake' && available)) {
         this.provider.set(available?.id ?? '');
       }
