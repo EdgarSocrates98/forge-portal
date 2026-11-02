@@ -673,7 +673,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly pairError = signal<string | null>(null);
   readonly proposalState = signal<string | null>(null);
   readonly providers = signal<BridgeProvider[]>([]);
-  readonly provider = signal('fake');
+  // A fake provider is an explicit test double, never an implicit production
+  // default.  The first installed provider is selected after discovery.
+  readonly provider = signal('');
   readonly products = signal<PfProduct[]>([]);
   readonly productId = signal('');
   readonly sessions = signal<BridgeSession[]>([]);
@@ -737,12 +739,7 @@ export class PfChatPage implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    if (this.bridge.token()) {
-      this.paired.set(true);
-      void this.bootstrap();
-    } else {
-      void this.autoPair();
-    }
+    void this.autoPair();
   }
 
   async autoPair(): Promise<void> {
@@ -767,6 +764,11 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.error.set(null);
     try {
       this.providers.set(await firstValueFrom(this.bridge.providers()));
+      const available = this.providers().find((p) => p.installed && p.auth_state !== 'blocked')
+        ?? this.providers().find((p) => p.id !== 'fake' && p.executable);
+      if (!this.provider() || (this.provider() === 'fake' && available)) {
+        this.provider.set(available?.id ?? '');
+      }
       this.sessions.set(await firstValueFrom(this.bridge.listSessions()));
       try {
         const pl = await firstValueFrom(this.api.products());
