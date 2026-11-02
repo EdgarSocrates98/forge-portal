@@ -354,6 +354,35 @@ export interface PfRoadmap {
   stats?: { initiatives: number; rejected: number };
 }
 
+export interface PfBoardColumn {
+  id: string;
+  name: string;
+  position?: number;
+}
+
+export interface PfTask {
+  id: string;
+  workspace_id: string;
+  product_id: string;
+  board_id: string;
+  column_id: string;
+  title: string;
+  description?: string;
+  type?: string;
+  priority?: string;
+  position?: number;
+  version?: number;
+  comments?: { id: string; author: string; text: string; created_at: string }[];
+}
+
+export interface PfBoard {
+  schema?: string;
+  product_id: string;
+  board: { id: string; name: string; columns: PfBoardColumn[] };
+  tasks: PfTask[];
+  items?: PfInitiative[];
+}
+
 export interface PfPrd {
   schema?: string;
   initiative_id: string;
