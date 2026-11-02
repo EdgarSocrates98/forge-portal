@@ -26,12 +26,9 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
         </select></label
       >
       <form (submit)="create($event)">
-        <input
-          name="title"
-          [(ngModel)]="newTitle"
-          placeholder="Nova tarefa"
-          required
-        /><button class="btn btn--primary">
+        <input name="title" [(ngModel)]="newTitle" placeholder="Nova tarefa" required /><button
+          class="btn btn--primary"
+        >
           {{ 'pf.boards.add' | t }}
         </button>
       </form>
@@ -167,9 +164,7 @@ export class PfBoardsPage implements OnInit {
   select(id: string): void {
     this.productId.set(id);
     if (id)
-      this.api
-        .board(id)
-        .subscribe({ next: (r) => this.board.set(r), error: (e) => this.fail(e) });
+      this.api.board(id).subscribe({ next: (r) => this.board.set(r), error: (e) => this.fail(e) });
   }
   create(ev: Event): void {
     ev.preventDefault();
