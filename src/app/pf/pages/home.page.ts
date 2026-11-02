@@ -184,6 +184,10 @@ import { ToastService } from '../../shared/toast';
         <h2>{{ 'pf.home.agenticWorkspace' | t }}</h2>
       </header>
       <nav class="navgrid" aria-label="Agentic workspace surfaces">
+        <a class="card navcard" data-lift routerLink="/pf/boards">
+          <strong>{{ 'pf.home.boardsRoadmaps' | t }}</strong>
+          <span class="muted small">{{ 'pf.home.boardsRoadmapsSub' | t }}</span>
+        </a>
         <a class="card navcard" data-lift routerLink="/pf/chat">
           <strong>{{ 'pf.home.chat' | t }}</strong>
           <span class="muted small">{{ 'pf.home.providerSessionsWithStreamingTools' | t }}</span>

@@ -1985,3 +1985,26 @@ tr[data-selected] td {
   gap: var(--space-2);
   align-items: center;
 }
+
+/* Graph Studio remains a full data surface on small screens: controls wrap
+   before the canvas becomes cramped, while list mode remains the accessible
+   fallback for keyboard and assistive-technology users. */
+@media (max-width: 720px) {
+  .fed__canvas {
+    height: 390px;
+  }
+  .fed__toolbar {
+    align-items: stretch;
+  }
+  .fed__toolbar > .fg-pill,
+  .fed__toolbar > .btn,
+  .fed__toolbar > select {
+    flex: 1 1 auto;
+  }
+  .fed__head-side {
+    align-items: stretch;
+  }
+  .fed__head-side > * {
+    flex: 1 1 auto;
+  }
+}
