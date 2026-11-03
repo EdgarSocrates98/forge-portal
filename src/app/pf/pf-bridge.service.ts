@@ -381,7 +381,13 @@ export class PfBridge {
         try {
           const resp = await fetch(
             this.gatewayUrl(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
-            { headers: { Accept: 'text/event-stream' }, signal: ctrl.signal },
+            {
+              headers: {
+                Accept: 'text/event-stream',
+                'Last-Event-ID': String(cursor),
+              },
+              signal: ctrl.signal,
+            },
           );
           if (!resp.ok || !resp.body) {
             sub.error(new ApiError(resp.status));
@@ -400,6 +406,8 @@ export class PfBridge {
               const dataLine = frame.split('\n').find((l) => l.startsWith('data: '));
               if (!dataLine || dataLine.startsWith('data: hb')) continue;
               const ev = JSON.parse(dataLine.slice(6)) as BridgeEvent;
+              const idLine = frame.split('\n').find((l) => l.startsWith('id: '));
+              if (idLine && !ev.seq) ev.seq = Number(idLine.slice(4));
               if (seen.has(ev.seq)) continue; // §26.6 dedup
               seen.add(ev.seq);
               cursor = Math.max(cursor, ev.seq);
