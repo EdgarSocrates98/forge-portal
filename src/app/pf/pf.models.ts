@@ -42,7 +42,16 @@ export interface PfTaskProposal {
   source?: string;
   session_id?: string;
   state: 'proposed' | 'approved' | 'rejected';
-  tasks: { title: string; description?: string; priority?: string }[];
+  tasks: {
+    title: string;
+    description?: string;
+    priority?: string;
+    type?: string;
+    acceptance_criteria?: string[];
+    depends_on?: string[];
+    destination?: string;
+    agent?: string;
+  }[];
   task_ids?: string[];
   created_at?: string;
 }

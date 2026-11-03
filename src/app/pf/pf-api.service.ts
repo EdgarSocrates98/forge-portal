@@ -391,10 +391,10 @@ export class PfApi {
       `/products/${encodeURIComponent(pid)}/task-proposals`,
     );
   }
-  approveTaskProposal(pid: string, proposalId: string) {
+  approveTaskProposal(pid: string, proposalId: string, tasks?: PfTaskProposal['tasks']) {
     return this.post<PfTaskProposal>(
       `/products/${encodeURIComponent(pid)}/task-proposals/${encodeURIComponent(proposalId)}/approve`,
-      { approved: true, confirm: 'decide' },
+      { approved: true, confirm: 'decide', ...(tasks ? { tasks } : {}) },
     );
   }
   rejectTaskProposal(pid: string, proposalId: string) {
