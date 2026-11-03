@@ -38,20 +38,52 @@ import { ToastService } from '../../shared/toast';
             </div>
             <span class="state">{{ proposal.state }}</span>
           </div>
-          <p class="muted">Revise cada item antes de aprovar. Alterações ficam registradas na proposta.</p>
+          <p class="muted">
+            Revise cada item antes de aprovar. Alterações ficam registradas na proposta.
+          </p>
           <div class="task-review">
             @for (task of proposal.tasks; track $index; let i = $index) {
               <section class="task-review__item">
                 <div class="task-review__heading">
                   <span class="task-number">{{ i + 1 }}</span>
-                  <input class="input" [value]="task.title" (input)="editTask(proposal, i, 'title', $any($event.target).value)" aria-label="Título da tarefa" />
-                  <button class="btn btn--mini btn--ghost" type="button" (click)="removeTask(proposal, i)" [disabled]="proposal.tasks.length < 2">Remover</button>
+                  <input
+                    class="input"
+                    [value]="task.title"
+                    (input)="editTask(proposal, i, 'title', $any($event.target).value)"
+                    aria-label="Título da tarefa"
+                  />
+                  <button
+                    class="btn btn--mini btn--ghost"
+                    type="button"
+                    (click)="removeTask(proposal, i)"
+                    [disabled]="proposal.tasks.length < 2"
+                  >
+                    Remover
+                  </button>
                 </div>
-                <textarea class="input" rows="2" [value]="task.description || ''" (input)="editTask(proposal, i, 'description', $any($event.target).value)" aria-label="Descrição da tarefa"></textarea>
+                <textarea
+                  class="input"
+                  rows="2"
+                  [value]="task.description || ''"
+                  (input)="editTask(proposal, i, 'description', $any($event.target).value)"
+                  aria-label="Descrição da tarefa"
+                ></textarea>
                 <div class="task-review__meta">
-                  <label>Prioridade <select [value]="task.priority || 'medium'" (change)="editTask(proposal, i, 'priority', $any($event.target).value)"><option value="low">Baixa</option><option value="medium">Média</option><option value="high">Alta</option></select></label>
+                  <label
+                    >Prioridade
+                    <select
+                      [value]="task.priority || 'medium'"
+                      (change)="editTask(proposal, i, 'priority', $any($event.target).value)"
+                    >
+                      <option value="low">Baixa</option>
+                      <option value="medium">Média</option>
+                      <option value="high">Alta</option>
+                    </select></label
+                  >
                   <span>{{ task.type || 'task' }}</span>
-                  @if (task.acceptance_criteria?.length) { <span>{{ task.acceptance_criteria.length }} critérios de aceite</span> }
+                  @if (task.acceptance_criteria?.length) {
+                    <span>{{ task.acceptance_criteria.length }} critérios de aceite</span>
+                  }
                 </div>
               </section>
             }
@@ -128,15 +160,67 @@ import { ToastService } from '../../shared/toast';
         display: flex;
         gap: 0.5rem;
       }
-      .task-review { display: grid; gap: .75rem; }
-      .task-review__item { display: grid; gap: .55rem; padding: .8rem; border: 1px solid var(--border); border-radius: .65rem; background: color-mix(in srgb, var(--surface) 90%, white 4%); }
-      .task-review__heading { display: grid; grid-template-columns: auto 1fr auto; gap: .55rem; align-items: center; }
-      .task-number { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--accent); color: var(--surface); font-weight: 700; }
-      .input { width: 100%; box-sizing: border-box; padding: .6rem .7rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--surface); color: inherit; font: inherit; }
-      .task-review__meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; font-size: .8rem; opacity: .8; }
-      .task-review__meta label { display: flex; gap: .35rem; align-items: center; }
-      .task-review__meta select { padding: .3rem; border: 1px solid var(--border); border-radius: .4rem; background: var(--surface); color: inherit; }
-      .btn--ghost { opacity: .75; }
+      .task-review {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .task-review__item {
+        display: grid;
+        gap: 0.55rem;
+        padding: 0.8rem;
+        border: 1px solid var(--border);
+        border-radius: 0.65rem;
+        background: color-mix(in srgb, var(--surface) 90%, white 4%);
+      }
+      .task-review__heading {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.55rem;
+        align-items: center;
+      }
+      .task-number {
+        display: grid;
+        place-items: center;
+        width: 1.7rem;
+        height: 1.7rem;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--surface);
+        font-weight: 700;
+      }
+      .input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.6rem 0.7rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        background: var(--surface);
+        color: inherit;
+        font: inherit;
+      }
+      .task-review__meta {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+      .task-review__meta label {
+        display: flex;
+        gap: 0.35rem;
+        align-items: center;
+      }
+      .task-review__meta select {
+        padding: 0.3rem;
+        border: 1px solid var(--border);
+        border-radius: 0.4rem;
+        background: var(--surface);
+        color: inherit;
+      }
+      .btn--ghost {
+        opacity: 0.75;
+      }
       .empty {
         text-align: center;
         padding: 2rem;
@@ -182,7 +266,8 @@ export class PfProposalsPage implements OnInit {
   }
   private async decide(p: PfTaskProposal, approved: boolean): Promise<void> {
     try {
-      if (approved) await firstValueFrom(this.api.approveTaskProposal(this.productId(), p.id, p.tasks));
+      if (approved)
+        await firstValueFrom(this.api.approveTaskProposal(this.productId(), p.id, p.tasks));
       else await firstValueFrom(this.api.rejectTaskProposal(this.productId(), p.id));
       this.toast.show(
         approved ? 'Task created' : 'Proposal rejected',
@@ -193,14 +278,23 @@ export class PfProposalsPage implements OnInit {
       this.fail(e);
     }
   }
-  editTask(p: PfTaskProposal, index: number, key: 'title' | 'description' | 'priority', value: string): void {
-    const tasks = p.tasks.map((task, i) => i === index ? { ...task, [key]: value } : task);
-    this.proposals.update((items) => items.map((item) => item.id === p.id ? { ...item, tasks } : item));
+  editTask(
+    p: PfTaskProposal,
+    index: number,
+    key: 'title' | 'description' | 'priority',
+    value: string,
+  ): void {
+    const tasks = p.tasks.map((task, i) => (i === index ? { ...task, [key]: value } : task));
+    this.proposals.update((items) =>
+      items.map((item) => (item.id === p.id ? { ...item, tasks } : item)),
+    );
   }
   removeTask(p: PfTaskProposal, index: number): void {
     if (p.tasks.length < 2) return;
     const tasks = p.tasks.filter((_, i) => i !== index);
-    this.proposals.update((items) => items.map((item) => item.id === p.id ? { ...item, tasks } : item));
+    this.proposals.update((items) =>
+      items.map((item) => (item.id === p.id ? { ...item, tasks } : item)),
+    );
   }
   private fail(e: unknown): void {
     this.error.set(e instanceof Error ? e.message : 'Unable to load proposals.');
