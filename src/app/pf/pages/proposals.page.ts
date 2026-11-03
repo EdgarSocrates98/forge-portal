@@ -75,9 +75,9 @@ import { ToastService } from '../../shared/toast';
                       [value]="task.priority || 'medium'"
                       (change)="editTask(proposal, i, 'priority', $any($event.target).value)"
                     >
-                      <option value="low">Baixa</option>
-                      <option value="medium">Média</option>
-                      <option value="high">Alta</option>
+                      <option value="low">{{ 'pf.proposals.priorityLow' | t }}</option>
+                      <option value="medium">{{ 'pf.proposals.priorityMedium' | t }}</option>
+                      <option value="high">{{ 'pf.proposals.priorityHigh' | t }}</option>
                     </select></label
                   >
                   <span>{{ task.type || 'task' }}</span>
