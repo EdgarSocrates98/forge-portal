@@ -147,7 +147,7 @@ const TEMPLATES = [
                     }
                   </span>
                   <span class="muted small"
-                    >{{ s.provider }} · {{ s.state
+                    >{{ s.provider }} · {{ s.model || 'default' }} · {{ s.state
                     }}{{ s.product_name ? ' · ' + s.product_name : '' }}</span
                   >
                 </button>
@@ -159,18 +159,48 @@ const TEMPLATES = [
             <details class="new" [open]="!sessions().length">
               <summary>{{ 'pf.chat.newSession' | t }}</summary>
               <label class="lbl"
-                >Provider
+                >Host de IA
                 <select
                   class="input"
                   [value]="provider()"
-                  (change)="provider.set($any($event.target).value)"
+                  (change)="onProviderChange($any($event.target).value)"
+                  aria-describedby="host-help"
                 >
                   @for (p of providers(); track p.id) {
                     <option [value]="p.id" [disabled]="!p.executable && p.id !== 'fake'">
-                      {{ p.name }}{{ p.executable || p.id === 'fake' ? '' : ' (unavailable)' }}
+                      {{ p.name }} · {{ p.auth_state }}{{ p.executable || p.id === 'fake' ? '' : ' · indisponível' }}
                     </option>
                   }
                 </select>
+                <span id="host-help" class="field-help">O host executa a sessão e mantém as credenciais locais.</span>
+              </label>
+              <label class="lbl"
+                >Modelo
+                <select
+                  class="input"
+                  [value]="model()"
+                  (change)="model.set($any($event.target).value)"
+                  aria-describedby="model-help"
+                >
+                  <option value="default">Automático — padrão do host</option>
+                  @for (m of modelOptions(); track m.id) {
+                    @if (m.id !== 'default') {
+                      <option [value]="m.id">{{ m.label }}{{ m.verified ? '' : ' · não verificado' }}</option>
+                    }
+                  }
+                  <option value="__custom">ID personalizado…</option>
+                </select>
+                <input
+                  class="input"
+                  [value]="customModel()"
+                  (input)="customModel.set($any($event.target).value)"
+                  [hidden]="model() !== '__custom'"
+                  placeholder="ID do modelo publicado pelo host"
+                  aria-label="ID personalizado do modelo"
+                />
+                <span id="model-help" class="field-help">
+                  {{ modelOptions().length ? 'Catálogo declarado pelo host; itens não verificados são enviados como hint.' : 'Este host não publica um catálogo local; use Automático ou um ID personalizado.' }}
+                </span>
               </label>
               <label class="lbl"
                 >Product
@@ -197,6 +227,7 @@ const TEMPLATES = [
                 <ui-state-badge [state]="s.state" />
                 <strong>{{ s.meta?.title || s.id }}</strong>
                 <span class="muted small">{{ s.provider }}</span>
+                <span class="model-chip" title="Modelo usado na sessão">{{ s.model || 'default' }}</span>
                 <span class="spacer"></span>
                 @if (s.resumable && s.provider_session_ref) {
                   <button class="btn btn--mini" (click)="resumeCopy(s)">
@@ -506,6 +537,11 @@ const TEMPLATES = [
       color: var(--fg-muted);
       margin: var(--space-2) 0;
     }
+    .field-help {
+      color: var(--fg-muted);
+      font-size: 0.72rem;
+      line-height: 1.35;
+    }
     .main {
       display: grid;
       gap: var(--space-3);
@@ -517,6 +553,13 @@ const TEMPLATES = [
       gap: var(--space-2);
       border-bottom: 1px solid var(--border);
       padding-bottom: var(--space-2);
+    }
+    .model-chip {
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: var(--accent-ink, var(--fg));
+      font: 0.72rem var(--font-mono);
     }
     .spacer {
       flex: 1;
@@ -682,6 +725,37 @@ const TEMPLATES = [
         display: none;
       }
     }
+    @media (max-width: 640px) {
+      .studio {
+        gap: var(--space-3);
+      }
+      .card {
+        padding: var(--space-3);
+      }
+      .sessbar {
+        flex-wrap: wrap;
+      }
+      .sessbar .spacer {
+        display: none;
+      }
+      .sessbar .btn {
+        min-height: 2rem;
+      }
+      .timeline {
+        max-height: none;
+      }
+      .msg {
+        max-width: 100%;
+      }
+      .composer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .composer__acts {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
   `,
 })
 export class PfChatPage implements OnInit, OnDestroy {
@@ -703,6 +777,8 @@ export class PfChatPage implements OnInit, OnDestroy {
   // A fake provider is an explicit test double, never an implicit production
   // default.  The first installed provider is selected after discovery.
   readonly provider = signal('');
+  readonly model = signal('default');
+  readonly customModel = signal('');
   readonly products = signal<PfProduct[]>([]);
   readonly productId = signal('');
   readonly sessions = signal<BridgeSession[]>([]);
@@ -726,6 +802,10 @@ export class PfChatPage implements OnInit, OnDestroy {
   private streamRetries = 0;
   private streamSeq = 0;
   readonly streaming = signal(false);
+  readonly selectedProvider = computed(() =>
+    this.providers().find((p) => p.id === this.provider()) ?? null,
+  );
+  readonly modelOptions = computed(() => this.selectedProvider()?.models ?? []);
   readonly latestAssistant = computed(
     () => [...this.items()].reverse().find((item) => item.kind === 'assistant')?.text ?? '',
   );
@@ -800,6 +880,8 @@ export class PfChatPage implements OnInit, OnDestroy {
       if (!this.provider() || (this.provider() === 'fake' && available)) {
         this.provider.set(available?.id ?? '');
       }
+      this.model.set('default');
+      this.customModel.set('');
       this.sessions.set(await firstValueFrom(this.api.chatSessions()));
       try {
         const health = await firstValueFrom(this.api.agentHealth());
@@ -817,6 +899,17 @@ export class PfChatPage implements OnInit, OnDestroy {
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     }
+  }
+
+  onProviderChange(id: string): void {
+    this.provider.set(id);
+    this.model.set('default');
+    this.customModel.set('');
+  }
+
+  private selectedModel(): string | undefined {
+    if (this.model() === '__custom') return this.customModel().trim() || undefined;
+    return this.model() || 'default';
   }
 
   async proposeLatestTask(pid: string): Promise<void> {
@@ -869,6 +962,7 @@ export class PfChatPage implements OnInit, OnDestroy {
         this.api.chatCreate({
           provider: this.provider(),
           product_id: this.productId() || undefined,
+          model: this.selectedModel(),
         }),
       );
       this.session.set(s);

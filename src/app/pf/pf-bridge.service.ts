@@ -30,6 +30,7 @@ export interface BridgeSessionMeta {
 export interface BridgeSession {
   id: string;
   provider: string;
+  model?: string | null;
   state: string;
   product_id?: string | null;
   /** Resolved by the typed portal op (`GET /chat/sessions`); absent on the
@@ -47,6 +48,7 @@ export interface BridgeProvider {
   executable?: string | null;
   auth_state: string;
   capabilities: { name: string; state: string }[];
+  models?: { id: string; label: string; verified?: boolean }[];
 }
 
 export interface McpCheck {
@@ -93,6 +95,8 @@ export interface DiagnosticReport {
   budgets: Record<string, unknown>;
   mcp_servers: McpDoctorItem[];
   checks: { name: string; state: string; detail?: string; mode?: string }[];
+  state?: 'ready' | 'unavailable' | 'degraded';
+  reason?: string;
 }
 
 export interface BridgeDevice {
@@ -302,10 +306,26 @@ export class PfBridge {
   }
 
   providers() {
-    return this.gatewayGet<{ items: BridgeProvider[] }>('/providers').pipe(map((r) => r.items));
+    return this.gatewayGet<{ items?: BridgeProvider[] }>('/providers').pipe(
+      map((r) => r.items ?? []),
+    );
   }
   diagnostics(): Observable<DiagnosticReport> {
-    return this.gatewayGet<DiagnosticReport>('/diagnostics');
+    return this.gatewayGet<DiagnosticReport>('/diagnostics').pipe(
+      map((report) => ({
+        schema: 'forge/DiagnosticReport/1' as const,
+        generated_at: new Date().toISOString(),
+        bridge: report.bridge ?? { version: '—', state_dir: '—', pf_verify_mode: '—' },
+        providers: report.providers ?? [],
+        sessions: report.sessions ?? { active: 0, tracked: 0 },
+        approvals: report.approvals ?? { pending: 0 },
+        budgets: report.budgets ?? {},
+        mcp_servers: report.mcp_servers ?? [],
+        checks: report.checks ?? [],
+        state: report.state ?? 'ready',
+        reason: report.reason,
+      })),
+    );
   }
   mcpDoctor(): Observable<McpDoctorReport> {
     return this.gatewayGet<McpDoctorReport>('/mcp/doctor');
@@ -313,10 +333,11 @@ export class PfBridge {
   mcpSetHealth(serverId: string, health: string) {
     return this.gatewayPost<Record<string, unknown>>(`/mcp/${serverId}/health`, { health });
   }
-  createSession(provider: string, productId?: string) {
+  createSession(provider: string, productId?: string, model?: string) {
     return this.gatewayPost<BridgeSession>('/agent-sessions', {
       provider,
       product_id: productId ?? null,
+      model: model ?? 'default',
     });
   }
   prompt(sessionId: string, provider: string, text: string) {
@@ -538,7 +559,14 @@ export class PfBridge {
     return this.gatewayPost<ProviderRouting>('/intel/route', opts);
   }
   intelQuality(sessionId: string) {
-    return this.gatewayGet<SessionQuality>(`/intel/${sessionId}/quality`);
+    return this.gatewayGet<Partial<SessionQuality>>(`/intel/${sessionId}/quality`).pipe(
+      map((r) => ({
+        schema: r.schema ?? 'forge/SessionQuality/1',
+        axes: r.axes ?? {},
+        overall: r.overall ?? 0,
+        note: r.note ?? 'Nenhuma evidência de qualidade registrada ainda.',
+      })),
+    );
   }
   intelContextHealth(sessionId: string) {
     return this.gatewayGet<ContextHealth>(`/intel/${sessionId}/context-health`);
@@ -547,12 +575,19 @@ export class PfBridge {
     return this.gatewayGet<ReplayDossier>(`/intel/${sessionId}/replay`);
   }
   intelDecisions(sessionId: string) {
-    return this.gatewayGet<{ items: DecisionRecord[] }>(`/intel/${sessionId}/decisions`).pipe(
-      map((r) => r.items),
+    return this.gatewayGet<{ items?: DecisionRecord[] }>(`/intel/${sessionId}/decisions`).pipe(
+      map((r) => r.items ?? []),
     );
   }
   intelFinops() {
-    return this.gatewayGet<AgentFinOps>('/intel/finops');
+    return this.gatewayGet<Partial<AgentFinOps>>('/intel/finops').pipe(
+      map((r) => ({
+        schema: r.schema ?? 'forge/AgentFinOps/1',
+        by_scope: r.by_scope ?? [],
+        limits: r.limits ?? {},
+        note: r.note ?? 'Nenhum uso registrado ainda.',
+      })),
+    );
   }
   intelMode() {
     return this.gatewayGet<DegradedMode>('/intel/mode');

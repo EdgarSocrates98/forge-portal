@@ -35,6 +35,18 @@ import { UiSkeleton } from '../../shared/skeleton';
     } @else {
       @let r = report()!;
 
+      @if (r.state === 'unavailable' || r.state === 'degraded') {
+        <section class="card notice" role="status" aria-live="polite">
+          <ui-state-badge [state]="r.state" />
+          <span>
+            {{ r.state === 'unavailable' ? 'O diagnóstico do Bridge está indisponível no momento.' :
+            'O diagnóstico do Bridge está degradado.' }}
+            @if (r.reason) { <span class="muted mono">{{ r.reason }}</span> }
+          </span>
+          <button class="btn btn--mini" type="button" (click)="load()">Tentar novamente</button>
+        </section>
+      }
+
       <section class="card meta" aria-labelledby="dg-bridge">
         <h2 id="dg-bridge">{{ 'pf.diagnostics.bridge' | t }}</h2>
         <dl class="kv">
@@ -162,6 +174,12 @@ import { UiSkeleton } from '../../shared/skeleton';
     `
       .meta {
         margin-bottom: 1rem;
+      }
+      .notice {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-color: var(--warn, #c90);
       }
       .kv {
         display: grid;

@@ -31,6 +31,10 @@ import { UiGuideHint } from './guide-hint';
       justify-content: space-between;
       gap: var(--space-4);
     }
+    .ph__text {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
     .ph__title {
       margin: 0;
       font-size: var(--font-2xl);
@@ -46,6 +50,15 @@ import { UiGuideHint } from './guide-hint';
       display: flex;
       gap: var(--space-2);
       flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .ph {
+        flex-direction: column;
+      }
+      .ph__actions {
+        flex-wrap: wrap;
+        width: 100%;
+      }
     }
   `,
 })

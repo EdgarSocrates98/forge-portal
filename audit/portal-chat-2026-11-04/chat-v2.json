@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:4310/?forge_session=gal6EuaqMMQo7nAnRuCajCRXnREaSneW",
+  "status": "PASSED",
+  "provider": "fake",
+  "model": "default",
+  "prompt_echoed": true,
+  "mobile_horizontal_overflow_px": 0,
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "failed_requests": [],
+  "bad_responses": [
+    {
+      "url": "http://127.0.0.1:4310/api/v1/chat/sessions/ses_d8dj8ekook0f/stream?after_seq=0",
+      "status": 403
+    }
+  ],
+  "screenshot": "audit\\portal-chat-2026-11-04\\chat-v2.png"
+}

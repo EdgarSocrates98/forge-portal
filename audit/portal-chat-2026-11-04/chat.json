@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:4310/?forge_session=B-9s9Kw0efBNBMaWLpXDqgKz6dzNbbYR",
+  "status": "PASSED",
+  "provider": "fake",
+  "model": "default",
+  "prompt_echoed": true,
+  "mobile_horizontal_overflow_px": 0,
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "failed_requests": [],
+  "bad_responses": [
+    {
+      "url": "http://127.0.0.1:4310/api/v1/chat/sessions/ses_y7hl108uqsog/stream?after_seq=0",
+      "status": 503
+    }
+  ],
+  "screenshot": "audit\\portal-chat-2026-11-04\\chat.png"
+}

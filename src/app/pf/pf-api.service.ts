@@ -177,7 +177,7 @@ export class PfApi {
   cleanupChatSessions() {
     return this.post<PfChatCleanup>('/chat/sessions/cleanup', { confirm: 'cleanup' });
   }
-  chatCreate(input: { provider: string; product_id?: string }) {
+  chatCreate(input: { provider: string; product_id?: string; model?: string }) {
     return this.post<BridgeSession>('/chat/sessions', { confirm: 'create', ...input });
   }
   chatPrompt(sid: string, text: string, provider?: string) {
