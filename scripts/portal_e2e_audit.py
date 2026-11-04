@@ -15,7 +15,6 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from playwright.sync_api import Page, sync_playwright
 
-
 ROUTES = [
     "/dashboard",
     "/install",
@@ -116,7 +115,9 @@ def main() -> int:
         for route in ROUTES:
             try:
                 results.append(inspect_page(page, route, args.url, args.output))
-            except Exception as exc:  # keep the matrix complete after one route fails
+            except (TimeoutError, OSError, RuntimeError, ValueError) as exc:
+                # Keep the matrix complete after one route fails while
+                # retaining a bounded, actionable exception contract.
                 results.append({"route": route, "status": "NOT_RUN", "error": repr(exc)})
         browser.close()
     report = {

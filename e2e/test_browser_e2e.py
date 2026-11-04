@@ -1297,6 +1297,9 @@ def ops_home(tmp_path, monkeypatch):
     home.mkdir()
     monkeypatch.setenv("FORGE_CLI_HOME", str(home))
     monkeypatch.setenv("FORGE_HOME_OVERRIDE", str(home))
+    workspace_cli = REPO.parent / "forge-cli" / "dist" / "index.js"
+    if workspace_cli.is_file():
+        monkeypatch.setenv("FORGE_CLI_BIN", str(workspace_cli))
     return home
 
 

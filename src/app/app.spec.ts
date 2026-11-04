@@ -132,6 +132,30 @@ describe('App shell', () => {
     input.remove();
   });
 
+  it('provides a labelled mobile drawer and keeps icon-only links discoverable', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const side = el.querySelector<HTMLElement>('.shell__side')!;
+    const mobile = el.querySelector<HTMLButtonElement>('.nav-mobile-toggle')!;
+    const dashboard = el.querySelector<HTMLAnchorElement>('.nav__item')!;
+
+    expect(mobile.getAttribute('aria-controls')).toBe('shell-nav');
+    expect(mobile.getAttribute('aria-expanded')).toBe('false');
+    expect(dashboard.getAttribute('title')).toBeTruthy();
+
+    mobile.click();
+    fixture.detectChanges();
+    expect(side.hasAttribute('data-mobile-open')).toBe(true);
+    expect(mobile.getAttribute('aria-expanded')).toBe('true');
+    expect(el.querySelector('.nav-scrim')).toBeTruthy();
+
+    el.querySelector<HTMLButtonElement>('.nav-scrim')!.click();
+    fixture.detectChanges();
+    expect(side.hasAttribute('data-mobile-open')).toBe(false);
+  });
+
   it('shows the offline banner when the server is unreachable', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
@@ -202,5 +226,17 @@ describe('App shell — a11y chrome', () => {
     await router.navigateByUrl('/agents');
     await fixture.whenStable();
     expect(document.activeElement).toBe(main);
+  });
+
+  it('exposes the active journey and page in the top bar', async () => {
+    const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
+    fixture.detectChanges();
+    await router.navigateByUrl('/agents');
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const route = fixture.nativeElement.querySelector('.topbar__route') as HTMLElement;
+    expect(route.textContent).toMatch(/Explore|Explorar/);
+    expect(route.textContent).toContain('Agents');
   });
 });

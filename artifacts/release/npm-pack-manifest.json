@@ -1,0 +1,5998 @@
+{
+  "dir": ".",
+  "file_count": 1195,
+  "files": [
+    {
+      "bytes": 314,
+      "mode": 420,
+      "path": ".editorconfig"
+    },
+    {
+      "bytes": 133,
+      "mode": 420,
+      "path": ".github/CODEOWNERS"
+    },
+    {
+      "bytes": 285,
+      "mode": 420,
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md"
+    },
+    {
+      "bytes": 257,
+      "mode": 420,
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md"
+    },
+    {
+      "bytes": 217,
+      "mode": 420,
+      "path": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "bytes": 2052,
+      "mode": 420,
+      "path": ".github/workflows/ci.yml"
+    },
+    {
+      "bytes": 161,
+      "mode": 420,
+      "path": ".prettierrc"
+    },
+    {
+      "bytes": 130,
+      "mode": 420,
+      "path": ".vscode/extensions.json"
+    },
+    {
+      "bytes": 470,
+      "mode": 420,
+      "path": ".vscode/launch.json"
+    },
+    {
+      "bytes": 978,
+      "mode": 420,
+      "path": ".vscode/tasks.json"
+    },
+    {
+      "bytes": 3853,
+      "mode": 420,
+      "path": "CHANGELOG.md"
+    },
+    {
+      "bytes": 611,
+      "mode": 420,
+      "path": "CODE_OF_CONDUCT.md"
+    },
+    {
+      "bytes": 993,
+      "mode": 420,
+      "path": "CONTRIBUTING.md"
+    },
+    {
+      "bytes": 1078,
+      "mode": 420,
+      "path": "LICENSE"
+    },
+    {
+      "bytes": 3005,
+      "mode": 420,
+      "path": "README.md"
+    },
+    {
+      "bytes": 751,
+      "mode": 420,
+      "path": "SECURITY.md"
+    },
+    {
+      "bytes": 449,
+      "mode": 420,
+      "path": "SUPPORT.md"
+    },
+    {
+      "bytes": 2189,
+      "mode": 420,
+      "path": "angular.json"
+    },
+    {
+      "bytes": 979,
+      "mode": 420,
+      "path": "artifacts/release/release-inventory.json"
+    },
+    {
+      "bytes": 99602,
+      "mode": 420,
+      "path": "artifacts/release/vendor-integrity.json"
+    },
+    {
+      "bytes": 361,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat-final.json"
+    },
+    {
+      "bytes": 59438,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat-final.png"
+    },
+    {
+      "bytes": 583,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat-v2.json"
+    },
+    {
+      "bytes": 53051,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat-v2.png"
+    },
+    {
+      "bytes": 590,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat.json"
+    },
+    {
+      "bytes": 56175,
+      "mode": 420,
+      "path": "audit/portal-chat-2026-11-04/chat.png"
+    },
+    {
+      "bytes": 86582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/config.png"
+    },
+    {
+      "bytes": 105684,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/execution.png"
+    },
+    {
+      "bytes": 74708,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/federation.png"
+    },
+    {
+      "bytes": 82029,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 134982,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/forges.png"
+    },
+    {
+      "bytes": 161924,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/guide.png"
+    },
+    {
+      "bytes": 71156,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/hosts.png"
+    },
+    {
+      "bytes": 115797,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/install.png"
+    },
+    {
+      "bytes": 159874,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/knowledge.png"
+    },
+    {
+      "bytes": 70828,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/match.png"
+    },
+    {
+      "bytes": 105806,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/mcp.png"
+    },
+    {
+      "bytes": 76968,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__boards.png"
+    },
+    {
+      "bytes": 114698,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__chat.png"
+    },
+    {
+      "bytes": 70243,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__compare.png"
+    },
+    {
+      "bytes": 90358,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__control-center.png"
+    },
+    {
+      "bytes": 69594,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__diagnostics.png"
+    },
+    {
+      "bytes": 85671,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__intelligence.png"
+    },
+    {
+      "bytes": 90592,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf__workflows.png"
+    },
+    {
+      "bytes": 131268,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/pf.png"
+    },
+    {
+      "bytes": 79727,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/profiles.png"
+    },
+    {
+      "bytes": 93865,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/report.json"
+    },
+    {
+      "bytes": 105582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/settings.png"
+    },
+    {
+      "bytes": 81810,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/skills.png"
+    },
+    {
+      "bytes": 118039,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/tasks.png"
+    },
+    {
+      "bytes": 74351,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v2/versions.png"
+    },
+    {
+      "bytes": 86582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/config.png"
+    },
+    {
+      "bytes": 94971,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/execution.png"
+    },
+    {
+      "bytes": 74708,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/federation.png"
+    },
+    {
+      "bytes": 82029,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 134797,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/forges.png"
+    },
+    {
+      "bytes": 161924,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/guide.png"
+    },
+    {
+      "bytes": 71156,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/hosts.png"
+    },
+    {
+      "bytes": 115797,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/install.png"
+    },
+    {
+      "bytes": 159874,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/knowledge.png"
+    },
+    {
+      "bytes": 70828,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/match.png"
+    },
+    {
+      "bytes": 105806,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/mcp.png"
+    },
+    {
+      "bytes": 76968,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__boards.png"
+    },
+    {
+      "bytes": 114336,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__chat.png"
+    },
+    {
+      "bytes": 70243,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__compare.png"
+    },
+    {
+      "bytes": 78545,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__control-center.png"
+    },
+    {
+      "bytes": 100699,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__diagnostics.png"
+    },
+    {
+      "bytes": 93902,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__intelligence.png"
+    },
+    {
+      "bytes": 90592,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf__workflows.png"
+    },
+    {
+      "bytes": 131268,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/pf.png"
+    },
+    {
+      "bytes": 79727,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/profiles.png"
+    },
+    {
+      "bytes": 79432,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/report.json"
+    },
+    {
+      "bytes": 105582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/settings.png"
+    },
+    {
+      "bytes": 81810,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/skills.png"
+    },
+    {
+      "bytes": 118039,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/tasks.png"
+    },
+    {
+      "bytes": 74351,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v3/versions.png"
+    },
+    {
+      "bytes": 85288,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/config.png"
+    },
+    {
+      "bytes": 141117,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/execution.png"
+    },
+    {
+      "bytes": 138945,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/federation.png"
+    },
+    {
+      "bytes": 79631,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 132590,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/forges.png"
+    },
+    {
+      "bytes": 163061,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/guide.png"
+    },
+    {
+      "bytes": 117932,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/hosts.png"
+    },
+    {
+      "bytes": 149479,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/install.png"
+    },
+    {
+      "bytes": 158097,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/knowledge.png"
+    },
+    {
+      "bytes": 66342,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/match.png"
+    },
+    {
+      "bytes": 107596,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/mcp.png"
+    },
+    {
+      "bytes": 90201,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__boards.png"
+    },
+    {
+      "bytes": 114336,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__chat.png"
+    },
+    {
+      "bytes": 70243,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__compare.png"
+    },
+    {
+      "bytes": 78545,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__control-center.png"
+    },
+    {
+      "bytes": 100732,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__diagnostics.png"
+    },
+    {
+      "bytes": 93902,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__intelligence.png"
+    },
+    {
+      "bytes": 90592,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf__workflows.png"
+    },
+    {
+      "bytes": 131268,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/pf.png"
+    },
+    {
+      "bytes": 79077,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/profiles.png"
+    },
+    {
+      "bytes": 84442,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/report.json"
+    },
+    {
+      "bytes": 105582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/settings.png"
+    },
+    {
+      "bytes": 80937,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/skills.png"
+    },
+    {
+      "bytes": 116341,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/tasks.png"
+    },
+    {
+      "bytes": 108524,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v4/versions.png"
+    },
+    {
+      "bytes": 85288,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/config.png"
+    },
+    {
+      "bytes": 140797,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/execution.png"
+    },
+    {
+      "bytes": 138945,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/federation.png"
+    },
+    {
+      "bytes": 79631,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 132501,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/forges.png"
+    },
+    {
+      "bytes": 163061,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/guide.png"
+    },
+    {
+      "bytes": 117852,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/hosts.png"
+    },
+    {
+      "bytes": 149335,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/install.png"
+    },
+    {
+      "bytes": 158097,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/knowledge.png"
+    },
+    {
+      "bytes": 78160,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/match.png"
+    },
+    {
+      "bytes": 107515,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/mcp.png"
+    },
+    {
+      "bytes": 90286,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__boards.png"
+    },
+    {
+      "bytes": 98869,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__chat.png"
+    },
+    {
+      "bytes": 70244,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__compare.png"
+    },
+    {
+      "bytes": 97502,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__control-center.png"
+    },
+    {
+      "bytes": 130503,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__diagnostics.png"
+    },
+    {
+      "bytes": 118861,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__intelligence.png"
+    },
+    {
+      "bytes": 97530,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf__workflows.png"
+    },
+    {
+      "bytes": 131268,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/pf.png"
+    },
+    {
+      "bytes": 79077,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/profiles.png"
+    },
+    {
+      "bytes": 79217,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/report.json"
+    },
+    {
+      "bytes": 105582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/settings.png"
+    },
+    {
+      "bytes": 80937,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/skills.png"
+    },
+    {
+      "bytes": 116341,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/tasks.png"
+    },
+    {
+      "bytes": 108494,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v5/versions.png"
+    },
+    {
+      "bytes": 85288,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/config.png"
+    },
+    {
+      "bytes": 140688,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/execution.png"
+    },
+    {
+      "bytes": 138945,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/federation.png"
+    },
+    {
+      "bytes": 79631,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 132520,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/forges.png"
+    },
+    {
+      "bytes": 163061,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/guide.png"
+    },
+    {
+      "bytes": 117831,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/hosts.png"
+    },
+    {
+      "bytes": 149335,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/install.png"
+    },
+    {
+      "bytes": 158097,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/knowledge.png"
+    },
+    {
+      "bytes": 77973,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/match.png"
+    },
+    {
+      "bytes": 107443,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/mcp.png"
+    },
+    {
+      "bytes": 90250,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__boards.png"
+    },
+    {
+      "bytes": 101350,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__chat.png"
+    },
+    {
+      "bytes": 70240,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__compare.png"
+    },
+    {
+      "bytes": 102883,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__control-center.png"
+    },
+    {
+      "bytes": 130336,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__diagnostics.png"
+    },
+    {
+      "bytes": 118861,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__intelligence.png"
+    },
+    {
+      "bytes": 97506,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf__workflows.png"
+    },
+    {
+      "bytes": 131268,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/pf.png"
+    },
+    {
+      "bytes": 79077,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/profiles.png"
+    },
+    {
+      "bytes": 83849,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/report.json"
+    },
+    {
+      "bytes": 105558,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/settings.png"
+    },
+    {
+      "bytes": 80937,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/skills.png"
+    },
+    {
+      "bytes": 1399,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/summary.md"
+    },
+    {
+      "bytes": 116341,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/tasks.png"
+    },
+    {
+      "bytes": 108402,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04-v6/versions.png"
+    },
+    {
+      "bytes": 86582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/agents.png"
+    },
+    {
+      "bytes": 144657,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/config.png"
+    },
+    {
+      "bytes": 105684,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/dashboard.png"
+    },
+    {
+      "bytes": 87447,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/execution.png"
+    },
+    {
+      "bytes": 74708,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/federation.png"
+    },
+    {
+      "bytes": 82029,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/forges__code-atlas-forge.png"
+    },
+    {
+      "bytes": 134936,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/forges.png"
+    },
+    {
+      "bytes": 161924,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/graph.png"
+    },
+    {
+      "bytes": 125682,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/guide.png"
+    },
+    {
+      "bytes": 71156,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/hosts.png"
+    },
+    {
+      "bytes": 115797,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/install.png"
+    },
+    {
+      "bytes": 159874,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/knowledge.png"
+    },
+    {
+      "bytes": 70828,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/lab.png"
+    },
+    {
+      "bytes": 85664,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/match.png"
+    },
+    {
+      "bytes": 105806,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/mcp.png"
+    },
+    {
+      "bytes": 76968,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/observe.png"
+    },
+    {
+      "bytes": 74866,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__artifacts.png"
+    },
+    {
+      "bytes": 72194,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__boards.png"
+    },
+    {
+      "bytes": 114698,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__chat.png"
+    },
+    {
+      "bytes": 70243,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__compare.png"
+    },
+    {
+      "bytes": 78545,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__control-center.png"
+    },
+    {
+      "bytes": 69594,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__diagnostics.png"
+    },
+    {
+      "bytes": 93902,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__intelligence.png"
+    },
+    {
+      "bytes": 90592,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__lens.png"
+    },
+    {
+      "bytes": 86719,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__onboarding.png"
+    },
+    {
+      "bytes": 77395,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__products.png"
+    },
+    {
+      "bytes": 73553,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__proposals.png"
+    },
+    {
+      "bytes": 88150,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__settings.png"
+    },
+    {
+      "bytes": 138678,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__templates.png"
+    },
+    {
+      "bytes": 88891,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf__workflows.png"
+    },
+    {
+      "bytes": 124584,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/pf.png"
+    },
+    {
+      "bytes": 79727,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/profiles.png"
+    },
+    {
+      "bytes": 29824,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/report.json"
+    },
+    {
+      "bytes": 105582,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/settings.png"
+    },
+    {
+      "bytes": 81810,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/skills.png"
+    },
+    {
+      "bytes": 118039,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/tasks.png"
+    },
+    {
+      "bytes": 74351,
+      "mode": 420,
+      "path": "audit/portal-e2e-2026-11-04/versions.png"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-final/checksums.sha256"
+    },
+    {
+      "bytes": 86989,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-final/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 979,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-final/release-inventory.json"
+    },
+    {
+      "bytes": 1648,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-final/release-summary.md"
+    },
+    {
+      "bytes": 99584,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-final/vendor-integrity.json"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v2/checksums.sha256"
+    },
+    {
+      "bytes": 85549,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v2/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 979,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v2/release-inventory.json"
+    },
+    {
+      "bytes": 1907,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v2/release-summary.md"
+    },
+    {
+      "bytes": 101922,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v2/vendor-integrity.json"
+    },
+    {
+      "bytes": 175,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v3/checksums.sha256"
+    },
+    {
+      "bytes": 1056,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v3/release-summary.md"
+    },
+    {
+      "bytes": 99822,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v3/vendor-integrity.json"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4-all/checksums.sha256"
+    },
+    {
+      "bytes": 86965,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4-all/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 979,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4-all/release-inventory.json"
+    },
+    {
+      "bytes": 1903,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4-all/release-summary.md"
+    },
+    {
+      "bytes": 99584,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4-all/vendor-integrity.json"
+    },
+    {
+      "bytes": 175,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4/checksums.sha256"
+    },
+    {
+      "bytes": 1053,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4/release-summary.md"
+    },
+    {
+      "bytes": 99584,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v4/vendor-integrity.json"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v5/checksums.sha256"
+    },
+    {
+      "bytes": 87642,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v5/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 979,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v5/release-inventory.json"
+    },
+    {
+      "bytes": 1648,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v5/release-summary.md"
+    },
+    {
+      "bytes": 99584,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v5/vendor-integrity.json"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v6/checksums.sha256"
+    },
+    {
+      "bytes": 88286,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v6/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 980,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v6/release-inventory.json"
+    },
+    {
+      "bytes": 1649,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v6/release-summary.md"
+    },
+    {
+      "bytes": 99584,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04-v6/vendor-integrity.json"
+    },
+    {
+      "bytes": 355,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04/checksums.sha256"
+    },
+    {
+      "bytes": 84913,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04/npm-pack-manifest.json"
+    },
+    {
+      "bytes": 980,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04/release-inventory.json"
+    },
+    {
+      "bytes": 1929,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04/release-summary.md"
+    },
+    {
+      "bytes": 78898,
+      "mode": 420,
+      "path": "audit/release-dumps/2026-11-04/vendor-integrity.json"
+    },
+    {
+      "bytes": 78021,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/audit-metrics.json"
+    },
+    {
+      "bytes": 77736,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__agents.png"
+    },
+    {
+      "bytes": 114227,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__config.png"
+    },
+    {
+      "bytes": 113280,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__dashboard.png"
+    },
+    {
+      "bytes": 92742,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__execution.png"
+    },
+    {
+      "bytes": 113999,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__federation.png"
+    },
+    {
+      "bytes": 88647,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__forges_self.png"
+    },
+    {
+      "bytes": 117465,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__forges.png"
+    },
+    {
+      "bytes": 127771,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__graph.png"
+    },
+    {
+      "bytes": 104013,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__guide.png"
+    },
+    {
+      "bytes": 131628,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__hosts.png"
+    },
+    {
+      "bytes": 108562,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__install.png"
+    },
+    {
+      "bytes": 116486,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__knowledge.png"
+    },
+    {
+      "bytes": 71614,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__lab.png"
+    },
+    {
+      "bytes": 81152,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__match.png"
+    },
+    {
+      "bytes": 106137,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__mcp.png"
+    },
+    {
+      "bytes": 102065,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__observe.png"
+    },
+    {
+      "bytes": 98782,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__profiles.png"
+    },
+    {
+      "bytes": 85399,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__settings.png"
+    },
+    {
+      "bytes": 73103,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__skills.png"
+    },
+    {
+      "bytes": 97508,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__tasks.png"
+    },
+    {
+      "bytes": 86508,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__d1366__versions.png"
+    },
+    {
+      "bytes": 78265,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__agents.png"
+    },
+    {
+      "bytes": 115052,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__config.png"
+    },
+    {
+      "bytes": 113722,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__dashboard.png"
+    },
+    {
+      "bytes": 97184,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__execution.png"
+    },
+    {
+      "bytes": 114991,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__federation.png"
+    },
+    {
+      "bytes": 89154,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__forges_self.png"
+    },
+    {
+      "bytes": 117603,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__forges.png"
+    },
+    {
+      "bytes": 128707,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__graph.png"
+    },
+    {
+      "bytes": 104668,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__guide.png"
+    },
+    {
+      "bytes": 132568,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__hosts.png"
+    },
+    {
+      "bytes": 108888,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__install.png"
+    },
+    {
+      "bytes": 117561,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__knowledge.png"
+    },
+    {
+      "bytes": 72853,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__lab.png"
+    },
+    {
+      "bytes": 82045,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__match.png"
+    },
+    {
+      "bytes": 106329,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__mcp.png"
+    },
+    {
+      "bytes": 104391,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__observe.png"
+    },
+    {
+      "bytes": 102782,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__profiles.png"
+    },
+    {
+      "bytes": 86275,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__settings.png"
+    },
+    {
+      "bytes": 73926,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__skills.png"
+    },
+    {
+      "bytes": 99314,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__tasks.png"
+    },
+    {
+      "bytes": 87309,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__light1366__versions.png"
+    },
+    {
+      "bytes": 43008,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__agents.png"
+    },
+    {
+      "bytes": 53792,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__config.png"
+    },
+    {
+      "bytes": 57026,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__dashboard.png"
+    },
+    {
+      "bytes": 53269,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__execution.png"
+    },
+    {
+      "bytes": 47152,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__federation.png"
+    },
+    {
+      "bytes": 48008,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__forges_self.png"
+    },
+    {
+      "bytes": 61743,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__forges.png"
+    },
+    {
+      "bytes": 59917,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__graph.png"
+    },
+    {
+      "bytes": 58915,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__guide.png"
+    },
+    {
+      "bytes": 47899,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__hosts.png"
+    },
+    {
+      "bytes": 65073,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__install.png"
+    },
+    {
+      "bytes": 66705,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__knowledge.png"
+    },
+    {
+      "bytes": 34538,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__lab.png"
+    },
+    {
+      "bytes": 41583,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__match.png"
+    },
+    {
+      "bytes": 52822,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__mcp.png"
+    },
+    {
+      "bytes": 46144,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__observe.png"
+    },
+    {
+      "bytes": 51842,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__profiles.png"
+    },
+    {
+      "bytes": 45546,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__settings.png"
+    },
+    {
+      "bytes": 34411,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__skills.png"
+    },
+    {
+      "bytes": 53481,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__tasks.png"
+    },
+    {
+      "bytes": 49921,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__m390__versions.png"
+    },
+    {
+      "bytes": 82065,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__agents.png"
+    },
+    {
+      "bytes": 112523,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__config.png"
+    },
+    {
+      "bytes": 121478,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__dashboard.png"
+    },
+    {
+      "bytes": 104676,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__execution.png"
+    },
+    {
+      "bytes": 103599,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__federation.png"
+    },
+    {
+      "bytes": 100915,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__forges_self.png"
+    },
+    {
+      "bytes": 121415,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__forges.png"
+    },
+    {
+      "bytes": 125758,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__graph.png"
+    },
+    {
+      "bytes": 120435,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__guide.png"
+    },
+    {
+      "bytes": 102575,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__hosts.png"
+    },
+    {
+      "bytes": 120343,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__install.png"
+    },
+    {
+      "bytes": 126129,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__knowledge.png"
+    },
+    {
+      "bytes": 74350,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__lab.png"
+    },
+    {
+      "bytes": 81609,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__match.png"
+    },
+    {
+      "bytes": 102606,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__mcp.png"
+    },
+    {
+      "bytes": 93052,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__observe.png"
+    },
+    {
+      "bytes": 103652,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__profiles.png"
+    },
+    {
+      "bytes": 100000,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__settings.png"
+    },
+    {
+      "bytes": 74716,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__skills.png"
+    },
+    {
+      "bytes": 107242,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__tasks.png"
+    },
+    {
+      "bytes": 98838,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__t768__versions.png"
+    },
+    {
+      "bytes": 97674,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__agents.png"
+    },
+    {
+      "bytes": 166338,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__config.png"
+    },
+    {
+      "bytes": 162926,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__dashboard.png"
+    },
+    {
+      "bytes": 132844,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__execution.png"
+    },
+    {
+      "bytes": 157894,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__federation.png"
+    },
+    {
+      "bytes": 120670,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__forges_self.png"
+    },
+    {
+      "bytes": 151869,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__forges.png"
+    },
+    {
+      "bytes": 171340,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__graph.png"
+    },
+    {
+      "bytes": 143301,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__guide.png"
+    },
+    {
+      "bytes": 181241,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__hosts.png"
+    },
+    {
+      "bytes": 164964,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__install.png"
+    },
+    {
+      "bytes": 161476,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__knowledge.png"
+    },
+    {
+      "bytes": 87337,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__lab.png"
+    },
+    {
+      "bytes": 96450,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__match.png"
+    },
+    {
+      "bytes": 130283,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__mcp.png"
+    },
+    {
+      "bytes": 148506,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__observe.png"
+    },
+    {
+      "bytes": 125475,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__profiles.png"
+    },
+    {
+      "bytes": 119280,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__settings.png"
+    },
+    {
+      "bytes": 93037,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__skills.png"
+    },
+    {
+      "bytes": 127038,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__tasks.png"
+    },
+    {
+      "bytes": 125506,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__w1920__versions.png"
+    },
+    {
+      "bytes": 113162,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__zoom200-1366__dashboard.png"
+    },
+    {
+      "bytes": 113050,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/base__zoom400-1366__dashboard.png"
+    },
+    {
+      "bytes": 101730,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__agents.png"
+    },
+    {
+      "bytes": 114215,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__config.png"
+    },
+    {
+      "bytes": 113568,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__dashboard.png"
+    },
+    {
+      "bytes": 92472,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__execution.png"
+    },
+    {
+      "bytes": 124575,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__federation.png"
+    },
+    {
+      "bytes": 91718,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__forges_self.png"
+    },
+    {
+      "bytes": 120396,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__forges.png"
+    },
+    {
+      "bytes": 126822,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__graph.png"
+    },
+    {
+      "bytes": 103991,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__guide.png"
+    },
+    {
+      "bytes": 129819,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__hosts.png"
+    },
+    {
+      "bytes": 108051,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__install.png"
+    },
+    {
+      "bytes": 129366,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__knowledge.png"
+    },
+    {
+      "bytes": 71660,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__lab.png"
+    },
+    {
+      "bytes": 81131,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__match.png"
+    },
+    {
+      "bytes": 117792,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__mcp.png"
+    },
+    {
+      "bytes": 102244,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__observe.png"
+    },
+    {
+      "bytes": 98773,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__profiles.png"
+    },
+    {
+      "bytes": 85385,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__settings.png"
+    },
+    {
+      "bytes": 95186,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__skills.png"
+    },
+    {
+      "bytes": 97456,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__tasks.png"
+    },
+    {
+      "bytes": 86552,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__d1366__versions.png"
+    },
+    {
+      "bytes": 102100,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__agents.png"
+    },
+    {
+      "bytes": 115051,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__config.png"
+    },
+    {
+      "bytes": 114236,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__dashboard.png"
+    },
+    {
+      "bytes": 97189,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__execution.png"
+    },
+    {
+      "bytes": 125459,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__federation.png"
+    },
+    {
+      "bytes": 92027,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__forges_self.png"
+    },
+    {
+      "bytes": 120622,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__forges.png"
+    },
+    {
+      "bytes": 128136,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__graph.png"
+    },
+    {
+      "bytes": 104666,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__guide.png"
+    },
+    {
+      "bytes": 131123,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__hosts.png"
+    },
+    {
+      "bytes": 108602,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__install.png"
+    },
+    {
+      "bytes": 129429,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__knowledge.png"
+    },
+    {
+      "bytes": 72878,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__lab.png"
+    },
+    {
+      "bytes": 82049,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__match.png"
+    },
+    {
+      "bytes": 118044,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__mcp.png"
+    },
+    {
+      "bytes": 104625,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__observe.png"
+    },
+    {
+      "bytes": 102780,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__profiles.png"
+    },
+    {
+      "bytes": 86281,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__settings.png"
+    },
+    {
+      "bytes": 95895,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__skills.png"
+    },
+    {
+      "bytes": 99154,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__tasks.png"
+    },
+    {
+      "bytes": 87301,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__light1366__versions.png"
+    },
+    {
+      "bytes": 59335,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__agents.png"
+    },
+    {
+      "bytes": 53800,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__config.png"
+    },
+    {
+      "bytes": 57885,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__dashboard.png"
+    },
+    {
+      "bytes": 53239,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__execution.png"
+    },
+    {
+      "bytes": 46938,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__federation.png"
+    },
+    {
+      "bytes": 50734,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__forges_self.png"
+    },
+    {
+      "bytes": 61594,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__forges.png"
+    },
+    {
+      "bytes": 59929,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__graph.png"
+    },
+    {
+      "bytes": 58920,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__guide.png"
+    },
+    {
+      "bytes": 47964,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__hosts.png"
+    },
+    {
+      "bytes": 65217,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__install.png"
+    },
+    {
+      "bytes": 68814,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__knowledge.png"
+    },
+    {
+      "bytes": 34554,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__lab.png"
+    },
+    {
+      "bytes": 41588,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__match.png"
+    },
+    {
+      "bytes": 50009,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__mcp.png"
+    },
+    {
+      "bytes": 46105,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__observe.png"
+    },
+    {
+      "bytes": 51854,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__profiles.png"
+    },
+    {
+      "bytes": 45557,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__settings.png"
+    },
+    {
+      "bytes": 51466,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__skills.png"
+    },
+    {
+      "bytes": 53494,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__tasks.png"
+    },
+    {
+      "bytes": 49980,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__m390__versions.png"
+    },
+    {
+      "bytes": 106739,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__agents.png"
+    },
+    {
+      "bytes": 112531,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__config.png"
+    },
+    {
+      "bytes": 122078,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__dashboard.png"
+    },
+    {
+      "bytes": 104480,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__execution.png"
+    },
+    {
+      "bytes": 103938,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__federation.png"
+    },
+    {
+      "bytes": 104049,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__forges_self.png"
+    },
+    {
+      "bytes": 121463,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__forges.png"
+    },
+    {
+      "bytes": 127401,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__graph.png"
+    },
+    {
+      "bytes": 120446,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__guide.png"
+    },
+    {
+      "bytes": 101988,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__hosts.png"
+    },
+    {
+      "bytes": 119638,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__install.png"
+    },
+    {
+      "bytes": 129489,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__knowledge.png"
+    },
+    {
+      "bytes": 74295,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__lab.png"
+    },
+    {
+      "bytes": 81619,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__match.png"
+    },
+    {
+      "bytes": 114173,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__mcp.png"
+    },
+    {
+      "bytes": 93098,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__observe.png"
+    },
+    {
+      "bytes": 103666,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__profiles.png"
+    },
+    {
+      "bytes": 100018,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__settings.png"
+    },
+    {
+      "bytes": 95478,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__skills.png"
+    },
+    {
+      "bytes": 110609,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__tasks.png"
+    },
+    {
+      "bytes": 98759,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__t768__versions.png"
+    },
+    {
+      "bytes": 122907,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__agents.png"
+    },
+    {
+      "bytes": 166315,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__config.png"
+    },
+    {
+      "bytes": 166783,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__dashboard.png"
+    },
+    {
+      "bytes": 132094,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__execution.png"
+    },
+    {
+      "bytes": 168736,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__federation.png"
+    },
+    {
+      "bytes": 122040,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__forges_self.png"
+    },
+    {
+      "bytes": 164286,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__forges.png"
+    },
+    {
+      "bytes": 188542,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__graph.png"
+    },
+    {
+      "bytes": 143278,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__guide.png"
+    },
+    {
+      "bytes": 174353,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__hosts.png"
+    },
+    {
+      "bytes": 164588,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__install.png"
+    },
+    {
+      "bytes": 173519,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__knowledge.png"
+    },
+    {
+      "bytes": 87194,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__lab.png"
+    },
+    {
+      "bytes": 96429,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__match.png"
+    },
+    {
+      "bytes": 160437,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__mcp.png"
+    },
+    {
+      "bytes": 146311,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__observe.png"
+    },
+    {
+      "bytes": 125461,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__profiles.png"
+    },
+    {
+      "bytes": 119259,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__settings.png"
+    },
+    {
+      "bytes": 115760,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__skills.png"
+    },
+    {
+      "bytes": 139131,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__tasks.png"
+    },
+    {
+      "bytes": 125335,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__w1920__versions.png"
+    },
+    {
+      "bytes": 113665,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__zoom200-1366__dashboard.png"
+    },
+    {
+      "bytes": 113780,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/dense__zoom400-1366__dashboard.png"
+    },
+    {
+      "bytes": 100984,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/probe-metrics-final.json/probe-metrics.json"
+    },
+    {
+      "bytes": 275644,
+      "mode": 420,
+      "path": "audit/ui-ux-2026-11-04/reflow-cycle5-final.json"
+    },
+    {
+      "bytes": 789,
+      "mode": 420,
+      "path": "docs/account-environment.md"
+    },
+    {
+      "bytes": 3493,
+      "mode": 420,
+      "path": "docs/architecture/ecosystem-independence-validation.md"
+    },
+    {
+      "bytes": 3496,
+      "mode": 420,
+      "path": "docs/architecture/frontend.md"
+    },
+    {
+      "bytes": 9989,
+      "mode": 420,
+      "path": "docs/architecture/graph-studio-2.1.md"
+    },
+    {
+      "bytes": 1843388,
+      "mode": 420,
+      "path": "docs/assets/logo.png"
+    },
+    {
+      "bytes": 7945,
+      "mode": 420,
+      "path": "docs/audits/a11y-cycle6.md"
+    },
+    {
+      "bytes": 3485,
+      "mode": 420,
+      "path": "docs/audits/a11y-manual-checklist.md"
+    },
+    {
+      "bytes": 3173,
+      "mode": 420,
+      "path": "docs/audits/agentic-capabilities-inventory.md"
+    },
+    {
+      "bytes": 262,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/checksums.sha256"
+    },
+    {
+      "bytes": 30291,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/keyboard-e2e-evidence.json"
+    },
+    {
+      "bytes": 4131,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/phase1-install-results.json"
+    },
+    {
+      "bytes": 955,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/release-inventory.json"
+    },
+    {
+      "bytes": 1316,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/release-summary.md"
+    },
+    {
+      "bytes": 2427,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/sdist-wheel-results.json"
+    },
+    {
+      "bytes": 60143,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-dump/vendor-integrity.json"
+    },
+    {
+      "bytes": 4008,
+      "mode": 420,
+      "path": "docs/audits/forge-2.2.2-ecosystem-baseline.md"
+    },
+    {
+      "bytes": 2792,
+      "mode": 420,
+      "path": "docs/audits/forge-portal-nextgen-baseline.md"
+    },
+    {
+      "bytes": 4279,
+      "mode": 420,
+      "path": "docs/audits/portal-2.1-baseline.md"
+    },
+    {
+      "bytes": 5014,
+      "mode": 420,
+      "path": "docs/audits/portal-2.2-baseline.md"
+    },
+    {
+      "bytes": 3004,
+      "mode": 420,
+      "path": "docs/audits/portal-2.2-telemetry-matrix.md"
+    },
+    {
+      "bytes": 3196,
+      "mode": 420,
+      "path": "docs/audits/portal-2.2-vendor-matrix.md"
+    },
+    {
+      "bytes": 3643,
+      "mode": 420,
+      "path": "docs/audits/security-cycle6.md"
+    },
+    {
+      "bytes": 13437,
+      "mode": 420,
+      "path": "docs/codebase/.codebase-scan.txt"
+    },
+    {
+      "bytes": 2469,
+      "mode": 420,
+      "path": "docs/codebase/ARCHITECTURE.md"
+    },
+    {
+      "bytes": 3432,
+      "mode": 420,
+      "path": "docs/codebase/CONCERNS.md"
+    },
+    {
+      "bytes": 1690,
+      "mode": 420,
+      "path": "docs/codebase/CONVENTIONS.md"
+    },
+    {
+      "bytes": 2130,
+      "mode": 420,
+      "path": "docs/codebase/INTEGRATIONS.md"
+    },
+    {
+      "bytes": 1839,
+      "mode": 420,
+      "path": "docs/codebase/STACK.md"
+    },
+    {
+      "bytes": 1746,
+      "mode": 420,
+      "path": "docs/codebase/STRUCTURE.md"
+    },
+    {
+      "bytes": 1720,
+      "mode": 420,
+      "path": "docs/codebase/TESTING.md"
+    },
+    {
+      "bytes": 67869,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/audit-metrics.json"
+    },
+    {
+      "bytes": 80968,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__agents.png"
+    },
+    {
+      "bytes": 135767,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__config.png"
+    },
+    {
+      "bytes": 122174,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__dashboard.png"
+    },
+    {
+      "bytes": 150327,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__federation.png"
+    },
+    {
+      "bytes": 104099,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__forges_self.png"
+    },
+    {
+      "bytes": 143048,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__forges.png"
+    },
+    {
+      "bytes": 155579,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__graph.png"
+    },
+    {
+      "bytes": 167994,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__hosts.png"
+    },
+    {
+      "bytes": 122351,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__install.png"
+    },
+    {
+      "bytes": 132798,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__knowledge.png"
+    },
+    {
+      "bytes": 74313,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__lab.png"
+    },
+    {
+      "bytes": 98455,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__match.png"
+    },
+    {
+      "bytes": 121643,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__mcp.png"
+    },
+    {
+      "bytes": 83923,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__observe.png"
+    },
+    {
+      "bytes": 112110,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__profiles.png"
+    },
+    {
+      "bytes": 88271,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__settings.png"
+    },
+    {
+      "bytes": 73654,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__skills.png"
+    },
+    {
+      "bytes": 110647,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__tasks.png"
+    },
+    {
+      "bytes": 73006,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__d1366__versions.png"
+    },
+    {
+      "bytes": 81884,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__agents.png"
+    },
+    {
+      "bytes": 136840,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__config.png"
+    },
+    {
+      "bytes": 122603,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__dashboard.png"
+    },
+    {
+      "bytes": 151077,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__federation.png"
+    },
+    {
+      "bytes": 104786,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__forges_self.png"
+    },
+    {
+      "bytes": 143332,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__forges.png"
+    },
+    {
+      "bytes": 156502,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__graph.png"
+    },
+    {
+      "bytes": 168841,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__hosts.png"
+    },
+    {
+      "bytes": 123032,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__install.png"
+    },
+    {
+      "bytes": 133474,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__knowledge.png"
+    },
+    {
+      "bytes": 74898,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__lab.png"
+    },
+    {
+      "bytes": 99284,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__match.png"
+    },
+    {
+      "bytes": 122070,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__mcp.png"
+    },
+    {
+      "bytes": 84539,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__observe.png"
+    },
+    {
+      "bytes": 115684,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__profiles.png"
+    },
+    {
+      "bytes": 88602,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__settings.png"
+    },
+    {
+      "bytes": 74893,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__skills.png"
+    },
+    {
+      "bytes": 111969,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__tasks.png"
+    },
+    {
+      "bytes": 73780,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__light1366__versions.png"
+    },
+    {
+      "bytes": 46551,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__agents.png"
+    },
+    {
+      "bytes": 66404,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__config.png"
+    },
+    {
+      "bytes": 58629,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__dashboard.png"
+    },
+    {
+      "bytes": 59000,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__federation.png"
+    },
+    {
+      "bytes": 56699,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__forges_self.png"
+    },
+    {
+      "bytes": 68353,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__forges.png"
+    },
+    {
+      "bytes": 72829,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__graph.png"
+    },
+    {
+      "bytes": 68226,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__hosts.png"
+    },
+    {
+      "bytes": 72092,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__install.png"
+    },
+    {
+      "bytes": 81100,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__knowledge.png"
+    },
+    {
+      "bytes": 46684,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__lab.png"
+    },
+    {
+      "bytes": 62830,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__match.png"
+    },
+    {
+      "bytes": 58916,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__mcp.png"
+    },
+    {
+      "bytes": 51665,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__observe.png"
+    },
+    {
+      "bytes": 65504,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__profiles.png"
+    },
+    {
+      "bytes": 50957,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__settings.png"
+    },
+    {
+      "bytes": 37872,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__skills.png"
+    },
+    {
+      "bytes": 63928,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__tasks.png"
+    },
+    {
+      "bytes": 44859,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__m390__versions.png"
+    },
+    {
+      "bytes": 84640,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__agents.png"
+    },
+    {
+      "bytes": 131836,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__config.png"
+    },
+    {
+      "bytes": 133462,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__dashboard.png"
+    },
+    {
+      "bytes": 133811,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__federation.png"
+    },
+    {
+      "bytes": 117729,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__forges_self.png"
+    },
+    {
+      "bytes": 144038,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__forges.png"
+    },
+    {
+      "bytes": 144490,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__graph.png"
+    },
+    {
+      "bytes": 123516,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__hosts.png"
+    },
+    {
+      "bytes": 137956,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__install.png"
+    },
+    {
+      "bytes": 138368,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__knowledge.png"
+    },
+    {
+      "bytes": 80631,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__lab.png"
+    },
+    {
+      "bytes": 99795,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__match.png"
+    },
+    {
+      "bytes": 111491,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__mcp.png"
+    },
+    {
+      "bytes": 85411,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__observe.png"
+    },
+    {
+      "bytes": 116154,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__profiles.png"
+    },
+    {
+      "bytes": 91514,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__settings.png"
+    },
+    {
+      "bytes": 75294,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__skills.png"
+    },
+    {
+      "bytes": 119670,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__tasks.png"
+    },
+    {
+      "bytes": 79231,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__t768__versions.png"
+    },
+    {
+      "bytes": 96207,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__agents.png"
+    },
+    {
+      "bytes": 187757,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__config.png"
+    },
+    {
+      "bytes": 173607,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__dashboard.png"
+    },
+    {
+      "bytes": 206430,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__federation.png"
+    },
+    {
+      "bytes": 138058,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__forges_self.png"
+    },
+    {
+      "bytes": 165162,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__forges.png"
+    },
+    {
+      "bytes": 174721,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__graph.png"
+    },
+    {
+      "bytes": 222549,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__hosts.png"
+    },
+    {
+      "bytes": 195717,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__install.png"
+    },
+    {
+      "bytes": 184953,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__knowledge.png"
+    },
+    {
+      "bytes": 89948,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__lab.png"
+    },
+    {
+      "bytes": 111763,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__match.png"
+    },
+    {
+      "bytes": 137439,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__mcp.png"
+    },
+    {
+      "bytes": 97143,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__observe.png"
+    },
+    {
+      "bytes": 136196,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__profiles.png"
+    },
+    {
+      "bytes": 103807,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__settings.png"
+    },
+    {
+      "bytes": 89328,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__skills.png"
+    },
+    {
+      "bytes": 134235,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__tasks.png"
+    },
+    {
+      "bytes": 93180,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__w1920__versions.png"
+    },
+    {
+      "bytes": 122340,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__zoom200-1366__dashboard.png"
+    },
+    {
+      "bytes": 122424,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/base__zoom400-1366__dashboard.png"
+    },
+    {
+      "bytes": 114784,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__agents.png"
+    },
+    {
+      "bytes": 135748,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__config.png"
+    },
+    {
+      "bytes": 127025,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__dashboard.png"
+    },
+    {
+      "bytes": 166452,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__federation.png"
+    },
+    {
+      "bytes": 108410,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__forges_self.png"
+    },
+    {
+      "bytes": 142458,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__forges.png"
+    },
+    {
+      "bytes": 157649,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__graph.png"
+    },
+    {
+      "bytes": 166909,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__hosts.png"
+    },
+    {
+      "bytes": 121437,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__install.png"
+    },
+    {
+      "bytes": 146305,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__knowledge.png"
+    },
+    {
+      "bytes": 74290,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__lab.png"
+    },
+    {
+      "bytes": 98442,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__match.png"
+    },
+    {
+      "bytes": 129267,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__mcp.png"
+    },
+    {
+      "bytes": 83904,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__observe.png"
+    },
+    {
+      "bytes": 112091,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__profiles.png"
+    },
+    {
+      "bytes": 88267,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__settings.png"
+    },
+    {
+      "bytes": 102806,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__skills.png"
+    },
+    {
+      "bytes": 119160,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__tasks.png"
+    },
+    {
+      "bytes": 72986,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__d1366__versions.png"
+    },
+    {
+      "bytes": 115609,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__agents.png"
+    },
+    {
+      "bytes": 136850,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__config.png"
+    },
+    {
+      "bytes": 127242,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__dashboard.png"
+    },
+    {
+      "bytes": 167149,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__federation.png"
+    },
+    {
+      "bytes": 109097,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__forges_self.png"
+    },
+    {
+      "bytes": 142523,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__forges.png"
+    },
+    {
+      "bytes": 158157,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__graph.png"
+    },
+    {
+      "bytes": 167595,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__hosts.png"
+    },
+    {
+      "bytes": 122077,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__install.png"
+    },
+    {
+      "bytes": 146720,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__knowledge.png"
+    },
+    {
+      "bytes": 74895,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__lab.png"
+    },
+    {
+      "bytes": 99277,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__match.png"
+    },
+    {
+      "bytes": 129478,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__mcp.png"
+    },
+    {
+      "bytes": 84536,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__observe.png"
+    },
+    {
+      "bytes": 115692,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__profiles.png"
+    },
+    {
+      "bytes": 88617,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__settings.png"
+    },
+    {
+      "bytes": 103636,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__skills.png"
+    },
+    {
+      "bytes": 120231,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__tasks.png"
+    },
+    {
+      "bytes": 73772,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__light1366__versions.png"
+    },
+    {
+      "bytes": 69312,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__agents.png"
+    },
+    {
+      "bytes": 66406,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__config.png"
+    },
+    {
+      "bytes": 58668,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__dashboard.png"
+    },
+    {
+      "bytes": 59294,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__federation.png"
+    },
+    {
+      "bytes": 56701,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__forges_self.png"
+    },
+    {
+      "bytes": 67226,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__forges.png"
+    },
+    {
+      "bytes": 72834,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__graph.png"
+    },
+    {
+      "bytes": 68317,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__hosts.png"
+    },
+    {
+      "bytes": 72095,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__install.png"
+    },
+    {
+      "bytes": 81492,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__knowledge.png"
+    },
+    {
+      "bytes": 46682,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__lab.png"
+    },
+    {
+      "bytes": 62831,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__match.png"
+    },
+    {
+      "bytes": 47429,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__mcp.png"
+    },
+    {
+      "bytes": 51666,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__observe.png"
+    },
+    {
+      "bytes": 65506,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__profiles.png"
+    },
+    {
+      "bytes": 50963,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__settings.png"
+    },
+    {
+      "bytes": 62296,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__skills.png"
+    },
+    {
+      "bytes": 63933,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__tasks.png"
+    },
+    {
+      "bytes": 44859,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__m390__versions.png"
+    },
+    {
+      "bytes": 119740,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__agents.png"
+    },
+    {
+      "bytes": 131827,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__config.png"
+    },
+    {
+      "bytes": 138536,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__dashboard.png"
+    },
+    {
+      "bytes": 134249,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__federation.png"
+    },
+    {
+      "bytes": 122194,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__forges_self.png"
+    },
+    {
+      "bytes": 144899,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__forges.png"
+    },
+    {
+      "bytes": 145779,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__graph.png"
+    },
+    {
+      "bytes": 123517,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__hosts.png"
+    },
+    {
+      "bytes": 136992,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__install.png"
+    },
+    {
+      "bytes": 141476,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__knowledge.png"
+    },
+    {
+      "bytes": 80617,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__lab.png"
+    },
+    {
+      "bytes": 99783,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__match.png"
+    },
+    {
+      "bytes": 123097,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__mcp.png"
+    },
+    {
+      "bytes": 85406,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__observe.png"
+    },
+    {
+      "bytes": 116147,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__profiles.png"
+    },
+    {
+      "bytes": 91506,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__settings.png"
+    },
+    {
+      "bytes": 107372,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__skills.png"
+    },
+    {
+      "bytes": 128453,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__tasks.png"
+    },
+    {
+      "bytes": 79226,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__t768__versions.png"
+    },
+    {
+      "bytes": 131067,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__agents.png"
+    },
+    {
+      "bytes": 187757,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__config.png"
+    },
+    {
+      "bytes": 184608,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__dashboard.png"
+    },
+    {
+      "bytes": 222234,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__federation.png"
+    },
+    {
+      "bytes": 138268,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__forges_self.png"
+    },
+    {
+      "bytes": 180568,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__forges.png"
+    },
+    {
+      "bytes": 191072,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__graph.png"
+    },
+    {
+      "bytes": 215228,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__hosts.png"
+    },
+    {
+      "bytes": 194859,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__install.png"
+    },
+    {
+      "bytes": 196972,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__knowledge.png"
+    },
+    {
+      "bytes": 89923,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__lab.png"
+    },
+    {
+      "bytes": 111742,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__match.png"
+    },
+    {
+      "bytes": 182036,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__mcp.png"
+    },
+    {
+      "bytes": 97122,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__observe.png"
+    },
+    {
+      "bytes": 136177,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__profiles.png"
+    },
+    {
+      "bytes": 103787,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__settings.png"
+    },
+    {
+      "bytes": 118921,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__skills.png"
+    },
+    {
+      "bytes": 162376,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__tasks.png"
+    },
+    {
+      "bytes": 93172,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__w1920__versions.png"
+    },
+    {
+      "bytes": 126786,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__zoom200-1366__dashboard.png"
+    },
+    {
+      "bytes": 127068,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/dense__zoom400-1366__dashboard.png"
+    },
+    {
+      "bytes": 87596,
+      "mode": 420,
+      "path": "docs/design/captures/cycle1/probe-metrics.json"
+    },
+    {
+      "bytes": 35620,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/audit-metrics.json"
+    },
+    {
+      "bytes": 87355,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__agents.png"
+    },
+    {
+      "bytes": 135032,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__config.png"
+    },
+    {
+      "bytes": 127011,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__dashboard.png"
+    },
+    {
+      "bytes": 117937,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__execution.png"
+    },
+    {
+      "bytes": 149675,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__federation.png"
+    },
+    {
+      "bytes": 103067,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__forges_self.png"
+    },
+    {
+      "bytes": 139878,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__forges.png"
+    },
+    {
+      "bytes": 155916,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__graph.png"
+    },
+    {
+      "bytes": 143190,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__guide.png"
+    },
+    {
+      "bytes": 167531,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__hosts.png"
+    },
+    {
+      "bytes": 127238,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__install.png"
+    },
+    {
+      "bytes": 133347,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__knowledge.png"
+    },
+    {
+      "bytes": 73314,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__lab.png"
+    },
+    {
+      "bytes": 97759,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__match.png"
+    },
+    {
+      "bytes": 124414,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__mcp.png"
+    },
+    {
+      "bytes": 125106,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__observe.png"
+    },
+    {
+      "bytes": 111180,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__profiles.png"
+    },
+    {
+      "bytes": 95394,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__settings.png"
+    },
+    {
+      "bytes": 80921,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__skills.png"
+    },
+    {
+      "bytes": 116493,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__tasks.png"
+    },
+    {
+      "bytes": 72068,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__d1366__versions.png"
+    },
+    {
+      "bytes": 88285,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__agents.png"
+    },
+    {
+      "bytes": 136052,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__config.png"
+    },
+    {
+      "bytes": 126943,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__dashboard.png"
+    },
+    {
+      "bytes": 124185,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__execution.png"
+    },
+    {
+      "bytes": 150135,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__federation.png"
+    },
+    {
+      "bytes": 103721,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__forges_self.png"
+    },
+    {
+      "bytes": 139593,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__forges.png"
+    },
+    {
+      "bytes": 156915,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__graph.png"
+    },
+    {
+      "bytes": 141644,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__guide.png"
+    },
+    {
+      "bytes": 167749,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__hosts.png"
+    },
+    {
+      "bytes": 127768,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__install.png"
+    },
+    {
+      "bytes": 134248,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__knowledge.png"
+    },
+    {
+      "bytes": 73892,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__lab.png"
+    },
+    {
+      "bytes": 98655,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__match.png"
+    },
+    {
+      "bytes": 125023,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__mcp.png"
+    },
+    {
+      "bytes": 128720,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__observe.png"
+    },
+    {
+      "bytes": 115023,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__profiles.png"
+    },
+    {
+      "bytes": 95982,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__settings.png"
+    },
+    {
+      "bytes": 82023,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__skills.png"
+    },
+    {
+      "bytes": 117993,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__tasks.png"
+    },
+    {
+      "bytes": 72801,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__light1366__versions.png"
+    },
+    {
+      "bytes": 57054,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__agents.png"
+    },
+    {
+      "bytes": 67706,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__config.png"
+    },
+    {
+      "bytes": 64100,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__dashboard.png"
+    },
+    {
+      "bytes": 66128,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__execution.png"
+    },
+    {
+      "bytes": 60093,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__federation.png"
+    },
+    {
+      "bytes": 57628,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__forges_self.png"
+    },
+    {
+      "bytes": 70496,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__forges.png"
+    },
+    {
+      "bytes": 69837,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__graph.png"
+    },
+    {
+      "bytes": 83739,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__guide.png"
+    },
+    {
+      "bytes": 69381,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__hosts.png"
+    },
+    {
+      "bytes": 72769,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__install.png"
+    },
+    {
+      "bytes": 83444,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__knowledge.png"
+    },
+    {
+      "bytes": 47455,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__lab.png"
+    },
+    {
+      "bytes": 64049,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__match.png"
+    },
+    {
+      "bytes": 63461,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__mcp.png"
+    },
+    {
+      "bytes": 60696,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__observe.png"
+    },
+    {
+      "bytes": 66359,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__profiles.png"
+    },
+    {
+      "bytes": 55781,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__settings.png"
+    },
+    {
+      "bytes": 48505,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__skills.png"
+    },
+    {
+      "bytes": 66671,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__tasks.png"
+    },
+    {
+      "bytes": 45914,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__m390__versions.png"
+    },
+    {
+      "bytes": 93985,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__agents.png"
+    },
+    {
+      "bytes": 132398,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__config.png"
+    },
+    {
+      "bytes": 138130,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__dashboard.png"
+    },
+    {
+      "bytes": 132375,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__execution.png"
+    },
+    {
+      "bytes": 134305,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__federation.png"
+    },
+    {
+      "bytes": 118274,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__forges_self.png"
+    },
+    {
+      "bytes": 148843,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__forges.png"
+    },
+    {
+      "bytes": 149818,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__graph.png"
+    },
+    {
+      "bytes": 168665,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__guide.png"
+    },
+    {
+      "bytes": 124151,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__hosts.png"
+    },
+    {
+      "bytes": 141073,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__install.png"
+    },
+    {
+      "bytes": 142014,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__knowledge.png"
+    },
+    {
+      "bytes": 81189,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__lab.png"
+    },
+    {
+      "bytes": 100579,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__match.png"
+    },
+    {
+      "bytes": 121290,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__mcp.png"
+    },
+    {
+      "bytes": 117936,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__observe.png"
+    },
+    {
+      "bytes": 116236,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__profiles.png"
+    },
+    {
+      "bytes": 119224,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__settings.png"
+    },
+    {
+      "bytes": 85441,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__skills.png"
+    },
+    {
+      "bytes": 128344,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__tasks.png"
+    },
+    {
+      "bytes": 79848,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__t768__versions.png"
+    },
+    {
+      "bytes": 109004,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__agents.png"
+    },
+    {
+      "bytes": 190765,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__config.png"
+    },
+    {
+      "bytes": 184023,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__dashboard.png"
+    },
+    {
+      "bytes": 161345,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__execution.png"
+    },
+    {
+      "bytes": 209326,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__federation.png"
+    },
+    {
+      "bytes": 140610,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__forges_self.png"
+    },
+    {
+      "bytes": 177467,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__forges.png"
+    },
+    {
+      "bytes": 199812,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__graph.png"
+    },
+    {
+      "bytes": 203925,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__guide.png"
+    },
+    {
+      "bytes": 224529,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__hosts.png"
+    },
+    {
+      "bytes": 195691,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__install.png"
+    },
+    {
+      "bytes": 189826,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__knowledge.png"
+    },
+    {
+      "bytes": 92750,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__lab.png"
+    },
+    {
+      "bytes": 114762,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__match.png"
+    },
+    {
+      "bytes": 150481,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__mcp.png"
+    },
+    {
+      "bytes": 188264,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__observe.png"
+    },
+    {
+      "bytes": 139141,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__profiles.png"
+    },
+    {
+      "bytes": 138456,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__settings.png"
+    },
+    {
+      "bytes": 103173,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__skills.png"
+    },
+    {
+      "bytes": 147499,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__tasks.png"
+    },
+    {
+      "bytes": 96001,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__w1920__versions.png"
+    },
+    {
+      "bytes": 126935,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__zoom200-1366__dashboard.png"
+    },
+    {
+      "bytes": 127261,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/base__zoom400-1366__dashboard.png"
+    },
+    {
+      "bytes": 46408,
+      "mode": 420,
+      "path": "docs/design/captures/cycle6/probe-metrics.json"
+    },
+    {
+      "bytes": 7068,
+      "mode": 420,
+      "path": "docs/design/portal-2.1-personalization.md"
+    },
+    {
+      "bytes": 13262,
+      "mode": 420,
+      "path": "docs/design/portal-2.1-ux-review.md"
+    },
+    {
+      "bytes": 6418,
+      "mode": 420,
+      "path": "docs/design/tokens.md"
+    },
+    {
+      "bytes": 14320,
+      "mode": 420,
+      "path": "docs/engineering-excellence/ux-readiness.md"
+    },
+    {
+      "bytes": 6581,
+      "mode": 420,
+      "path": "docs/fase0/architecture.md"
+    },
+    {
+      "bytes": 4072,
+      "mode": 420,
+      "path": "docs/fase0/capability-map.md"
+    },
+    {
+      "bytes": 5625,
+      "mode": 420,
+      "path": "docs/fase0/contracts.md"
+    },
+    {
+      "bytes": 1686,
+      "mode": 420,
+      "path": "docs/fase0/distribution-plan.md"
+    },
+    {
+      "bytes": 3385,
+      "mode": 420,
+      "path": "docs/fase0/security-matrix.md"
+    },
+    {
+      "bytes": 4900,
+      "mode": 420,
+      "path": "docs/fase1/angular-shell-report.md"
+    },
+    {
+      "bytes": 6558,
+      "mode": 420,
+      "path": "docs/fase2/server-report.md"
+    },
+    {
+      "bytes": 5084,
+      "mode": 420,
+      "path": "docs/fase9-release-report.md"
+    },
+    {
+      "bytes": 4630,
+      "mode": 420,
+      "path": "docs/final-hardening/baseline.md"
+    },
+    {
+      "bytes": 5448,
+      "mode": 420,
+      "path": "docs/final-hardening/fase1-portal-core.md"
+    },
+    {
+      "bytes": 7212,
+      "mode": 420,
+      "path": "docs/final-hardening/fase9-release.md"
+    },
+    {
+      "bytes": 4786,
+      "mode": 420,
+      "path": "docs/graph/portal-parity.md"
+    },
+    {
+      "bytes": 3181,
+      "mode": 420,
+      "path": "docs/graph/renderer-decision.md"
+    },
+    {
+      "bytes": 48292,
+      "mode": 420,
+      "path": "docs/homologation/cycle-4-matrix.json"
+    },
+    {
+      "bytes": 32563,
+      "mode": 420,
+      "path": "docs/homologation/cycle-4-matrix.md"
+    },
+    {
+      "bytes": 3547,
+      "mode": 420,
+      "path": "docs/homologation/public-package-e2e-report.md"
+    },
+    {
+      "bytes": 3725,
+      "mode": 420,
+      "path": "docs/homologation/public-package-runtime-matrix.md"
+    },
+    {
+      "bytes": 7030,
+      "mode": 420,
+      "path": "docs/homologation/README.md"
+    },
+    {
+      "bytes": 2010,
+      "mode": 420,
+      "path": "docs/installation/federation-onboarding.md"
+    },
+    {
+      "bytes": 2050,
+      "mode": 420,
+      "path": "docs/installation/README.md"
+    },
+    {
+      "bytes": 5587,
+      "mode": 420,
+      "path": "docs/knowledge/assistant-eval.md"
+    },
+    {
+      "bytes": 6277,
+      "mode": 420,
+      "path": "docs/knowledge/search-benchmark.md"
+    },
+    {
+      "bytes": 9111,
+      "mode": 420,
+      "path": "docs/observability/execution-events.md"
+    },
+    {
+      "bytes": 3161,
+      "mode": 420,
+      "path": "docs/perf/bundle-baseline.md"
+    },
+    {
+      "bytes": 13347,
+      "mode": 420,
+      "path": "docs/perf/execution-rendering-report.md"
+    },
+    {
+      "bytes": 3459,
+      "mode": 420,
+      "path": "docs/perf/graph-federation-report.md"
+    },
+    {
+      "bytes": 3417,
+      "mode": 420,
+      "path": "docs/perf/graph-public-package-validation.md"
+    },
+    {
+      "bytes": 17999,
+      "mode": 420,
+      "path": "docs/perf/graph-scale-report.md"
+    },
+    {
+      "bytes": 11276,
+      "mode": 420,
+      "path": "docs/perf/portal-2.1-benchmarks.md"
+    },
+    {
+      "bytes": 2572,
+      "mode": 420,
+      "path": "docs/release/cycle-2.2.1-package-baseline.md"
+    },
+    {
+      "bytes": 7997,
+      "mode": 420,
+      "path": "docs/release/dump-schemas.md"
+    },
+    {
+      "bytes": 955,
+      "mode": 420,
+      "path": "docs/release/README.md"
+    },
+    {
+      "bytes": 1927,
+      "mode": 420,
+      "path": "docs/release/sdist-wheel-reproducibility.md"
+    },
+    {
+      "bytes": 2488,
+      "mode": 420,
+      "path": "docs/release/version-consistency-matrix.md"
+    },
+    {
+      "bytes": 6242,
+      "mode": 420,
+      "path": "docs/reports/forge-2.2.1-release-certification.md"
+    },
+    {
+      "bytes": 3668,
+      "mode": 420,
+      "path": "docs/reports/forge-2.2.2-final-report.md"
+    },
+    {
+      "bytes": 4496,
+      "mode": 420,
+      "path": "docs/reports/forge-2.2.2-independent-certification.md"
+    },
+    {
+      "bytes": 9191,
+      "mode": 420,
+      "path": "docs/reports/forge-portal-nextgen-completion.md"
+    },
+    {
+      "bytes": 9924,
+      "mode": 420,
+      "path": "docs/reports/portal-2.1-final-homologation.md"
+    },
+    {
+      "bytes": 21133,
+      "mode": 420,
+      "path": "docs/reports/portal-2.1-independent-review.md"
+    },
+    {
+      "bytes": 7925,
+      "mode": 420,
+      "path": "docs/reports/portal-2.2-certification.md"
+    },
+    {
+      "bytes": 9813,
+      "mode": 420,
+      "path": "docs/reports/portal-2.2-cycle5-ux-a11y.md"
+    },
+    {
+      "bytes": 12493,
+      "mode": 420,
+      "path": "docs/roadmap/BASELINE_AUDIT.md"
+    },
+    {
+      "bytes": 6686,
+      "mode": 420,
+      "path": "docs/roadmap/C4_BRIDGE_ADR.md"
+    },
+    {
+      "bytes": 12746,
+      "mode": 420,
+      "path": "docs/roadmap/C5_SECURITY_MATRIX.md"
+    },
+    {
+      "bytes": 7528,
+      "mode": 420,
+      "path": "docs/roadmap/CYCLE_C3_REPORT.md"
+    },
+    {
+      "bytes": 7921,
+      "mode": 420,
+      "path": "docs/roadmap/CYCLE_C4_REPORT.md"
+    },
+    {
+      "bytes": 4847,
+      "mode": 420,
+      "path": "docs/roadmap/CYCLE_C5_REPORT.md"
+    },
+    {
+      "bytes": 10161,
+      "mode": 420,
+      "path": "docs/security/portal-2.1-review.md"
+    },
+    {
+      "bytes": 4927,
+      "mode": 420,
+      "path": "docs/security/publishing-workflow-review.md"
+    },
+    {
+      "bytes": 3804,
+      "mode": 420,
+      "path": "docs/security/release-dumps-review.md"
+    },
+    {
+      "bytes": 1527,
+      "mode": 420,
+      "path": "docs/testing/README.md"
+    },
+    {
+      "bytes": 4195,
+      "mode": 420,
+      "path": "docs/ux/execution-keyboard-validation.md"
+    },
+    {
+      "bytes": 138969,
+      "mode": 420,
+      "path": "e2e/artifacts/01-dashboard.png"
+    },
+    {
+      "bytes": 94449,
+      "mode": 420,
+      "path": "e2e/artifacts/02-language-toggle.png"
+    },
+    {
+      "bytes": 132151,
+      "mode": 420,
+      "path": "e2e/artifacts/03-install-plan.png"
+    },
+    {
+      "bytes": 124112,
+      "mode": 420,
+      "path": "e2e/artifacts/04-install-applied.png"
+    },
+    {
+      "bytes": 139898,
+      "mode": 420,
+      "path": "e2e/artifacts/05-command-palette.png"
+    },
+    {
+      "bytes": 136735,
+      "mode": 420,
+      "path": "e2e/artifacts/05-config-center.png"
+    },
+    {
+      "bytes": 139603,
+      "mode": 420,
+      "path": "e2e/artifacts/06-explorer.png"
+    },
+    {
+      "bytes": 117075,
+      "mode": 420,
+      "path": "e2e/artifacts/06-task-plan.png"
+    },
+    {
+      "bytes": 100720,
+      "mode": 420,
+      "path": "e2e/artifacts/07-forge-detail.png"
+    },
+    {
+      "bytes": 56902,
+      "mode": 420,
+      "path": "e2e/artifacts/07-mobile.png"
+    },
+    {
+      "bytes": 116840,
+      "mode": 420,
+      "path": "e2e/artifacts/08-execution-timeline.png"
+    },
+    {
+      "bytes": 139090,
+      "mode": 420,
+      "path": "e2e/artifacts/08-offline.png"
+    },
+    {
+      "bytes": 137506,
+      "mode": 420,
+      "path": "e2e/artifacts/08-palette-search.png"
+    },
+    {
+      "bytes": 126919,
+      "mode": 420,
+      "path": "e2e/artifacts/09-execution-replay.png"
+    },
+    {
+      "bytes": 129121,
+      "mode": 420,
+      "path": "e2e/artifacts/10-execution-inspector.png"
+    },
+    {
+      "bytes": 137964,
+      "mode": 420,
+      "path": "e2e/artifacts/16-graph-select.png"
+    },
+    {
+      "bytes": 141220,
+      "mode": 420,
+      "path": "e2e/artifacts/17-theme-light.png"
+    },
+    {
+      "bytes": 158744,
+      "mode": 420,
+      "path": "e2e/artifacts/18-graph-canvas.png"
+    },
+    {
+      "bytes": 141605,
+      "mode": 420,
+      "path": "e2e/artifacts/19-graph-canvas-select.png"
+    },
+    {
+      "bytes": 137983,
+      "mode": 420,
+      "path": "e2e/artifacts/20-graph-canvas-shared-selection.png"
+    },
+    {
+      "bytes": 163190,
+      "mode": 420,
+      "path": "e2e/artifacts/20-registry-ops.png"
+    },
+    {
+      "bytes": 166528,
+      "mode": 420,
+      "path": "e2e/artifacts/21-registry-plan.png"
+    },
+    {
+      "bytes": 167088,
+      "mode": 420,
+      "path": "e2e/artifacts/22-registry-executed.png"
+    },
+    {
+      "bytes": 179538,
+      "mode": 420,
+      "path": "e2e/artifacts/23-registry-uninstalled.png"
+    },
+    {
+      "bytes": 137566,
+      "mode": 420,
+      "path": "e2e/artifacts/24-graph-impact.png"
+    },
+    {
+      "bytes": 122160,
+      "mode": 420,
+      "path": "e2e/artifacts/24-guide.png"
+    },
+    {
+      "bytes": 173041,
+      "mode": 420,
+      "path": "e2e/artifacts/25-graph-snapshot.png"
+    },
+    {
+      "bytes": 99591,
+      "mode": 420,
+      "path": "e2e/artifacts/25-settings-prefs.png"
+    },
+    {
+      "bytes": 127662,
+      "mode": 420,
+      "path": "e2e/artifacts/26-graph-saved-view.png"
+    },
+    {
+      "bytes": 161133,
+      "mode": 420,
+      "path": "e2e/artifacts/27-graph-grouped.png"
+    },
+    {
+      "bytes": 166652,
+      "mode": 420,
+      "path": "e2e/artifacts/28-graph-layouts.png"
+    },
+    {
+      "bytes": 164806,
+      "mode": 420,
+      "path": "e2e/artifacts/29-graph-adaptive.png"
+    },
+    {
+      "bytes": 406,
+      "mode": 420,
+      "path": "e2e/artifacts/axe-report.json"
+    },
+    {
+      "bytes": 86586,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-01-agents-unavailable.png"
+    },
+    {
+      "bytes": 80431,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-02-skills-offline.png"
+    },
+    {
+      "bytes": 79668,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-03-missing-forge.png"
+    },
+    {
+      "bytes": 135105,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-04-partial-hosts.png"
+    },
+    {
+      "bytes": 147280,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-05-host-absent-refusal.png"
+    },
+    {
+      "bytes": 124926,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-06-mcp-fail-receipt.png"
+    },
+    {
+      "bytes": 123646,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-07-permission-denied.png"
+    },
+    {
+      "bytes": 163475,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-08-degraded-graph.png"
+    },
+    {
+      "bytes": 105868,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-09-incompatible-version.png"
+    },
+    {
+      "bytes": 157664,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-10-theforge-federation.png"
+    },
+    {
+      "bytes": 182270,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-11-theforge-graph.png"
+    },
+    {
+      "bytes": 174530,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-12-theforge-agents.png"
+    },
+    {
+      "bytes": 154794,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-13-theforge-skills.png"
+    },
+    {
+      "bytes": 155983,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-14-theforge-mcp-registry.png"
+    },
+    {
+      "bytes": 154190,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-15-theforge-mcp-receipt.png"
+    },
+    {
+      "bytes": 182270,
+      "mode": 420,
+      "path": "e2e/artifacts/c4-16-theforge-graph-return.png"
+    },
+    {
+      "bytes": 104802,
+      "mode": 420,
+      "path": "e2e/artifacts/chat_streaming/01_chat.png"
+    },
+    {
+      "bytes": 102597,
+      "mode": 420,
+      "path": "e2e/artifacts/chat_streaming/02_after_send.png"
+    },
+    {
+      "bytes": 117482,
+      "mode": 420,
+      "path": "e2e/artifacts/chat_streaming/03_diagnostics.png"
+    },
+    {
+      "bytes": 0,
+      "mode": 420,
+      "path": "e2e/artifacts/chat_streaming/fab.log"
+    },
+    {
+      "bytes": 167,
+      "mode": 420,
+      "path": "e2e/artifacts/chat_streaming/stream_evidence.json"
+    },
+    {
+      "bytes": 33442,
+      "mode": 420,
+      "path": "e2e/artifacts/exec-render-cycle4-baseline.json"
+    },
+    {
+      "bytes": 35019,
+      "mode": 420,
+      "path": "e2e/artifacts/exec-render-cycle4.json"
+    },
+    {
+      "bytes": 48399,
+      "mode": 420,
+      "path": "e2e/artifacts/graph-scale-cycle3-auto.json"
+    },
+    {
+      "bytes": 16235,
+      "mode": 420,
+      "path": "e2e/artifacts/graph-scale-cycle3-off.json"
+    },
+    {
+      "bytes": 5752,
+      "mode": 420,
+      "path": "e2e/artifacts/graph-scale-cycle3-off.log"
+    },
+    {
+      "bytes": 127651,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-contrast-more-dark.png"
+    },
+    {
+      "bytes": 127855,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-contrast-more-light.png"
+    },
+    {
+      "bytes": 133606,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-motion-pref-reduced-ua-normal.png"
+    },
+    {
+      "bytes": 127687,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-motion-reduce-pref-full.png"
+    },
+    {
+      "bytes": 131356,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-motion-reduce.png"
+    },
+    {
+      "bytes": 127253,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-scheme-forced-dark.png"
+    },
+    {
+      "bytes": 127260,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-scheme-forced-light.png"
+    },
+    {
+      "bytes": 127289,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-scheme-system-ua-dark.png"
+    },
+    {
+      "bytes": 127210,
+      "mode": 420,
+      "path": "e2e/artifacts/mode-scheme-system-ua-light.png"
+    },
+    {
+      "bytes": 5601,
+      "mode": 420,
+      "path": "e2e/artifacts/modes-cycle5.json"
+    },
+    {
+      "bytes": 68815,
+      "mode": 420,
+      "path": "e2e/artifacts/orca-cycle5.json"
+    },
+    {
+      "bytes": 21268,
+      "mode": 420,
+      "path": "e2e/artifacts/perf-cycle6.json"
+    },
+    {
+      "bytes": 205051,
+      "mode": 420,
+      "path": "e2e/artifacts/real-spark-aws-dashboard.png"
+    },
+    {
+      "bytes": 123211,
+      "mode": 420,
+      "path": "e2e/artifacts/real-spark-aws-install.png"
+    },
+    {
+      "bytes": 68084,
+      "mode": 420,
+      "path": "e2e/artifacts/real-spark-aws-tasks.png"
+    },
+    {
+      "bytes": 270553,
+      "mode": 420,
+      "path": "e2e/artifacts/reflow-cycle5.json"
+    },
+    {
+      "bytes": 87721,
+      "mode": 420,
+      "path": "e2e/artifacts/route-agents.png"
+    },
+    {
+      "bytes": 136735,
+      "mode": 420,
+      "path": "e2e/artifacts/route-config.png"
+    },
+    {
+      "bytes": 111949,
+      "mode": 420,
+      "path": "e2e/artifacts/route-execution.png"
+    },
+    {
+      "bytes": 133267,
+      "mode": 420,
+      "path": "e2e/artifacts/route-federation.png"
+    },
+    {
+      "bytes": 139478,
+      "mode": 420,
+      "path": "e2e/artifacts/route-forges.png"
+    },
+    {
+      "bytes": 100666,
+      "mode": 420,
+      "path": "e2e/artifacts/route-forges/self.png"
+    },
+    {
+      "bytes": 169396,
+      "mode": 420,
+      "path": "e2e/artifacts/route-graph.png"
+    },
+    {
+      "bytes": 122160,
+      "mode": 420,
+      "path": "e2e/artifacts/route-guide.png"
+    },
+    {
+      "bytes": 150279,
+      "mode": 420,
+      "path": "e2e/artifacts/route-hosts.png"
+    },
+    {
+      "bytes": 125771,
+      "mode": 420,
+      "path": "e2e/artifacts/route-install.png"
+    },
+    {
+      "bytes": 122404,
+      "mode": 420,
+      "path": "e2e/artifacts/route-mcp.png"
+    },
+    {
+      "bytes": 119011,
+      "mode": 420,
+      "path": "e2e/artifacts/route-observe.png"
+    },
+    {
+      "bytes": 107871,
+      "mode": 420,
+      "path": "e2e/artifacts/route-profiles.png"
+    },
+    {
+      "bytes": 100511,
+      "mode": 420,
+      "path": "e2e/artifacts/route-settings.png"
+    },
+    {
+      "bytes": 82854,
+      "mode": 420,
+      "path": "e2e/artifacts/route-skills.png"
+    },
+    {
+      "bytes": 114195,
+      "mode": 420,
+      "path": "e2e/artifacts/route-tasks.png"
+    },
+    {
+      "bytes": 30029,
+      "mode": 420,
+      "path": "e2e/artifacts/usability-cycle5.json"
+    },
+    {
+      "bytes": 18707,
+      "mode": 420,
+      "path": "e2e/exec_render_probe.py"
+    },
+    {
+      "bytes": 7886,
+      "mode": 420,
+      "path": "e2e/modes_probe.py"
+    },
+    {
+      "bytes": 17929,
+      "mode": 420,
+      "path": "e2e/orca_probe.py"
+    },
+    {
+      "bytes": 13652,
+      "mode": 420,
+      "path": "e2e/perf_probe.py"
+    },
+    {
+      "bytes": 4815,
+      "mode": 420,
+      "path": "e2e/reflow_probe.py"
+    },
+    {
+      "bytes": 65500,
+      "mode": 420,
+      "path": "e2e/test_browser_e2e.py"
+    },
+    {
+      "bytes": 20934,
+      "mode": 420,
+      "path": "e2e/test_browser_homologation.py"
+    },
+    {
+      "bytes": 10392,
+      "mode": 420,
+      "path": "e2e/test_chat_streaming.py"
+    },
+    {
+      "bytes": 14106,
+      "mode": 420,
+      "path": "e2e/usability_probe.py"
+    },
+    {
+      "bytes": 11255,
+      "mode": 420,
+      "path": "e2e/visual_audit.py"
+    },
+    {
+      "bytes": 10871,
+      "mode": 420,
+      "path": "e2e/visual_probe.py"
+    },
+    {
+      "bytes": 3344,
+      "mode": 420,
+      "path": "factory/runs/2026-10-15.cyc8-06.md"
+    },
+    {
+      "bytes": 1444,
+      "mode": 420,
+      "path": "factory/runs/2026-10-15.cyc9-10.md"
+    },
+    {
+      "bytes": 2055,
+      "mode": 420,
+      "path": "factory/specs/archive/2026/cyc8-06-portal-release-ui.md"
+    },
+    {
+      "bytes": 1912,
+      "mode": 420,
+      "path": "factory/specs/archive/2026/cyc9-10-portal-lab-ui.md"
+    },
+    {
+      "bytes": 902,
+      "mode": 420,
+      "path": "package.json"
+    },
+    {
+      "bytes": 45564,
+      "mode": 420,
+      "path": "portal_core/forge_portal.py"
+    },
+    {
+      "bytes": 7502,
+      "mode": 420,
+      "path": "portal_core/registry_ops.py"
+    },
+    {
+      "bytes": 10562,
+      "mode": 420,
+      "path": "portal_core/telemetry.py"
+    },
+    {
+      "bytes": 15086,
+      "mode": 420,
+      "path": "public/favicon.ico"
+    },
+    {
+      "bytes": 177,
+      "mode": 420,
+      "path": "requirements-dev.txt"
+    },
+    {
+      "bytes": 511,
+      "mode": 420,
+      "path": "ruff.toml"
+    },
+    {
+      "bytes": 3484,
+      "mode": 420,
+      "path": "scripts/check_i18n.py"
+    },
+    {
+      "bytes": 16592,
+      "mode": 420,
+      "path": "scripts/graph-bench-entry.js"
+    },
+    {
+      "bytes": 9179,
+      "mode": 420,
+      "path": "scripts/graph-bench-federation-entry.js"
+    },
+    {
+      "bytes": 1344,
+      "mode": 420,
+      "path": "scripts/graph-bench-federation.mjs"
+    },
+    {
+      "bytes": 1416,
+      "mode": 420,
+      "path": "scripts/graph-bench.mjs"
+    },
+    {
+      "bytes": 44593,
+      "mode": 420,
+      "path": "scripts/homologation.py"
+    },
+    {
+      "bytes": 4148,
+      "mode": 420,
+      "path": "scripts/portal_chat_e2e.py"
+    },
+    {
+      "bytes": 5269,
+      "mode": 420,
+      "path": "scripts/portal_e2e_audit.py"
+    },
+    {
+      "bytes": 12592,
+      "mode": 420,
+      "path": "scripts/portal_e2e.py"
+    },
+    {
+      "bytes": 43940,
+      "mode": 420,
+      "path": "scripts/release_dumps.py"
+    },
+    {
+      "bytes": 11429,
+      "mode": 420,
+      "path": "scripts/vendor.py"
+    },
+    {
+      "bytes": 7119,
+      "mode": 420,
+      "path": "src/app/a11y.spec.ts"
+    },
+    {
+      "bytes": 906,
+      "mode": 420,
+      "path": "src/app/app.config.ts"
+    },
+    {
+      "bytes": 225,
+      "mode": 420,
+      "path": "src/app/app.css"
+    },
+    {
+      "bytes": 2828,
+      "mode": 420,
+      "path": "src/app/app.routes.ts"
+    },
+    {
+      "bytes": 8802,
+      "mode": 420,
+      "path": "src/app/app.spec.ts"
+    },
+    {
+      "bytes": 13415,
+      "mode": 420,
+      "path": "src/app/app.ts"
+    },
+    {
+      "bytes": 9361,
+      "mode": 420,
+      "path": "src/app/core/api/api.client.ts"
+    },
+    {
+      "bytes": 932,
+      "mode": 420,
+      "path": "src/app/core/api/api.error.spec.ts"
+    },
+    {
+      "bytes": 997,
+      "mode": 420,
+      "path": "src/app/core/api/api.error.ts"
+    },
+    {
+      "bytes": 1935,
+      "mode": 420,
+      "path": "src/app/core/api/api.interceptor.ts"
+    },
+    {
+      "bytes": 13057,
+      "mode": 420,
+      "path": "src/app/core/api/api.models.ts"
+    },
+    {
+      "bytes": 2567,
+      "mode": 420,
+      "path": "src/app/core/api/error-guidance.spec.ts"
+    },
+    {
+      "bytes": 3649,
+      "mode": 420,
+      "path": "src/app/core/api/error-guidance.ts"
+    },
+    {
+      "bytes": 5968,
+      "mode": 420,
+      "path": "src/app/core/catalog/dedup.spec.ts"
+    },
+    {
+      "bytes": 7603,
+      "mode": 420,
+      "path": "src/app/core/catalog/dedup.ts"
+    },
+    {
+      "bytes": 6333,
+      "mode": 420,
+      "path": "src/app/core/graph/analysis.spec.ts"
+    },
+    {
+      "bytes": 11650,
+      "mode": 420,
+      "path": "src/app/core/graph/analysis.ts"
+    },
+    {
+      "bytes": 17041,
+      "mode": 420,
+      "path": "src/app/core/graph/cytoscape-adapter.spec.ts"
+    },
+    {
+      "bytes": 39116,
+      "mode": 420,
+      "path": "src/app/core/graph/cytoscape-adapter.ts"
+    },
+    {
+      "bytes": 2503,
+      "mode": 420,
+      "path": "src/app/core/graph/entity-link.spec.ts"
+    },
+    {
+      "bytes": 2674,
+      "mode": 420,
+      "path": "src/app/core/graph/entity-link.ts"
+    },
+    {
+      "bytes": 13962,
+      "mode": 420,
+      "path": "src/app/core/graph/federated.spec.ts"
+    },
+    {
+      "bytes": 23116,
+      "mode": 420,
+      "path": "src/app/core/graph/federated.ts"
+    },
+    {
+      "bytes": 5827,
+      "mode": 420,
+      "path": "src/app/core/graph/layout-policy.spec.ts"
+    },
+    {
+      "bytes": 10552,
+      "mode": 420,
+      "path": "src/app/core/graph/layout-policy.ts"
+    },
+    {
+      "bytes": 9624,
+      "mode": 420,
+      "path": "src/app/core/graph/projection.spec.ts"
+    },
+    {
+      "bytes": 11921,
+      "mode": 420,
+      "path": "src/app/core/graph/projection.ts"
+    },
+    {
+      "bytes": 8440,
+      "mode": 420,
+      "path": "src/app/core/graph/renderer.ts"
+    },
+    {
+      "bytes": 3228,
+      "mode": 420,
+      "path": "src/app/core/graph/saved-view.spec.ts"
+    },
+    {
+      "bytes": 4651,
+      "mode": 420,
+      "path": "src/app/core/graph/saved-view.ts"
+    },
+    {
+      "bytes": 3943,
+      "mode": 420,
+      "path": "src/app/core/graph/snapshot.spec.ts"
+    },
+    {
+      "bytes": 5962,
+      "mode": 420,
+      "path": "src/app/core/graph/snapshot.ts"
+    },
+    {
+      "bytes": 4826,
+      "mode": 420,
+      "path": "src/app/core/graph/view-model.spec.ts"
+    },
+    {
+      "bytes": 7063,
+      "mode": 420,
+      "path": "src/app/core/graph/view-model.ts"
+    },
+    {
+      "bytes": 734,
+      "mode": 420,
+      "path": "src/app/core/i18n/i18n.pipe.ts"
+    },
+    {
+      "bytes": 1947,
+      "mode": 420,
+      "path": "src/app/core/i18n/i18n.service.spec.ts"
+    },
+    {
+      "bytes": 3762,
+      "mode": 420,
+      "path": "src/app/core/i18n/i18n.service.ts"
+    },
+    {
+      "bytes": 72712,
+      "mode": 420,
+      "path": "src/app/core/i18n/locales/en.ts"
+    },
+    {
+      "bytes": 60,
+      "mode": 420,
+      "path": "src/app/core/i18n/locales/index.ts"
+    },
+    {
+      "bytes": 76681,
+      "mode": 420,
+      "path": "src/app/core/i18n/locales/pt-br.ts"
+    },
+    {
+      "bytes": 8306,
+      "mode": 420,
+      "path": "src/app/core/match/match.service.spec.ts"
+    },
+    {
+      "bytes": 14595,
+      "mode": 420,
+      "path": "src/app/core/match/match.service.ts"
+    },
+    {
+      "bytes": 3413,
+      "mode": 420,
+      "path": "src/app/core/portal/portal.store.ts"
+    },
+    {
+      "bytes": 6162,
+      "mode": 420,
+      "path": "src/app/core/prefs/prefs.store.spec.ts"
+    },
+    {
+      "bytes": 8526,
+      "mode": 420,
+      "path": "src/app/core/prefs/prefs.store.ts"
+    },
+    {
+      "bytes": 8765,
+      "mode": 420,
+      "path": "src/app/core/search/recommend.data.spec.ts"
+    },
+    {
+      "bytes": 13292,
+      "mode": 420,
+      "path": "src/app/core/search/recommend.data.ts"
+    },
+    {
+      "bytes": 3781,
+      "mode": 420,
+      "path": "src/app/core/search/search.data.spec.ts"
+    },
+    {
+      "bytes": 5945,
+      "mode": 420,
+      "path": "src/app/core/search/search.data.ts"
+    },
+    {
+      "bytes": 14331,
+      "mode": 420,
+      "path": "src/app/core/search/search.service.spec.ts"
+    },
+    {
+      "bytes": 15539,
+      "mode": 420,
+      "path": "src/app/core/search/search.service.ts"
+    },
+    {
+      "bytes": 1195,
+      "mode": 420,
+      "path": "src/app/core/session/session.store.ts"
+    },
+    {
+      "bytes": 2013,
+      "mode": 420,
+      "path": "src/app/core/theme/theme.store.spec.ts"
+    },
+    {
+      "bytes": 2023,
+      "mode": 420,
+      "path": "src/app/core/theme/theme.store.ts"
+    },
+    {
+      "bytes": 6831,
+      "mode": 420,
+      "path": "src/app/pages/agents/agents.data.spec.ts"
+    },
+    {
+      "bytes": 7835,
+      "mode": 420,
+      "path": "src/app/pages/agents/agents.data.ts"
+    },
+    {
+      "bytes": 13756,
+      "mode": 420,
+      "path": "src/app/pages/agents/agents.page.spec.ts"
+    },
+    {
+      "bytes": 36616,
+      "mode": 420,
+      "path": "src/app/pages/agents/agents.page.ts"
+    },
+    {
+      "bytes": 5759,
+      "mode": 420,
+      "path": "src/app/pages/config/config.page.spec.ts"
+    },
+    {
+      "bytes": 12033,
+      "mode": 420,
+      "path": "src/app/pages/config/config.page.ts"
+    },
+    {
+      "bytes": 14838,
+      "mode": 420,
+      "path": "src/app/pages/dashboard/dashboard.page.spec.ts"
+    },
+    {
+      "bytes": 33035,
+      "mode": 420,
+      "path": "src/app/pages/dashboard/dashboard.page.ts"
+    },
+    {
+      "bytes": 11448,
+      "mode": 420,
+      "path": "src/app/pages/dashboard/ops.data.spec.ts"
+    },
+    {
+      "bytes": 11130,
+      "mode": 420,
+      "path": "src/app/pages/dashboard/ops.data.ts"
+    },
+    {
+      "bytes": 13209,
+      "mode": 420,
+      "path": "src/app/pages/execution/execution.data.spec.ts"
+    },
+    {
+      "bytes": 21187,
+      "mode": 420,
+      "path": "src/app/pages/execution/execution.data.ts"
+    },
+    {
+      "bytes": 22752,
+      "mode": 420,
+      "path": "src/app/pages/execution/execution.page.spec.ts"
+    },
+    {
+      "bytes": 46647,
+      "mode": 420,
+      "path": "src/app/pages/execution/execution.page.ts"
+    },
+    {
+      "bytes": 4929,
+      "mode": 420,
+      "path": "src/app/pages/explorer/explorer.page.spec.ts"
+    },
+    {
+      "bytes": 8292,
+      "mode": 420,
+      "path": "src/app/pages/explorer/explorer.page.ts"
+    },
+    {
+      "bytes": 6089,
+      "mode": 420,
+      "path": "src/app/pages/explorer/forge-detail.page.spec.ts"
+    },
+    {
+      "bytes": 16285,
+      "mode": 420,
+      "path": "src/app/pages/explorer/forge-detail.page.ts"
+    },
+    {
+      "bytes": 6707,
+      "mode": 420,
+      "path": "src/app/pages/explorer/forges.data.ts"
+    },
+    {
+      "bytes": 4735,
+      "mode": 420,
+      "path": "src/app/pages/explorer/inventory-panel.ts"
+    },
+    {
+      "bytes": 8358,
+      "mode": 420,
+      "path": "src/app/pages/explorer/registry-ops-panel.spec.ts"
+    },
+    {
+      "bytes": 19777,
+      "mode": 420,
+      "path": "src/app/pages/explorer/registry-ops-panel.ts"
+    },
+    {
+      "bytes": 22234,
+      "mode": 420,
+      "path": "src/app/pages/federation/federation.page.ts"
+    },
+    {
+      "bytes": 40010,
+      "mode": 420,
+      "path": "src/app/pages/graph/graph.page.spec.ts"
+    },
+    {
+      "bytes": 85601,
+      "mode": 420,
+      "path": "src/app/pages/graph/graph.page.ts"
+    },
+    {
+      "bytes": 6004,
+      "mode": 420,
+      "path": "src/app/pages/guide/guide.page.ts"
+    },
+    {
+      "bytes": 12410,
+      "mode": 420,
+      "path": "src/app/pages/hosts/hosts.page.spec.ts"
+    },
+    {
+      "bytes": 22905,
+      "mode": 420,
+      "path": "src/app/pages/hosts/hosts.page.ts"
+    },
+    {
+      "bytes": 8865,
+      "mode": 420,
+      "path": "src/app/pages/install/install.page.spec.ts"
+    },
+    {
+      "bytes": 37073,
+      "mode": 420,
+      "path": "src/app/pages/install/install.page.ts"
+    },
+    {
+      "bytes": 12248,
+      "mode": 420,
+      "path": "src/app/pages/knowledge/knowledge.page.spec.ts"
+    },
+    {
+      "bytes": 32900,
+      "mode": 420,
+      "path": "src/app/pages/knowledge/knowledge.page.ts"
+    },
+    {
+      "bytes": 5781,
+      "mode": 420,
+      "path": "src/app/pages/lab/lab.page.spec.ts"
+    },
+    {
+      "bytes": 14680,
+      "mode": 420,
+      "path": "src/app/pages/lab/lab.page.ts"
+    },
+    {
+      "bytes": 5403,
+      "mode": 420,
+      "path": "src/app/pages/match/match.page.spec.ts"
+    },
+    {
+      "bytes": 7615,
+      "mode": 420,
+      "path": "src/app/pages/match/match.page.ts"
+    },
+    {
+      "bytes": 11609,
+      "mode": 420,
+      "path": "src/app/pages/mcp/mcp.page.spec.ts"
+    },
+    {
+      "bytes": 26633,
+      "mode": 420,
+      "path": "src/app/pages/mcp/mcp.page.ts"
+    },
+    {
+      "bytes": 11638,
+      "mode": 420,
+      "path": "src/app/pages/observe/observe.page.spec.ts"
+    },
+    {
+      "bytes": 17036,
+      "mode": 420,
+      "path": "src/app/pages/observe/observe.page.ts"
+    },
+    {
+      "bytes": 4569,
+      "mode": 420,
+      "path": "src/app/pages/profiles/profiles.page.spec.ts"
+    },
+    {
+      "bytes": 11430,
+      "mode": 420,
+      "path": "src/app/pages/profiles/profiles.page.ts"
+    },
+    {
+      "bytes": 2294,
+      "mode": 420,
+      "path": "src/app/pages/settings/settings.page.spec.ts"
+    },
+    {
+      "bytes": 7873,
+      "mode": 420,
+      "path": "src/app/pages/settings/settings.page.ts"
+    },
+    {
+      "bytes": 6188,
+      "mode": 420,
+      "path": "src/app/pages/skills/skills.page.spec.ts"
+    },
+    {
+      "bytes": 17301,
+      "mode": 420,
+      "path": "src/app/pages/skills/skills.page.ts"
+    },
+    {
+      "bytes": 6140,
+      "mode": 420,
+      "path": "src/app/pages/tasks/tasks.data.spec.ts"
+    },
+    {
+      "bytes": 6104,
+      "mode": 420,
+      "path": "src/app/pages/tasks/tasks.data.ts"
+    },
+    {
+      "bytes": 22458,
+      "mode": 420,
+      "path": "src/app/pages/tasks/tasks.page.spec.ts"
+    },
+    {
+      "bytes": 40891,
+      "mode": 420,
+      "path": "src/app/pages/tasks/tasks.page.ts"
+    },
+    {
+      "bytes": 10947,
+      "mode": 420,
+      "path": "src/app/pages/versions/versions.page.spec.ts"
+    },
+    {
+      "bytes": 13960,
+      "mode": 420,
+      "path": "src/app/pages/versions/versions.page.ts"
+    },
+    {
+      "bytes": 6815,
+      "mode": 420,
+      "path": "src/app/pf/pages/artifact-studio.page.ts"
+    },
+    {
+      "bytes": 6850,
+      "mode": 420,
+      "path": "src/app/pf/pages/boards.page.ts"
+    },
+    {
+      "bytes": 46214,
+      "mode": 420,
+      "path": "src/app/pf/pages/chat.page.ts"
+    },
+    {
+      "bytes": 8023,
+      "mode": 420,
+      "path": "src/app/pf/pages/compare.page.ts"
+    },
+    {
+      "bytes": 9018,
+      "mode": 420,
+      "path": "src/app/pf/pages/control-center.page.ts"
+    },
+    {
+      "bytes": 10189,
+      "mode": 420,
+      "path": "src/app/pf/pages/diagnostics.page.ts"
+    },
+    {
+      "bytes": 16618,
+      "mode": 420,
+      "path": "src/app/pf/pages/home.page.ts"
+    },
+    {
+      "bytes": 7864,
+      "mode": 420,
+      "path": "src/app/pf/pages/intel-actions.page.ts"
+    },
+    {
+      "bytes": 8327,
+      "mode": 420,
+      "path": "src/app/pf/pages/lens.page.ts"
+    },
+    {
+      "bytes": 29595,
+      "mode": 420,
+      "path": "src/app/pf/pages/onboarding.page.ts"
+    },
+    {
+      "bytes": 6980,
+      "mode": 420,
+      "path": "src/app/pf/pages/product-detail.page.ts"
+    },
+    {
+      "bytes": 8390,
+      "mode": 420,
+      "path": "src/app/pf/pages/products.page.ts"
+    },
+    {
+      "bytes": 9533,
+      "mode": 420,
+      "path": "src/app/pf/pages/proposals.page.ts"
+    },
+    {
+      "bytes": 7193,
+      "mode": 420,
+      "path": "src/app/pf/pages/settings.page.ts"
+    },
+    {
+      "bytes": 20477,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/agents.tab.ts"
+    },
+    {
+      "bytes": 26772,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/analytics.tab.ts"
+    },
+    {
+      "bytes": 11592,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/apis.tab.ts"
+    },
+    {
+      "bytes": 8503,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/context.tab.ts"
+    },
+    {
+      "bytes": 18936,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/dashboards.tab.ts"
+    },
+    {
+      "bytes": 7411,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/health.tab.ts"
+    },
+    {
+      "bytes": 14212,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/knowledge.tab.ts"
+    },
+    {
+      "bytes": 17338,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/planning.tab.ts"
+    },
+    {
+      "bytes": 7211,
+      "mode": 420,
+      "path": "src/app/pf/pages/tabs/reports.tab.ts"
+    },
+    {
+      "bytes": 5183,
+      "mode": 420,
+      "path": "src/app/pf/pages/templates.page.ts"
+    },
+    {
+      "bytes": 8580,
+      "mode": 420,
+      "path": "src/app/pf/pages/workflow.page.ts"
+    },
+    {
+      "bytes": 3787,
+      "mode": 420,
+      "path": "src/app/pf/pf-api.service.spec.ts"
+    },
+    {
+      "bytes": 20187,
+      "mode": 420,
+      "path": "src/app/pf/pf-api.service.ts"
+    },
+    {
+      "bytes": 22573,
+      "mode": 420,
+      "path": "src/app/pf/pf-bridge.service.ts"
+    },
+    {
+      "bytes": 13598,
+      "mode": 420,
+      "path": "src/app/pf/pf.models.ts"
+    },
+    {
+      "bytes": 2318,
+      "mode": 420,
+      "path": "src/app/pf/pf.routes.ts"
+    },
+    {
+      "bytes": 4420,
+      "mode": 420,
+      "path": "src/app/shared/artifact-viewer.ts"
+    },
+    {
+      "bytes": 10954,
+      "mode": 420,
+      "path": "src/app/shared/command-palette.spec.ts"
+    },
+    {
+      "bytes": 13952,
+      "mode": 420,
+      "path": "src/app/shared/command-palette.ts"
+    },
+    {
+      "bytes": 5999,
+      "mode": 420,
+      "path": "src/app/shared/confirm-dialog.spec.ts"
+    },
+    {
+      "bytes": 7326,
+      "mode": 420,
+      "path": "src/app/shared/confirm-dialog.ts"
+    },
+    {
+      "bytes": 1654,
+      "mode": 420,
+      "path": "src/app/shared/empty-state.ts"
+    },
+    {
+      "bytes": 3487,
+      "mode": 420,
+      "path": "src/app/shared/error-state.ts"
+    },
+    {
+      "bytes": 2334,
+      "mode": 420,
+      "path": "src/app/shared/filter-bar.ts"
+    },
+    {
+      "bytes": 10817,
+      "mode": 420,
+      "path": "src/app/shared/forge-doc.ts"
+    },
+    {
+      "bytes": 2075,
+      "mode": 420,
+      "path": "src/app/shared/guide-hint.spec.ts"
+    },
+    {
+      "bytes": 3325,
+      "mode": 420,
+      "path": "src/app/shared/guide-hint.ts"
+    },
+    {
+      "bytes": 4959,
+      "mode": 420,
+      "path": "src/app/shared/icon-paths.ts"
+    },
+    {
+      "bytes": 1335,
+      "mode": 420,
+      "path": "src/app/shared/icon.ts"
+    },
+    {
+      "bytes": 2448,
+      "mode": 420,
+      "path": "src/app/shared/md-lite.pipe.ts"
+    },
+    {
+      "bytes": 1670,
+      "mode": 420,
+      "path": "src/app/shared/page-header.ts"
+    },
+    {
+      "bytes": 3416,
+      "mode": 420,
+      "path": "src/app/shared/pager.spec.ts"
+    },
+    {
+      "bytes": 3211,
+      "mode": 420,
+      "path": "src/app/shared/pager.ts"
+    },
+    {
+      "bytes": 2377,
+      "mode": 420,
+      "path": "src/app/shared/skeleton.spec.ts"
+    },
+    {
+      "bytes": 2971,
+      "mode": 420,
+      "path": "src/app/shared/skeleton.ts"
+    },
+    {
+      "bytes": 4030,
+      "mode": 420,
+      "path": "src/app/shared/state-badge.ts"
+    },
+    {
+      "bytes": 4083,
+      "mode": 420,
+      "path": "src/app/shared/toast.spec.ts"
+    },
+    {
+      "bytes": 6847,
+      "mode": 420,
+      "path": "src/app/shared/toast.ts"
+    },
+    {
+      "bytes": 328,
+      "mode": 420,
+      "path": "src/index.html"
+    },
+    {
+      "bytes": 219,
+      "mode": 420,
+      "path": "src/main.ts"
+    },
+    {
+      "bytes": 654,
+      "mode": 420,
+      "path": "src/spec-support.d.ts"
+    },
+    {
+      "bytes": 48293,
+      "mode": 420,
+      "path": "src/styles.css"
+    },
+    {
+      "bytes": 11995,
+      "mode": 420,
+      "path": "src/styles/tokens.css"
+    },
+    {
+      "bytes": 2886,
+      "mode": 420,
+      "path": "src/styles/tokens.spec.ts"
+    },
+    {
+      "bytes": 7053,
+      "mode": 420,
+      "path": "tests/test_compat_generations.py"
+    },
+    {
+      "bytes": 30367,
+      "mode": 420,
+      "path": "tests/test_forge_portal.py"
+    },
+    {
+      "bytes": 11632,
+      "mode": 420,
+      "path": "tests/test_homologation_real.py"
+    },
+    {
+      "bytes": 10490,
+      "mode": 420,
+      "path": "tests/test_independence.py"
+    },
+    {
+      "bytes": 1452,
+      "mode": 420,
+      "path": "tests/test_portal_e2e_harness.py"
+    },
+    {
+      "bytes": 18964,
+      "mode": 420,
+      "path": "tests/test_release_dumps.py"
+    },
+    {
+      "bytes": 32484,
+      "mode": 420,
+      "path": "tests/test_security_c5.py"
+    },
+    {
+      "bytes": 11317,
+      "mode": 420,
+      "path": "tests/test_telemetry.py"
+    },
+    {
+      "bytes": 665,
+      "mode": 420,
+      "path": "tests/test_version_track.py"
+    },
+    {
+      "bytes": 382,
+      "mode": 420,
+      "path": "tsconfig.app.json"
+    },
+    {
+      "bytes": 957,
+      "mode": 420,
+      "path": "tsconfig.json"
+    },
+    {
+      "bytes": 385,
+      "mode": 420,
+      "path": "tsconfig.spec.json"
+    }
+  ],
+  "forbidden": [],
+  "generated_at_utc": "2026-11-04T21:04:29Z",
+  "mode": "safe",
+  "package": {
+    "filename": "forge-portal-app-1.1.1.tgz",
+    "integrity": "sha512-sBzWFfpCCDDCFzzeAzbbUGF3itGbee5MezgFpFgyXFZu5CrlKB4rC2QNUhTautGwlmyM5J/n4QP10zDDmXDlaw==",
+    "name": "forge-portal-app",
+    "package_size": null,
+    "shasum": "be6e1595c2155fede8817358702b8dc99f5eb960",
+    "total_files": null,
+    "unpacked_size": 96420713,
+    "version": "1.1.1"
+  },
+  "problems": [],
+  "schema": "forge/NpmPackManifest/1",
+  "status": "OK",
+  "total_bytes": 96420713
+}

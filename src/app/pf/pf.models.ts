@@ -47,6 +47,65 @@ export interface PfWorkspace {
   updated_at?: string;
 }
 
+/** productforge/WorkspaceDiscovery/v1 — metadata-only local discovery. */
+export interface PfWorkspaceRepository {
+  id: string;
+  name: string;
+  path: string;
+  repository: string;
+  is_git?: boolean;
+  languages?: string[];
+  manifests?: string[];
+  state?: string;
+}
+
+export interface PfWorkspaceDocument {
+  id: string;
+  path: string;
+  relative_path: string;
+  repository: string;
+  kind: 'prd' | 'brief' | 'knowledge';
+  title: string;
+  extension?: string;
+  size: number;
+  modified_at?: string;
+  state?: string;
+  readable?: boolean;
+}
+
+export interface PfWorkspaceDiscovery {
+  schema: string;
+  generated_at: string;
+  workspace: {
+    name: string;
+    path: string;
+    source: string;
+    current_repository?: string | null;
+  };
+  repositories: PfWorkspaceRepository[];
+  projects?: PfWorkspaceRepository[];
+  documents: PfWorkspaceDocument[];
+  skipped?: string[];
+  limits?: Record<string, number>;
+  state: 'discovered' | 'degraded' | string;
+}
+
+export interface PfWorkspacePreview {
+  path: string;
+  kind: string;
+  title: string;
+  size: number;
+  preview: string;
+  truncated?: boolean;
+  state: string;
+}
+
+export interface PfWorkspaceImport extends PfDocument {
+  state?: string;
+  source_path?: string;
+  source_kind?: string;
+}
+
 export interface PfProduct {
   id: string;
   workspace_id: string;

@@ -39,11 +39,18 @@ import { UiSkeleton } from '../../shared/skeleton';
         <section class="card notice" role="status" aria-live="polite">
           <ui-state-badge [state]="r.state" />
           <span>
-            {{ r.state === 'unavailable' ? 'O diagnóstico do Bridge está indisponível no momento.' :
-            'O diagnóstico do Bridge está degradado.' }}
-            @if (r.reason) { <span class="muted mono">{{ r.reason }}</span> }
+            {{
+              r.state === 'unavailable'
+                ? 'O diagnóstico do Bridge está indisponível no momento.'
+                : 'O diagnóstico do Bridge está degradado.'
+            }}
+            @if (r.reason) {
+              <span class="muted mono">{{ r.reason }}</span>
+            }
           </span>
-          <button class="btn btn--mini" type="button" (click)="load()">Tentar novamente</button>
+          <button class="btn btn--mini" type="button" (click)="load()">
+            {{ 'pf.diagnostics.retry' | t }}
+          </button>
         </section>
       }
 

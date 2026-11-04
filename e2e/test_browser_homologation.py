@@ -113,7 +113,8 @@ class DegradedAdapter(E2EAdapter):
     # -- missing host: real detection probe → named refusal --------------
     def _launch(self, ctx: fp.RequestContext) -> dict:
         host = str((ctx.body or {}).get("host") or "")
-        if shutil.which(host):
+        known = next((item for item in self.hosts() if item["host"] == host), None)
+        if known and known["launchable"] and shutil.which(host):
             return {
                 "command": f"{host} integrate degraded-forge",
                 "detail": f"run `{host} integrate degraded-forge` in your terminal",
@@ -159,7 +160,7 @@ class DegradedAdapter(E2EAdapter):
             raise fp.PortalError(
                 "E2E-PERMISSION-DENIED",
                 f"insufficient permissions: {target} not writable by "
-                f"uid {os.getuid()}",
+            f"identity {getattr(os, 'getuid', lambda: 'windows')()}",
                 http=403,
             )
         raise fp.PortalError(
@@ -303,7 +304,7 @@ def test_offline_mcp_fail_receipt(page, degraded):
     s, env = _req(degraded, "POST", "/mcp/verify", body={"confirm": "verify"})
     assert s == 200 and env["data"]["status"] == "FAIL"
     detail = json.dumps(env["data"])
-    assert "refused" in detail.lower() or "ConnectionRefusedError" in detail
+    assert any(token in detail.lower() for token in ("refused", "timeout", "timed out"))
 
     _goto(page, degraded, "/mcp")
     page.locator("button[data-action='verify']").click()

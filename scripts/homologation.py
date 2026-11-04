@@ -164,6 +164,9 @@ def _find_checkout(repo: str, manifest_src: dict | None) -> Path | None:
     for cand in candidates:
         if _venv_python(cand):
             return cand
+    canonical = REPO.parent / repo
+    if canonical.is_dir():
+        return canonical
     return candidates[0] if candidates else None
 
 
@@ -814,13 +817,25 @@ def _boot(local: ForgeLocal) -> tuple[subprocess.Popen[str], str]:
             attempts.append(
                 (local.installed_python, argv, local.install_root or Path("/"))
             )
+    if local.checkout and not local.dev_python and not local.installed_python:
+        # A checkout is a valid local installation even when its optional
+        # .venv has not been created.  The homologation runner itself is the
+        # available interpreter; adding the checkout's src/ directory keeps
+        # the probe on the real source adapter instead of reporting a false
+        # "no python entrypoint" blocker.
+        attempts.append((Path(sys.executable), list(local.spec.argv), local.checkout))
     errors: list[str] = []
     for py, argv, cwd in attempts:
         cmd = [str(py), *argv, "--no-browser", "--root", str(scratch)]
+        env = os.environ.copy()
+        src = cwd / "src"
+        if src.is_dir():
+            existing = env.get("PYTHONPATH")
+            env["PYTHONPATH"] = str(src) + (os.pathsep + existing if existing else "")
         try:
             proc = subprocess.Popen(
                 cmd, cwd=str(cwd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                text=True, encoding="utf-8", errors="replace",
+                text=True, encoding="utf-8", errors="replace", env=env,
             )
         except OSError as e:
             errors.append(f"{' '.join(cmd)}: {e}")

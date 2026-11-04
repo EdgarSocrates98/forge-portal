@@ -53,6 +53,109 @@ button {
   font: inherit;
 }
 
+/* Product Forge Chat — workspace context discovery */
+.discovery__head,
+.discovery__doc {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.discovery__head {
+  justify-content: space-between;
+}
+.discovery__repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: var(--space-1) 0;
+}
+.discovery__repo,
+.kind {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 6px;
+  font-size: var(--font-xs);
+  color: var(--fg-muted);
+}
+.kind[data-kind='prd'] {
+  color: var(--accent-ink, var(--fg));
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+}
+.kind[data-kind='brief'] {
+  color: var(--info, var(--fg));
+}
+.kind[data-kind='knowledge'] {
+  color: var(--ok, var(--fg));
+}
+.discovery__doc {
+  align-items: stretch;
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-1);
+}
+.discovery__open {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+}
+.discovery__open small {
+  grid-column: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ctx__blk {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-2);
+}
+.small {
+  font-size: var(--font-xs);
+}
+.danger,
+.err {
+  color: var(--error);
+}
+.err {
+  font-size: var(--font-sm);
+  margin: var(--space-2) 0 0;
+}
+.copy {
+  border: none;
+  background: none;
+  color: var(--fg-muted);
+  font-size: var(--font-xs);
+  cursor: pointer;
+}
+.copy:hover {
+  color: var(--fg);
+}
+.tpls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.tpl {
+  border: 1px solid var(--border);
+  background: none;
+  border-radius: 999px;
+  padding: 2px var(--space-2);
+  font: inherit;
+  font-size: var(--font-xs);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.tpl:hover {
+  border-color: var(--accent, var(--fg));
+  color: var(--fg);
+}
+.raw pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  max-height: 12rem;
+  overflow: auto;
+}
+
 :focus-visible {
   outline: var(--fg-focus-width) solid var(--fg-focus);
   outline-offset: var(--fg-focus-offset);
@@ -1052,7 +1155,8 @@ details > summary::marker {
 }
 
 .nav__collapse,
-.icon-btn {
+.icon-btn,
+.nav-mobile-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1100,6 +1204,10 @@ details > summary::marker {
   border-radius: var(--radius-sm);
   padding: 1px 5px;
   letter-spacing: 0.02em;
+}
+.nav-mobile-toggle {
+  display: none;
+  flex: none;
 }
 @media (max-width: 640px) {
   .icon-btn__kbd {
@@ -1149,6 +1257,28 @@ details > summary::marker {
   text-overflow: ellipsis;
   color: var(--fg);
   font-weight: 550;
+}
+.topbar__route {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar__route strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--fg);
+  font-weight: 600;
+}
+.topbar__route-sep {
+  color: var(--fg-text-dim);
+}
+.topbar__route-section {
+  color: var(--fg-text-dim);
 }
 .topbar__fed {
   font-size: var(--font-xs);
@@ -1222,6 +1352,9 @@ details > summary::marker {
 .offline-banner p {
   margin: 0;
 }
+.nav-scrim {
+  display: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
   :root:not([data-motion='full']) .dot[data-state='booting'] {
@@ -1235,19 +1368,78 @@ details > summary::marker {
 }
 
 @media (max-width: 760px) {
-  .shell__side {
-    --sidebar-w: var(--fg-sidebar-w-collapsed);
+  .shell {
+    display: block;
+    position: relative;
   }
-  .brand__text,
-  .nav__label,
-  .nav__section,
-  .nav__item::before,
-  .nav__collapse {
+  .shell__side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: var(--z-dialog);
+    width: min(19rem, 86vw);
+    transform: translateX(-105%);
+    box-shadow: var(--elev-pop);
+    transition:
+      transform var(--motion),
+      width var(--motion);
+  }
+  .shell__side[data-mobile-open] {
+    transform: translateX(0);
+  }
+  /* A mobile drawer is always labelled: the persisted desktop collapse
+     preference must not turn the only navigation into unexplained icons. */
+  .shell__side[data-collapsed] {
+    --sidebar-w: min(19rem, 86vw);
+  }
+  .shell__side[data-collapsed] .brand__text,
+  .shell__side[data-collapsed] .nav__label,
+  .shell__side[data-collapsed] .nav__section {
+    display: initial;
+  }
+  .shell__side[data-collapsed] .brand__text {
+    display: grid;
+  }
+  .shell__side[data-collapsed] .nav__item {
+    justify-content: flex-start;
+    padding-inline: calc(var(--space-3) + 3px) var(--space-3);
+  }
+  .shell__side[data-collapsed] .nav__item::before {
+    display: block;
+  }
+  .shell__side[data-collapsed] .nav__collapse {
+    display: inline-flex;
+  }
+  .nav-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-dialog) - 1);
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--scrim);
+    cursor: pointer;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    padding-inline: var(--space-3);
+  }
+  .nav-mobile-toggle {
+    display: inline-flex;
+    min-width: 36px;
+    height: 36px;
+  }
+  .topbar__status {
+    flex: 1;
+    min-width: 0;
+  }
+  .topbar__route {
     display: none;
   }
-  .nav__item {
-    justify-content: center;
-    padding-inline: 0;
+  .content {
+    padding: var(--space-4);
   }
 }
 

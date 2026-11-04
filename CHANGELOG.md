@@ -5,6 +5,15 @@ formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ## [Não lançado]
 
+## [1.1.1] - 2026-11-04
+
+### Fixed
+
+- Improved responsive navigation, localized chat and diagnostics actions, and
+  honest unavailable/error states for missing portal capabilities.
+- Hardened registry CLI discovery, cross-platform homologation and workspace
+  context discovery support.
+
 ### Programa evo-cli-portal (F0→C5, branches `audit/f0-baseline-squashed`→`cycle/c5-operations`)
 
 #### Added

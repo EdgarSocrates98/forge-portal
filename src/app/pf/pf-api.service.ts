@@ -50,6 +50,9 @@ import {
   PfSourceSchema,
   PfVerifyResult,
   PfWorkspace,
+  PfWorkspaceDiscovery,
+  PfWorkspaceImport,
+  PfWorkspacePreview,
 } from './pf.models';
 
 export const PF_BASE_URL_KEY = 'pf.baseUrl';
@@ -246,6 +249,24 @@ export class PfApi {
   }
   productContext(pid: string) {
     return this.get<PfContextPackage>(`/products/${encodeURIComponent(pid)}/context`);
+  }
+
+  // -- local workspace context discovery ----------------------------------
+
+  /** Metadata-only discovery; content is never returned by this call. */
+  workspaceDiscovery() {
+    return this.get<PfWorkspaceDiscovery>('/workspace/discovery');
+  }
+  workspacePreview(path: string) {
+    return this.get<PfWorkspacePreview>(
+      `/workspace/discovery/preview?path=${encodeURIComponent(path)}`,
+    );
+  }
+  importWorkspaceDocument(pid: string, path: string, title?: string) {
+    return this.post<PfWorkspaceImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-workspace`,
+      { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
   }
 
   // -- knowledge ------------------------------------------------------------

@@ -95,6 +95,7 @@ const NAV: NavEntry[] = [
       <aside
         class="shell__side"
         [attr.data-collapsed]="collapsed() || null"
+        [attr.data-mobile-open]="mobileNavOpen() || null"
         [attr.aria-label]="'nav.primary' | t"
       >
         <a class="brand" routerLink="/dashboard">
@@ -115,6 +116,8 @@ const NAV: NavEntry[] = [
                   [routerLink]="item.route"
                   routerLinkActive="nav__item--active"
                   ariaCurrentWhenActive="page"
+                  [title]="item.label | t"
+                  (click)="closeMobileNav()"
                 >
                   <ui-icon class="nav__icon" [name]="item.icon" [size]="17" />
                   <span class="nav__label">{{ item.label | t }}</span>
@@ -136,8 +139,28 @@ const NAV: NavEntry[] = [
         </button>
       </aside>
 
+      @if (mobileNavOpen()) {
+        <button
+          class="nav-scrim"
+          type="button"
+          (click)="closeMobileNav()"
+          [attr.aria-label]="'nav.close' | t"
+        ></button>
+      }
+
       <div class="shell__main">
         <header class="topbar">
+          <button
+            class="nav-mobile-toggle"
+            type="button"
+            (click)="toggleMobileNav()"
+            [attr.aria-expanded]="mobileNavOpen()"
+            aria-controls="shell-nav"
+            [attr.aria-label]="(mobileNavOpen() ? 'nav.close' : 'nav.open') | t"
+            [title]="(mobileNavOpen() ? 'nav.close' : 'nav.open') | t"
+          >
+            <ui-icon [name]="mobileNavOpen() ? 'close' : 'menu'" [size]="17" />
+          </button>
           <div class="topbar__status">
             <span
               class="dot"
@@ -151,6 +174,12 @@ const NAV: NavEntry[] = [
             >
               <ui-icon name="folder" [size]="14" />
               {{ store.workspace()?.name ?? ('dashboard.noWorkspace' | t) }}
+            </span>
+            <span class="topbar__route" aria-live="polite">
+              <span class="topbar__route-sep" aria-hidden="true">/</span>
+              <span class="topbar__route-section">{{ currentSection() }}</span>
+              <span class="topbar__route-sep" aria-hidden="true">/</span>
+              <strong>{{ currentPage() }}</strong>
             </span>
             @if (store.federated()) {
               <span class="topbar__fed">{{ 'settings.federated' | t }}</span>
@@ -225,6 +254,8 @@ export class App {
    *  later navigation moves focus into <main> so keyboard/AT users land
    *  on the new page's content instead of staying on the old focus. */
   private navigated = false;
+  readonly mobileNavOpen = signal(false);
+  readonly currentRoute = signal('/dashboard');
 
   readonly visibleNav = computed(() =>
     this.nav
@@ -242,6 +273,31 @@ export class App {
       .filter((section) => section.items.length > 0),
   );
 
+  private readonly activeNavItem = computed(() => {
+    const path = this.currentRoute().split('?')[0].replace(/\/$/, '') || '/';
+    return (
+      this.nav
+        .flatMap((section) => section.items.map((item) => ({ item, section })))
+        .filter(
+          ({ item }) =>
+            path === item.route || (item.route !== '/' && path.startsWith(`${item.route}/`)),
+        )
+        .sort((a, b) => b.item.route.length - a.item.route.length)[0] ?? null
+    );
+  });
+
+  readonly currentPage = computed(() => {
+    this.i18n.locale();
+    const item = this.activeNavItem();
+    return item ? this.i18n.t(item.item.label) : this.i18n.t('nav.dashboard');
+  });
+
+  readonly currentSection = computed(() => {
+    this.i18n.locale();
+    const item = this.activeNavItem();
+    return item ? this.i18n.t(item.section.label) : this.i18n.t('nav.section.overview');
+  });
+
   readonly schemeIcon = computed(() => {
     const scheme = this.theme.scheme();
     return scheme === 'dark' ? 'moon' : scheme === 'light' ? 'sun' : 'contrast';
@@ -257,6 +313,8 @@ export class App {
     void this.store.bootstrap();
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
       if (!(e instanceof NavigationEnd)) return;
+      this.currentRoute.set(e.urlAfterRedirects);
+      this.closeMobileNav();
       // last visited internal URL → "voltar à última área" on the
       // dashboard (§8.3). Internal-only guard lives in PrefsStore.
       this.prefs.recordRoute(e.urlAfterRedirects);
@@ -282,8 +340,20 @@ export class App {
     this.prefs.setNavCollapsed(next);
   }
 
+  toggleMobileNav(): void {
+    this.mobileNavOpen.update((open) => !open);
+  }
+
+  closeMobileNav(): void {
+    this.mobileNavOpen.set(false);
+  }
+
   /** `[` toggles the sidebar — ignored while typing or with modifiers. */
   protected onDocKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.mobileNavOpen()) {
+      this.closeMobileNav();
+      return;
+    }
     if (event.key !== '[' || event.ctrlKey || event.metaKey || event.altKey) return;
     const el = event.target as HTMLElement | null;
     const tag = el?.tagName;

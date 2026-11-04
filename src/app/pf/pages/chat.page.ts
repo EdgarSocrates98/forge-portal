@@ -18,7 +18,12 @@ import {
   PfBridge,
 } from '../pf-bridge.service';
 import { PfApi } from '../pf-api.service';
-import { PfManagedBridge, PfProduct } from '../pf.models';
+import {
+  PfManagedBridge,
+  PfProduct,
+  PfWorkspaceDiscovery,
+  PfWorkspaceDocument,
+} from '../pf.models';
 import { ApiError } from '../../core/api/api.error';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
@@ -168,11 +173,12 @@ const TEMPLATES = [
                 >
                   @for (p of providers(); track p.id) {
                     <option [value]="p.id" [disabled]="!p.executable && p.id !== 'fake'">
-                      {{ p.name }} · {{ p.auth_state }}{{ p.executable || p.id === 'fake' ? '' : ' · indisponível' }}
+                      {{ p.name }} · {{ p.auth_state
+                      }}{{ p.executable || p.id === 'fake' ? '' : ' · indisponível' }}
                     </option>
                   }
                 </select>
-                <span id="host-help" class="field-help">O host executa a sessão e mantém as credenciais locais.</span>
+                <span id="host-help" class="field-help">{{ 'pf.chat.hostHelp' | t }}</span>
               </label>
               <label class="lbl"
                 >Modelo
@@ -182,13 +188,15 @@ const TEMPLATES = [
                   (change)="model.set($any($event.target).value)"
                   aria-describedby="model-help"
                 >
-                  <option value="default">Automático — padrão do host</option>
+                  <option value="default">{{ 'pf.chat.modelAutomatic' | t }}</option>
                   @for (m of modelOptions(); track m.id) {
                     @if (m.id !== 'default') {
-                      <option [value]="m.id">{{ m.label }}{{ m.verified ? '' : ' · não verificado' }}</option>
+                      <option [value]="m.id">
+                        {{ m.label }}{{ m.verified ? '' : ' · não verificado' }}
+                      </option>
                     }
                   }
-                  <option value="__custom">ID personalizado…</option>
+                  <option value="__custom">{{ 'pf.chat.modelCustom' | t }}</option>
                 </select>
                 <input
                   class="input"
@@ -196,10 +204,12 @@ const TEMPLATES = [
                   (input)="customModel.set($any($event.target).value)"
                   [hidden]="model() !== '__custom'"
                   placeholder="ID do modelo publicado pelo host"
-                  aria-label="ID personalizado do modelo"
+                  [attr.aria-label]="'pf.chat.modelCustom' | t"
                 />
                 <span id="model-help" class="field-help">
-                  {{ modelOptions().length ? 'Catálogo declarado pelo host; itens não verificados são enviados como hint.' : 'Este host não publica um catálogo local; use Automático ou um ID personalizado.' }}
+                  {{
+                    (modelOptions().length ? 'pf.chat.modelCatalog' : 'pf.chat.modelFallback') | t
+                  }}
                 </span>
               </label>
               <label class="lbl"
@@ -227,7 +237,9 @@ const TEMPLATES = [
                 <ui-state-badge [state]="s.state" />
                 <strong>{{ s.meta?.title || s.id }}</strong>
                 <span class="muted small">{{ s.provider }}</span>
-                <span class="model-chip" title="Modelo usado na sessão">{{ s.model || 'default' }}</span>
+                <span class="model-chip" title="Modelo usado na sessão">{{
+                  s.model || 'default'
+                }}</span>
                 <span class="spacer"></span>
                 @if (s.resumable && s.provider_session_ref) {
                   <button class="btn btn--mini" (click)="resumeCopy(s)">
@@ -380,6 +392,68 @@ const TEMPLATES = [
                 <button class="btn btn--mini" (click)="loadFiles()">
                   {{ 'pf.chat.browseWorkspace' | t }}
                 </button>
+              }
+            </div>
+            <div class="ctx__blk discovery" [attr.aria-label]="'pf.chat.workspaceDiscovery' | t">
+              <div class="discovery__head">
+                <h4>{{ 'pf.chat.workspaceContext' | t }}</h4>
+                <button
+                  class="btn btn--mini"
+                  type="button"
+                  [disabled]="discoveryLoading()"
+                  (click)="discoverWorkspace()"
+                  [attr.title]="'pf.chat.discoverContextTitle' | t"
+                >
+                  {{ discoveryLoading() ? '…' : ('pf.chat.discover' | t) }}
+                </button>
+              </div>
+              @if (workspaceDiscovery(); as d) {
+                <p class="muted small">
+                  {{ d.workspace.name }} · {{ d.repositories.length }} repos ·
+                  {{ d.documents.length }} context files
+                </p>
+                <div
+                  class="discovery__repos"
+                  role="list"
+                  [attr.aria-label]="'pf.chat.discoveredRepositories' | t"
+                >
+                  @for (r of d.repositories; track r.id) {
+                    <span class="discovery__repo" role="listitem" [title]="r.path">
+                      {{ r.name }}
+                    </span>
+                  }
+                </div>
+                @for (doc of d.documents; track doc.id) {
+                  <div class="discovery__doc">
+                    <button
+                      class="flink discovery__open"
+                      type="button"
+                      (click)="previewWorkspaceDocument(doc)"
+                      [title]="doc.path"
+                    >
+                      <span class="kind" [attr.data-kind]="doc.kind">{{ doc.kind }}</span>
+                      <span>{{ doc.title }}</span>
+                      <small class="muted mono">{{ doc.repository }}/{{ doc.relative_path }}</small>
+                    </button>
+                    @if (session()?.product_id; as pid) {
+                      <button
+                        class="btn btn--mini"
+                        type="button"
+                        [disabled]="importingPath() === doc.path"
+                        (click)="importWorkspaceDocument(doc, pid)"
+                      >
+                        {{ importingPath() === doc.path ? '…' : ('pf.chat.addContext' | t) }}
+                      </button>
+                    }
+                  </div>
+                }
+                @if (!d.documents.length) {
+                  <p class="muted small">{{ 'pf.chat.noContextFiles' | t }}</p>
+                }
+              } @else {
+                <p class="muted small">
+                  {{ 'pf.chat.discoveryHint' | t }}
+                </p>
               }
             </div>
             @if (ctxEntities().length) {
@@ -634,35 +708,6 @@ const TEMPLATES = [
       gap: var(--space-2);
       margin-top: var(--space-2);
     }
-    .copy {
-      border: none;
-      background: none;
-      color: var(--fg-muted);
-      font-size: var(--font-xs);
-      cursor: pointer;
-    }
-    .copy:hover {
-      color: var(--fg);
-    }
-    .tpls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1);
-    }
-    .tpl {
-      border: 1px solid var(--border);
-      background: none;
-      border-radius: 999px;
-      padding: 2px var(--space-2);
-      font: inherit;
-      font-size: var(--font-xs);
-      color: var(--fg-muted);
-      cursor: pointer;
-    }
-    .tpl:hover {
-      border-color: var(--accent, var(--fg));
-      color: var(--fg);
-    }
     .composer {
       display: flex;
       gap: var(--space-2);
@@ -676,33 +721,6 @@ const TEMPLATES = [
     .composer__acts {
       display: grid;
       gap: var(--space-1);
-    }
-    .raw pre,
-    .mono {
-      font-family: var(--font-mono);
-    }
-    .raw pre {
-      font-size: var(--font-xs);
-      max-height: 12rem;
-      overflow: auto;
-    }
-    .ctx__blk {
-      border-top: 1px solid var(--border);
-      padding-top: var(--space-2);
-    }
-    .muted {
-      color: var(--fg-muted);
-    }
-    .small {
-      font-size: var(--font-xs);
-    }
-    .err,
-    .danger {
-      color: var(--error);
-    }
-    .err {
-      font-size: var(--font-sm);
-      margin: var(--space-2) 0 0;
     }
     .studio[data-mode='simple'] .side,
     .studio[data-mode='simple'] .ctx {
@@ -794,6 +812,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly rawJson = computed(() => JSON.stringify(this.lastEvents(), null, 2));
   readonly files = signal<BridgeFileEntry[]>([]);
   readonly preview = signal<BridgeFilePreview | null>(null);
+  readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
+  readonly discoveryLoading = signal(false);
+  readonly importingPath = signal<string | null>(null);
   readonly ctxEntities = signal<string[]>([]);
   private readonly seenSeq = new Set<number>();
   private poll: ReturnType<typeof setInterval> | null = null;
@@ -802,8 +823,8 @@ export class PfChatPage implements OnInit, OnDestroy {
   private streamRetries = 0;
   private streamSeq = 0;
   readonly streaming = signal(false);
-  readonly selectedProvider = computed(() =>
-    this.providers().find((p) => p.id === this.provider()) ?? null,
+  readonly selectedProvider = computed(
+    () => this.providers().find((p) => p.id === this.provider()) ?? null,
   );
   readonly modelOptions = computed(() => this.selectedProvider()?.models ?? []);
   readonly latestAssistant = computed(
@@ -895,6 +916,7 @@ export class PfChatPage implements OnInit, OnDestroy {
       } catch {
         this.products.set([]); // product context optional — degrade honestly
       }
+      void this.discoverWorkspace();
       this.armPoll();
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
@@ -1091,6 +1113,46 @@ export class PfChatPage implements OnInit, OnDestroy {
       this.files.set(r.items);
     } catch {
       this.toast.show('file listing unavailable', 'error');
+    }
+  }
+
+  async discoverWorkspace(): Promise<void> {
+    this.discoveryLoading.set(true);
+    try {
+      this.workspaceDiscovery.set(await firstValueFrom(this.api.workspaceDiscovery()));
+    } catch {
+      this.workspaceDiscovery.set(null);
+      this.toast.show('workspace discovery unavailable', 'error');
+    } finally {
+      this.discoveryLoading.set(false);
+    }
+  }
+
+  async previewWorkspaceDocument(doc: PfWorkspaceDocument): Promise<void> {
+    try {
+      const preview = await firstValueFrom(this.api.workspacePreview(doc.path));
+      this.preview.set(preview);
+    } catch {
+      this.toast.show(`cannot preview ${doc.path}`, 'error');
+    }
+  }
+
+  async importWorkspaceDocument(doc: PfWorkspaceDocument, pid: string): Promise<void> {
+    if (this.importingPath()) return;
+    this.importingPath.set(doc.path);
+    try {
+      const result = await firstValueFrom(this.api.importWorkspaceDocument(pid, doc.path));
+      this.toast.show(
+        result.state === 'already_imported'
+          ? 'context already linked to this product'
+          : 'context added for review',
+        'success',
+      );
+      await this.loadCtxEntities(pid);
+    } catch {
+      this.toast.show('context import refused', 'error');
+    } finally {
+      this.importingPath.set(null);
     }
   }
 

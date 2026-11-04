@@ -40,17 +40,34 @@ _OFFLINE_PLAN_ACTIONS = frozenset({"pin", "unpin"})
 
 
 def _cli_binary() -> str | None:
+    override = os.environ.get("FORGE_CLI_BIN")
+    if override:
+        candidate = Path(override).expanduser()
+        if candidate.is_file():
+            return str(candidate)
     found = shutil.which("forge-cli")
-    if found:
+    if found and _cli_candidate_is_usable(Path(found)):
         return found
     shim = Path.home() / ".forge-cli" / "bin" / ("forge-cli.exe" if os.name == "nt" else "forge-cli")
     return str(shim) if shim.is_file() else None
+
+
+def _cli_candidate_is_usable(candidate: Path) -> bool:
+    """Reject stale npm shims whose target package was removed."""
+    if candidate.suffix.lower() not in {".cmd", ".ps1"}:
+        return True
+    text = candidate.read_text(encoding="utf-8", errors="ignore")
+    if "node_modules\\forge-cli\\dist\\index.js" in text or "node_modules/forge-cli/dist/index.js" in text:
+        return candidate.parent.joinpath("node_modules", "forge-cli", "dist", "index.js").is_file()
+    return True
 
 
 def _run_cli(argv: list[str], timeout: float = 120.0) -> dict[str, Any]:
     """Argv-array subprocess — never shell. Returns parsed JSON doc when the
     CLI's last stdout line is JSON (`--json` mode), else the raw tail."""
     try:
+        if argv and Path(argv[0]).suffix.lower() == ".js":
+            argv = [shutil.which("node") or "node", *argv]
         proc = subprocess.run(
             argv,
             capture_output=True,

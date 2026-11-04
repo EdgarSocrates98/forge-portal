@@ -59,6 +59,7 @@ export const PATHS: Record<string, string> = {
   guide:
     '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.2a2.6 2.6 0 1 1 3.8 2.3c-.85.42-1.2 1-1.2 1.8v.4"/><path d="M12 17h.01"/>',
   close: '<path d="m6 6 12 12M18 6 6 18"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
 };
 
 /** Raw path data for hosts that paint icons outside the DOM (the

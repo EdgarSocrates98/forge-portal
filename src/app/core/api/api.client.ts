@@ -202,7 +202,6 @@ export class PortalApi {
   }
   agents() {
     return this.get<AgentDescriptor[]>('/agents').pipe(
-      this.unavailable<AgentDescriptor[]>([]),
       map((xs) =>
         xs.map((a) => ({
           ...a,
@@ -261,9 +260,7 @@ export class PortalApi {
     });
   }
   graphs() {
-    return this.get<GraphBundle>('/graphs').pipe(
-      this.unavailable<GraphBundle>({ availability: { state: 'unverified' }, views: [], studio_url: null }),
-    );
+    return this.get<GraphBundle>('/graphs');
   }
   docsSearch(query: string, limit = 20) {
     return this.get<DocHit[]>(`/docs/search?q=${encodeURIComponent(query)}&limit=${limit}`);
