@@ -1106,12 +1106,15 @@ export class PfChatPage implements OnInit, OnDestroy {
         const s = this.session();
         if (s && s.state !== 'closed' && this.streamRetries < 3) {
           this.streamRetries += 1;
-          this.streamRetryTimer = setTimeout(() => {
-            this.streamRetryTimer = null;
-            if (this.session()?.id === s.id && s.state !== 'closed') {
-              this.startStream(s.id);
-            }
-          }, 1000 * 2 ** this.streamRetries);
+          this.streamRetryTimer = setTimeout(
+            () => {
+              this.streamRetryTimer = null;
+              if (this.session()?.id === s.id && s.state !== 'closed') {
+                this.startStream(s.id);
+              }
+            },
+            1000 * 2 ** this.streamRetries,
+          );
         }
       },
       complete: () => {
@@ -1135,9 +1138,7 @@ export class PfChatPage implements OnInit, OnDestroy {
   }
 
   private async pullEvents(s: BridgeSession): Promise<void> {
-    const evs = (
-      await firstValueFrom(this.api.chatEvents(s.id, s.provider, this.streamSeq))
-    ).items;
+    const evs = (await firstValueFrom(this.api.chatEvents(s.id, s.provider, this.streamSeq))).items;
     this.lastEvents.set(evs);
     const fresh = evs.filter((e) => !this.seenSeq.has(e.seq));
     fresh.forEach((e) => this.seenSeq.add(e.seq));

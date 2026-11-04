@@ -172,9 +172,7 @@ export class PfApi {
 
   /** Same session listing as the bridge proxy, enriched with product_name. */
   chatSessions() {
-    return this.get<{ items: BridgeSession[] }>('/chat/sessions').pipe(
-      map((r) => r.items),
-    );
+    return this.get<{ items: BridgeSession[] }>('/chat/sessions').pipe(map((r) => r.items));
   }
   cleanupChatSessions() {
     return this.post<PfChatCleanup>('/chat/sessions/cleanup', { confirm: 'cleanup' });
