@@ -737,6 +737,13 @@ def _parse_npm_json(stdout: str) -> dict | None:
     if isinstance(data, list) and data and isinstance(data[0], dict):
         return data[0]
     if isinstance(data, dict):
+        # npm 12 emits an object keyed by package name, while older npm
+        # versions emit the package record directly.  Normalize both forms
+        # so the manifest schema stays stable across supported runtimes.
+        if "name" not in data and len(data) == 1:
+            only = next(iter(data.values()))
+            if isinstance(only, dict):
+                return only
         return data
     return None
 
@@ -987,7 +994,15 @@ def write_checksums(out_dir: Path) -> Path:
 
 def finalize(out_dir: Path, docs: dict[str, dict], mode: str) -> None:
     summary = out_dir / F_SUMMARY
-    summary.write_text(sanitize_text(render_summary(docs, mode)), encoding="utf-8")
+    # Keep the human-readable dump portable to callers that use the platform
+    # default decoder (notably Windows tests and shell tooling).  JSON dumps
+    # remain UTF-8; this Markdown artifact is intentionally ASCII-safe.
+    summary.write_text(
+        sanitize_text(render_summary(docs, mode)).encode(
+            "ascii", errors="backslashreplace"
+        ).decode("ascii"),
+        encoding="ascii",
+    )
     sums = write_checksums(out_dir)
     print(f"  wrote {summary.relative_to(out_dir)}")
     print(f"  wrote {sums.relative_to(out_dir)} ({len(sums.read_text().splitlines())} entries)")
