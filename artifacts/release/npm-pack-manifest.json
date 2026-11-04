@@ -1,6 +1,6 @@
 {
   "dir": ".",
-  "file_count": 1195,
+  "file_count": 1198,
   "files": [
     {
       "bytes": 314,
@@ -93,9 +93,24 @@
       "path": "angular.json"
     },
     {
+      "bytes": 355,
+      "mode": 420,
+      "path": "artifacts/release/checksums.sha256"
+    },
+    {
+      "bytes": 143559,
+      "mode": 420,
+      "path": "artifacts/release/npm-pack-manifest.json"
+    },
+    {
       "bytes": 979,
       "mode": 420,
       "path": "artifacts/release/release-inventory.json"
+    },
+    {
+      "bytes": 1665,
+      "mode": 420,
+      "path": "artifacts/release/release-summary.md"
     },
     {
       "bytes": 99602,
@@ -5979,20 +5994,20 @@
     }
   ],
   "forbidden": [],
-  "generated_at_utc": "2026-11-04T21:04:29Z",
+  "generated_at_utc": "2026-11-04T21:08:38Z",
   "mode": "safe",
   "package": {
     "filename": "forge-portal-app-1.1.1.tgz",
-    "integrity": "sha512-sBzWFfpCCDDCFzzeAzbbUGF3itGbee5MezgFpFgyXFZu5CrlKB4rC2QNUhTautGwlmyM5J/n4QP10zDDmXDlaw==",
+    "integrity": "sha512-78p72n24T6aUY96SRuV8Lp5EUb6x9irBHZGReNVmoQT1uinx/K/GJ1R9sRYtddIQWOxC9ayzFR9KOnB8aCo0fg==",
     "name": "forge-portal-app",
     "package_size": null,
-    "shasum": "be6e1595c2155fede8817358702b8dc99f5eb960",
+    "shasum": "72c96cf2dc5973d95c68c0ca7f289ef0c59f4616",
     "total_files": null,
-    "unpacked_size": 96420713,
+    "unpacked_size": 96566292,
     "version": "1.1.1"
   },
   "problems": [],
   "schema": "forge/NpmPackManifest/1",
   "status": "OK",
-  "total_bytes": 96420713
+  "total_bytes": 96566292
 }
