@@ -58,9 +58,10 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 try:
-    from vendor import FORGES, SERVER_SRC, TELEMETRY_SRC, telemetry_source
+    from vendor import ASSETS_SRC, FORGES, SERVER_SRC, TELEMETRY_SRC, telemetry_source
 except ImportError:  # pragma: no cover — vendor.py unavailable: degrade honestly
     FORGES = {}
+    ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
     SERVER_SRC = ROOT / "portal_core" / "forge_portal.py"
     TELEMETRY_SRC = ROOT / "portal_core" / "telemetry.py"
 
@@ -95,6 +96,14 @@ FORBIDDEN_BASENAME_GLOBS = (
     ".DS_Store",
 )
 FORBIDDEN_SEGMENTS = (".git", "__pycache__", ".pytest_cache", "test-results")
+# These are product design-system assets, not credential/token material.  Keep
+# the generic `*token*` guard for package contents while avoiding false release
+# findings for the Portal's tracked source files.
+SAFE_TOKEN_PATHS = {
+    "docs/design/tokens.md",
+    "src/styles/tokens.css",
+    "src/styles/tokens.spec.ts",
+}
 
 # Absolute user paths are never written; this regex both flags them in
 # metadata and powers the <HOME> rewrite.
@@ -205,12 +214,15 @@ def sanitize(obj):
 def forbidden_reasons(rel_path: str) -> list[str]:
     """Return every reason `rel_path` is forbidden, or []."""
     reasons: list[str] = []
-    parts = [seg for seg in re.split(r"[\\/]+", rel_path.strip("/")) if seg]
+    normalized = rel_path.strip("/").replace("\\", "/")
+    parts = [seg for seg in normalized.split("/") if seg]
     if not parts:
         return reasons
     base = parts[-1]
     lowered = [seg.lower() for seg in parts]
     for glob in FORBIDDEN_BASENAME_GLOBS:
+        if glob == "*token*" and normalized in SAFE_TOKEN_PATHS:
+            continue
         if fnmatch.fnmatchcase(base.lower(), glob.lower()):
             reasons.append(f"basename matches forbidden pattern {glob!r}")
     for seg in lowered[:-1]:
@@ -377,6 +389,7 @@ def inspect_forge(repo: Path, target) -> dict:
 
     if isinstance(target, str):
         target = {"pkg": target}
+    assets_only = target.get("assets_only") == "1"
     server_path = repo / target["pkg"] / "_forge_portal.py"
     telemetry_path = repo / target["pkg"] / "_portal_telemetry.py"
     assets_dir = repo / target.get("assets", "portal/assets")
@@ -421,7 +434,7 @@ def inspect_forge(repo: Path, target) -> dict:
         ),
     }
 
-    expected_telemetry = telemetry_source(target)
+    expected_telemetry = None if assets_only else telemetry_source(target)
     expected_telemetry_sha = (
         sha256_bytes(expected_telemetry) if expected_telemetry is not None else None
     )
@@ -445,13 +458,29 @@ def inspect_forge(repo: Path, target) -> dict:
 
     live: dict[str, dict] = {}
     for rel, p in iter_files(assets_dir):
+        if assets_only and rel == "manifest.json":
+            continue
         live[rel] = {"sha256": sha256_file(p), "bytes": p.stat().st_size}
-    missing = sorted(set(manifest_files) - set(live))
-    extra = sorted(set(live) - set(manifest_files))
+    if assets_only:
+        # Product Forge owns a specialist manifest and intentionally does not
+        # vendor the server/telemetry modules.  Compare its bundle to the
+        # canonical Portal build instead of interpreting the specialist
+        # manifest as the generic `files: {sha256,...}` schema.
+        expected_assets = {
+            rel: {
+                "sha256": sha256_file(p),
+                "bytes": p.stat().st_size,
+            }
+            for rel, p in iter_files(ASSETS_SRC)
+        }
+    else:
+        expected_assets = manifest_files
+    missing = sorted(set(expected_assets) - set(live))
+    extra = sorted(set(live) - set(expected_assets))
     mismatched = sorted(
         rel
-        for rel in set(manifest_files) & set(live)
-        if manifest_files[rel].get("sha256") != live[rel]["sha256"]
+        for rel in set(expected_assets) & set(live)
+        if expected_assets[rel].get("sha256") != live[rel]["sha256"]
     )
     out["assets"] = {
         "path": assets_dir.relative_to(repo).as_posix(),
@@ -477,7 +506,7 @@ def inspect_forge(repo: Path, target) -> dict:
         or out["forbidden"]
         or out["manifest"].get("parse_error")
     )
-    module_drift = (
+    module_drift = False if assets_only else (
         out["server"]["manifest_match"] is False
         or out["telemetry"]["manifest_match"] is False
         or out["server"]["matches_source"] is False

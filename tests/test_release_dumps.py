@@ -233,7 +233,15 @@ def test_forbidden_reasons_flags(path: str) -> None:
 
 @pytest.mark.parametrize(
     "path",
-    ["src/app.py", "README.md", "portal/assets/index.html", "a/b/c.txt"],
+    [
+        "src/app.py",
+        "README.md",
+        "portal/assets/index.html",
+        "a/b/c.txt",
+        "docs/design/tokens.md",
+        "src/styles/tokens.css",
+        "src/styles/tokens.spec.ts",
+    ],
 )
 def test_forbidden_reasons_clean(path: str) -> None:
     assert rd.forbidden_reasons(path) == []
