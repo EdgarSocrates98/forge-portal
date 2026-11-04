@@ -286,15 +286,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "7558e5ac5659af7d245f7e430508f8dc022cda4b5987918aaf6778b0aeb6544f"
+        "sha256": "76e97a9b99ed2944a0b8bc5b586b717b31d62962e45218e7cb5cc4e5a6843af7"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "src/apiforge/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -592,15 +592,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "216949d76a4de509616265069ad031a9b031e92ef17f3178c3886db0d8869aa4"
+        "sha256": "d5804358ba08580fadae5fea4e581638d9f8ff1018bd804b0ec8c409b82c9d40"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "scripts/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -898,15 +898,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "45e79884635b927d9d5e2de8d294be684f1fd434019e69fb667207ce8ca7d5f1"
+        "sha256": "f635009d75534f9db873a88f3911466e3b642747bfa0216af68e4095c32e670f"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "src/forge_doctor_data/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -1204,15 +1204,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "e20d4cc914c9ff2c7493e2b313049b62e157b018b7d29adc1be46233b8b94fc1"
+        "sha256": "88fd6f36b70ab7e8862f6b777d8b33baaa478cc5b4d831bb00f23d7bba1f041c"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "platformforge/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -1510,7 +1510,7 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/ProductForgePortalManifest/v1",
-        "sha256": "679683e7777b2ff8027193b41dfe4b1019b81682c192223bd47f04209ff53432"
+        "sha256": "6207802fc1e2a3c5e582904c3f0716dd9d9aec3f9467a4cc0483a534ebfbbfd7"
       },
       "server": {
         "manifest_match": null,
@@ -1816,15 +1816,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "cce8532f5795aa47156aa58727d439a0a17d8e1c102c65a91c3be0cfa6ca69ce"
+        "sha256": "5e7cc05fddb0a8f088009a574354e8269fc3474ec1778bbe125e5d1c5b9b6f7e"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "sparkforge_aws/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -2122,15 +2122,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "0cfaaaf4a39b12bfae2e8f26937bda5363362ff60c77ecd3d863e97ead1a25e5"
+        "sha256": "97c412a6843f3cea77494f3038defb61505271d6c6fd54bf6cee3ad421e0ca9a"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "sparkforge_azure/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -2428,15 +2428,15 @@
         "portal_version": "1.1.1",
         "present": true,
         "schema": "forge/PortalAssets/1",
-        "sha256": "86f1756d310c513c3c8431f5347defb60bfcdcd22d6886dc4858c86322b575a6"
+        "sha256": "1f0f6263e6f0224789880a187ce5b3f347dc7147888fc63504782476618ebd64"
       },
       "server": {
         "manifest_match": true,
-        "manifest_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+        "manifest_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
         "matches_source": true,
         "path": "src/theforge/_forge_portal.py",
         "present": true,
-        "sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8"
+        "sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47"
       },
       "status": "OK",
       "telemetry": {
@@ -2450,12 +2450,12 @@
     }
   },
   "forges_dir": "E:\\projetos\\FORJAS",
-  "generated_at_utc": "2026-11-04T21:09:40Z",
+  "generated_at_utc": "2026-11-04T21:23:41Z",
   "mode": "safe",
   "problems": [],
   "schema": "forge/VendorIntegrity/1",
   "source": {
-    "server_sha256": "acd824799ffd0038f1566cf843900ff719ab3abed5ba9e444808d5785d3b66b8",
+    "server_sha256": "639d5ca49c7d9916965590e92facc2640f17bd6caccf2b09baff4ab1d4849a47",
     "telemetry_sha256": "0d7ce7ada357327bf0c0247a05ad38b433cb3eb59bd8cc730562e492b2850b8f"
   },
   "status": "OK",
