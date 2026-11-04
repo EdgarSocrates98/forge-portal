@@ -40,6 +40,8 @@ const STAGE_ORDER: Record<Stage, number> = {
  */
 const STATE_ORDER: Record<McpState, number | null> = {
   NOT_CONFIGURED: -1,
+  NOT_APPLICABLE: null,
+  UNVERIFIED: null,
   CONFIGURED: 0,
   STARTING: 1,
   HANDSHAKE_VERIFIED: 2,

@@ -76,6 +76,8 @@ export const PT_BR: Record<string, string> = {
 
   // MCP — estados
   'mcpState.NOT_CONFIGURED': 'Não configurado',
+  'mcpState.NOT_APPLICABLE': 'Não aplicável',
+  'mcpState.UNVERIFIED': 'Não verificado',
   'mcpState.CONFIGURED': 'Configurado',
   'mcpState.STARTING': 'Iniciando',
   'mcpState.HANDSHAKE_VERIFIED': 'Handshake verificado',
@@ -743,6 +745,9 @@ export const PT_BR: Record<string, string> = {
   'mcp.selectHint': 'Selecione um servidor no registro para inspecioná-lo.',
   'mcp.detail': 'Detalhe',
   'mcp.explain.NOT_CONFIGURED': 'Declarado, mas sem configuração para nenhum host.',
+  'mcp.explain.NOT_APPLICABLE': 'Esta Forja não declara um servidor MCP.',
+  'mcp.explain.UNVERIFIED':
+    'O adapter reportou o servidor, mas não há evidência de verificação disponível.',
   'mcp.explain.CONFIGURED': 'Configurado — nenhum handshake executado ainda.',
   'mcp.explain.STARTING': 'Processo iniciando — handshake em andamento.',
   'mcp.explain.HANDSHAKE_VERIFIED':

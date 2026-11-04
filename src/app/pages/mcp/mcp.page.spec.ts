@@ -207,6 +207,35 @@ describe('McpPage', () => {
     expect(section(el, 'compat')?.querySelectorAll('tbody tr').length).toBe(0);
   });
 
+  it('does not claim verified stages for unverified or non-applicable states', async () => {
+    const { el } = await setup({
+      mcpServers: () =>
+        of([
+          {
+            id: 'unknown-mcp',
+            state: 'UNVERIFIED',
+            host: null,
+            tools_count: null,
+            last_verify: null,
+          },
+          {
+            id: 'none-mcp',
+            state: 'NOT_APPLICABLE',
+            host: null,
+            tools_count: null,
+            last_verify: null,
+          },
+        ]),
+    });
+    const compat = section(el, 'compat');
+
+    for (const id of ['unknown-mcp', 'none-mcp']) {
+      const server = row(compat!, id);
+      expect(server?.querySelector('td[colspan="5"]')).toBeTruthy();
+      expect(server?.querySelectorAll('.stage ui-icon').length).toBe(0);
+    }
+  });
+
   it('shows the honest empty state when the registry is empty', async () => {
     const { el } = await setup({ mcpServers: () => of([]) });
     const registry = section(el, 'registry');

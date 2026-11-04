@@ -61,6 +61,8 @@ export type InstallState =
 
 export type McpState =
   | 'NOT_CONFIGURED'
+  | 'NOT_APPLICABLE'
+  | 'UNVERIFIED'
   | 'CONFIGURED'
   | 'STARTING'
   | 'HANDSHAKE_VERIFIED'
