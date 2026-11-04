@@ -2,6 +2,8 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { DiagnosticReport, PfBridge } from '../pf-bridge.service';
+import { PfApi } from '../pf-api.service';
+import { PfManagedBridge } from '../pf.models';
 import { ApiError } from '../../core/api/api.error';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
@@ -57,6 +59,26 @@ import { UiSkeleton } from '../../shared/skeleton';
           }
         </ul>
       </section>
+
+      @if (managed(); as m) {
+        <section class="card meta" aria-labelledby="dg-managed">
+          <h2 id="dg-managed">{{ 'pf.diagnostics.managed' | t }}</h2>
+          <dl class="kv">
+            <dt>{{ 'pf.diagnostics.managedState' | t }}</dt>
+            <dd><ui-state-badge [state]="m.state ?? 'unknown'" /> {{ m.state }}</dd>
+            <dt>{{ 'pf.diagnostics.managedPid' | t }}</dt>
+            <dd class="mono">{{ m.pid ?? '—' }}</dd>
+            <dt>{{ 'pf.diagnostics.managedRestarts' | t }}</dt>
+            <dd>{{ m.restarts ?? 0 }}</dd>
+            @if (m.last_exit !== null && m.last_exit !== undefined) {
+              <dt>{{ 'pf.diagnostics.managedLastExit' | t }}</dt>
+              <dd class="mono">{{ m.last_exit }}</dd>
+            }
+            <dt>{{ 'pf.diagnostics.managedGateway' | t }}</dt>
+            <dd class="mono">{{ m.gateway }}</dd>
+          </dl>
+        </section>
+      }
 
       <section class="card" aria-labelledby="dg-prov">
         <h2 id="dg-prov">{{ 'pf.diagnostics.providers' | t }}</h2>
@@ -217,7 +239,9 @@ import { UiSkeleton } from '../../shared/skeleton';
 })
 export class PfDiagnosticsPage implements OnInit {
   private bridge = inject(PfBridge);
+  private api = inject(PfApi);
   report = signal<DiagnosticReport | null>(null);
+  managed = signal<PfManagedBridge | null>(null);
   loading = signal(true);
   err = signal<ApiError | null>(null);
 
@@ -230,6 +254,14 @@ export class PfDiagnosticsPage implements OnInit {
     this.err.set(null);
     try {
       this.report.set(await firstValueFrom(this.bridge.diagnostics()));
+      // Optional supervisor surface — absent when the portal does not manage
+      // the bridge lifecycle; degrade to hidden, never to fabricated state.
+      try {
+        const health = await firstValueFrom(this.api.agentHealth());
+        this.managed.set(health.managed ?? null);
+      } catch {
+        this.managed.set(null);
+      }
     } catch (e) {
       this.err.set(e as ApiError);
     } finally {

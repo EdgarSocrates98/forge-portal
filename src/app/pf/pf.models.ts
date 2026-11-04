@@ -14,6 +14,30 @@ export interface PfHealth {
   uptime_s?: number;
 }
 
+/** Supervisor-reported state for the portal-managed Agent Bridge
+ *  (`GET /agent/health` → `managed`; absent when unsupervised). */
+export interface PfManagedBridge {
+  state?: string;
+  pid?: number | null;
+  port?: number;
+  url?: string;
+  restarts?: number;
+  last_exit?: number | null;
+  gateway?: string;
+}
+
+export interface PfAgentHealth {
+  managed?: PfManagedBridge;
+  [key: string]: unknown;
+}
+
+export interface PfChatCleanup {
+  closed: string[];
+  kept: string[];
+  errors: { id: string; result: unknown }[];
+  state?: string;
+}
+
 export interface PfWorkspace {
   id: string;
   name: string;

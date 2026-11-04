@@ -32,6 +32,9 @@ export interface BridgeSession {
   provider: string;
   state: string;
   product_id?: string | null;
+  /** Resolved by the typed portal op (`GET /chat/sessions`); absent on the
+   *  raw bridge listing. */
+  product_name?: string | null;
   resumable?: boolean;
   provider_session_ref?: string | null;
   meta?: BridgeSessionMeta;
@@ -380,7 +383,9 @@ export class PfBridge {
       const pump = async (): Promise<void> => {
         try {
           const resp = await fetch(
-            this.gatewayUrl(`/agent-sessions/${sessionId}/stream?after_seq=${cursor}`),
+            // typed portal route (validates + proxies with the server-side
+            // gateway token); the bridge path stays reachable via gatewayUrl
+            `/api/v1/chat/sessions/${encodeURIComponent(sessionId)}/stream?after_seq=${cursor}`,
             {
               headers: {
                 Accept: 'text/event-stream',

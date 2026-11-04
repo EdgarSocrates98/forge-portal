@@ -3,8 +3,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map } from 'rxjs';
 import { ApiEnvelope, ApiErrorBody } from '../core/api/api.models';
 import { ApiError } from '../core/api/api.error';
+import type { BridgeEvent, BridgeSession } from './pf-bridge.service';
 import {
   PfAgent,
+  PfAgentHealth,
   PfBoard,
   PfAgentRun,
   PfAgentTemplate,
@@ -12,6 +14,7 @@ import {
   PfApiSpec,
   PfAuditEvent,
   PfCapabilities,
+  PfChatCleanup,
   PfCompileResult,
   PfContextPackage,
   PfDashboard,
@@ -160,6 +163,62 @@ export class PfApi {
   }
   capabilities() {
     return this.get<PfCapabilities>('/capabilities');
+  }
+  agentHealth() {
+    return this.get<PfAgentHealth>('/agent/health');
+  }
+
+  // -- chat (typed portal ops; the bridge path stays in PfBridge) ------------
+
+  /** Same session listing as the bridge proxy, enriched with product_name. */
+  chatSessions() {
+    return this.get<{ items: BridgeSession[] }>('/chat/sessions').pipe(
+      map((r) => r.items),
+    );
+  }
+  cleanupChatSessions() {
+    return this.post<PfChatCleanup>('/chat/sessions/cleanup', { confirm: 'cleanup' });
+  }
+  chatCreate(input: { provider: string; product_id?: string }) {
+    return this.post<BridgeSession>('/chat/sessions', { confirm: 'create', ...input });
+  }
+  chatPrompt(sid: string, text: string, provider?: string) {
+    return this.post<{ accepted: boolean }>(`/chat/sessions/${encodeURIComponent(sid)}/prompt`, {
+      confirm: 'send',
+      text,
+      provider,
+    });
+  }
+  chatEvents(sid: string, provider?: string, after_seq = 0) {
+    return this.post<{ items: BridgeEvent[] }>(`/chat/sessions/${encodeURIComponent(sid)}/events`, {
+      provider,
+      after_seq,
+    });
+  }
+  chatCancel(sid: string) {
+    return this.post<{ cancelled: boolean }>(`/chat/sessions/${encodeURIComponent(sid)}/cancel`, {
+      confirm: 'cancel',
+    });
+  }
+  chatApprove(sid: string, approval_id: string, approved: boolean) {
+    return this.post<{ resolved: boolean }>(`/chat/sessions/${encodeURIComponent(sid)}/approve`, {
+      confirm: 'approve',
+      approval_id,
+      approved,
+    });
+  }
+  chatResume(sid: string, session_ref: string, provider?: string) {
+    return this.post<BridgeSession>(`/chat/sessions/${encodeURIComponent(sid)}/resume`, {
+      confirm: 'resume',
+      session_ref,
+      provider,
+    });
+  }
+  chatClose(sid: string) {
+    return this.post<{ closed: boolean; archived: boolean }>(
+      `/chat/sessions/${encodeURIComponent(sid)}/close`,
+      { confirm: 'close' },
+    );
   }
 
   // -- workspaces / products -----------------------------------------------

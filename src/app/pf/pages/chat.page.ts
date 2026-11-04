@@ -18,7 +18,7 @@ import {
   PfBridge,
 } from '../pf-bridge.service';
 import { PfApi } from '../pf-api.service';
-import { PfProduct } from '../pf.models';
+import { PfManagedBridge, PfProduct } from '../pf.models';
 import { ApiError } from '../../core/api/api.error';
 import { EmptyState } from '../../shared/empty-state';
 import { ErrorState } from '../../shared/error-state';
@@ -99,10 +99,31 @@ const TEMPLATES = [
           }
         </section>
       } @else {
+        @if (managed(); as mb) {
+          @if (mb.state && mb.state !== 'running') {
+            <section class="card side__head" role="status" aria-live="polite">
+              <ui-state-badge [state]="mb.state" />
+              <span class="muted small">{{
+                'pf.chat.bridgeManaged' | t: { state: mb.state, restarts: mb.restarts ?? 0 }
+              }}</span>
+              <button class="btn btn--mini" type="button" (click)="bootstrap()">
+                {{ 'pf.chat.retry' | t }}
+              </button>
+            </section>
+          }
+        }
         <div class="layout">
           <aside class="side card" aria-label="Sessions">
             <div class="side__head">
               <h3>{{ 'pf.chat.sessions' | t }}</h3>
+              <button
+                class="btn btn--mini"
+                [disabled]="busy()"
+                [title]="'pf.chat.cleanupHint' | t"
+                (click)="cleanupSessions()"
+              >
+                {{ 'pf.chat.cleanup' | t }}
+              </button>
               <button class="btn btn--mini" (click)="reloadSessions()">↻</button>
             </div>
             <input
@@ -125,7 +146,10 @@ const TEMPLATES = [
                       <span aria-label="favorite">★</span>
                     }
                   </span>
-                  <span class="muted small">{{ s.provider }} · {{ s.state }}</span>
+                  <span class="muted small"
+                    >{{ s.provider }} · {{ s.state
+                    }}{{ s.product_name ? ' · ' + s.product_name : '' }}</span
+                  >
                 </button>
               }
               @if (!filteredSessions().length) {
@@ -671,6 +695,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly mode = signal<'simple' | 'visual' | 'advanced'>('visual');
   readonly paired = signal(false);
   readonly pairError = signal<string | null>(null);
+  /** Supervisor view of the managed bridge — null when the portal does not
+   *  supervise it (or the health call failed). Never fabricated. */
+  readonly managed = signal<PfManagedBridge | null>(null);
   readonly proposalState = signal<string | null>(null);
   readonly providers = signal<BridgeProvider[]>([]);
   // A fake provider is an explicit test double, never an implicit production
@@ -695,6 +722,8 @@ export class PfChatPage implements OnInit, OnDestroy {
   private readonly seenSeq = new Set<number>();
   private poll: ReturnType<typeof setInterval> | null = null;
   private streamAbort: (() => void) | null = null;
+  private streamRetryTimer: ReturnType<typeof setTimeout> | null = null;
+  private streamRetries = 0;
   private streamSeq = 0;
   readonly streaming = signal(false);
   readonly latestAssistant = computed(
@@ -756,6 +785,7 @@ export class PfChatPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.poll) clearInterval(this.poll);
+    if (this.streamRetryTimer) clearTimeout(this.streamRetryTimer);
     this.streamAbort?.();
     this.streamAbort = null;
   }
@@ -770,7 +800,13 @@ export class PfChatPage implements OnInit, OnDestroy {
       if (!this.provider() || (this.provider() === 'fake' && available)) {
         this.provider.set(available?.id ?? '');
       }
-      this.sessions.set(await firstValueFrom(this.bridge.listSessions()));
+      this.sessions.set(await firstValueFrom(this.api.chatSessions()));
+      try {
+        const health = await firstValueFrom(this.api.agentHealth());
+        this.managed.set(health.managed ?? null);
+      } catch {
+        this.managed.set(null); // supervisor surface optional — degrade honestly
+      }
       try {
         const pl = await firstValueFrom(this.api.products());
         this.products.set(pl.items);
@@ -802,14 +838,38 @@ export class PfChatPage implements OnInit, OnDestroy {
   }
 
   async reloadSessions(): Promise<void> {
-    this.sessions.set(await firstValueFrom(this.bridge.listSessions()));
+    this.sessions.set(await firstValueFrom(this.api.chatSessions()));
+  }
+
+  /** Archive bridge sessions left over from dead portals — the typed op
+   *  closes inactive entries and reports the real closed/kept split. */
+  async cleanupSessions(): Promise<void> {
+    this.busy.set(true);
+    try {
+      const r = await firstValueFrom(this.api.cleanupChatSessions());
+      this.sessions.set(await firstValueFrom(this.api.chatSessions()));
+      if (this.session() && r.closed.includes(this.session()!.id)) {
+        this.session.set(null);
+      }
+      this.toast.show(`${r.closed.length} session(s) archived`, 'info');
+      if (r.errors.length) {
+        this.toast.show(`${r.errors.length} session(s) failed to archive`, 'error');
+      }
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   async startSession(): Promise<void> {
     this.busy.set(true);
     try {
       const s = await firstValueFrom(
-        this.bridge.createSession(this.provider(), this.productId() || undefined),
+        this.api.chatCreate({
+          provider: this.provider(),
+          product_id: this.productId() || undefined,
+        }),
       );
       this.session.set(s);
       this.items.set([{ kind: 'system', text: `session ${s.id} started (${s.provider})` }]);
@@ -863,7 +923,7 @@ export class PfChatPage implements OnInit, OnDestroy {
       danger: true,
     });
     if (!ok) return;
-    await firstValueFrom(this.bridge.deleteSession(s.id));
+    await firstValueFrom(this.api.chatClose(s.id));
     this.session.set(null);
     this.items.set([]);
     await this.reloadSessions();
@@ -884,7 +944,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.draft.set('');
     this.items.update((l) => [...l, { kind: 'user', text }]);
     try {
-      await firstValueFrom(this.bridge.prompt(s.id, s.provider, text));
+      await firstValueFrom(this.api.chatPrompt(s.id, text, s.provider));
       await this.pullEvents(s);
     } catch (e) {
       const st = e instanceof ApiError ? String(e.status) : 'transport';
@@ -912,7 +972,7 @@ export class PfChatPage implements OnInit, OnDestroy {
   async cancel(): Promise<void> {
     const s = this.session();
     if (!s) return;
-    await firstValueFrom(this.bridge.cancel(s.id, s.provider));
+    await firstValueFrom(this.api.chatCancel(s.id));
     this.items.update((l) => [...l, { kind: 'system', text: 'turn cancelled' }]);
   }
 
@@ -920,7 +980,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     const s = this.session();
     if (!s || !it.approvalId) return;
     try {
-      await firstValueFrom(this.bridge.approve(s.id, s.provider, it.approvalId, approved));
+      await firstValueFrom(this.api.chatApprove(s.id, it.approvalId, approved));
       it.resolved = true;
       this.items.update((l) => [
         ...l,
@@ -1030,6 +1090,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.streaming.set(true);
     events.subscribe({
       next: (e) => {
+        this.streamRetries = 0;
         this.streamSeq = Math.max(this.streamSeq, e.seq);
         if (!this.seenSeq.has(e.seq)) {
           this.seenSeq.add(e.seq);
@@ -1039,9 +1100,23 @@ export class PfChatPage implements OnInit, OnDestroy {
       error: () => {
         this.streaming.set(false);
         this.streamAbort = null;
+        // Bounded backoff retry (cursor-resumed) before the poll fallback
+        // takes over — transient drops shouldn't silently degrade to 2.5s
+        // polling for the rest of the session.
+        const s = this.session();
+        if (s && s.state !== 'closed' && this.streamRetries < 3) {
+          this.streamRetries += 1;
+          this.streamRetryTimer = setTimeout(() => {
+            this.streamRetryTimer = null;
+            if (this.session()?.id === s.id && s.state !== 'closed') {
+              this.startStream(s.id);
+            }
+          }, 1000 * 2 ** this.streamRetries);
+        }
       },
       complete: () => {
         this.streaming.set(false);
+        this.streamRetries = 0;
         const s = this.session();
         if (s && s.state !== 'closed') this.startStream(s.id); // re-arm cursor
       },
@@ -1060,7 +1135,9 @@ export class PfChatPage implements OnInit, OnDestroy {
   }
 
   private async pullEvents(s: BridgeSession): Promise<void> {
-    const evs = (await firstValueFrom(this.bridge.events(s.id, s.provider))).items;
+    const evs = (
+      await firstValueFrom(this.api.chatEvents(s.id, s.provider, this.streamSeq))
+    ).items;
     this.lastEvents.set(evs);
     const fresh = evs.filter((e) => !this.seenSeq.has(e.seq));
     fresh.forEach((e) => this.seenSeq.add(e.seq));

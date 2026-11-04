@@ -35,7 +35,9 @@ function templateOf(src: string): string {
 }
 
 const sources = [...tsFiles(appDir)].map((path) => ({
-  path: path.slice(root.length + 1),
+  // POSIX-normalized: every assertion below compares against 'src/app/...'
+  // literals; on Windows the filesystem walk yields backslashes.
+  path: path.slice(root.length + 1).replace(/\\/g, '/'),
   tpl: templateOf(readFileSync(path, 'utf8')),
 }));
 

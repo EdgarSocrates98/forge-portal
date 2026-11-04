@@ -52,6 +52,16 @@ FORGES: dict[str, str | dict[str, str]] = {
     # is a checkout-level host surface like forge_install.py → scripts/.
     # "flat": modules in that dir import siblings by bare module name.
     "forge-doctor-api": {"pkg": "scripts", "flat": "1"},
+    # product-forge: assets only.  Its `_forge_portal.py` is synced by the
+    # specialist's own byte-parity gate, and the bundle manifest uses the
+    # product-specific `forge/ProductForgePortalManifest/v1` schema that
+    # `portal/runtime._assets_dir()` validates at startup.
+    "product-forge": {
+        "pkg": "src/product_forge",
+        "assets_only": "1",
+        "assets": "src/product_forge/portal_assets/angular/browser",
+        "manifest": "src/product_forge/portal_assets/angular/browser/manifest.json",
+    },
 }
 
 
@@ -83,6 +93,36 @@ def manifest_for(
     return manifest
 
 
+def pf_manifest(assets_dir: Path, previous: dict) -> dict:
+    """Product Forge portal manifest — `forge/ProductForgePortalManifest/v1`.
+    Fields the specialist owns (product_forge_version, contracts, integrity)
+    are preserved from the previous manifest; the portal fields are refreshed
+    from this build."""
+    files = {
+        p.relative_to(assets_dir).as_posix(): sha256(p)
+        for p in sorted(assets_dir.rglob("*"))
+        if p.is_file() and p.name != "manifest.json"
+    }
+    fingerprint = hashlib.sha256(
+        json.dumps(files, sort_keys=True).encode("utf-8")
+    ).hexdigest()[:16]
+    manifest = dict(previous)
+    manifest.update(
+        {
+            "schema": "forge/ProductForgePortalManifest/v1",
+            "portal_version": PORTAL_VERSION,
+            "portal_commit": fingerprint,
+            "build_mode": "production",
+        }
+    )
+    manifest.setdefault("product_forge_version", "0.1.0")
+    manifest.setdefault("angular_version", "")
+    manifest.setdefault("api_schema", "forge/PortalApi/1")
+    manifest.setdefault("bridge_contract", "forge/AgentBridge/1")
+    manifest.setdefault("integrity", "verified-by-package-build")
+    return manifest
+
+
 def telemetry_source(target: dict[str, str]) -> bytes:
     """`_portal_telemetry.py` content for a target. The canonical module
     does `import forge_portal as fp` (portal_core flat layout); vendored
@@ -106,10 +146,57 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
 
     if isinstance(target, str):
         target = {"pkg": target}
-    server_dst = repo / target["pkg"] / "_forge_portal.py"
-    telemetry_dst = repo / target["pkg"] / "_portal_telemetry.py"
+
     assets_dst = repo / target.get("assets", "portal/assets")
     manifest_dst = repo / target.get("manifest", "portal/manifest.json")
+
+    if target.get("assets_only"):
+        # Assets + specialist manifest only; `_forge_portal.py` parity is
+        # owned by the target repo, never overwritten here.
+        if not ASSETS_SRC.is_dir():
+            return ["  assets: dist build missing — run `npm run build` first"]
+        old_manifest = {}
+        if manifest_dst.is_file():
+            try:
+                old_manifest = json.loads(manifest_dst.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                old_manifest = {}
+        new_manifest = pf_manifest(ASSETS_SRC, old_manifest)
+        stale_files = not assets_dst.is_dir() or {
+            p.relative_to(assets_dst).as_posix()
+            for p in assets_dst.rglob("*")
+            if p.is_file() and p.name != "manifest.json"
+        } != {
+            p.relative_to(ASSETS_SRC).as_posix()
+            for p in ASSETS_SRC.rglob("*")
+            if p.is_file()
+        }
+        stale_hash = not stale_files and any(
+            sha256(p) != sha256(assets_dst / p.relative_to(ASSETS_SRC))
+            for p in ASSETS_SRC.rglob("*")
+            if p.is_file()
+        )
+        if check:
+            if stale_files or stale_hash or old_manifest != new_manifest:
+                notes.append(f"DRIFT {name}: portal assets out of parity")
+            else:
+                notes.append("  assets: parity ok")
+            return notes
+        if assets_dst.is_dir():
+            shutil.rmtree(assets_dst)
+        shutil.copytree(ASSETS_SRC, assets_dst)
+        manifest_dst.write_text(
+            json.dumps(new_manifest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        notes.append(
+            f"  wrote {assets_dst.relative_to(repo)}/ + manifest.json"
+            f" ({len(new_manifest)} fields, assets fingerprint {new_manifest['portal_commit']})"
+        )
+        return notes
+
+    server_dst = repo / target["pkg"] / "_forge_portal.py"
+    telemetry_dst = repo / target["pkg"] / "_portal_telemetry.py"
 
     telemetry_bytes = telemetry_source(target) if TELEMETRY_SRC.is_file() else None
     telemetry_hash = (
