@@ -893,7 +893,8 @@ export class TasksPage {
    *  record matches is consumed silently — never a fake selection. */
   readonly task = input('');
   /** Route `?new=1` opens the same canonical task flow as a guided entry point. */
-  readonly newInvestigation = input('');
+  /** Public route input is `?new=1`; the property keeps the domain meaning. */
+  readonly newInvestigation = input('', { alias: 'new' });
   private readonly intentInput = viewChild<ElementRef<HTMLInputElement>>('intentInput');
 
   readonly intent = signal('');

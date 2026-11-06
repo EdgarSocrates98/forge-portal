@@ -147,7 +147,7 @@ describe('TasksPage — Execution Center', () => {
 
   it('opens the canonical flow as a new investigation and focuses intent', async () => {
     const { fixture, el } = await setup();
-    fixture.componentRef.setInput('newInvestigation', '1');
+    fixture.componentRef.setInput('new', '1');
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
