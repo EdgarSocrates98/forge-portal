@@ -463,9 +463,20 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
               }
             </p>
           </div>
-          <button class="icon-btn" (click)="loadTasks()" [attr.aria-label]="'state.refresh' | t">
-            <ui-icon name="refresh" [size]="14" />
-          </button>
+          <div class="sec__actions">
+            <a
+              class="btn btn--primary"
+              data-action="new-investigation"
+              routerLink="/tasks"
+              [queryParams]="{ new: '1' }"
+            >
+              <ui-icon name="tasks" [size]="14" />
+              {{ 'tasks.newInvestigation' | t }}
+            </a>
+            <button class="icon-btn" (click)="loadTasks()" [attr.aria-label]="'state.refresh' | t">
+              <ui-icon name="refresh" [size]="14" />
+            </button>
+          </div>
         </div>
 
         @if (tasksSrc.unavailable()) {

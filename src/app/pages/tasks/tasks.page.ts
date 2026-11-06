@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -89,6 +90,7 @@ interface PendingPlan {
         <div class="search-field intent-field">
           <ui-icon name="terminal" [size]="15" />
           <input
+              #intentInput
             id="intent"
             class="input"
             type="text"
@@ -110,6 +112,13 @@ interface PendingPlan {
         </button>
       </div>
     </section>
+
+    @if (newInvestigation() === '1') {
+      <section class="card investigation-start" data-section="new-investigation" role="status">
+        <h2>{{ 'tasks.newInvestigation' | t }}</h2>
+        <p class="muted">{{ 'tasks.newInvestigation.hint' | t }}</p>
+      </section>
+    }
 
     @if (executing()) {
       <section class="card running" role="status" aria-live="polite" data-section="running">
@@ -883,6 +892,9 @@ export class TasksPage {
    *  card is never undone by a background refresh; an id that no
    *  record matches is consumed silently — never a fake selection. */
   readonly task = input('');
+  /** Route `?new=1` opens the same canonical task flow as a guided entry point. */
+  readonly newInvestigation = input('');
+  private readonly intentInput = viewChild<ElementRef<HTMLInputElement>>('intentInput');
 
   readonly intent = signal('');
   readonly pending = signal<PendingPlan | null>(null);
@@ -970,6 +982,14 @@ export class TasksPage {
   }
 
   constructor() {
+    // The dashboard entry point is a focus aid, not a second workflow. The
+    // existing plan/review/execute lifecycle remains the only task state
+    // machine and the focus is applied only for a fresh-investigation link.
+    effect(() => {
+      if (this.newInvestigation() !== '1') return;
+      const input = this.intentInput();
+      if (input) queueMicrotask(() => input.nativeElement.focus());
+    });
     // Deep link: once the records answer, a new ?task= value selects its
     // row (same path as a row click — detail + replay reset together).
     effect(() => {
