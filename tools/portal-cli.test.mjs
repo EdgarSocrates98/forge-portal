@@ -19,6 +19,14 @@ test('status is portable and machine-readable without a TTY', () => {
   assert.equal(result.surface.wizard, true);
 });
 
+test('version is available at the CLI root', () => {
+  const raw = execFileSync(process.execPath, [cli, '--version'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.equal(raw.trim(), 'forge-portal 1.1.1');
+});
+
 test('wizard degrades honestly when no TTY is available', () => {
   const raw = execFileSync(process.execPath, [cli, 'wizard'], {
     cwd: root,

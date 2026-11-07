@@ -119,7 +119,11 @@ const args = process.argv.slice(2);
 const machine = args.includes('--json') || !TTY;
 const command = args.find((arg) => !arg.startsWith('-')) || 'home';
 
-if (args.includes('--help') || args.includes('-h')) usage();
+if (args.includes('--version')) {
+  if (args.includes('--json')) json(status());
+  else output.write(`forge-portal ${VERSION}\n`);
+}
+else if (args.includes('--help') || args.includes('-h')) usage();
 else if (command === 'status') machine ? json(status()) : json(status());
 else if (command === 'start') startServer();
 else if (command === 'wizard') await run_wizard();
