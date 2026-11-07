@@ -185,7 +185,15 @@ const storage = (): Storage | null => {
 
     @if (bundle(); as b) {
       @if (b.availability.state === 'available') {
-        <section class="card">
+        <section
+          class="card fed graph__serving"
+          data-section="forge-graph-status"
+          data-state="available"
+        >
+          <header class="fed__head">
+            <h2><ui-icon name="graph" [size]="15" />{{ 'graph.own.title' | t }}</h2>
+            <ui-state-badge state="ok" [labelOverride]="'graph.own.available' | t" />
+          </header>
           @if (b.studio_url) {
             <a class="btn btn--primary" [href]="b.studio_url" target="_blank" rel="noopener">
               {{ 'graph.open' | t }}
@@ -212,11 +220,27 @@ const storage = (): Storage | null => {
           </ul>
         </section>
       } @else {
-        <ui-empty
-          icon="graph"
-          [title]="'graph.unavailable' | t"
-          [hint]="b.availability.unlock ?? ('graph.buildHint' | t)"
-        />
+        <section
+          class="card fed graph__serving graph__serving--state"
+          data-section="forge-graph-status"
+          [attr.data-state]="b.availability.state"
+        >
+          <header class="fed__head">
+            <h2><ui-icon name="graph" [size]="15" />{{ 'graph.own.title' | t }}</h2>
+            <ui-state-badge
+              [state]="graphAvailabilityBadge(b.availability.state)"
+              [labelOverride]="graphAvailabilityLabel(b.availability.state) | t"
+            />
+          </header>
+          <ui-empty
+            icon="graph"
+            [title]="graphAvailabilityTitle(b.availability.state) | t"
+            [hint]="b.availability.unlock ?? (graphAvailabilityHint(b.availability.state) | t)"
+          />
+          <p class="muted fed__warn">
+            {{ 'graph.own.fallback' | t }}
+          </p>
+        </section>
       }
     }
 
@@ -2163,8 +2187,25 @@ export class GraphPage {
         this.graphsLoadedAt.set(new Date().toISOString());
       })
       .catch((e) => {
-        this.bundle.set(null);
-        this.error.set(toApiError(e));
+        const err = toApiError(e);
+        // /graphs is an optional producer surface. A leaf forge can omit it
+        // while the federated overlay still has real evidence from the other
+        // endpoints. Keep the page useful and make the missing source visible
+        // in the source strip instead of showing a fatal page-level error.
+        if (err.status === 404 || err.body.code === 'PORTAL-NOT-FOUND') {
+          this.bundle.set({
+            availability: {
+              state: 'unavailable',
+              detail: 'GET /api/v1/graphs is not exposed by this adapter',
+            },
+            views: [],
+            studio_url: null,
+          });
+          this.error.set(null);
+        } else {
+          this.bundle.set(null);
+          this.error.set(err);
+        }
       });
     await Promise.allSettled([
       graphsCall,
@@ -2210,9 +2251,11 @@ export class GraphPage {
       ? graphsErr && (graphsErr.status === 404 || graphsErr.body.code === 'PORTAL-NOT-FOUND')
         ? 'unavailable'
         : 'unverified'
-      : b.availability.state === 'available' || b.availability.state === 'no_graph'
-        ? 'loaded'
-        : 'unverified'; // 'unverified'/'disabled' bundles stay unverified evidence
+      : b.availability.state === 'unavailable'
+        ? 'unavailable'
+        : b.availability.state === 'available' || b.availability.state === 'no_graph'
+          ? 'loaded'
+          : 'unverified'; // 'unverified'/'disabled' bundles stay unverified evidence
     const descriptor = this.store.descriptor();
     const availability = {} as Record<FedSource, SourceAvailability>;
     for (const s of this.srcs) availability[s.id] = avail(s.src);
@@ -2245,6 +2288,34 @@ export class GraphPage {
         availability,
       }),
     );
+  }
+
+  graphAvailabilityBadge(state: GraphBundle['availability']['state']): 'ok' | 'warn' | 'muted' {
+    return state === 'available' ? 'ok' : state === 'unavailable' ? 'muted' : 'warn';
+  }
+
+  graphAvailabilityLabel(state: GraphBundle['availability']['state']): string {
+    return state === 'available'
+      ? 'graph.own.available'
+      : state === 'unavailable'
+        ? 'graph.source.unavailable'
+        : 'state.unverified';
+  }
+
+  graphAvailabilityTitle(state: GraphBundle['availability']['state']): string {
+    return state === 'no_graph'
+      ? 'graph.own.noGraph'
+      : state === 'unavailable'
+        ? 'graph.own.unavailable'
+        : 'graph.own.unverified';
+  }
+
+  graphAvailabilityHint(state: GraphBundle['availability']['state']): string {
+    return state === 'no_graph'
+      ? 'graph.own.noGraphHint'
+      : state === 'unavailable'
+        ? 'graph.own.unavailableHint'
+        : 'graph.own.unverifiedHint';
   }
 
   private data<T>(id: StudioSource): T | null {

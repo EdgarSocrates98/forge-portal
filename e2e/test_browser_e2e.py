@@ -1002,7 +1002,13 @@ def test_graph_canvas_click_selects_element(page, portal):
     if fit.count():
         fit.click()
         page.wait_for_timeout(400)
-    box = page.locator("[data-canvas='graph']").bounding_box()
+    canvas = page.locator("[data-canvas='graph']")
+    # The studio is intentionally below the evidence/source controls. Bring
+    # the real hit surface into the viewport before sweeping pointer taps;
+    # bounding-box coordinates outside the viewport are not browser clicks.
+    canvas.scroll_into_view_if_needed()
+    page.wait_for_timeout(150)
+    box = canvas.bounding_box()
     assert box, "canvas container not measurable"
     inspector = page.locator("[data-section='inspector'],"
                              " [data-section='edge-inspector']")

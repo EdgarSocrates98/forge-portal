@@ -333,7 +333,7 @@ export interface TaskEventReport {
 }
 
 export interface GraphAvailability {
-  state: 'available' | 'no_graph' | 'disabled' | 'unverified';
+  state: 'available' | 'no_graph' | 'disabled' | 'unverified' | 'unavailable';
   detail?: string;
   refusal?: string;
   unlock?: string;

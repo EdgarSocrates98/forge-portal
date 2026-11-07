@@ -321,6 +321,25 @@ describe('GraphPage — §5.6 Federated Graph Studio', () => {
     expect(fixture.componentInstance.fed()!.edges.some((e) => e.kind === 'declares')).toBe(false);
     expect(el.textContent).toContain('capability:graph');
   });
+
+  it('keeps the studio usable when a leaf forge omits the optional graphs endpoint', async () => {
+    setup({ graphs: () => throwError(() => new ApiError(404, { code: 'PORTAL-NOT-FOUND' })) });
+    const fixture = await make();
+    const el = fixture.nativeElement as HTMLElement;
+
+    expect(el.querySelector('ui-error')).toBeNull();
+    expect(
+      el.querySelector('[data-section="forge-graph-status"]')?.getAttribute('data-state'),
+    ).toBe('unavailable');
+    expect(el.querySelector('[data-source="graphs"]')?.getAttribute('data-state')).toBe(
+      'unavailable',
+    );
+    // The loaded catalog remains actionable even without a ForgeGraphView/v1
+    // producer, so the user can still inspect and export the federated model.
+    expect(el.querySelector('[data-section="federated"]')).toBeTruthy();
+    expect(el.querySelector('[data-action="export"]')).toBeTruthy();
+    expect(nodeIds(el)).toContain('capability:graph');
+  });
 });
 
 /** Mount the canvas on a made fixture — shared by the canvas-surface
