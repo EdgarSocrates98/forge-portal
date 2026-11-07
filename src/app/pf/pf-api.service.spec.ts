@@ -105,9 +105,19 @@ describe('PfApi', () => {
 
   it('encodes URL preview and import routes under the selected product', async () => {
     const preview = firstValueFrom(api.urlPreview('p 1', 'https://example.com/a?x=1'));
-    http.expectOne(
-      `${BASE}/products/p%201/documents/url/preview?url=https%3A%2F%2Fexample.com%2Fa%3Fx%3D1&extractor=stdlib`,
-    ).flush(envelope({ title: 'Docs', preview: 'body', size: 4, url: 'https://example.com/a?x=1', state: 'ready_for_import' }));
+    http
+      .expectOne(
+        `${BASE}/products/p%201/documents/url/preview?url=https%3A%2F%2Fexample.com%2Fa%3Fx%3D1&extractor=stdlib`,
+      )
+      .flush(
+        envelope({
+          title: 'Docs',
+          preview: 'body',
+          size: 4,
+          url: 'https://example.com/a?x=1',
+          state: 'ready_for_import',
+        }),
+      );
     expect((await preview).title).toBe('Docs');
     const imported = firstValueFrom(api.importUrlDocument('p 1', 'https://example.com/a', 'Docs'));
     const req = http.expectOne(`${BASE}/products/p%201/documents/from-url`);
@@ -123,11 +133,13 @@ describe('PfApi', () => {
 
   it('loads a product-scoped document explorer payload', async () => {
     const p = firstValueFrom(api.documentDetail('p 1', 'doc/1'));
-    http.expectOne(`${BASE}/products/p%201/documents/doc%2F1`).flush(envelope({
-      document: { id: 'doc/1', title: 'Docs' },
-      content: { chunks: [], chunk_count: 0 },
-      versions: { state: 'current_only', items: [] },
-    }));
+    http.expectOne(`${BASE}/products/p%201/documents/doc%2F1`).flush(
+      envelope({
+        document: { id: 'doc/1', title: 'Docs' },
+        content: { chunks: [], chunk_count: 0 },
+        versions: { state: 'current_only', items: [] },
+      }),
+    );
     expect((await p).document.title).toBe('Docs');
   });
 });

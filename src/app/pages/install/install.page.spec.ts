@@ -83,6 +83,8 @@ function setup(apiOverrides: Partial<Record<keyof PortalApi, unknown>> = {}, con
   const store = {
     health: signal<PortalHealth | null>(HEALTH),
     refreshHealth: vi.fn(async () => {}),
+    healthRefreshing: signal(false),
+    healthRefreshError: signal<null>(null),
   };
   const ask = vi.fn(async (_opts?: { danger?: boolean }) => confirmResult);
   TestBed.configureTestingModule({

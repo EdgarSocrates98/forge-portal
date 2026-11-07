@@ -83,12 +83,24 @@ describe('PfKnowledgeTab — source capture', () => {
       knowledgeSources: vi.fn(() => of({ items: [] })),
       knowledgeHealth: vi.fn(() => of({ score: 1 })),
       knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
-      urlPreview: vi.fn(() => of({
-        url: 'https://example.com/docs', title: 'Docs', preview: '# Docs', size: 7, state: 'ready_for_import',
-      })),
-      importUrlDocument: vi.fn(() => of({
-        id: 'doc-url-1', title: 'Docs', product_id: 'p1', source_url: 'https://example.com/docs', state: 'imported',
-      })),
+      urlPreview: vi.fn(() =>
+        of({
+          url: 'https://example.com/docs',
+          title: 'Docs',
+          preview: '# Docs',
+          size: 7,
+          state: 'ready_for_import',
+        }),
+      ),
+      importUrlDocument: vi.fn(() =>
+        of({
+          id: 'doc-url-1',
+          title: 'Docs',
+          product_id: 'p1',
+          source_url: 'https://example.com/docs',
+          state: 'imported',
+        }),
+      ),
     };
     TestBed.configureTestingModule({
       imports: [PfKnowledgeTab],
@@ -108,7 +120,12 @@ describe('PfKnowledgeTab — source capture', () => {
     await c.capture();
     expect(api.urlPreview).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'defuddle');
     await c.confirmCapture();
-    expect(api.importUrlDocument).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'Docs', 'defuddle');
+    expect(api.importUrlDocument).toHaveBeenCalledWith(
+      'p1',
+      'https://example.com/docs',
+      'Docs',
+      'defuddle',
+    );
     expect(c.captureReceipt()?.id).toBe('doc-url-1');
   });
 });

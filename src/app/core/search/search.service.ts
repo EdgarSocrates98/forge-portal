@@ -257,10 +257,12 @@ export class SearchService {
         return [];
       });
     const productId = this.activeProductId();
-    const product = this.pf && productId
-      ? firstValueFrom(this.pf.knowledgeSearch(productId, q))
-          .then((response) => this.productKnowledgeEntries(productId, response.items))
-      : Promise.resolve([] as SearchEntry[]);
+    const product =
+      this.pf && productId
+        ? firstValueFrom(this.pf.knowledgeSearch(productId, q)).then((response) =>
+            this.productKnowledgeEntries(productId, response.items),
+          )
+        : Promise.resolve([] as SearchEntry[]);
     const results = await Promise.allSettled([portal, product]);
     const failed = results.some((item) => item.status === 'rejected');
     if (token === this.seq) this.docsFailed.set(failed);
@@ -460,9 +462,10 @@ export class SearchService {
   private productKnowledgeEntries(productId: string, hits: PfKnowledgeSearchHit[]): SearchEntry[] {
     const unique = new Map<string, PfKnowledgeSearchHit>();
     for (const hit of hits) {
-      const key = hit.kind === 'document'
-        ? `document:${hit.document_id ?? hit.id}`
-        : `${hit.kind ?? 'document'}:${hit.id}`;
+      const key =
+        hit.kind === 'document'
+          ? `document:${hit.document_id ?? hit.id}`
+          : `${hit.kind ?? 'document'}:${hit.id}`;
       unique.set(key, hit);
     }
     return [...unique.values()].map((hit) =>

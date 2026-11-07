@@ -66,11 +66,25 @@ interface HostChoice {
       [subtitle]="'install.subtitle' | t"
       hintId="install"
     >
-      <button class="btn" [disabled]="busy()" (click)="load()">
+      <button class="btn" [disabled]="busy() || store.healthRefreshing()" (click)="load()">
         <ui-icon name="refresh" [size]="15" />
-        {{ 'state.refresh' | t }}
+        {{ (store.healthRefreshing() ? 'state.refreshing' : 'state.refresh') | t }}
       </button>
     </ui-page-header>
+
+    @if (store.healthRefreshing()) {
+      <p class="refresh-feedback" role="status" aria-live="polite">
+        {{ 'state.refreshing' | t }}
+      </p>
+    } @else if (store.healthRefreshError(); as refreshError) {
+      <p class="refresh-feedback refresh-feedback--error" role="alert">
+        {{ 'state.refreshFailed' | t }}
+        @if (refreshError.body.code) {
+          <code>{{ refreshError.body.code }}</code>
+        }
+        <button class="btn btn--small" (click)="load()">{{ 'error.retry' | t }}</button>
+      </p>
+    }
 
     <section class="card">
       <ol class="stepper" [attr.aria-label]="'install.title' | t">
@@ -683,6 +697,18 @@ interface HostChoice {
     }
     .running {
       margin-top: var(--space-3);
+    }
+    .refresh-feedback {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin: 0 0 var(--space-4);
+      color: var(--fg-muted);
+      font-size: var(--font-sm);
+    }
+    .refresh-feedback--error {
+      color: var(--error);
     }
     .actions {
       font-family: var(--font-mono);

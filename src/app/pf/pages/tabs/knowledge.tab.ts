@@ -49,7 +49,7 @@ import { ToastService } from '../../../shared/toast';
     }
 
     @if (loading()) {
-      <div role="status" aria-label="loading knowledge">
+      <div role="status" [attr.aria-label]="'state.loading' | t">
         <ui-skeleton kind="card" [lines]="3" />
       </div>
     } @else {
@@ -86,27 +86,53 @@ import { ToastService } from '../../../shared/toast';
       <section class="card capture" data-section="source-capture">
         <div class="capture__head">
           <div>
-            <h2>Capture a knowledge source</h2>
+            <h2>{{ 'pf.knowledge.capture.title' | t }}</h2>
             <p class="muted small">
-              Choose a local workspace document or a public URL. Review the content and permission
-              before importing it into this product.
+              {{ 'pf.knowledge.capture.description' | t }}
             </p>
           </div>
-          <span class="capture__step" aria-live="polite">Step {{ captureStep() }} of 4</span>
+          <span class="capture__step" aria-live="polite"
+            >{{ 'pf.knowledge.capture.step' | t }} {{ captureStep() }}
+            {{ 'pf.knowledge.capture.of' | t }} 4</span
+          >
         </div>
 
-        <div class="capture__steps" aria-label="Source capture steps">
-          <span [class.active]="captureStep() === 1">1. Select</span>
-          <span [class.active]="captureStep() === 2">2. Permission</span>
-          <span [class.active]="captureStep() === 3">3. Preview</span>
-          <span [class.active]="captureStep() === 4">4. Confirm</span>
+        <div class="capture__steps" [attr.aria-label]="'pf.knowledge.capture.steps' | t">
+          <span [class.active]="captureStep() === 1"
+            >1. {{ 'pf.knowledge.capture.select' | t }}</span
+          >
+          <span [class.active]="captureStep() === 2"
+            >2. {{ 'pf.knowledge.capture.permission' | t }}</span
+          >
+          <span [class.active]="captureStep() === 3"
+            >3. {{ 'pf.knowledge.capture.preview' | t }}</span
+          >
+          <span [class.active]="captureStep() === 4"
+            >4. {{ 'pf.knowledge.capture.confirm' | t }}</span
+          >
         </div>
 
-        <div class="capture__modes" role="group" aria-label="Capture source type">
-          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'workspace'"
-            (click)="selectCaptureMode('workspace')">Workspace</button>
-          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'url'"
-            (click)="selectCaptureMode('url')">Public URL</button>
+        <div
+          class="capture__modes"
+          role="group"
+          [attr.aria-label]="'pf.knowledge.capture.type' | t"
+        >
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'workspace'"
+            (click)="selectCaptureMode('workspace')"
+          >
+            {{ 'pf.knowledge.capture.workspace' | t }}
+          </button>
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'url'"
+            (click)="selectCaptureMode('url')"
+          >
+            {{ 'pf.knowledge.capture.publicUrl' | t }}
+          </button>
         </div>
 
         @if (captureMode() === 'workspace' && !workspaceDiscovery()) {
@@ -116,25 +142,30 @@ import { ToastService } from '../../../shared/toast';
             [disabled]="captureBusy()"
             (click)="discoverWorkspace()"
           >
-            {{ captureBusy() ? 'Discovering…' : 'Select workspace source' }}
+            {{
+              (captureBusy()
+                ? 'pf.knowledge.capture.discovering'
+                : 'pf.knowledge.capture.selectWorkspace'
+              ) | t
+            }}
           </button>
         } @else if (captureMode() === 'workspace') {
           <div class="capture__source-row">
             <label class="field">
-              <span>Source document</span>
+              <span>{{ 'pf.knowledge.capture.sourceDocument' | t }}</span>
               <select
                 class="input"
                 [value]="captureSource()?.path ?? ''"
                 (change)="selectCaptureSource($any($event.target).value)"
               >
-                <option value="">Choose a discovered Markdown document</option>
+                <option value="">{{ 'pf.knowledge.capture.chooseMarkdown' | t }}</option>
                 @for (doc of markdownSources(); track doc.path) {
                   <option [value]="doc.path">{{ doc.title }} · {{ doc.relative_path }}</option>
                 }
               </select>
             </label>
             <button class="btn" type="button" [disabled]="captureBusy()" (click)="resetCapture()">
-              Start over
+              {{ 'pf.knowledge.capture.startOver' | t }}
             </button>
           </div>
 
@@ -161,7 +192,12 @@ import { ToastService } from '../../../shared/toast';
                 [disabled]="captureBusy() || !capturePermission()"
                 (click)="capture()"
               >
-                {{ captureBusy() ? 'Capturing…' : 'Capture and preview' }}
+                {{
+                  (captureBusy()
+                    ? 'pf.knowledge.capture.capturing'
+                    : 'pf.knowledge.capture.capturePreview'
+                  ) | t
+                }}
               </button>
             </div>
           }
@@ -169,17 +205,17 @@ import { ToastService } from '../../../shared/toast';
           @if (capturePreview(); as preview) {
             <div class="capture__preview" data-state="preview">
               <div class="capture__meta">
-                <strong>Preview · {{ preview.title }}</strong>
+                <strong>{{ 'pf.knowledge.capture.preview' | t }} · {{ preview.title }}</strong>
                 <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
               </div>
               <pre>{{ preview.preview }}</pre>
               <label class="field">
-                <span>Destination</span>
+                <span>{{ 'pf.knowledge.capture.destination' | t }}</span>
                 <input
                   class="input"
                   value="Current product"
                   readonly
-                  aria-label="Destination product"
+                  [attr.aria-label]="'pf.knowledge.capture.destinationProduct' | t"
                 />
               </label>
               <div class="fg-row">
@@ -189,7 +225,12 @@ import { ToastService } from '../../../shared/toast';
                   [disabled]="captureBusy()"
                   (click)="confirmCapture()"
                 >
-                  {{ captureBusy() ? 'Importing…' : 'Confirm and import' }}
+                  {{
+                    (captureBusy()
+                      ? 'pf.knowledge.capture.importing'
+                      : 'pf.knowledge.capture.confirmImport'
+                    ) | t
+                  }}
                 </button>
                 <button
                   class="btn"
@@ -197,7 +238,7 @@ import { ToastService } from '../../../shared/toast';
                   [disabled]="captureBusy()"
                   (click)="capturePreview.set(null)"
                 >
-                  Edit selection
+                  {{ 'pf.knowledge.capture.editSelection' | t }}
                 </button>
               </div>
             </div>
@@ -205,13 +246,16 @@ import { ToastService } from '../../../shared/toast';
 
           @if (captureReceipt(); as receipt) {
             <div class="capture__receipt" role="status" data-state="receipt">
-              <strong>Import receipt</strong>
+              <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
               <span
-                >Imported <code>{{ receipt.title }}</code> into the current product.</span
+                >{{ 'pf.knowledge.capture.imported' | t }} <code>{{ receipt.title }}</code>
+                {{ 'pf.knowledge.capture.intoProduct' | t }}</span
               >
               <code>{{ receipt.id }}</code>
               @if ($any(receipt).source_path) {
-                <span class="muted small">Source: {{ $any(receipt).source_path }}</span>
+                <span class="muted small"
+                  >{{ 'pf.knowledge.capture.source' | t }}: {{ $any(receipt).source_path }}</span
+                >
               }
             </div>
           }
@@ -220,70 +264,114 @@ import { ToastService } from '../../../shared/toast';
         @if (captureMode() === 'url') {
           <div class="capture__review">
             <label class="field">
-              <span>Public document URL</span>
-              <input class="input" type="url" inputmode="url" autocomplete="url"
+              <span>{{ 'pf.knowledge.capture.publicDocumentUrl' | t }}</span>
+              <input
+                class="input"
+                type="url"
+                inputmode="url"
+                autocomplete="url"
                 [value]="captureUrl()"
                 (input)="captureUrl.set($any($event.target).value); capturePreview.set(null)"
-                placeholder="https://docs.example.com/runbook" aria-describedby="url-capture-help" />
+                placeholder="https://docs.example.com/runbook"
+                aria-describedby="url-capture-help"
+              />
             </label>
             <p id="url-capture-help" class="muted small">
-              Only public HTTP(S) pages are fetched. Credentials, private networks, redirects,
-              scripts and oversized or unsupported responses are blocked by the server.
+              {{ 'pf.knowledge.capture.publicUrlHelp' | t }}
             </p>
             <label class="field">
-              <span>Extraction engine</span>
+              <span>{{ 'pf.knowledge.capture.extractionEngine' | t }}</span>
               <select
                 class="input"
                 [value]="captureExtractor()"
                 (change)="captureExtractor.set($any($event.target).value); capturePreview.set(null)"
                 aria-describedby="extractor-help"
               >
-                <option value="stdlib">Built-in safe extractor</option>
-                <option value="defuddle">Defuddle (optional)</option>
+                <option value="stdlib">{{ 'pf.knowledge.capture.stdlib' | t }}</option>
+                <option value="defuddle">{{ 'pf.knowledge.capture.defuddle' | t }}</option>
               </select>
             </label>
             <p id="extractor-help" class="muted small">
-              Defuddle is selected explicitly and receives only the validated HTML. If it is not installed,
-              choose the built-in extractor and continue locally.
+              {{ 'pf.knowledge.capture.extractorHelp' | t }}
             </p>
             <label class="check">
-              <input type="checkbox" [checked]="capturePermission()"
-                (change)="capturePermission.set($any($event.target).checked); capturePreview.set(null)" />
+              <input
+                type="checkbox"
+                [checked]="capturePermission()"
+                (change)="
+                  capturePermission.set($any($event.target).checked); capturePreview.set(null)
+                "
+              />
               I authorize fetching and importing this selected public URL.
             </label>
-            <button class="btn" type="button"
+            <button
+              class="btn"
+              type="button"
               [disabled]="captureBusy() || !capturePermission() || !captureUrl().trim()"
-              (click)="capture()">
-              {{ captureBusy() ? 'Fetching…' : 'Fetch and preview' }}
+              (click)="capture()"
+            >
+              {{
+                (captureBusy()
+                  ? 'pf.knowledge.capture.fetching'
+                  : 'pf.knowledge.capture.fetchPreview'
+                ) | t
+              }}
             </button>
           </div>
           @if (capturePreview(); as preview) {
             <div class="capture__preview" data-state="preview">
               <div class="capture__meta">
-                <strong>Preview · {{ preview.title }}</strong>
+                <strong>{{ 'pf.knowledge.capture.preview' | t }} · {{ preview.title }}</strong>
                 <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
               </div>
               <pre>{{ preview.preview }}</pre>
               <label class="field">
-                <span>Destination</span>
-                <input class="input" value="Current product" readonly aria-label="Destination product" />
+                <span>{{ 'pf.knowledge.capture.destination' | t }}</span>
+                <input
+                  class="input"
+                  value="Current product"
+                  readonly
+                  [attr.aria-label]="'pf.knowledge.capture.destinationProduct' | t"
+                />
               </label>
               <div class="fg-row">
-                <button class="btn btn--primary" type="button" [disabled]="captureBusy()"
-                  (click)="confirmCapture()">
-                  {{ captureBusy() ? 'Importing…' : 'Confirm and import' }}
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="confirmCapture()"
+                >
+                  {{
+                    (captureBusy()
+                      ? 'pf.knowledge.capture.importing'
+                      : 'pf.knowledge.capture.confirmImport'
+                    ) | t
+                  }}
                 </button>
-                <button class="btn" type="button" [disabled]="captureBusy()"
-                  (click)="capturePreview.set(null)">Edit URL</button>
+                <button
+                  class="btn"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)"
+                >
+                  {{ 'pf.knowledge.capture.editUrl' | t }}
+                </button>
               </div>
             </div>
           }
           @if (captureReceipt(); as receipt) {
             <div class="capture__receipt" role="status" data-state="receipt">
-              <strong>Import receipt</strong>
-              <span>Imported <code>{{ receipt.title }}</code> into the current product.</span>
+              <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
+              <span
+                >{{ 'pf.knowledge.capture.imported' | t }} <code>{{ receipt.title }}</code>
+                {{ 'pf.knowledge.capture.intoProduct' | t }}</span
+              >
               <code>{{ receipt.id }}</code>
-              @if ($any(receipt).source_url) { <span class="muted small">Source: {{ $any(receipt).source_url }}</span> }
+              @if ($any(receipt).source_url) {
+                <span class="muted small"
+                  >{{ 'pf.knowledge.capture.source' | t }}: {{ $any(receipt).source_url }}</span
+                >
+              }
             </div>
           }
         }
@@ -335,7 +423,9 @@ import { ToastService } from '../../../shared/toast';
           </form>
           @if (extractResult(); as xr) {
             <p class="ok-note">
-              Extraction complete — {{ xr.entities }} entities, {{ xr.relations }} relations.
+              {{ 'pf.knowledge.extractionComplete' | t }} — {{ xr.entities }}
+              {{ 'pf.knowledge.entities' | t }}, {{ xr.relations }}
+              {{ 'pf.knowledge.relations' | t }}.
             </p>
           }
         </section>
@@ -350,7 +440,7 @@ import { ToastService } from '../../../shared/toast';
                 rows="3"
                 [value]="question()"
                 (input)="question.set($any($event.target).value)"
-                placeholder="e.g. What metrics are tied to churn?"
+                [placeholder]="'pf.knowledge.questionPlaceholder' | t"
                 required
               ></textarea>
             </label>
@@ -359,7 +449,7 @@ import { ToastService } from '../../../shared/toast';
               type="submit"
               [disabled]="asking() || !question().trim()"
             >
-              {{ asking() ? 'Querying…' : 'Query' }}
+              {{ (asking() ? 'pf.knowledge.querying' : 'pf.knowledge.query') | t }}
             </button>
           </form>
 
@@ -367,7 +457,9 @@ import { ToastService } from '../../../shared/toast';
             <div class="answer fg-enter" aria-live="polite">
               <div class="answer__head">
                 <ui-state-badge [state]="synthBadge(a.synthesis)" [labelOverride]="a.synthesis" />
-                <span class="muted small">{{ a.citations.length }} citation(s)</span>
+                <span class="muted small"
+                  >{{ a.citations.length }} {{ 'pf.knowledge.citations' | t }}</span
+                >
               </div>
               @if (a.answer) {
                 <p class="answer__text">{{ a.answer }}</p>
@@ -410,9 +502,14 @@ import { ToastService } from '../../../shared/toast';
                   <td>
                     <strong>{{ d.title }}</strong>
                     <code class="muted small"> {{ d.id }}</code>
-                    <button class="btn btn--small" type="button" (click)="openDocument(d.id)"
-                      [disabled]="documentBusy()" [attr.aria-label]="'Open document ' + d.title">
-                      Explore
+                    <button
+                      class="btn btn--small"
+                      type="button"
+                      (click)="openDocument(d.id)"
+                      [disabled]="documentBusy()"
+                      [attr.aria-label]="('pf.knowledge.openDocument' | t) + ' ' + d.title"
+                    >
+                      {{ 'pf.knowledge.explore' | t }}
                     </button>
                   </td>
                   <td>
@@ -428,7 +525,7 @@ import { ToastService } from '../../../shared/toast';
             </tbody>
           </table>
         } @else {
-          <ui-empty icon="knowledge" title="No documents imported" />
+          <ui-empty icon="knowledge" [title]="'pf.knowledge.noDocuments' | t" />
         }
       </section>
 
@@ -436,22 +533,44 @@ import { ToastService } from '../../../shared/toast';
         <section class="card document-explorer" aria-labelledby="document-explorer-title">
           <div class="capture__head">
             <div>
-              <h2 id="document-explorer-title">Document explorer</h2>
-              <p class="muted small">{{ detail.document.title }} · {{ detail.document.status ?? 'unknown' }}</p>
+              <h2 id="document-explorer-title">{{ 'pf.knowledge.documentExplorer' | t }}</h2>
+              <p class="muted small">
+                {{ detail.document.title }} · {{ detail.document.status ?? 'unknown' }}
+              </p>
             </div>
-            <button class="btn" type="button" (click)="selectedDocument.set(null)">Close</button>
+            <button class="btn" type="button" (click)="selectedDocument.set(null)">
+              {{ 'state.close' | t }}
+            </button>
           </div>
           <dl class="document-explorer__meta">
-            <div><dt>Source</dt><dd><code>{{ detail.source ?? 'unreported' }}</code></dd></div>
-            <div><dt>Hash</dt><dd><code>{{ detail.document.content_hash ?? 'unreported' }}</code></dd></div>
-            <div><dt>Chunks</dt><dd>{{ detail.content.chunk_count }}</dd></div>
-            <div><dt>Version state</dt><dd>{{ detail.versions.state }}</dd></div>
+            <div>
+              <dt>{{ 'pf.knowledge.source' | t }}</dt>
+              <dd>
+                <code>{{ detail.source ?? 'unreported' }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'pf.knowledge.hash' | t }}</dt>
+              <dd>
+                <code>{{ detail.document.content_hash ?? 'unreported' }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'pf.knowledge.chunks' | t }}</dt>
+              <dd>{{ detail.content.chunk_count }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'pf.knowledge.versionState' | t }}</dt>
+              <dd>{{ detail.versions.state }}</dd>
+            </div>
           </dl>
           @if (detail.document.metadata; as metadata) {
-            <p class="muted small">Provenance metadata is available to the authorized product scope.</p>
+            <p class="muted small">
+              {{ 'pf.knowledge.provenanceAvailable' | t }}
+            </p>
             <pre class="document-explorer__metadata">{{ metadata | json }}</pre>
           }
-          <h3>Indexed content</h3>
+          <h3>{{ 'pf.knowledge.indexedContent' | t }}</h3>
           <div class="document-explorer__chunks">
             @for (chunk of detail.content.chunks; track chunk.id) {
               <article>
@@ -460,7 +579,10 @@ import { ToastService } from '../../../shared/toast';
               </article>
             }
           </div>
-          <p class="muted small">Versions: {{ detail.versions.items.length }} · relations: {{ detail.relations?.length ?? 0 }}</p>
+          <p class="muted small">
+            Versions: {{ detail.versions.items.length }} · relations:
+            {{ detail.relations?.length ?? 0 }}
+          </p>
         </section>
       }
 
@@ -497,7 +619,7 @@ import { ToastService } from '../../../shared/toast';
             </tbody>
           </table>
         } @else {
-          <ui-empty icon="folder" title="No knowledge sources registered" />
+          <ui-empty icon="folder" [title]="'pf.knowledge.noSources' | t" />
         }
       </section>
     }
@@ -818,8 +940,13 @@ export class PfKnowledgeTab implements OnInit {
   async capture(): Promise<void> {
     const source = this.captureSource();
     const url = this.captureUrl().trim();
-    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
-      || !this.capturePermission() || this.captureBusy()) return;
+    if (
+      (this.captureMode() === 'workspace' && !source) ||
+      (this.captureMode() === 'url' && !url) ||
+      !this.capturePermission() ||
+      this.captureBusy()
+    )
+      return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
@@ -839,16 +966,25 @@ export class PfKnowledgeTab implements OnInit {
     const source = this.captureSource();
     const preview = this.capturePreview();
     const url = this.captureUrl().trim();
-    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
-      || !preview || !this.capturePermission() || this.captureBusy()) return;
+    if (
+      (this.captureMode() === 'workspace' && !source) ||
+      (this.captureMode() === 'url' && !url) ||
+      !preview ||
+      !this.capturePermission() ||
+      this.captureBusy()
+    )
+      return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
-      const receipt = this.captureMode() === 'url'
-        ? await firstValueFrom(
-            this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
-          )
-        : await firstValueFrom(this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title));
+      const receipt =
+        this.captureMode() === 'url'
+          ? await firstValueFrom(
+              this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
+            )
+          : await firstValueFrom(
+              this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
+            );
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
       await this.load();
