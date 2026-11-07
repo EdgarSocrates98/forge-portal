@@ -29,6 +29,10 @@ export class PortalStore {
   readonly accountEnvironment = signal<AccountEnvironment | null>(null);
   readonly lastError = signal<ApiError | null>(null);
   readonly refreshedAt = signal<string | null>(null);
+  /** Health refresh is observable so pages can communicate pending/error
+   * states instead of making a failed refresh look like a no-op. */
+  readonly healthRefreshing = signal(false);
+  readonly healthRefreshError = signal<ApiError | null>(null);
 
   readonly forgeId = computed(() => this.descriptor()?.forge_id ?? 'the-forge');
   readonly forgeName = computed(() => this.descriptor()?.forge_name ?? 'Forge Portal');
@@ -57,6 +61,8 @@ export class PortalStore {
   }
 
   async refreshHealth(): Promise<void> {
+    this.healthRefreshing.set(true);
+    this.healthRefreshError.set(null);
     try {
       const health = await firstValueFrom(this.api.installationStatus());
       this.health.set(health);
@@ -66,7 +72,10 @@ export class PortalStore {
     } catch (err) {
       const apiErr = err instanceof ApiError ? err : new ApiError(0);
       this.lastError.set(apiErr);
+      this.healthRefreshError.set(apiErr);
       if (apiErr.transport) this.status.set('offline');
+    } finally {
+      this.healthRefreshing.set(false);
     }
   }
 

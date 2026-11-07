@@ -39,6 +39,8 @@ export const EN: Record<string, string> = {
   'state.loading': 'Loading…',
   'state.retry': 'Retry',
   'state.refresh': 'Refresh',
+  'state.refreshing': 'Refreshing…',
+  'state.refreshFailed': 'Refresh failed; the displayed health is unchanged.',
   'state.close': 'Close',
   'state.cancel': 'Cancel',
   'state.confirm': 'Confirm',

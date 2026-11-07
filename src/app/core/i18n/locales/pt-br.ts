@@ -37,6 +37,8 @@ export const PT_BR: Record<string, string> = {
   'state.loading': 'Carregando…',
   'state.retry': 'Tentar novamente',
   'state.refresh': 'Atualizar',
+  'state.refreshing': 'Atualizando…',
+  'state.refreshFailed': 'A atualização falhou; a saúde exibida não foi alterada.',
   'state.close': 'Fechar',
   'state.cancel': 'Cancelar',
   'state.confirm': 'Confirmar',

@@ -290,7 +290,7 @@ export interface ForgeFile {
       color: var(--warn);
     }
     .bad {
-      color: var(--bad);
+      color: var(--error);
     }
     .fdoc__file {
       display: flex;
@@ -309,10 +309,10 @@ export interface ForgeFile {
       gap: var(--space-2);
     }
     .fdoc__refusal {
-      border-left: 3px solid var(--bad);
+      border-left: 3px solid var(--error);
       padding: var(--space-1) var(--space-3);
       margin: var(--space-3) 0;
-      color: var(--bad);
+      color: var(--error);
     }
     .fdoc__refusal .unlock {
       color: var(--accent-ink);
