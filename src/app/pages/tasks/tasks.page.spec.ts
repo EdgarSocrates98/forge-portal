@@ -145,6 +145,17 @@ describe('TasksPage — Execution Center', () => {
     expect(section(el, 'plan')).toBeNull();
   });
 
+  it('opens the canonical flow as a new investigation and focuses intent', async () => {
+    const { fixture, el } = await setup();
+    fixture.componentRef.setInput('new', '1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(section(el, 'new-investigation')).toBeTruthy();
+    expect(document.activeElement).toBe(el.querySelector('#intent'));
+  });
+
   it('surfaces correlation ids on the plan card, receipt and history rows', async () => {
     const { fixture, c, el } = await setup();
 

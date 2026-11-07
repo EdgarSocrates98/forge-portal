@@ -671,6 +671,27 @@ def test_command_palette(page, portal):
     _shot(page, "05-command-palette")
 
 
+def test_new_investigation_entry_point(page, portal):
+    """Dashboard composes the canonical task flow without executing it."""
+    page.goto(f"http://127.0.0.1:{portal.port}/dashboard"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(400)
+
+    entry = page.locator('[data-action="new-investigation"]')
+    assert entry.count() == 1
+    assert "/tasks?new=1" in (entry.get_attribute("href") or "")
+
+    entry.click()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(300)
+    assert "/tasks" in page.url and "new=1" in page.url
+    assert page.locator('[data-section="new-investigation"]').count() == 1
+    assert page.locator("#intent").evaluate(
+        "element => document.activeElement === element"
+    )
+
+
 def test_tasks_plan_card(page, portal):
     _open(page, portal)
     page.goto(f"http://127.0.0.1:{portal.port}/tasks"
