@@ -16,7 +16,7 @@ import { PfProduct } from '../pf.models';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
 import { UiIcon } from '../../shared/icon';
-import { UiSkeleton } from '../../shared/skeleton';
+import { PageHeader } from '../../shared/page-header';
 import { PfContextTab } from './tabs/context.tab';
 import { PfKnowledgeTab } from './tabs/knowledge.tab';
 import { PfAgentsTab } from './tabs/agents.tab';
@@ -66,7 +66,7 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     StateBadge,
     ErrorState,
     UiIcon,
-    UiSkeleton,
+    PageHeader,
     PfContextTab,
     PfKnowledgeTab,
     PfAgentsTab,
@@ -79,31 +79,24 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     TPipe,
   ],
   template: `
-    <header class="head">
-      <div class="head__text">
-        <a class="back" routerLink="/pf/products">
-          <ui-icon name="chevron-left" [size]="14" />
-          Products
-        </a>
-        @if (product(); as p) {
-          <h2>{{ p.name }}</h2>
-          <div class="head__meta">
-            <ui-state-badge
-              [state]="p.status === 'active' ? 'ACTIVE' : 'muted'"
-              [labelOverride]="p.status ?? 'unknown'"
-            />
-            @if (p.domain) {
-              <span class="chip">{{ p.domain }}</span>
-            }
-            <code class="muted">{{ p.id }}</code>
-          </div>
-        } @else if (loading()) {
-          <ui-skeleton kind="text" [lines]="1" />
-        } @else {
-          <h2>{{ 'pf.productDetail.product' | t }}</h2>
-        }
-      </div>
-    </header>
+    <ui-page-header [title]="product()?.name ?? ('pf.productDetail.product' | t)">
+      <a class="back" routerLink="/pf/products">
+        <ui-icon name="chevron-left" [size]="14" />
+        Products
+      </a>
+      @if (product(); as p) {
+        <div class="head__meta">
+          <ui-state-badge
+            [state]="p.status === 'active' ? 'ACTIVE' : 'muted'"
+            [labelOverride]="p.status ?? 'unknown'"
+          />
+          @if (p.domain) {
+            <span class="chip">{{ p.domain }}</span>
+          }
+          <code class="muted">{{ p.id }}</code>
+        </div>
+      }
+    </ui-page-header>
 
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -155,9 +148,6 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     }
   `,
   styles: `
-    .head {
-      margin-bottom: var(--space-4);
-    }
     .back {
       display: inline-flex;
       align-items: center;
@@ -169,12 +159,6 @@ const TAB_IDS = new Set<string>(TABS.map((t) => t.id));
     }
     .back:hover {
       color: var(--accent-ink);
-    }
-    .head h2 {
-      margin: 0 0 var(--space-2);
-      font-size: var(--font-2xl);
-      font-weight: 700;
-      letter-spacing: -0.02em;
     }
     .head__meta {
       display: flex;
