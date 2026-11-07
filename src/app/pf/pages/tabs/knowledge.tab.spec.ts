@@ -101,13 +101,14 @@ describe('PfKnowledgeTab — source capture', () => {
     const c = fixture.componentInstance;
     c.selectCaptureMode('url');
     c.captureUrl.set('https://example.com/docs');
+    c.captureExtractor.set('defuddle');
     await c.capture();
     expect(api.urlPreview).not.toHaveBeenCalled();
     c.capturePermission.set(true);
     await c.capture();
-    expect(api.urlPreview).toHaveBeenCalledWith('p1', 'https://example.com/docs');
+    expect(api.urlPreview).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'defuddle');
     await c.confirmCapture();
-    expect(api.importUrlDocument).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'Docs');
+    expect(api.importUrlDocument).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'Docs', 'defuddle');
     expect(c.captureReceipt()?.id).toBe('doc-url-1');
   });
 });
