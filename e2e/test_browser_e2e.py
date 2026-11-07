@@ -1318,8 +1318,8 @@ def ops_home(tmp_path, monkeypatch):
     home.mkdir()
     monkeypatch.setenv("FORGE_CLI_HOME", str(home))
     monkeypatch.setenv("FORGE_HOME_OVERRIDE", str(home))
-    workspace_cli = REPO.parent / "forge-cli" / "dist" / "index.js"
-    if workspace_cli.is_file():
+    workspace_cli = _workspace_forge_cli()
+    if workspace_cli is not None:
         monkeypatch.setenv("FORGE_CLI_BIN", str(workspace_cli))
     return home
 
@@ -1353,6 +1353,29 @@ def _seed_registry(home: Path, forges: dict) -> None:
     d = home / ".forge-cli" / "forges"
     d.mkdir(parents=True, exist_ok=True)
     (d / "state.json").write_text(json.dumps({"forges": forges}), encoding="utf-8")
+
+
+def _workspace_forge_cli() -> Path | None:
+    """Find the source checkout's forge-cli across normal worktree layouts.
+
+    Portal E2E also runs from detached worktrees and CI checkout directories.
+    Assuming ``REPO.parent / forge-cli`` makes the real CLI boundary look
+    unavailable whenever the Portal is nested below a shared workspace.
+    """
+    override = os.environ.get("FORGE_CLI_BIN")
+    if override:
+        candidate = Path(override).expanduser()
+        if candidate.is_file():
+            return candidate
+    seen: set[Path] = set()
+    for root in (REPO, *REPO.parents):
+        candidate = (root / "forge-cli" / "dist" / "index.js").resolve()
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 _SEEDED = {"e2e-forge": {"forge": "e2e-forge", "method": "pypi", "version": "0.1.0"}}
