@@ -272,15 +272,20 @@ export class PfApi {
       { confirm: 'import', path, ...(title ? { title } : {}) },
     );
   }
-  urlPreview(pid: string, url: string) {
+  urlPreview(pid: string, url: string, extractor: 'stdlib' | 'defuddle' = 'stdlib') {
     return this.get<PfUrlPreview>(
-      `/products/${encodeURIComponent(pid)}/documents/url/preview?url=${encodeURIComponent(url)}`,
+      `/products/${encodeURIComponent(pid)}/documents/url/preview?url=${encodeURIComponent(url)}&extractor=${extractor}`,
     );
   }
-  importUrlDocument(pid: string, url: string, title?: string) {
+  importUrlDocument(
+    pid: string,
+    url: string,
+    title?: string,
+    extractor: 'stdlib' | 'defuddle' = 'stdlib',
+  ) {
     return this.post<PfUrlImport>(
       `/products/${encodeURIComponent(pid)}/documents/from-url`,
-      { confirm: 'import', url, ...(title ? { title } : {}) },
+      { confirm: 'import', url, extractor, ...(title ? { title } : {}) },
     );
   }
 

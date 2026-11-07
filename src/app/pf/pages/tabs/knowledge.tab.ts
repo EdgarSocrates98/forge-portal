@@ -230,6 +230,22 @@ import { ToastService } from '../../../shared/toast';
               Only public HTTP(S) pages are fetched. Credentials, private networks, redirects,
               scripts and oversized or unsupported responses are blocked by the server.
             </p>
+            <label class="field">
+              <span>Extraction engine</span>
+              <select
+                class="input"
+                [value]="captureExtractor()"
+                (change)="captureExtractor.set($any($event.target).value); capturePreview.set(null)"
+                aria-describedby="extractor-help"
+              >
+                <option value="stdlib">Built-in safe extractor</option>
+                <option value="defuddle">Defuddle (optional)</option>
+              </select>
+            </label>
+            <p id="extractor-help" class="muted small">
+              Defuddle is selected explicitly and receives only the validated HTML. If it is not installed,
+              choose the built-in extractor and continue locally.
+            </p>
             <label class="check">
               <input type="checkbox" [checked]="capturePermission()"
                 (change)="capturePermission.set($any($event.target).checked); capturePreview.set(null)" />
@@ -725,6 +741,7 @@ export class PfKnowledgeTab implements OnInit {
   readonly captureBusy = signal(false);
   readonly captureMode = signal<'workspace' | 'url'>('workspace');
   readonly captureUrl = signal('');
+  readonly captureExtractor = signal<'stdlib' | 'defuddle'>('stdlib');
   readonly selectedDocument = signal<PfDocumentDetail | null>(null);
   readonly documentBusy = signal(false);
 
@@ -771,6 +788,7 @@ export class PfKnowledgeTab implements OnInit {
     this.captureMode.set(mode);
     this.captureSource.set(null);
     this.captureUrl.set('');
+    this.captureExtractor.set('stdlib');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
     this.captureReceipt.set(null);
@@ -807,7 +825,7 @@ export class PfKnowledgeTab implements OnInit {
     try {
       this.capturePreview.set(
         this.captureMode() === 'url'
-          ? await firstValueFrom(this.api.urlPreview(this.pid(), url))
+          ? await firstValueFrom(this.api.urlPreview(this.pid(), url, this.captureExtractor()))
           : await firstValueFrom(this.api.workspacePreview(source!.path)),
       );
     } catch (e) {
@@ -827,7 +845,9 @@ export class PfKnowledgeTab implements OnInit {
     this.error.set(null);
     try {
       const receipt = this.captureMode() === 'url'
-        ? await firstValueFrom(this.api.importUrlDocument(this.pid(), url, preview.title))
+        ? await firstValueFrom(
+            this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
+          )
         : await firstValueFrom(this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title));
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
