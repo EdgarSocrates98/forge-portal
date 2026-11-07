@@ -22,7 +22,7 @@ import {
   PfDataSource,
   PfDecision,
   PfDocumentDetail,
-  PfDocumentSearchHit,
+  PfKnowledgeSearchHit,
   PfDelegate,
   PfDelegateCallResult,
   PfDocument,
@@ -295,8 +295,13 @@ export class PfApi {
     );
   }
   documentSearch(pid: string, query: string, limit = 20) {
-    return this.get<{ schema?: string; items: PfDocumentSearchHit[] }>(
+    return this.get<{ schema?: string; items: PfKnowledgeSearchHit[] }>(
       `/products/${encodeURIComponent(pid)}/documents/search?q=${encodeURIComponent(query)}&limit=${limit}`,
+    );
+  }
+  knowledgeSearch(pid: string, query: string, limit = 20) {
+    return this.get<{ schema?: string; items: PfKnowledgeSearchHit[] }>(
+      `/products/${encodeURIComponent(pid)}/knowledge/search?q=${encodeURIComponent(query)}&limit=${limit}`,
     );
   }
   importDocument(pid: string, input: { title: string; content: string }) {

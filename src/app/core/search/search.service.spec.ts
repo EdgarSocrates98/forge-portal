@@ -346,15 +346,17 @@ describe('SearchService', () => {
     expect(service.results().some((r) => r.kind === 'doc')).toBe(false);
   });
 
-  it('adds bounded Product Forge document hits only for the active product route', async () => {
+  it('adds bounded Product Forge knowledge hits only for the active product route', async () => {
     vi.stubGlobal('location', { pathname: '/pf/products/p%201' });
     try {
       const pf = {
-        documentSearch: vi.fn(() =>
+        knowledgeSearch: vi.fn(() =>
           of({
-            schema: 'productforge/DocumentSearch/v1',
+            schema: 'productforge/KnowledgeSearch/v1',
             items: [
               {
+                kind: 'document',
+                id: 'doc-1',
                 document_id: 'doc-1',
                 chunk_id: 'chunk-1',
                 seq: 0,
@@ -364,6 +366,8 @@ describe('SearchService', () => {
                 version: 2,
               },
               {
+                kind: 'document',
+                id: 'doc-1',
                 document_id: 'doc-1',
                 chunk_id: 'chunk-2',
                 seq: 1,
@@ -378,8 +382,8 @@ describe('SearchService', () => {
       };
       const { service } = await setup({}, {}, pf);
       await service.searchNow('spark');
-      const hits = service.results().filter((r) => r.id.startsWith('pf-doc:'));
-      expect(pf.documentSearch).toHaveBeenCalledWith('p 1', 'spark');
+      const hits = service.results().filter((r) => r.id.startsWith('pf-document:'));
+      expect(pf.knowledgeSearch).toHaveBeenCalledWith('p 1', 'spark');
       expect(hits).toHaveLength(1);
       expect(hits[0]?.route).toBe('/pf/products/p%201?tab=knowledge');
       expect(hits[0]?.sublabel).toContain('v2');

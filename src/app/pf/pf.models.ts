@@ -209,16 +209,23 @@ export interface PfDocumentDetail {
   relations?: unknown[];
 }
 
-/** productforge/DocumentSearch/v1 — bounded, body-free document hits. */
-export interface PfDocumentSearchHit {
-  document_id: string;
-  chunk_id: string;
-  seq: number;
+/** productforge/KnowledgeSearch/v1 — bounded, body-free federated hits. */
+export interface PfKnowledgeSearchHit {
+  kind?: 'document' | 'source' | 'entity' | 'relation';
+  id: string;
+  document_id?: string;
+  chunk_id?: string;
+  seq?: number;
   title: string;
   snippet: string;
   source?: string;
   version?: number;
+  from_entity?: string;
+  to_entity?: string;
 }
+
+/** @deprecated use PfKnowledgeSearchHit for new federated consumers. */
+export type PfDocumentSearchHit = PfKnowledgeSearchHit;
 
 export interface PfEntity {
   id: string;
