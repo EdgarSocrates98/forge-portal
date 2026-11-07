@@ -209,6 +209,17 @@ export interface PfDocumentDetail {
   relations?: unknown[];
 }
 
+/** productforge/DocumentSearch/v1 — bounded, body-free document hits. */
+export interface PfDocumentSearchHit {
+  document_id: string;
+  chunk_id: string;
+  seq: number;
+  title: string;
+  snippet: string;
+  source?: string;
+  version?: number;
+}
+
 export interface PfEntity {
   id: string;
   kind?: string;

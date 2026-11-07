@@ -7,6 +7,7 @@ import { ApiError } from '../api/api.error';
 import { PortalCapability, PortalNavItem } from '../api/api.models';
 import { I18nService } from '../i18n/i18n.service';
 import { PortalStore } from '../portal/portal.store';
+import { PfApi } from '../../pf/pf-api.service';
 import { SEARCH_DEBOUNCE_MS, SearchService } from './search.service';
 
 /** Flush pending microtasks — safe under vitest fake timers (promises
@@ -131,6 +132,7 @@ function fakeStore(over: Record<string, unknown> = {}) {
 async function setup(
   apiOver: Record<string, unknown> = {},
   storeOver: Record<string, unknown> = {},
+  pfApi?: unknown,
 ) {
   const api = fakeApi(apiOver);
   const store = fakeStore(storeOver);
@@ -139,6 +141,7 @@ async function setup(
     providers: [
       { provide: PortalApi, useValue: api },
       { provide: PortalStore, useValue: store },
+      ...(pfApi ? [{ provide: PfApi, useValue: pfApi }] : []),
     ],
   });
   const i18n = TestBed.inject(I18nService);
@@ -341,6 +344,48 @@ describe('SearchService', () => {
     expect(service.unverified()).toContain('doc');
     expect(service.results().some((r) => r.kind === 'agent')).toBe(true);
     expect(service.results().some((r) => r.kind === 'doc')).toBe(false);
+  });
+
+  it('adds bounded Product Forge document hits only for the active product route', async () => {
+    vi.stubGlobal('location', { pathname: '/pf/products/p%201' });
+    try {
+      const pf = {
+        documentSearch: vi.fn(() =>
+          of({
+            schema: 'productforge/DocumentSearch/v1',
+            items: [
+              {
+                document_id: 'doc-1',
+                chunk_id: 'chunk-1',
+                seq: 0,
+                title: 'Spark runbook',
+                snippet: 'safe path',
+                source: 'url',
+                version: 2,
+              },
+              {
+                document_id: 'doc-1',
+                chunk_id: 'chunk-2',
+                seq: 1,
+                title: 'Spark runbook',
+                snippet: 'duplicate document hit',
+                source: 'url',
+                version: 2,
+              },
+            ],
+          }),
+        ),
+      };
+      const { service } = await setup({}, {}, pf);
+      await service.searchNow('spark');
+      const hits = service.results().filter((r) => r.id.startsWith('pf-doc:'));
+      expect(pf.documentSearch).toHaveBeenCalledWith('p 1', 'spark');
+      expect(hits).toHaveLength(1);
+      expect(hits[0]?.route).toBe('/pf/products/p%201?tab=knowledge');
+      expect(hits[0]?.sublabel).toContain('v2');
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it('merges server nav with static routes — nav metadata wins', async () => {

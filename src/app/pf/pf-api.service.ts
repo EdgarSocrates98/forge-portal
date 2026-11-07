@@ -22,6 +22,7 @@ import {
   PfDataSource,
   PfDecision,
   PfDocumentDetail,
+  PfDocumentSearchHit,
   PfDelegate,
   PfDelegateCallResult,
   PfDocument,
@@ -291,6 +292,11 @@ export class PfApi {
   documentDetail(pid: string, did: string) {
     return this.get<PfDocumentDetail>(
       `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}`,
+    );
+  }
+  documentSearch(pid: string, query: string, limit = 20) {
+    return this.get<{ schema?: string; items: PfDocumentSearchHit[] }>(
+      `/products/${encodeURIComponent(pid)}/documents/search?q=${encodeURIComponent(query)}&limit=${limit}`,
     );
   }
   importDocument(pid: string, input: { title: string; content: string }) {
