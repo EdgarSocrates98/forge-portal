@@ -14,6 +14,8 @@ import {
 import { I18nService } from '../i18n/i18n.service';
 import { PortalStore } from '../portal/portal.store';
 import { ThemeStore } from '../theme/theme.store';
+import { PfApi } from '../../pf/pf-api.service';
+import { PfDocumentSearchHit } from '../../pf/pf.models';
 import {
   SEARCH_DEBOUNCE_MS,
   SEARCH_KIND_ORDER,
@@ -57,7 +59,8 @@ export type { SearchEntry, SearchKind, SearchResult } from './search.data';
  *  - operations + known-errors: `api.tasks()` — every task indexes as
  *    an operation; tasks with `refusal` or `receipt.status != 'ok'`
  *    additionally index as known errors.
- *  - docs: `api.docsSearch(q)` per query (server-side deterministic) —
+ *  - docs: `api.docsSearch(q)` per query plus Product Forge's bounded,
+ *    product-scoped document search when the active route is a product —
  *    never pre-fetched.
  *
  * Failure of one source never blocks the others: the failed kind is
@@ -100,6 +103,7 @@ export class SearchService {
   private readonly store = inject(PortalStore);
   private readonly theme = inject(ThemeStore);
   private readonly i18n = inject(I18nService);
+  private readonly pf = inject(PfApi, { optional: true });
 
   /** Flat, already-ranked results for the last executed query. */
   readonly results = signal<SearchResult[]>([]);
@@ -246,13 +250,31 @@ export class SearchService {
   }
 
   private async fetchDocs(q: string, token: number): Promise<SearchEntry[]> {
+    const portal = firstValueFrom(this.api.docsSearch(q))
+      .then((hits) => hits.map((h) => this.docEntry(h)))
+      .catch((err) => {
+        if (!(err instanceof ApiError && err.status === 404)) throw err;
+        return [];
+      });
+    const productId = this.activeProductId();
+    const product = this.pf && productId
+      ? firstValueFrom(this.pf.documentSearch(productId, q))
+          .then((response) => this.productDocEntries(productId, response.items))
+      : Promise.resolve([] as SearchEntry[]);
+    const results = await Promise.allSettled([portal, product]);
+    const failed = results.some((item) => item.status === 'rejected');
+    if (token === this.seq) this.docsFailed.set(failed);
+    return results.flatMap((item) => (item.status === 'fulfilled' ? item.value : []));
+  }
+
+  private activeProductId(): string | null {
+    const path = globalThis.location?.pathname ?? '';
+    const match = path.match(/\/pf\/products\/([^/]+)/);
+    if (!match?.[1]) return null;
     try {
-      const hits = await firstValueFrom(this.api.docsSearch(q));
-      if (token === this.seq) this.docsFailed.set(false);
-      return hits.map((h) => this.docEntry(h));
-    } catch (err) {
-      if (token === this.seq) this.docsFailed.set(!(err instanceof ApiError && err.status === 404));
-      return [];
+      return decodeURIComponent(match[1]);
+    } catch {
+      return null;
     }
   }
 
@@ -433,6 +455,23 @@ export class SearchService {
       icon: 'knowledge',
       ...(h.url ? { url: h.url } : { route: '/knowledge' }),
     });
+  }
+
+  private productDocEntries(productId: string, hits: PfDocumentSearchHit[]): SearchEntry[] {
+    const unique = new Map<string, PfDocumentSearchHit>();
+    for (const hit of hits) unique.set(hit.document_id, hit);
+    return [...unique.values()].map((hit) =>
+      makeSearchEntry({
+        id: `pf-doc:${productId}:${hit.document_id}`,
+        kind: 'doc',
+        label: hit.title || hit.document_id,
+        sublabel: ['Product Forge', hit.source, hit.version ? `v${hit.version}` : undefined]
+          .filter(Boolean)
+          .join(' · '),
+        icon: 'knowledge',
+        route: `/pf/products/${encodeURIComponent(productId)}?tab=knowledge`,
+      }),
+    );
   }
 
   // -- actions -------------------------------------------------------------
