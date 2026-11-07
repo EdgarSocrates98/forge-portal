@@ -103,10 +103,22 @@ import { ToastService } from '../../../shared/toast';
         </div>
 
         <div class="capture__modes" role="group" aria-label="Capture source type">
-          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'workspace'"
-            (click)="selectCaptureMode('workspace')">Workspace</button>
-          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'url'"
-            (click)="selectCaptureMode('url')">Public URL</button>
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'workspace'"
+            (click)="selectCaptureMode('workspace')"
+          >
+            Workspace
+          </button>
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'url'"
+            (click)="selectCaptureMode('url')"
+          >
+            Public URL
+          </button>
         </div>
 
         @if (captureMode() === 'workspace' && !workspaceDiscovery()) {
@@ -221,10 +233,16 @@ import { ToastService } from '../../../shared/toast';
           <div class="capture__review">
             <label class="field">
               <span>Public document URL</span>
-              <input class="input" type="url" inputmode="url" autocomplete="url"
+              <input
+                class="input"
+                type="url"
+                inputmode="url"
+                autocomplete="url"
                 [value]="captureUrl()"
                 (input)="captureUrl.set($any($event.target).value); capturePreview.set(null)"
-                placeholder="https://docs.example.com/runbook" aria-describedby="url-capture-help" />
+                placeholder="https://docs.example.com/runbook"
+                aria-describedby="url-capture-help"
+              />
             </label>
             <p id="url-capture-help" class="muted small">
               Only public HTTP(S) pages are fetched. Credentials, private networks, redirects,
@@ -243,17 +261,25 @@ import { ToastService } from '../../../shared/toast';
               </select>
             </label>
             <p id="extractor-help" class="muted small">
-              Defuddle is selected explicitly and receives only the validated HTML. If it is not installed,
-              choose the built-in extractor and continue locally.
+              Defuddle is selected explicitly and receives only the validated HTML. If it is not
+              installed, choose the built-in extractor and continue locally.
             </p>
             <label class="check">
-              <input type="checkbox" [checked]="capturePermission()"
-                (change)="capturePermission.set($any($event.target).checked); capturePreview.set(null)" />
+              <input
+                type="checkbox"
+                [checked]="capturePermission()"
+                (change)="
+                  capturePermission.set($any($event.target).checked); capturePreview.set(null)
+                "
+              />
               I authorize fetching and importing this selected public URL.
             </label>
-            <button class="btn" type="button"
+            <button
+              class="btn"
+              type="button"
               [disabled]="captureBusy() || !capturePermission() || !captureUrl().trim()"
-              (click)="capture()">
+              (click)="capture()"
+            >
               {{ captureBusy() ? 'Fetching…' : 'Fetch and preview' }}
             </button>
           </div>
@@ -266,24 +292,43 @@ import { ToastService } from '../../../shared/toast';
               <pre>{{ preview.preview }}</pre>
               <label class="field">
                 <span>Destination</span>
-                <input class="input" value="Current product" readonly aria-label="Destination product" />
+                <input
+                  class="input"
+                  value="Current product"
+                  readonly
+                  aria-label="Destination product"
+                />
               </label>
               <div class="fg-row">
-                <button class="btn btn--primary" type="button" [disabled]="captureBusy()"
-                  (click)="confirmCapture()">
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="confirmCapture()"
+                >
                   {{ captureBusy() ? 'Importing…' : 'Confirm and import' }}
                 </button>
-                <button class="btn" type="button" [disabled]="captureBusy()"
-                  (click)="capturePreview.set(null)">Edit URL</button>
+                <button
+                  class="btn"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)"
+                >
+                  Edit URL
+                </button>
               </div>
             </div>
           }
           @if (captureReceipt(); as receipt) {
             <div class="capture__receipt" role="status" data-state="receipt">
               <strong>Import receipt</strong>
-              <span>Imported <code>{{ receipt.title }}</code> into the current product.</span>
+              <span
+                >Imported <code>{{ receipt.title }}</code> into the current product.</span
+              >
               <code>{{ receipt.id }}</code>
-              @if ($any(receipt).source_url) { <span class="muted small">Source: {{ $any(receipt).source_url }}</span> }
+              @if ($any(receipt).source_url) {
+                <span class="muted small">Source: {{ $any(receipt).source_url }}</span>
+              }
             </div>
           }
         }
@@ -410,8 +455,13 @@ import { ToastService } from '../../../shared/toast';
                   <td>
                     <strong>{{ d.title }}</strong>
                     <code class="muted small"> {{ d.id }}</code>
-                    <button class="btn btn--small" type="button" (click)="openDocument(d.id)"
-                      [disabled]="documentBusy()" [attr.aria-label]="'Open document ' + d.title">
+                    <button
+                      class="btn btn--small"
+                      type="button"
+                      (click)="openDocument(d.id)"
+                      [disabled]="documentBusy()"
+                      [attr.aria-label]="'Open document ' + d.title"
+                    >
                       Explore
                     </button>
                   </td>
@@ -437,18 +487,38 @@ import { ToastService } from '../../../shared/toast';
           <div class="capture__head">
             <div>
               <h2 id="document-explorer-title">Document explorer</h2>
-              <p class="muted small">{{ detail.document.title }} · {{ detail.document.status ?? 'unknown' }}</p>
+              <p class="muted small">
+                {{ detail.document.title }} · {{ detail.document.status ?? 'unknown' }}
+              </p>
             </div>
             <button class="btn" type="button" (click)="selectedDocument.set(null)">Close</button>
           </div>
           <dl class="document-explorer__meta">
-            <div><dt>Source</dt><dd><code>{{ detail.source ?? 'unreported' }}</code></dd></div>
-            <div><dt>Hash</dt><dd><code>{{ detail.document.content_hash ?? 'unreported' }}</code></dd></div>
-            <div><dt>Chunks</dt><dd>{{ detail.content.chunk_count }}</dd></div>
-            <div><dt>Version state</dt><dd>{{ detail.versions.state }}</dd></div>
+            <div>
+              <dt>Source</dt>
+              <dd>
+                <code>{{ detail.source ?? 'unreported' }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Hash</dt>
+              <dd>
+                <code>{{ detail.document.content_hash ?? 'unreported' }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Chunks</dt>
+              <dd>{{ detail.content.chunk_count }}</dd>
+            </div>
+            <div>
+              <dt>Version state</dt>
+              <dd>{{ detail.versions.state }}</dd>
+            </div>
           </dl>
           @if (detail.document.metadata; as metadata) {
-            <p class="muted small">Provenance metadata is available to the authorized product scope.</p>
+            <p class="muted small">
+              Provenance metadata is available to the authorized product scope.
+            </p>
             <pre class="document-explorer__metadata">{{ metadata | json }}</pre>
           }
           <h3>Indexed content</h3>
@@ -460,7 +530,10 @@ import { ToastService } from '../../../shared/toast';
               </article>
             }
           </div>
-          <p class="muted small">Versions: {{ detail.versions.items.length }} · relations: {{ detail.relations?.length ?? 0 }}</p>
+          <p class="muted small">
+            Versions: {{ detail.versions.items.length }} · relations:
+            {{ detail.relations?.length ?? 0 }}
+          </p>
         </section>
       }
 
@@ -818,8 +891,13 @@ export class PfKnowledgeTab implements OnInit {
   async capture(): Promise<void> {
     const source = this.captureSource();
     const url = this.captureUrl().trim();
-    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
-      || !this.capturePermission() || this.captureBusy()) return;
+    if (
+      (this.captureMode() === 'workspace' && !source) ||
+      (this.captureMode() === 'url' && !url) ||
+      !this.capturePermission() ||
+      this.captureBusy()
+    )
+      return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
@@ -839,16 +917,25 @@ export class PfKnowledgeTab implements OnInit {
     const source = this.captureSource();
     const preview = this.capturePreview();
     const url = this.captureUrl().trim();
-    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
-      || !preview || !this.capturePermission() || this.captureBusy()) return;
+    if (
+      (this.captureMode() === 'workspace' && !source) ||
+      (this.captureMode() === 'url' && !url) ||
+      !preview ||
+      !this.capturePermission() ||
+      this.captureBusy()
+    )
+      return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
-      const receipt = this.captureMode() === 'url'
-        ? await firstValueFrom(
-            this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
-          )
-        : await firstValueFrom(this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title));
+      const receipt =
+        this.captureMode() === 'url'
+          ? await firstValueFrom(
+              this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
+            )
+          : await firstValueFrom(
+              this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
+            );
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
       await this.load();

@@ -321,7 +321,8 @@ export const EN: Record<string, string> = {
   'tasks.title': 'Tasks',
   'tasks.subtitle': 'Say what you want to do — the portal builds the plan on the real Forge.',
   'tasks.newInvestigation': 'New investigation',
-  'tasks.newInvestigation.hint': 'Describe the problem or goal. The Forge will propose a specialist plan for your review.',
+  'tasks.newInvestigation.hint':
+    'Describe the problem or goal. The Forge will propose a specialist plan for your review.',
   'tasks.intent.label': 'What do you want to do?',
   'tasks.intent.placeholder': 'E.g.: analyze the PySpark scripts in this project',
   'tasks.intent.run': 'Plan',

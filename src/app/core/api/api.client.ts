@@ -89,7 +89,10 @@ export class PortalApi {
 
   bootstrap() {
     return this.get<BootstrapPayload>('/bootstrap').pipe(
-      map((payload) => ({ ...payload, health: this.normalizeHealth(payload.health as unknown as Record<string, unknown>) })),
+      map((payload) => ({
+        ...payload,
+        health: this.normalizeHealth(payload.health as unknown as Record<string, unknown>),
+      })),
     );
   }
   health() {
@@ -134,7 +137,8 @@ export class PortalApi {
   federation() {
     return this.get<FederationSnapshot>('/federation').pipe(
       this.unavailable<FederationSnapshot>({
-        specialists: [], installed_forges: [],
+        specialists: [],
+        installed_forges: [],
         registry: { count: 0, path: '' },
         summary: { catalog: 0, installed: 0, with_mcp: 0, with_checkout: 0 },
       }),
@@ -171,7 +175,9 @@ export class PortalApi {
     });
   }
   profiles() {
-    return this.get<ProfileDescriptor[]>('/profiles').pipe(this.unavailable<ProfileDescriptor[]>([]));
+    return this.get<ProfileDescriptor[]>('/profiles').pipe(
+      this.unavailable<ProfileDescriptor[]>([]),
+    );
   }
   profilesApply(profile: string) {
     return this.post<InstallationReceipt>('/profiles/apply', { profile, confirm: 'apply' });
@@ -186,7 +192,9 @@ export class PortalApi {
     );
   }
   mcpServers() {
-    return this.get<McpServerDescriptor[]>('/mcp/servers').pipe(this.unavailable<McpServerDescriptor[]>([]));
+    return this.get<McpServerDescriptor[]>('/mcp/servers').pipe(
+      this.unavailable<McpServerDescriptor[]>([]),
+    );
   }
   mcpVerify() {
     return this.post<InstallationReceipt>('/mcp/verify', { confirm: 'verify' });
@@ -217,7 +225,12 @@ export class PortalApi {
   }
   metrics() {
     return this.get<MetricsReport>('/metrics').pipe(
-      this.unavailable<MetricsReport>({ generated_at: '', counters: {}, events: [], truncated: false }),
+      this.unavailable<MetricsReport>({
+        generated_at: '',
+        counters: {},
+        events: [],
+        truncated: false,
+      }),
     );
   }
   /** forge/PortalEvent/1 window — read-only over the recorded buffer.
@@ -239,8 +252,11 @@ export class PortalApi {
     return this.get<VersionInfo>('/versions').pipe(
       this.unavailable<VersionInfo>({
         installed: { version: null, origin: null, channel: null },
-        available: { version: null, source: 'unavailable' }, compat: 'unverified',
-        changelog: null, history: [], rollback: { supported: false },
+        available: { version: null, source: 'unavailable' },
+        compat: 'unverified',
+        changelog: null,
+        history: [],
+        rollback: { supported: false },
       }),
     );
   }

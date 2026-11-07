@@ -321,7 +321,8 @@ export const PT_BR: Record<string, string> = {
   'tasks.title': 'Tarefas',
   'tasks.subtitle': 'Diga o que você quer fazer — o portal monta o plano na Forja real.',
   'tasks.newInvestigation': 'Nova investigação',
-  'tasks.newInvestigation.hint': 'Descreva o problema ou objetivo. O Forge proporá um plano de especialistas para sua revisão.',
+  'tasks.newInvestigation.hint':
+    'Descreva o problema ou objetivo. O Forge proporá um plano de especialistas para sua revisão.',
   'tasks.intent.label': 'O que você quer fazer?',
   'tasks.intent.placeholder': 'Ex.: analisar os scripts PySpark deste projeto',
   'tasks.intent.run': 'Planejar',

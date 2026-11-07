@@ -283,10 +283,12 @@ export class PfApi {
     title?: string,
     extractor: 'stdlib' | 'defuddle' = 'stdlib',
   ) {
-    return this.post<PfUrlImport>(
-      `/products/${encodeURIComponent(pid)}/documents/from-url`,
-      { confirm: 'import', url, extractor, ...(title ? { title } : {}) },
-    );
+    return this.post<PfUrlImport>(`/products/${encodeURIComponent(pid)}/documents/from-url`, {
+      confirm: 'import',
+      url,
+      extractor,
+      ...(title ? { title } : {}),
+    });
   }
 
   // -- knowledge ------------------------------------------------------------

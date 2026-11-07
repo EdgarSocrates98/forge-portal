@@ -90,7 +90,7 @@ interface PendingPlan {
         <div class="search-field intent-field">
           <ui-icon name="terminal" [size]="15" />
           <input
-              #intentInput
+            #intentInput
             id="intent"
             class="input"
             type="text"

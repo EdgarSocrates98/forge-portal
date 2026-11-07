@@ -203,7 +203,10 @@ export interface PfDocument {
 export interface PfDocumentDetail {
   schema?: string;
   document: PfDocument;
-  content: { chunks: { id: string; document_id: string; seq: number; text: string }[]; chunk_count: number };
+  content: {
+    chunks: { id: string; document_id: string; seq: number; text: string }[];
+    chunk_count: number;
+  };
   source?: string;
   versions: { state: string; items: PfDocument[] };
   relations?: unknown[];
