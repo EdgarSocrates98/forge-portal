@@ -21,6 +21,7 @@ import {
   PfDashboardRender,
   PfDataSource,
   PfDecision,
+  PfDocumentDetail,
   PfDelegate,
   PfDelegateCallResult,
   PfDocument,
@@ -286,6 +287,11 @@ export class PfApi {
 
   documents(pid: string) {
     return this.get<PfList<PfDocument>>(`/products/${encodeURIComponent(pid)}/documents`);
+  }
+  documentDetail(pid: string, did: string) {
+    return this.get<PfDocumentDetail>(
+      `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}`,
+    );
   }
   importDocument(pid: string, input: { title: string; content: string }) {
     return this.post<PfDocument>(`/products/${encodeURIComponent(pid)}/documents`, input);

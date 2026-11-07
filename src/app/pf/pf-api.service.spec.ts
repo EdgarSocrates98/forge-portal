@@ -115,4 +115,14 @@ describe('PfApi', () => {
     req.flush(envelope({ id: 'doc-1', title: 'Docs' }));
     expect((await imported).id).toBe('doc-1');
   });
+
+  it('loads a product-scoped document explorer payload', async () => {
+    const p = firstValueFrom(api.documentDetail('p 1', 'doc/1'));
+    http.expectOne(`${BASE}/products/p%201/documents/doc%2F1`).flush(envelope({
+      document: { id: 'doc/1', title: 'Docs' },
+      content: { chunks: [], chunk_count: 0 },
+      versions: { state: 'current_only', items: [] },
+    }));
+    expect((await p).document.title).toBe('Docs');
+  });
 });

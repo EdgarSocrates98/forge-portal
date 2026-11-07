@@ -1,4 +1,5 @@
 import { TPipe } from '../../../core/i18n/i18n.pipe';
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,7 @@ import { PfApi } from '../../pf-api.service';
 import { ApiError } from '../../../core/api/api.error';
 import {
   PfDocument,
+  PfDocumentDetail,
   PfGraph,
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
@@ -40,7 +42,7 @@ import { ToastService } from '../../../shared/toast';
   selector: 'pf-knowledge-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton, TPipe],
+  imports: [EmptyState, ErrorState, StateBadge, UiSkeleton, TPipe, JsonPipe],
   template: `
     @if (error(); as e) {
       <ui-error [error]="e" (retry)="load()" />
@@ -392,6 +394,10 @@ import { ToastService } from '../../../shared/toast';
                   <td>
                     <strong>{{ d.title }}</strong>
                     <code class="muted small"> {{ d.id }}</code>
+                    <button class="btn btn--small" type="button" (click)="openDocument(d.id)"
+                      [disabled]="documentBusy()" [attr.aria-label]="'Open document ' + d.title">
+                      Explore
+                    </button>
                   </td>
                   <td>
                     <ui-state-badge
@@ -409,6 +415,38 @@ import { ToastService } from '../../../shared/toast';
           <ui-empty icon="knowledge" title="No documents imported" />
         }
       </section>
+
+      @if (selectedDocument(); as detail) {
+        <section class="card document-explorer" aria-labelledby="document-explorer-title">
+          <div class="capture__head">
+            <div>
+              <h2 id="document-explorer-title">Document explorer</h2>
+              <p class="muted small">{{ detail.document.title }} · {{ detail.document.status ?? 'unknown' }}</p>
+            </div>
+            <button class="btn" type="button" (click)="selectedDocument.set(null)">Close</button>
+          </div>
+          <dl class="document-explorer__meta">
+            <div><dt>Source</dt><dd><code>{{ detail.source ?? 'unreported' }}</code></dd></div>
+            <div><dt>Hash</dt><dd><code>{{ detail.document.content_hash ?? 'unreported' }}</code></dd></div>
+            <div><dt>Chunks</dt><dd>{{ detail.content.chunk_count }}</dd></div>
+            <div><dt>Version state</dt><dd>{{ detail.versions.state }}</dd></div>
+          </dl>
+          @if (detail.document.metadata; as metadata) {
+            <p class="muted small">Provenance metadata is available to the authorized product scope.</p>
+            <pre class="document-explorer__metadata">{{ metadata | json }}</pre>
+          }
+          <h3>Indexed content</h3>
+          <div class="document-explorer__chunks">
+            @for (chunk of detail.content.chunks; track chunk.id) {
+              <article>
+                <span class="muted small">Chunk {{ chunk.seq + 1 }}</span>
+                <pre>{{ chunk.text }}</pre>
+              </article>
+            }
+          </div>
+          <p class="muted small">Versions: {{ detail.versions.items.length }} · relations: {{ detail.relations?.length ?? 0 }}</p>
+        </section>
+      }
 
       <section class="card">
         <h2>{{ 'pf.knowledge.knowledgeSources' | t }}</h2>
@@ -613,6 +651,49 @@ import { ToastService } from '../../../shared/toast';
       gap: var(--space-2);
       font-size: var(--font-sm);
     }
+    .btn--small {
+      margin-left: var(--space-2);
+      padding: 2px 7px;
+      font-size: var(--font-xs);
+    }
+    .document-explorer {
+      display: grid;
+      gap: var(--space-3);
+    }
+    .document-explorer__meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      gap: var(--space-2);
+      margin: 0;
+    }
+    .document-explorer__meta div {
+      padding: var(--space-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .document-explorer__meta dt {
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+    }
+    .document-explorer__meta dd {
+      margin: var(--space-1) 0 0;
+      overflow-wrap: anywhere;
+    }
+    .document-explorer__metadata,
+    .document-explorer__chunks pre {
+      max-height: 16rem;
+      overflow: auto;
+      margin: 0;
+      padding: var(--space-3);
+      background: var(--bg-hover);
+      border-radius: var(--radius-sm);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .document-explorer__chunks {
+      display: grid;
+      gap: var(--space-2);
+    }
   `,
 })
 export class PfKnowledgeTab implements OnInit {
@@ -644,6 +725,8 @@ export class PfKnowledgeTab implements OnInit {
   readonly captureBusy = signal(false);
   readonly captureMode = signal<'workspace' | 'url'>('workspace');
   readonly captureUrl = signal('');
+  readonly selectedDocument = signal<PfDocumentDetail | null>(null);
+  readonly documentBusy = signal(false);
 
   readonly markdownSources = computed(() =>
     (this.workspaceDiscovery()?.documents ?? []).filter(
@@ -763,6 +846,19 @@ export class PfKnowledgeTab implements OnInit {
     this.capturePermission.set(false);
     this.capturePreview.set(null);
     this.captureReceipt.set(null);
+  }
+
+  async openDocument(did: string): Promise<void> {
+    if (this.documentBusy()) return;
+    this.documentBusy.set(true);
+    this.error.set(null);
+    try {
+      this.selectedDocument.set(await firstValueFrom(this.api.documentDetail(this.pid(), did)));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.documentBusy.set(false);
+    }
   }
 
   synthBadge(s: string): string {
