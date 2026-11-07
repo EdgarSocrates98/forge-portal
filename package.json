@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:cli": "node --test tools/portal-cli.test.mjs"
+  },
+  "bin": {
+    "forge-portal": "tools/portal-cli.mjs"
   },
   "private": true,
   "packageManager": "npm@12.0.2",
