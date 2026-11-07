@@ -15,7 +15,7 @@ import { I18nService } from '../i18n/i18n.service';
 import { PortalStore } from '../portal/portal.store';
 import { ThemeStore } from '../theme/theme.store';
 import { PfApi } from '../../pf/pf-api.service';
-import { PfDocumentSearchHit } from '../../pf/pf.models';
+import { PfKnowledgeSearchHit } from '../../pf/pf.models';
 import {
   SEARCH_DEBOUNCE_MS,
   SEARCH_KIND_ORDER,
@@ -60,8 +60,8 @@ export type { SearchEntry, SearchKind, SearchResult } from './search.data';
  *    an operation; tasks with `refusal` or `receipt.status != 'ok'`
  *    additionally index as known errors.
  *  - docs: `api.docsSearch(q)` per query plus Product Forge's bounded,
- *    product-scoped document search when the active route is a product —
- *    never pre-fetched.
+ *    product-scoped knowledge search (documents, sources and graph
+ *    projections) when the active route is a product — never pre-fetched.
  *
  * Failure of one source never blocks the others: the failed kind is
  * flagged in `unverified()` and the rest of the results still render.
@@ -258,8 +258,8 @@ export class SearchService {
       });
     const productId = this.activeProductId();
     const product = this.pf && productId
-      ? firstValueFrom(this.pf.documentSearch(productId, q))
-          .then((response) => this.productDocEntries(productId, response.items))
+      ? firstValueFrom(this.pf.knowledgeSearch(productId, q))
+          .then((response) => this.productKnowledgeEntries(productId, response.items))
       : Promise.resolve([] as SearchEntry[]);
     const results = await Promise.allSettled([portal, product]);
     const failed = results.some((item) => item.status === 'rejected');
@@ -457,15 +457,25 @@ export class SearchService {
     });
   }
 
-  private productDocEntries(productId: string, hits: PfDocumentSearchHit[]): SearchEntry[] {
-    const unique = new Map<string, PfDocumentSearchHit>();
-    for (const hit of hits) unique.set(hit.document_id, hit);
+  private productKnowledgeEntries(productId: string, hits: PfKnowledgeSearchHit[]): SearchEntry[] {
+    const unique = new Map<string, PfKnowledgeSearchHit>();
+    for (const hit of hits) {
+      const key = hit.kind === 'document'
+        ? `document:${hit.document_id ?? hit.id}`
+        : `${hit.kind ?? 'document'}:${hit.id}`;
+      unique.set(key, hit);
+    }
     return [...unique.values()].map((hit) =>
       makeSearchEntry({
-        id: `pf-doc:${productId}:${hit.document_id}`,
+        id: `pf-${hit.kind ?? 'document'}:${productId}:${hit.id}`,
         kind: 'doc',
-        label: hit.title || hit.document_id,
-        sublabel: ['Product Forge', hit.source, hit.version ? `v${hit.version}` : undefined]
+        label: hit.title || hit.id,
+        sublabel: [
+          'Product Forge',
+          hit.kind && hit.kind !== 'document' ? hit.kind : undefined,
+          hit.source,
+          hit.version ? `v${hit.version}` : undefined,
+        ]
           .filter(Boolean)
           .join(' · '),
         icon: 'knowledge',
