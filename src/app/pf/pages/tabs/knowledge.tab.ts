@@ -17,6 +17,10 @@ import {
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfWorkspaceDiscovery,
+  PfWorkspaceDocument,
+  PfWorkspaceImport,
+  PfWorkspacePreview,
 } from '../../pf.models';
 import { EmptyState } from '../../../shared/empty-state';
 import { ErrorState } from '../../../shared/error-state';
@@ -74,6 +78,134 @@ import { ToastService } from '../../../shared/toast';
           }
         </div>
       </div>
+
+      <section class="card capture" data-section="source-capture">
+        <div class="capture__head">
+          <div>
+            <h2>Capture a workspace source</h2>
+            <p class="muted small">
+              Review the file and permission before importing it into this product. URLs remain
+              unavailable until a server-side safe fetcher is configured.
+            </p>
+          </div>
+          <span class="capture__step" aria-live="polite">Step {{ captureStep() }} of 4</span>
+        </div>
+
+        <div class="capture__steps" aria-label="Source capture steps">
+          <span [class.active]="captureStep() === 1">1. Select</span>
+          <span [class.active]="captureStep() === 2">2. Permission</span>
+          <span [class.active]="captureStep() === 3">3. Preview</span>
+          <span [class.active]="captureStep() === 4">4. Confirm</span>
+        </div>
+
+        @if (!workspaceDiscovery()) {
+          <button
+            class="btn btn--primary"
+            type="button"
+            [disabled]="captureBusy()"
+            (click)="discoverWorkspace()"
+          >
+            {{ captureBusy() ? 'Discovering…' : 'Select workspace source' }}
+          </button>
+        } @else {
+          <div class="capture__source-row">
+            <label class="field">
+              <span>Source document</span>
+              <select
+                class="input"
+                [value]="captureSource()?.path ?? ''"
+                (change)="selectCaptureSource($any($event.target).value)"
+              >
+                <option value="">Choose a discovered Markdown document</option>
+                @for (doc of markdownSources(); track doc.path) {
+                  <option [value]="doc.path">{{ doc.title }} · {{ doc.relative_path }}</option>
+                }
+              </select>
+            </label>
+            <button class="btn" type="button" [disabled]="captureBusy()" (click)="resetCapture()">
+              Start over
+            </button>
+          </div>
+
+          @if (captureSource(); as source) {
+            <div class="capture__review">
+              <div class="capture__meta">
+                <strong>{{ source.title }}</strong>
+                <code>{{ source.relative_path }}</code>
+                <span class="muted small">{{ source.size }} bytes · {{ source.repository }}</span>
+              </div>
+              <label class="check">
+                <input
+                  type="checkbox"
+                  [checked]="capturePermission()"
+                  (change)="
+                    capturePermission.set($any($event.target).checked); capturePreview.set(null)
+                  "
+                />
+                I authorize reading this selected workspace document for this import.
+              </label>
+              <button
+                class="btn"
+                type="button"
+                [disabled]="captureBusy() || !capturePermission()"
+                (click)="capture()"
+              >
+                {{ captureBusy() ? 'Capturing…' : 'Capture and preview' }}
+              </button>
+            </div>
+          }
+
+          @if (capturePreview(); as preview) {
+            <div class="capture__preview" data-state="preview">
+              <div class="capture__meta">
+                <strong>Preview · {{ preview.title }}</strong>
+                <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
+              </div>
+              <pre>{{ preview.preview }}</pre>
+              <label class="field">
+                <span>Destination</span>
+                <input
+                  class="input"
+                  value="Current product"
+                  readonly
+                  aria-label="Destination product"
+                />
+              </label>
+              <div class="fg-row">
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="confirmCapture()"
+                >
+                  {{ captureBusy() ? 'Importing…' : 'Confirm and import' }}
+                </button>
+                <button
+                  class="btn"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)"
+                >
+                  Edit selection
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (captureReceipt(); as receipt) {
+            <div class="capture__receipt" role="status" data-state="receipt">
+              <strong>Import receipt</strong>
+              <span
+                >Imported <code>{{ receipt.title }}</code> into the current product.</span
+              >
+              <code>{{ receipt.id }}</code>
+              @if (receipt.source_path) {
+                <span class="muted small">Source: {{ receipt.source_path }}</span>
+              }
+            </div>
+          }
+        }
+      </section>
 
       <div class="cols">
         <section class="card">
@@ -331,6 +463,87 @@ import { ToastService } from '../../../shared/toast';
     .small {
       font-size: var(--font-xs);
     }
+    .capture {
+      display: grid;
+      gap: var(--space-3);
+    }
+    .capture__head,
+    .capture__source-row,
+    .capture__review,
+    .capture__meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+    .capture__head {
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .capture__head h2 {
+      margin-bottom: var(--space-1);
+    }
+    .capture__step {
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+      white-space: nowrap;
+    }
+    .capture__steps {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      color: var(--fg-muted);
+      font-size: var(--font-xs);
+    }
+    .capture__steps span {
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+    .capture__steps span.active {
+      border-color: var(--accent);
+      color: var(--fg);
+    }
+    .capture__source-row .field {
+      min-width: min(34rem, 100%);
+      flex: 1;
+    }
+    .capture__review,
+    .capture__preview,
+    .capture__receipt {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      display: grid;
+      gap: var(--space-3);
+    }
+    .capture__meta {
+      align-items: baseline;
+    }
+    .capture__meta code {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .capture__preview pre {
+      max-height: 14rem;
+      overflow: auto;
+      margin: 0;
+      padding: var(--space-3);
+      background: var(--bg-hover);
+      border-radius: var(--radius-sm);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .capture__receipt {
+      border-color: var(--ok);
+    }
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      font-size: var(--font-sm);
+    }
   `,
 })
 export class PfKnowledgeTab implements OnInit {
@@ -353,6 +566,19 @@ export class PfKnowledgeTab implements OnInit {
   readonly docTitle = signal('');
   readonly docContent = signal('');
   readonly question = signal('');
+
+  readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
+  readonly captureSource = signal<PfWorkspaceDocument | null>(null);
+  readonly capturePermission = signal(false);
+  readonly capturePreview = signal<PfWorkspacePreview | null>(null);
+  readonly captureReceipt = signal<PfWorkspaceImport | null>(null);
+  readonly captureBusy = signal(false);
+
+  readonly markdownSources = computed(() =>
+    (this.workspaceDiscovery()?.documents ?? []).filter(
+      (doc) => doc.extension?.toLowerCase() === '.md' && doc.readable !== false,
+    ),
+  );
 
   ngOnInit(): void {
     void this.load();
@@ -377,6 +603,77 @@ export class PfKnowledgeTab implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  captureStep(): number {
+    if (this.captureReceipt()) return 4;
+    if (this.capturePreview()) return 4;
+    if (this.capturePermission() && this.captureSource()) return 3;
+    if (this.captureSource()) return 2;
+    return 1;
+  }
+
+  async discoverWorkspace(): Promise<void> {
+    if (this.captureBusy()) return;
+    this.captureBusy.set(true);
+    this.error.set(null);
+    try {
+      this.workspaceDiscovery.set(await firstValueFrom(this.api.workspaceDiscovery()));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.captureBusy.set(false);
+    }
+  }
+
+  selectCaptureSource(path: string): void {
+    const source = this.markdownSources().find((doc) => doc.path === path) ?? null;
+    this.captureSource.set(source);
+    this.capturePermission.set(false);
+    this.capturePreview.set(null);
+    this.captureReceipt.set(null);
+  }
+
+  async capture(): Promise<void> {
+    const source = this.captureSource();
+    if (!source || !this.capturePermission() || this.captureBusy()) return;
+    this.captureBusy.set(true);
+    this.error.set(null);
+    try {
+      this.capturePreview.set(await firstValueFrom(this.api.workspacePreview(source.path)));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.captureBusy.set(false);
+    }
+  }
+
+  async confirmCapture(): Promise<void> {
+    const source = this.captureSource();
+    const preview = this.capturePreview();
+    if (!source || !preview || !this.capturePermission() || this.captureBusy()) return;
+    this.captureBusy.set(true);
+    this.error.set(null);
+    try {
+      const receipt = await firstValueFrom(
+        this.api.importWorkspaceDocument(this.pid(), source.path, preview.title),
+      );
+      this.captureReceipt.set(receipt);
+      this.toast.show(`Document "${receipt.title}" imported`, 'success');
+      await this.load();
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.captureBusy.set(false);
+    }
+  }
+
+  resetCapture(): void {
+    this.workspaceDiscovery.set(null);
+    this.captureSource.set(null);
+    this.capturePermission.set(false);
+    this.capturePreview.set(null);
+    this.captureReceipt.set(null);
   }
 
   synthBadge(s: string): string {
