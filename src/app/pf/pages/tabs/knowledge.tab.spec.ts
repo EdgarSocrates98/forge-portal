@@ -76,4 +76,38 @@ describe('PfKnowledgeTab — source capture', () => {
     expect(api.importWorkspaceDocument).toHaveBeenCalledWith('p1', 'C:/ws/README.md', 'README');
     expect(c.captureReceipt()?.id).toBe('doc-1');
   });
+
+  it('supports a public URL with the same permission, preview and receipt gate', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      urlPreview: vi.fn(() => of({
+        url: 'https://example.com/docs', title: 'Docs', preview: '# Docs', size: 7, state: 'ready_for_import',
+      })),
+      importUrlDocument: vi.fn(() => of({
+        id: 'doc-url-1', title: 'Docs', product_id: 'p1', source_url: 'https://example.com/docs', state: 'imported',
+      })),
+    };
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+    c.selectCaptureMode('url');
+    c.captureUrl.set('https://example.com/docs');
+    await c.capture();
+    expect(api.urlPreview).not.toHaveBeenCalled();
+    c.capturePermission.set(true);
+    await c.capture();
+    expect(api.urlPreview).toHaveBeenCalledWith('p1', 'https://example.com/docs');
+    await c.confirmCapture();
+    expect(api.importUrlDocument).toHaveBeenCalledWith('p1', 'https://example.com/docs', 'Docs');
+    expect(c.captureReceipt()?.id).toBe('doc-url-1');
+  });
 });

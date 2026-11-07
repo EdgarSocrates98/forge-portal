@@ -21,6 +21,8 @@ import {
   PfWorkspaceDocument,
   PfWorkspaceImport,
   PfWorkspacePreview,
+  PfUrlImport,
+  PfUrlPreview,
 } from '../../pf.models';
 import { EmptyState } from '../../../shared/empty-state';
 import { ErrorState } from '../../../shared/error-state';
@@ -82,10 +84,10 @@ import { ToastService } from '../../../shared/toast';
       <section class="card capture" data-section="source-capture">
         <div class="capture__head">
           <div>
-            <h2>Capture a workspace source</h2>
+            <h2>Capture a knowledge source</h2>
             <p class="muted small">
-              Review the file and permission before importing it into this product. URLs remain
-              unavailable until a server-side safe fetcher is configured.
+              Choose a local workspace document or a public URL. Review the content and permission
+              before importing it into this product.
             </p>
           </div>
           <span class="capture__step" aria-live="polite">Step {{ captureStep() }} of 4</span>
@@ -98,7 +100,14 @@ import { ToastService } from '../../../shared/toast';
           <span [class.active]="captureStep() === 4">4. Confirm</span>
         </div>
 
-        @if (!workspaceDiscovery()) {
+        <div class="capture__modes" role="group" aria-label="Capture source type">
+          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'workspace'"
+            (click)="selectCaptureMode('workspace')">Workspace</button>
+          <button class="btn" type="button" [class.btn--primary]="captureMode() === 'url'"
+            (click)="selectCaptureMode('url')">Public URL</button>
+        </div>
+
+        @if (captureMode() === 'workspace' && !workspaceDiscovery()) {
           <button
             class="btn btn--primary"
             type="button"
@@ -107,7 +116,7 @@ import { ToastService } from '../../../shared/toast';
           >
             {{ captureBusy() ? 'Discovering…' : 'Select workspace source' }}
           </button>
-        } @else {
+        } @else if (captureMode() === 'workspace') {
           <div class="capture__source-row">
             <label class="field">
               <span>Source document</span>
@@ -199,9 +208,64 @@ import { ToastService } from '../../../shared/toast';
                 >Imported <code>{{ receipt.title }}</code> into the current product.</span
               >
               <code>{{ receipt.id }}</code>
-              @if (receipt.source_path) {
-                <span class="muted small">Source: {{ receipt.source_path }}</span>
+              @if ($any(receipt).source_path) {
+                <span class="muted small">Source: {{ $any(receipt).source_path }}</span>
               }
+            </div>
+          }
+        }
+
+        @if (captureMode() === 'url') {
+          <div class="capture__review">
+            <label class="field">
+              <span>Public document URL</span>
+              <input class="input" type="url" inputmode="url" autocomplete="url"
+                [value]="captureUrl()"
+                (input)="captureUrl.set($any($event.target).value); capturePreview.set(null)"
+                placeholder="https://docs.example.com/runbook" aria-describedby="url-capture-help" />
+            </label>
+            <p id="url-capture-help" class="muted small">
+              Only public HTTP(S) pages are fetched. Credentials, private networks, redirects,
+              scripts and oversized or unsupported responses are blocked by the server.
+            </p>
+            <label class="check">
+              <input type="checkbox" [checked]="capturePermission()"
+                (change)="capturePermission.set($any($event.target).checked); capturePreview.set(null)" />
+              I authorize fetching and importing this selected public URL.
+            </label>
+            <button class="btn" type="button"
+              [disabled]="captureBusy() || !capturePermission() || !captureUrl().trim()"
+              (click)="capture()">
+              {{ captureBusy() ? 'Fetching…' : 'Fetch and preview' }}
+            </button>
+          </div>
+          @if (capturePreview(); as preview) {
+            <div class="capture__preview" data-state="preview">
+              <div class="capture__meta">
+                <strong>Preview · {{ preview.title }}</strong>
+                <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
+              </div>
+              <pre>{{ preview.preview }}</pre>
+              <label class="field">
+                <span>Destination</span>
+                <input class="input" value="Current product" readonly aria-label="Destination product" />
+              </label>
+              <div class="fg-row">
+                <button class="btn btn--primary" type="button" [disabled]="captureBusy()"
+                  (click)="confirmCapture()">
+                  {{ captureBusy() ? 'Importing…' : 'Confirm and import' }}
+                </button>
+                <button class="btn" type="button" [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)">Edit URL</button>
+              </div>
+            </div>
+          }
+          @if (captureReceipt(); as receipt) {
+            <div class="capture__receipt" role="status" data-state="receipt">
+              <strong>Import receipt</strong>
+              <span>Imported <code>{{ receipt.title }}</code> into the current product.</span>
+              <code>{{ receipt.id }}</code>
+              @if ($any(receipt).source_url) { <span class="muted small">Source: {{ $any(receipt).source_url }}</span> }
             </div>
           }
         }
@@ -508,6 +572,11 @@ import { ToastService } from '../../../shared/toast';
       min-width: min(34rem, 100%);
       flex: 1;
     }
+    .capture__modes {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
     .capture__review,
     .capture__preview,
     .capture__receipt {
@@ -570,9 +639,11 @@ export class PfKnowledgeTab implements OnInit {
   readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
   readonly captureSource = signal<PfWorkspaceDocument | null>(null);
   readonly capturePermission = signal(false);
-  readonly capturePreview = signal<PfWorkspacePreview | null>(null);
-  readonly captureReceipt = signal<PfWorkspaceImport | null>(null);
+  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | null>(null);
+  readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | null>(null);
   readonly captureBusy = signal(false);
+  readonly captureMode = signal<'workspace' | 'url'>('workspace');
+  readonly captureUrl = signal('');
 
   readonly markdownSources = computed(() =>
     (this.workspaceDiscovery()?.documents ?? []).filter(
@@ -608,9 +679,18 @@ export class PfKnowledgeTab implements OnInit {
   captureStep(): number {
     if (this.captureReceipt()) return 4;
     if (this.capturePreview()) return 4;
-    if (this.capturePermission() && this.captureSource()) return 3;
-    if (this.captureSource()) return 2;
+    if (this.capturePermission() && (this.captureSource() || this.captureUrl().trim())) return 3;
+    if (this.captureSource() || this.captureUrl().trim()) return 2;
     return 1;
+  }
+
+  selectCaptureMode(mode: 'workspace' | 'url'): void {
+    this.captureMode.set(mode);
+    this.captureSource.set(null);
+    this.captureUrl.set('');
+    this.capturePermission.set(false);
+    this.capturePreview.set(null);
+    this.captureReceipt.set(null);
   }
 
   async discoverWorkspace(): Promise<void> {
@@ -636,11 +716,17 @@ export class PfKnowledgeTab implements OnInit {
 
   async capture(): Promise<void> {
     const source = this.captureSource();
-    if (!source || !this.capturePermission() || this.captureBusy()) return;
+    const url = this.captureUrl().trim();
+    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
+      || !this.capturePermission() || this.captureBusy()) return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
-      this.capturePreview.set(await firstValueFrom(this.api.workspacePreview(source.path)));
+      this.capturePreview.set(
+        this.captureMode() === 'url'
+          ? await firstValueFrom(this.api.urlPreview(this.pid(), url))
+          : await firstValueFrom(this.api.workspacePreview(source!.path)),
+      );
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -651,13 +737,15 @@ export class PfKnowledgeTab implements OnInit {
   async confirmCapture(): Promise<void> {
     const source = this.captureSource();
     const preview = this.capturePreview();
-    if (!source || !preview || !this.capturePermission() || this.captureBusy()) return;
+    const url = this.captureUrl().trim();
+    if ((this.captureMode() === 'workspace' && !source) || (this.captureMode() === 'url' && !url)
+      || !preview || !this.capturePermission() || this.captureBusy()) return;
     this.captureBusy.set(true);
     this.error.set(null);
     try {
-      const receipt = await firstValueFrom(
-        this.api.importWorkspaceDocument(this.pid(), source.path, preview.title),
-      );
+      const receipt = this.captureMode() === 'url'
+        ? await firstValueFrom(this.api.importUrlDocument(this.pid(), url, preview.title))
+        : await firstValueFrom(this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title));
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
       await this.load();
@@ -671,6 +759,7 @@ export class PfKnowledgeTab implements OnInit {
   resetCapture(): void {
     this.workspaceDiscovery.set(null);
     this.captureSource.set(null);
+    this.captureUrl.set('');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
     this.captureReceipt.set(null);
