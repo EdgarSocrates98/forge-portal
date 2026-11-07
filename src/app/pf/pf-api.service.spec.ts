@@ -102,4 +102,17 @@ describe('PfApi', () => {
     http.expectOne(`${BASE}/health`).error(new ProgressEvent('error'), { status: 0 });
     expect((await rejected(p)).transport).toBe(true);
   });
+
+  it('encodes URL preview and import routes under the selected product', async () => {
+    const preview = firstValueFrom(api.urlPreview('p 1', 'https://example.com/a?x=1'));
+    http.expectOne(
+      `${BASE}/products/p%201/documents/url/preview?url=https%3A%2F%2Fexample.com%2Fa%3Fx%3D1`,
+    ).flush(envelope({ title: 'Docs', preview: 'body', size: 4, url: 'https://example.com/a?x=1', state: 'ready_for_import' }));
+    expect((await preview).title).toBe('Docs');
+    const imported = firstValueFrom(api.importUrlDocument('p 1', 'https://example.com/a', 'Docs'));
+    const req = http.expectOne(`${BASE}/products/p%201/documents/from-url`);
+    expect(req.request.body).toEqual({ confirm: 'import', url: 'https://example.com/a', title: 'Docs' });
+    req.flush(envelope({ id: 'doc-1', title: 'Docs' }));
+    expect((await imported).id).toBe('doc-1');
+  });
 });

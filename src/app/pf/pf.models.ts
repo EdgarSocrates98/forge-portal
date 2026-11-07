@@ -106,6 +106,29 @@ export interface PfWorkspaceImport extends PfDocument {
   source_kind?: string;
 }
 
+/** productforge/UrlDocument/v1 — bounded remote capture preview. */
+export interface PfUrlPreview {
+  schema?: string;
+  url: string;
+  title: string;
+  preview: string;
+  content_hash?: string;
+  size: number;
+  content_type?: string;
+  extractor?: string;
+  state: string;
+  warnings?: string[];
+  metrics?: Record<string, number>;
+  provenance?: Record<string, unknown>;
+}
+
+export interface PfUrlImport extends PfDocument {
+  state?: string;
+  source_url?: string;
+  source_kind?: string;
+  capture?: Omit<PfUrlPreview, 'preview'>;
+}
+
 export interface PfProduct {
   id: string;
   workspace_id: string;

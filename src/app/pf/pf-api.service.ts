@@ -53,6 +53,8 @@ import {
   PfWorkspaceDiscovery,
   PfWorkspaceImport,
   PfWorkspacePreview,
+  PfUrlImport,
+  PfUrlPreview,
 } from './pf.models';
 
 export const PF_BASE_URL_KEY = 'pf.baseUrl';
@@ -266,6 +268,17 @@ export class PfApi {
     return this.post<PfWorkspaceImport>(
       `/products/${encodeURIComponent(pid)}/documents/from-workspace`,
       { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
+  }
+  urlPreview(pid: string, url: string) {
+    return this.get<PfUrlPreview>(
+      `/products/${encodeURIComponent(pid)}/documents/url/preview?url=${encodeURIComponent(url)}`,
+    );
+  }
+  importUrlDocument(pid: string, url: string, title?: string) {
+    return this.post<PfUrlImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-url`,
+      { confirm: 'import', url, ...(title ? { title } : {}) },
     );
   }
 
