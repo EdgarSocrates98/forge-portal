@@ -197,6 +197,16 @@ export interface PfDocument {
   chunk_count?: number;
   content_hash?: string;
   created_at?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface PfDocumentDetail {
+  schema?: string;
+  document: PfDocument;
+  content: { chunks: { id: string; document_id: string; seq: number; text: string }[]; chunk_count: number };
+  source?: string;
+  versions: { state: string; items: PfDocument[] };
+  relations?: unknown[];
 }
 
 export interface PfEntity {
