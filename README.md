@@ -31,7 +31,17 @@ npm install
 npm start          # dev server Angular (ng serve) — o backend Python vem da Forja
 npm run build      # dist/forge-portal-app — artefato de release (vendorable)
 npm test           # testes unitários (vitest)
+npm run test:cli   # contrato CLI/TUI/Wizard sem depender de um TTY
+node tools/portal-cli.mjs   # home TUI; wizard e status ficam no mesmo comando
 ```
+
+### CLI portátil
+
+O Portal também possui uma superfície terminal mínima e útil, sem dependências
+adicionais: `forge-portal` abre a home TUI em um terminal, `forge-portal wizard`
+guia host/porta com confirmação explícita, e `forge-portal status` produz o
+contrato local. Em pipes e CI, o mesmo fluxo degrada para JSON honesto; o
+servidor web só é iniciado pelo comando explícito de start.
 
 Gates de qualidade deste repo:
 
