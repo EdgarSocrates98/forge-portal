@@ -45,7 +45,7 @@ ROUTES = [
     "/mcp",
     "/skills",
     "/agents",
-    "/tasks",
+    "/tasks", "/api-operations",
     "/graph",
     "/observe",
     "/execution",

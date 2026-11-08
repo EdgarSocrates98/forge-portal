@@ -380,6 +380,14 @@ describe('DashboardPage', () => {
     const hrefs = [...(diag?.querySelectorAll('a[data-shortcut]') ?? [])].map((a) =>
       a.getAttribute('href'),
     );
-    expect(hrefs).toEqual(['/hosts', '/observe', '/config', '/versions', '/mcp', '/tasks']);
+    expect(hrefs).toEqual([
+      '/hosts',
+      '/observe',
+      '/config',
+      '/versions',
+      '/mcp',
+      '/tasks',
+      '/api-operations',
+    ]);
   });
 });

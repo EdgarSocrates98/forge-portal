@@ -1499,6 +1499,46 @@ details > summary::marker {
   margin-bottom: var(--space-2);
 }
 
+/* API Operations remains a dense two-pane workspace on desktop and a
+   touch-friendly stack on narrow screens. Kept global so the page component
+   stays under its per-component style budget. */
+@media (max-width: 800px) {
+  page-api-operations .workspace {
+    grid-template-columns: 1fr;
+  }
+  page-api-operations .service-panel {
+    position: static;
+  }
+  page-api-operations .service-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  page-api-operations .metrics {
+    grid-template-columns: 1fr;
+  }
+  page-api-operations .endpoint-row {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+  page-api-operations .endpoint-summary,
+  page-api-operations .endpoint-row > .muted {
+    grid-column: 2;
+  }
+}
+@media (max-width: 560px) {
+  page-api-operations .hero,
+  page-api-operations .service-header,
+  page-api-operations .next-action {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  page-api-operations .hero__signal {
+    justify-items: start;
+    text-align: left;
+  }
+  page-api-operations .service-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* busy row + spinner */
 .running {
   display: flex;

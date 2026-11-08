@@ -38,6 +38,10 @@ const STATE_KIND: Record<string, BadgeKind> = {
   MISSING: 'muted',
   INVALID: 'error',
   UNSET: 'muted',
+  AVAILABLE: 'ok',
+  LOADING: 'info',
+  EMPTY: 'muted',
+  UNAVAILABLE: 'unv',
   // generic
   ok: 'ok',
   warn: 'warn',
