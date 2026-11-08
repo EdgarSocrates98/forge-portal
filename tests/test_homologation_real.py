@@ -164,6 +164,8 @@ def test_report_shape_and_markdown() -> None:
     md = hom.matrix_markdown(report)
     assert "| Capability |" in md and spec.forge_id in md
     assert "VERIFIED" in md and "NOT_TESTED" in md
+    assert f"{report['generated_at']}Z" not in md
+    assert f"{report['generated_at']}." in md
 
 
 # ---------------------------------------------------------------------------
