@@ -1,8 +1,8 @@
 {
   "schema": "forge-portal/HomologationMatrix/v1",
-  "generated_at": "2026-10-18T01:59:05Z",
+  "generated_at": "2026-11-08T07:30:58Z",
   "ecosystem": {
-    "installations_dir": "/home/edgar/.forge/installations",
+    "installations_dir": "C:\\Users\\edgar\\.forge\\installations",
     "forges": 7,
     "present": 7,
     "booted": 7
@@ -11,11 +11,11 @@
     {
       "forge_id": "the-forge",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/the-forge",
-      "installed_venv": "/home/edgar/.forge/installs/the-forge",
-      "manifest": "/home/edgar/.forge/installations/the-forge.json",
+      "checkout": "E:\\projetos\\FORJAS\\the-forge",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\the-forge.json",
       "booted": true,
-      "url": "http://127.0.0.1:33311/?forge_session=yqVJNQTRsj8ZI0NWinWvT1Z7U9kleaW0",
+      "url": "http://127.0.0.1:53740/?forge_session=tu-9Pdz_F_eu1oLQibCxmY5F2a58S_4z",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -27,16 +27,16 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='the-forge' cli='theforge' version='0.5.0'",
+          "detail": "forge_id='the-forge' cli='theforge' version='0.7.4'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
         },
         "capabilities": {
           "status": "VERIFIED",
-          "detail": "9 declared",
+          "detail": "11 declared",
           "evidence": [
-            "GET /api/v1/capabilities → 200: agents=supported, docs=supported, federation=supported, graph=supported, hosts=supported, install=supported, mcp=supported, skills=supported, tasks=supported"
+            "GET /api/v1/capabilities → 200: agents=supported, delegations=supported, docs=supported, federation=supported, graph=supported, hosts=supported, install=supported, mcp=supported, skills=supported, specialists=supported, tasks=supported"
           ]
         },
         "health": {
@@ -48,11 +48,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest theforge 0.5.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest theforge 0.5.0; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/the-forge.json → forge/InstallationManifest/v1 theforge 0.5.0",
-            "/home/edgar/.forge/installs/the-forge/.venv/bin/python -c import theforge.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\the-forge.json → forge/InstallationManifest/v1 theforge 0.5.0",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -65,17 +65,17 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
           "status": "VERIFIED",
-          "detail": "skills: 33 entries",
+          "detail": "skills: 34 entries",
           "evidence": [
-            "GET /api/v1/skills → 200 [33 entries]"
+            "GET /api/v1/skills → 200 [34 entries]"
           ]
         },
         "agents": {
@@ -87,23 +87,23 @@
         },
         "mcp_servers": {
           "status": "VERIFIED",
-          "detail": "mcp_servers: 7 entries",
+          "detail": "mcp_servers: 12 entries",
           "evidence": [
-            "GET /api/v1/mcp/servers → 200 [7 entries]"
+            "GET /api/v1/mcp/servers → 200 [12 entries]"
           ]
         },
         "mcp_verify": {
           "status": "VERIFIED",
           "detail": "receipt status=FAIL",
           "evidence": [
-            "POST /api/v1/mcp/verify → 200 status=FAIL servers=7 detail=4/7 handshakes passed"
+            "POST /api/v1/mcp/verify → 200 status=FAIL servers=12 detail=1/12 handshakes passed"
           ]
         },
         "graphs": {
           "status": "VERIFIED",
-          "detail": "availability='available'",
+          "detail": "availability='no_graph'",
           "evidence": [
-            "GET /api/v1/graphs → 200 availability='available' views=1"
+            "GET /api/v1/graphs → 200 availability='no_graph' views=0"
           ]
         },
         "tasks": {
@@ -124,16 +124,16 @@
         },
         "federation": {
           "status": "VERIFIED",
-          "detail": "specialists=7 installed=7",
+          "detail": "specialists=12 installed=8",
           "evidence": [
-            "GET /api/v1/federation → 200 specialists=7 installed=7"
+            "GET /api/v1/federation → 200 specialists=12 installed=8"
           ]
         },
         "versions": {
           "status": "VERIFIED",
-          "detail": "compat='forge/EcosystemCompatibility/v1 · release 2026.10 · the-forge@0.5.0 → certified'",
+          "detail": "compat='forge/EcosystemCompatibility/v1 · release 2026.11 · the-forge@0.7.4 → certified'",
           "evidence": [
-            "GET /api/v1/versions → 200 compat='forge/EcosystemCompatibility/v1 · release 2026.10 · the-forge@0.5.0 → certified'"
+            "GET /api/v1/versions → 200 compat='forge/EcosystemCompatibility/v1 · release 2026.11 · the-forge@0.7.4 → certified'"
           ]
         },
         "lab": {
@@ -144,10 +144,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "47 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -184,11 +184,11 @@
     {
       "forge_id": "api-forge",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/api-forge",
-      "installed_venv": "/home/edgar/.forge/installs/api-forge",
-      "manifest": "/home/edgar/.forge/installations/api-forge.json",
+      "checkout": "E:\\projetos\\FORJAS\\api-forge",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\api-forge.json",
       "booted": true,
-      "url": "http://127.0.0.1:39161/?forge_session=ktA43hr9qqdQV6Epz8vgmwUmFekfZA1_",
+      "url": "http://127.0.0.1:53753/?forge_session=n6u1BouBo2Ao4yvXd9lmmEm7yJntSc6W",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -200,7 +200,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='api-forge' cli='apiforge' version='0.1.0'",
+          "detail": "forge_id='api-forge' cli='apiforge' version='0.0.0+local'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -221,11 +221,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest apiforge 0.1.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest 0.3.2; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/api-forge.json → forge/InstallationManifest/v1 apiforge 0.1.0",
-            "/home/edgar/.forge/installs/api-forge/.venv/bin/python -c import apiforge.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\api-forge.json → forge/InstallationManifest/v1 0.3.2",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -238,17 +238,17 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
           "status": "VERIFIED",
-          "detail": "skills: 14 entries",
+          "detail": "skills: 15 entries",
           "evidence": [
-            "GET /api/v1/skills → 200 [14 entries]"
+            "GET /api/v1/skills → 200 [15 entries]"
           ]
         },
         "agents": {
@@ -317,10 +317,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -357,11 +357,11 @@
     {
       "forge_id": "platform-forge",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/platform-forge",
-      "installed_venv": "/home/edgar/.forge/installs/platform-forge",
-      "manifest": "/home/edgar/.forge/installations/platform-forge.json",
+      "checkout": "E:\\projetos\\FORJAS\\platform-forge",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\platform-forge.json",
       "booted": true,
-      "url": "http://127.0.0.1:37683/?forge_session=jvjVNQj9yvp1ADVtTKEGSpbWVfbrnymx",
+      "url": "http://127.0.0.1:53715/?forge_session=4EolPeGumS5i13aHzAPtMu8_rWzBELnV",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -373,7 +373,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='platform-forge' cli='platformforge' version='0.1.0'",
+          "detail": "forge_id='platform-forge' cli='platformforge' version='0.3.2'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -394,11 +394,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest platformforge 0.1.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest platformforge 0.1.0; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/platform-forge.json → forge/InstallationManifest/v1 platformforge 0.1.0",
-            "/home/edgar/.forge/installs/platform-forge/.venv/bin/python -c import platformforge.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\platform-forge.json → forge/InstallationManifest/v1 platformforge 0.1.0",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -411,10 +411,10 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
@@ -490,10 +490,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -530,11 +530,11 @@
     {
       "forge_id": "spark-forge-aws",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/spark-forge-aws",
-      "installed_venv": "/home/edgar/.forge/installs/spark-forge-aws",
-      "manifest": "/home/edgar/.forge/installations/spark-forge-aws.json",
+      "checkout": "E:\\projetos\\FORJAS\\spark-forge-aws",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\spark-forge-aws.json",
       "booted": true,
-      "url": "http://127.0.0.1:38463/?forge_session=dd3vubVMi9mcWTP7cHz5f1BbOiw11xYF",
+      "url": "http://127.0.0.1:53714/?forge_session=B0kxPe-9wPXblSCWqn7WqE0dbD9Ymi8q",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -546,7 +546,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='spark-forge-aws' cli='sparkforge-aws' version='0.5.0'",
+          "detail": "forge_id='spark-forge-aws' cli='sparkforge-aws' version='0.7.4'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -567,11 +567,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest sparkforge-aws 0.5.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest 0.7.4; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/spark-forge-aws.json → forge/InstallationManifest/v1 sparkforge-aws 0.5.0",
-            "/home/edgar/.forge/installs/spark-forge-aws/.venv/bin/python -c import sparkforge_aws.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\spark-forge-aws.json → forge/InstallationManifest/v1 0.7.4",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -584,17 +584,17 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
           "status": "VERIFIED",
-          "detail": "skills: 61 entries",
+          "detail": "skills: 62 entries",
           "evidence": [
-            "GET /api/v1/skills → 200 [61 entries]"
+            "GET /api/v1/skills → 200 [62 entries]"
           ]
         },
         "agents": {
@@ -613,9 +613,9 @@
         },
         "mcp_verify": {
           "status": "VERIFIED",
-          "detail": "receipt status=PASS",
+          "detail": "receipt status=FAIL",
           "evidence": [
-            "POST /api/v1/mcp/verify → 200 status=PASS servers=? detail=146 tools"
+            "POST /api/v1/mcp/verify → 200 status=FAIL servers=? detail=no initialize response"
           ]
         },
         "graphs": {
@@ -663,10 +663,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -703,11 +703,11 @@
     {
       "forge_id": "spark-forge-azure",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/spark-forge-azure",
-      "installed_venv": "/home/edgar/.forge/installs/spark-forge-azure",
-      "manifest": "/home/edgar/.forge/installations/spark-forge-azure.json",
+      "checkout": "E:\\projetos\\FORJAS\\spark-forge-azure",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\spark-forge-azure.json",
       "booted": true,
-      "url": "http://127.0.0.1:35155/?forge_session=yLSBX9rSdvpxU7yNIIqygsYYDOOJE396",
+      "url": "http://127.0.0.1:53711/?forge_session=p6PXft77SH_xWBfidMzBrMLtasCmz848",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -719,7 +719,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='spark-forge-azure' cli='sparkforge-azure' version='0.1.0'",
+          "detail": "forge_id='spark-forge-azure' cli='sparkforge-azure' version='0.3.2'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -740,11 +740,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest sparkforge-azure 0.1.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest sparkforge-azure 0.1.0; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/spark-forge-azure.json → forge/InstallationManifest/v1 sparkforge-azure 0.1.0",
-            "/home/edgar/.forge/installs/spark-forge-azure/.venv/bin/python -c import sparkforge_azure.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\spark-forge-azure.json → forge/InstallationManifest/v1 sparkforge-azure 0.1.0",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -765,16 +765,16 @@
         },
         "skills": {
           "status": "VERIFIED",
-          "detail": "skills: 22 entries",
+          "detail": "skills: 24 entries",
           "evidence": [
-            "GET /api/v1/skills → 200 [22 entries]"
+            "GET /api/v1/skills → 200 [24 entries]"
           ]
         },
         "agents": {
           "status": "VERIFIED",
-          "detail": "agents: 40 entries",
+          "detail": "agents: 41 entries",
           "evidence": [
-            "GET /api/v1/agents → 200 [40 entries]"
+            "GET /api/v1/agents → 200 [41 entries]"
           ]
         },
         "mcp_servers": {
@@ -836,10 +836,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -876,11 +876,11 @@
     {
       "forge_id": "forge-doctor-data",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/forge-doctor-data",
-      "installed_venv": "/home/edgar/.forge/installs/forge-doctor-data",
-      "manifest": "/home/edgar/.forge/installations/forge-doctor-data.json",
+      "checkout": "E:\\projetos\\FORJAS\\forge-doctor-data",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\forge-doctor-data.json",
       "booted": true,
-      "url": "http://127.0.0.1:45809/?forge_session=b1jx-_UgS_0LU3yxJOC4NM6o8TCDctZq",
+      "url": "http://127.0.0.1:53712/?forge_session=R4tvOo9vODSEdTH16fBR4niVdsCEQfUy",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -892,7 +892,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='forge-doctor-data' cli='forge-doctor-data' version='1.0.0'",
+          "detail": "forge_id='forge-doctor-data' cli='forge-doctor-data' version='1.1.1'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -913,11 +913,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest forge-doctor-data 1.0.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest 1.0.0rc1; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/forge-doctor-data.json → forge/InstallationManifest/v1 forge-doctor-data 1.0.0",
-            "/home/edgar/.forge/installs/forge-doctor-data/.venv/bin/python -c import forge_doctor_data.portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\forge-doctor-data.json → forge/InstallationManifest/v1 1.0.0rc1",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -930,10 +930,10 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
@@ -945,9 +945,9 @@
         },
         "agents": {
           "status": "VERIFIED",
-          "detail": "agents: 0 entries",
+          "detail": "agents: 3 entries",
           "evidence": [
-            "GET /api/v1/agents → 200 [0 entries]"
+            "GET /api/v1/agents → 200 [3 entries]"
           ]
         },
         "mcp_servers": {
@@ -959,9 +959,9 @@
         },
         "mcp_verify": {
           "status": "VERIFIED",
-          "detail": "receipt status=PASS",
+          "detail": "receipt status=BLOCKED",
           "evidence": [
-            "POST /api/v1/mcp/verify → 200 status=PASS servers=? detail=14 tools"
+            "POST /api/v1/mcp/verify → 200 status=BLOCKED servers=? detail=cannot spawn 'forge-doctor-data': [WinError 2] O sistema não pode encontrar o arquivo especificado"
           ]
         },
         "graphs": {
@@ -1009,10 +1009,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -1049,11 +1049,11 @@
     {
       "forge_id": "forge-doctor-api",
       "present": true,
-      "checkout": "/home/edgar/Documentos/projetos/forjas/forge-doctor-api",
-      "installed_venv": "/home/edgar/.forge/installs/forge-doctor-api",
-      "manifest": "/home/edgar/.forge/installations/forge-doctor-api.json",
+      "checkout": "E:\\projetos\\FORJAS\\forge-doctor-api",
+      "installed_venv": null,
+      "manifest": "C:\\Users\\edgar\\.forge\\installations\\forge-doctor-api.json",
       "booted": true,
-      "url": "http://127.0.0.1:35617/?forge_session=r0kwuLVSUKhLWKmglkGpNIiB2x-_q1Jx",
+      "url": "http://127.0.0.1:53713/?forge_session=yy5ppH4Zfjtg9wV5zu3yfWzlQjEvWGm8",
       "boot_error": null,
       "capabilities": {
         "initialization": {
@@ -1065,7 +1065,7 @@
         },
         "descriptor": {
           "status": "VERIFIED",
-          "detail": "forge_id='forge-doctor-api' cli='forge-doctor-api' version='0.2.0'",
+          "detail": "forge_id='forge-doctor-api' cli='forge-doctor-api' version='0.3.1'",
           "evidence": [
             "bootstrap.data.descriptor fields verified"
           ]
@@ -1086,11 +1086,11 @@
         },
         "installation": {
           "status": "VERIFIED",
-          "detail": "state='NOT_INSTALLED'; manifest forge-doctor-api 0.2.0; installed copy imports; registry/state present=False",
+          "detail": "state='NOT_INSTALLED'; manifest forge-doctor-api 0.2.0; no installed venv; registry/state present=False",
           "evidence": [
             "GET /api/v1/installation/status → 200 state='NOT_INSTALLED'",
-            "/home/edgar/.forge/installations/forge-doctor-api.json → forge/InstallationManifest/v1 forge-doctor-api 0.2.0",
-            "/home/edgar/.forge/installs/forge-doctor-api/.venv/bin/python -c import forge_portal_adapter; print('ok') → ok",
+            "C:\\Users\\edgar\\.forge\\installations\\forge-doctor-api.json → forge/InstallationManifest/v1 forge-doctor-api 0.2.0",
+            "~/.forge/installs/<f>/.venv absent",
             "GET /api/v1/registry/state → 200 present=False"
           ]
         },
@@ -1103,10 +1103,10 @@
         },
         "hosts": {
           "status": "VERIFIED",
-          "detail": "hosts: 4 entries; launch probe → refusal PORTAL-HOST-ABSENT",
+          "detail": "hosts: 4 entries; launch probe → command returned",
           "evidence": [
             "GET /api/v1/hosts → 200 [4 entries]",
-            "POST /api/v1/hosts/launch → 200 {\"command\": null, \"refusal\": \"PORTAL-HOST-ABSENT\", \"detail\": \"copilot not detected on this system\"}"
+            "POST /api/v1/hosts/launch → 200 {\"command\": \"copilot\", \"detail\": \"run `copilot` in your terminal to open copilot\", \"host\": \"copilot\"}"
           ]
         },
         "skills": {
@@ -1118,9 +1118,9 @@
         },
         "agents": {
           "status": "VERIFIED",
-          "detail": "agents: 0 entries",
+          "detail": "agents: 3 entries",
           "evidence": [
-            "GET /api/v1/agents → 200 [0 entries]"
+            "GET /api/v1/agents → 200 [3 entries]"
           ]
         },
         "mcp_servers": {
@@ -1132,9 +1132,9 @@
         },
         "mcp_verify": {
           "status": "VERIFIED",
-          "detail": "receipt status=PASS",
+          "detail": "receipt status=BLOCKED",
           "evidence": [
-            "POST /api/v1/mcp/verify → 200 status=PASS servers=? detail=17 tools"
+            "POST /api/v1/mcp/verify → 200 status=BLOCKED servers=? detail=cannot spawn 'forge-doctor-api': [WinError 2] O sistema não pode encontrar o arquivo especificado"
           ]
         },
         "graphs": {
@@ -1182,10 +1182,10 @@
           ]
         },
         "telemetry": {
-          "status": "UNSUPPORTED",
-          "detail": "event sink ops not registered on this adapter",
+          "status": "VERIFIED",
+          "detail": "38 recorded events",
           "evidence": [
-            "GET /api/v1/events → 404"
+            "GET /api/v1/events → 200"
           ]
         },
         "mutations": {
@@ -1221,10 +1221,10 @@
     }
   ],
   "summary": {
-    "VERIFIED": 115,
+    "VERIFIED": 122,
     "PARTIAL": 0,
     "BLOCKED": 0,
-    "UNSUPPORTED": 7,
+    "UNSUPPORTED": 0,
     "NOT_APPLICABLE": 18,
     "NOT_TESTED": 7
   }
