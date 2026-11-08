@@ -30,6 +30,23 @@ from urllib.parse import parse_qs, urlsplit
 ECO = Path(__file__).resolve().parents[2]
 TIMEOUT = 30
 
+
+def _configure_stdio() -> None:
+    """Keep the cross-forge report portable on Windows console code pages.
+
+    The runner emits a few non-ASCII labels as part of its evidence. Windows
+    Python processes can still expose the legacy ``charmap`` stream even when
+    the application itself is fully UTF-8 capable; an encoding error there
+    must not turn a completed HTTP assertion into an entrypoint failure.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors="replace")
+
+
+_configure_stdio()
+
 # forge -> (repo, argv para subir o portal, env extra)
 FORGES: dict[str, tuple[str, list[str]]] = {
     "the-forge": ("the-forge", ["-m", "theforge.portal_adapter"]),
