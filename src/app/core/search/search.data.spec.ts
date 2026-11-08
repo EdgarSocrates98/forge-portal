@@ -20,7 +20,7 @@ describe('search.data — normalization', () => {
 });
 
 describe('search.data — scoring', () => {
-  it('exact > prefix > substring > doc-tier', () => {
+  it('exact > prefix > substring > token match > doc-tier', () => {
     const exact = entry('a', 'skill', 'abc');
     const prefix = entry('b', 'skill', 'abc-x');
     const sub = entry('c', 'skill', 'zabc');
@@ -28,8 +28,10 @@ describe('search.data — scoring', () => {
     expect(scoreEntry(exact, 'abc')).toBe(0);
     expect(scoreEntry(prefix, 'abc')).toBe(1);
     expect(scoreEntry(sub, 'abc')).toBe(2);
+    const token = entry('e', 'skill', 'Spark diagnostics');
+    expect(scoreEntry(token, 'diag spark')).toBe(3);
     // server-side docs hits stay even when the title does not match
-    expect(scoreEntry(doc, 'qqq')).toBe(2);
+    expect(scoreEntry(doc, 'qqq')).toBe(4);
     expect(scoreEntry(exact, 'qqq')).toBe(-1);
   });
 

@@ -26,8 +26,10 @@
  *   score 0 — normalized label equals the query
  *   score 1 — normalized label starts with the query
  *   score 2 — label + sublabel contains the query as a substring
- *   score 2 — doc hits always land here (the server already matched
- *             them against excerpt/path, not the title)
+ *   score 2 — label + sublabel contains the query as a substring
+ *   score 3 — every query token matches a label/sublabel token prefix
+ *   score 4 — doc hits with no local title match (the server already
+ *             matched them against excerpt/path)
  * Ties break by kind boost (pages first, forjas second, all others
  * equal), then by normalized label, then by id — a total order, so a
  * query always yields the same list for the same index. Diacritics are
@@ -120,6 +122,11 @@ export const normalizeSearchText = (s: string): string =>
     .replace(/\s+/g, ' ')
     .trim();
 
+const tokensOf = (s: string): string[] =>
+  normalizeSearchText(s)
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean);
+
 export const cmpSearchText = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
 /** Build the scorable form of a result — the only way into an index. */
@@ -139,8 +146,18 @@ export function scoreEntry(e: SearchEntry, normalizedQuery: string): number {
   if (e.normLabel === normalizedQuery) return 0;
   if (e.normLabel.startsWith(normalizedQuery)) return 1;
   if (e.norm.includes(normalizedQuery)) return 2;
-  // server-side hit (excerpt/path) — keep, lowest tier
-  if (e.kind === 'doc') return 2;
+  const queryTokens = tokensOf(normalizedQuery);
+  const candidateTokens = tokensOf(e.norm);
+  if (
+    queryTokens.length > 1 &&
+    queryTokens.every((queryToken) =>
+      candidateTokens.some((candidateToken) => candidateToken.startsWith(queryToken)),
+    )
+  ) {
+    return 3;
+  }
+  // Server-side hit (excerpt/path) — keep, lowest local tier.
+  if (e.kind === 'doc') return 4;
   return -1;
 }
 
