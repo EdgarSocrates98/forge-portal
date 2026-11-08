@@ -40,7 +40,12 @@ if (dryRun) {
 
 for (const [command, args, label] of steps) {
   if (!quiet) process.stdout.write(`\n✦ Preparando ${label}...\n`);
-  const result = spawnSync(command, args, {
+  const runner = process.platform === 'win32' ? 'cmd.exe' : command;
+  const runnerArgs =
+    process.platform === 'win32'
+      ? ['/d', '/s', '/c', [command, ...args].join(' ')]
+      : args;
+  const result = spawnSync(runner, runnerArgs, {
     cwd: root,
     stdio: quiet ? 'pipe' : 'inherit',
     encoding: 'utf8',
