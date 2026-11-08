@@ -80,6 +80,21 @@ STATUSES = (
     "NOT_TESTED",
 )
 
+
+def _configure_stdio() -> None:
+    """Keep machine-readable reports Unicode-safe on Windows consoles.
+
+    Portal evidence contains user-facing and adapter-provided text (for
+    example, the ``→`` separator in probe evidence).  Windows may expose a
+    legacy CP1252 stream to a subprocess even when the report itself is JSON.
+    Reconfigure only the standard streams; HTTP/subprocess boundaries keep
+    their existing explicit encodings.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="strict")
+
 # Honest lifecycle vocabulary from docs/fase0/contracts.md + the
 # adapters: a named state is a valid answer; invented states are not.
 HONEST_STATES = {
@@ -982,6 +997,7 @@ def console_report(results: list[ForgeResult]) -> None:
 
 
 def main() -> int:
+    _configure_stdio()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("forges", nargs="*", help="forge ids (default: all discovered)")
     ap.add_argument("--write", action="store_true", help="write docs/homologation artifacts")
