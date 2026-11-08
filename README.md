@@ -35,6 +35,21 @@ npm run test:cli   # contrato CLI/TUI/Wizard sem depender de um TTY
 node tools/portal-cli.mjs   # home TUI; wizard e status ficam no mesmo comando
 ```
 
+### Instalação local portátil
+
+Para instalar o Portal diretamente a partir deste repositório, com build e
+comando local `forge-portal`, use a rota do seu terminal:
+
+```bash
+./install.sh
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -NoLink
+bash install.windows.sh --no-link
+```
+
+O instalador mostra um plano sem alterar nada com `--dry-run`. O `-NoLink` /
+`--no-link` deixa o bundle apenas no repositório; a distribuição das Forjas em
+produção continua sendo feita por `scripts/vendor.py`.
+
 ### CLI portátil
 
 O Portal também possui uma superfície terminal mínima e útil, sem dependências
