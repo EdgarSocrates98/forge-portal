@@ -192,7 +192,10 @@ JS_METRICS = """() => {
       const style = getComputedStyle(el);
       if (style.overflow === 'hidden' || style.textOverflow === 'ellipsis') {
         clipped.push(el.tagName.toLowerCase() + ' "' +
-          (el.textContent || '').trim().slice(0, 48) + '"');
+          // `innerText` excludes display:none responsive variants. Using
+          // `textContent` here made the audit report hidden desktop/mobile
+          // labels as if they were simultaneously visible and clipped.
+          (el.innerText || el.textContent || '').trim().slice(0, 48) + '"');
         if (clipped.length > 24) break;
       }
     }

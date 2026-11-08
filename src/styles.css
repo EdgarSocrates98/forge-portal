@@ -1258,6 +1258,17 @@ details > summary::marker {
   color: var(--fg);
   font-weight: 550;
 }
+.topbar__workspace-short {
+  display: none;
+}
+@media (max-width: 820px) {
+  .topbar__workspace-full {
+    display: none;
+  }
+  .topbar__workspace-short {
+    display: inline;
+  }
+}
 .topbar__route {
   display: inline-flex;
   align-items: center;

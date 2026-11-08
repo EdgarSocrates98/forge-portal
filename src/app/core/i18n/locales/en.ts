@@ -98,6 +98,7 @@ export const EN: Record<string, string> = {
   'dashboard.health': 'Installation health',
   'dashboard.workspace': 'Workspace',
   'dashboard.noWorkspace': 'No workspace open',
+  'dashboard.noWorkspaceShort': 'No workspace',
   'dashboard.profile': 'Profile',
   'dashboard.host': 'AI host',
   'dashboard.mcp': 'MCP',
