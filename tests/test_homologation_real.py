@@ -91,6 +91,25 @@ def test_err_code_and_data_extract_envelope_fields() -> None:
     assert hom._data({}) is None
 
 
+def test_homologation_cli_configures_unicode_stdio(monkeypatch) -> None:
+    class FakeStream:
+        def __init__(self) -> None:
+            self.calls = []
+
+        def reconfigure(self, **kwargs):
+            self.calls.append(kwargs)
+
+    stdout = FakeStream()
+    stderr = FakeStream()
+    monkeypatch.setattr(hom.sys, "stdout", stdout)
+    monkeypatch.setattr(hom.sys, "stderr", stderr)
+
+    hom._configure_stdio()
+
+    assert stdout.calls == [{"encoding": "utf-8", "errors": "strict"}]
+    assert stderr.calls == [{"encoding": "utf-8", "errors": "strict"}]
+
+
 # ---------------------------------------------------------------------------
 # discovery — real lookup semantics, honest absence
 # ---------------------------------------------------------------------------
