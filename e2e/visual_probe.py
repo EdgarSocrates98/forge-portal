@@ -31,7 +31,7 @@ AXE = REPO / "node_modules" / "axe-core" / "axe.min.js"
 ROUTES = [
     "/dashboard", "/install", "/config", "/forges", "/forges/self",
     "/match", "/federation", "/profiles", "/hosts", "/mcp", "/skills",
-    "/agents", "/tasks", "/graph", "/observe", "/execution", "/lab",
+    "/agents", "/tasks", "/api-operations", "/graph", "/observe", "/execution", "/lab",
     "/versions", "/knowledge", "/guide", "/settings",
 ]
 

@@ -905,6 +905,7 @@ export class DashboardPage {
     { id: 'versions', route: '/versions', icon: 'history', labelKey: 'nav.versions' },
     { id: 'mcp', route: '/mcp', icon: 'mcp', labelKey: 'nav.mcp' },
     { id: 'tasks', route: '/tasks', icon: 'tasks', labelKey: 'nav.tasks' },
+    { id: 'api-operations', route: '/api-operations', icon: 'mcp', labelKey: 'nav.apiOperations' },
   ] as const;
 
   readonly stamp = stamp;

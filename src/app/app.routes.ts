@@ -56,6 +56,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/tasks/tasks.page').then((m) => m.TasksPage),
   },
   {
+    path: 'api-operations',
+    loadComponent: () =>
+      import('./pages/api-operations/api-operations.page').then((m) => m.ApiOperationsPage),
+  },
+  {
     path: 'graph',
     loadComponent: () => import('./pages/graph/graph.page').then((m) => m.GraphPage),
   },
