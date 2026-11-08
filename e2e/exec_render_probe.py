@@ -434,10 +434,10 @@ def main() -> int:
                     f"depth={d.get('max_depth')} rows={d.get('table_rows')} "
                     f"nodes={ex.get('cdp', {}).get('Nodes')} "
                     f"heap={round((ex.get('cdp', {}).get('JSHeapUsedSize') or 0) / 1048576, 1)}MB "
-                    f"taskΔ={ex.get('delta', {}).get('TaskDuration_ms')}ms "
+                    f"task_delta={ex.get('delta', {}).get('TaskDuration_ms')}ms "
                     f"http.events={ev_ms:.0f}ms/{ev_bytes}B "
-                    f"leak.nodesΔ={scen['leak']['nodes_growth']} "
-                    f"leak.listenersΔ={scen['leak']['listeners_growth']}"
+                    f"leak.nodes_delta={scen['leak']['nodes_growth']} "
+                    f"leak.listeners_delta={scen['leak']['listeners_growth']}"
                 )
             finally:
                 server.shutdown()
