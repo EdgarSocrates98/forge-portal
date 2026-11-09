@@ -327,4 +327,47 @@ describe('PfKnowledgeTab — source capture', () => {
     expect(c.obsidianVault()?.capabilities).toContain('reviewed_sync');
     expect(c.obsidianVault()?.provenance?.['path_hash']).toHaveLength(64);
   });
+
+  it('offers guarded rollback only for receipts with a backup', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      rollbackObsidianDocument: vi.fn(() =>
+        of({
+          receipt_schema: 'theforge/ObsidianSyncReceipt/v1',
+          path: 'exports/runbook.md',
+          content_hash: 'hash-old',
+          sync_state: 'rolled_back',
+          backup_path: '.forge/obsidian-backups/hash-old.md',
+          receipt_path: '.forge/obsidian-receipts/hash-old.rollback.json',
+        }),
+      ),
+      obsidianHistory: vi.fn(() => of({ items: [], count: 0 })),
+    };
+    vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+
+    await c.rollbackObsidian({
+      path: 'exports/runbook.md',
+      content_hash: 'hash-new',
+      backup_path: '.forge/obsidian-backups/hash-old.md',
+      receipt_path: '.forge/obsidian-receipts/hash-new.json',
+    });
+
+    expect(api.rollbackObsidianDocument).toHaveBeenCalledWith('p1', {
+      path: 'exports/runbook.md',
+      receipt_path: '.forge/obsidian-receipts/hash-new.json',
+    });
+    expect(c.obsidianReceipt()?.sync_state).toBe('rolled_back');
+  });
 });

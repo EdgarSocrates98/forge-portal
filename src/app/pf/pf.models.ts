@@ -150,7 +150,16 @@ export interface PfObsidianSyncPlan {
   content_hash: string;
   previous_hash?: string | null;
   baseline_hash?: string | null;
-  outcome: 'created' | 'unchanged' | 'conflict' | 'updated' | string;
+  outcome:
+    | 'created'
+    | 'unchanged'
+    | 'conflict'
+    | 'updated'
+    | 'skipped'
+    | 'denied'
+    | 'failed'
+    | 'rolled_back'
+    | string;
   warnings?: string[];
   unresolved?: string[];
   planned_at?: string;
@@ -171,6 +180,9 @@ export interface PfObsidianSyncReceipt {
   source?: string;
   backup_path?: string | null;
   receipt_path?: string;
+  workspace?: string;
+  vault_id?: string;
+  provenance?: Record<string, string>;
   warnings?: string[];
   unresolved?: string[];
 }

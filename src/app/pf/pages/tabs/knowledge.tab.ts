@@ -1,4 +1,5 @@
 import { TPipe } from '../../../core/i18n/i18n.pipe';
+import { I18nService } from '../../../core/i18n/i18n.service';
 import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -810,6 +811,16 @@ import { ToastService } from '../../../shared/toast';
                       <li>
                         <span>{{ item.path }} · {{ item.sync_state ?? item.state }}</span>
                         <code>{{ item.content_hash }}</code>
+                        @if (item.backup_path && item.receipt_path) {
+                          <button
+                            class="btn btn--small"
+                            type="button"
+                            [disabled]="obsidianExportBusy()"
+                            (click)="rollbackObsidian(item)"
+                          >
+                            {{ 'pf.knowledge.obsidianExport.rollback' | t }}
+                          </button>
+                        }
                       </li>
                     }
                   </ul>
@@ -1106,6 +1117,7 @@ import { ToastService } from '../../../shared/toast';
 export class PfKnowledgeTab implements OnInit {
   private readonly api = inject(PfApi);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
   readonly pid = input.required<string>();
 
   readonly docs = signal<PfDocument[]>([]);
@@ -1403,6 +1415,30 @@ export class PfKnowledgeTab implements OnInit {
     this.error.set(null);
     try {
       this.obsidianHistory.set(await firstValueFrom(this.api.obsidianHistory(this.pid())));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async rollbackObsidian(receipt: PfObsidianSyncReceipt): Promise<void> {
+    if (!receipt.backup_path || !receipt.receipt_path || this.obsidianExportBusy()) return;
+    const confirmed = globalThis.confirm(this.i18n.t('pf.knowledge.obsidianExport.rollbackConfirm'));
+    if (!confirmed) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianReceipt.set(
+        await firstValueFrom(
+          this.api.rollbackObsidianDocument(this.pid(), {
+            path: receipt.path,
+            receipt_path: receipt.receipt_path,
+          }),
+        ),
+      );
+      this.toast.show(this.i18n.t('pf.knowledge.obsidianExport.rolledBack'), 'success');
+      await this.loadObsidianHistory();
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {

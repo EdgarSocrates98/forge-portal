@@ -314,6 +314,15 @@ export class PfApi {
       { ...input, confirm: 'export' },
     );
   }
+  rollbackObsidianDocument(
+    pid: string,
+    input: { path: string; receipt_path: string; source?: string },
+  ) {
+    return this.post<PfObsidianSyncReceipt>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/rollback`,
+      { ...input, confirm: 'rollback' },
+    );
+  }
   urlPreview(pid: string, url: string, extractor: 'stdlib' | 'defuddle' = 'stdlib') {
     return this.get<PfUrlPreview>(
       `/products/${encodeURIComponent(pid)}/documents/url/preview?url=${encodeURIComponent(url)}&extractor=${extractor}`,
