@@ -327,6 +327,16 @@ export const PT_BR: Record<string, string> = {
   'tasks.newInvestigation': 'Nova investigação',
   'tasks.newInvestigation.hint':
     'Descreva o problema ou objetivo. O Forge proporá um plano de especialistas para sua revisão.',
+  'tasks.investigation.evidence': 'Evidências autorizadas',
+  'tasks.investigation.safety': 'Guardrails',
+  'tasks.investigation.safetyHint':
+    'A investigação começa em leitura local. Nada é escrito ou enviado sem uma autorização explícita no plano.',
+  'tasks.investigation.plan': 'Montar plano federado',
+  'tasks.investigation.planTitle': 'Plano da investigação',
+  'tasks.investigation.execute': 'Executar investigação',
+  'tasks.investigation.receipt': 'Recibo da investigação',
+  'tasks.investigation.receiptHint':
+    'O recibo abaixo é a evidência persistida pelo The Forge e pode ser compartilhado com o restante da família.',
   'apiOperations.title': 'Operações de API',
   'apiOperations.subtitle': 'Vá do contrato real para a evidência e para a próxima ação segura.',
   'apiOperations.eyebrow': 'Superfície de decisão',

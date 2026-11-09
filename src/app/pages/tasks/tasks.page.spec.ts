@@ -5,7 +5,13 @@ import { TasksPage } from './tasks.page';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
-import { InstallationReceipt, MetricsReport, TaskExecution } from '../../core/api/api.models';
+import {
+  InstallationReceipt,
+  InvestigationPlanResponse,
+  InvestigationReceipt,
+  MetricsReport,
+  TaskExecution,
+} from '../../core/api/api.models';
 
 const TASKS: TaskExecution[] = [
   {
@@ -55,6 +61,28 @@ const RECEIPT: InstallationReceipt = {
   },
 };
 
+const INVESTIGATION_PLAN: InvestigationPlanResponse = {
+  status: 'planned',
+  plan: {
+    operation: 'federated_investigation',
+    intent: 'diagnose spark',
+    inputs: ['runtime_log'],
+    authorized_risks: ['LOCAL_READ'],
+    max_providers: 4,
+    probe: true,
+    allow_unverified: false,
+  },
+  plan_token: 'investigation-token',
+  report: { kind: 'plan', plan_status: 'planned' },
+};
+
+const INVESTIGATION_RECEIPT: InvestigationReceipt = {
+  status: 'completed',
+  path: 'C:/workspace/.forge/orchestrations/orch.json',
+  report: { kind: 'run', findings: [] },
+  actions: [{ kind: 'investigation', path: 'C:/workspace/.forge/orchestrations/orch.json', status: 'completed' }],
+};
+
 const STALE = () =>
   new ApiError(409, { code: 'PORTAL-PLAN-STALE', message: 'plan token is stale' });
 
@@ -96,6 +124,8 @@ function fakeApi(overrides: Partial<Record<keyof PortalApi, unknown>> = {}): Por
     tasks: vi.fn(() => of(TASKS)),
     tasksPlan: vi.fn(() => of(PLAN)),
     tasksExecute: vi.fn(() => of(RECEIPT)),
+    investigationPlan: vi.fn(() => of(INVESTIGATION_PLAN)),
+    investigationRun: vi.fn(() => of(INVESTIGATION_RECEIPT)),
     metrics: vi.fn(() => of(METRICS)),
     ...overrides,
   } as unknown as PortalApi;
@@ -154,6 +184,32 @@ describe('TasksPage — Execution Center', () => {
 
     expect(section(el, 'new-investigation')).toBeTruthy();
     expect(document.activeElement).toBe(el.querySelector('#intent'));
+  });
+
+  it('runs the real federated investigation plan after explicit review', async () => {
+    const { fixture, api, c, el } = await setup();
+    fixture.componentRef.setInput('new', '1');
+    fixture.detectChanges();
+    c.intent.set('diagnose spark');
+    await c.plan();
+    fixture.detectChanges();
+
+    expect(api.investigationPlan).toHaveBeenCalledWith({
+      intent: 'diagnose spark',
+      inputs: ['runtime_log'],
+    });
+    expect(text(section(el, 'plan'))).toContain('LOCAL_READ');
+    await c.execute(
+      INVESTIGATION_PLAN.plan as unknown as Record<string, unknown>,
+      INVESTIGATION_PLAN.plan_token,
+    );
+    fixture.detectChanges();
+    expect(api.investigationRun).toHaveBeenCalledWith(
+      INVESTIGATION_PLAN.plan,
+      INVESTIGATION_PLAN.plan_token,
+    );
+    expect(section(el, 'investigation-receipt')).toBeTruthy();
+    expect(c.investigationReceipt()?.status).toBe('completed');
   });
 
   it('surfaces correlation ids on the plan card, receipt and history rows', async () => {

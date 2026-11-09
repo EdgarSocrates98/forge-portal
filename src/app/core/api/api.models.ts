@@ -189,6 +189,30 @@ export interface McpServerDescriptor {
   limitations?: string[];
 }
 
+export interface InvestigationPlan {
+  operation: 'federated_investigation';
+  intent: string;
+  inputs: string[];
+  authorized_risks: string[];
+  max_providers: number;
+  probe: boolean;
+  allow_unverified: boolean;
+}
+
+export interface InvestigationPlanResponse {
+  status: 'planned';
+  plan: InvestigationPlan;
+  plan_token: string;
+  report: Record<string, unknown>;
+}
+
+export interface InvestigationReceipt {
+  status: string;
+  path: string;
+  report: Record<string, unknown>;
+  actions: { kind: string; path: string; status: string }[];
+}
+
 export interface SkillDescriptor {
   id: string;
   name: string;

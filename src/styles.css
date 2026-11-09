@@ -2283,3 +2283,55 @@ tr[data-selected] td {
     flex: 1 1 auto;
   }
 }
+
+/* Guided federated investigation — shared so the lazy Tasks chunk stays
+   within its component CSS budget. */
+.investigation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(14rem, 0.8fr);
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.evidence-list {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.evidence-choice {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.evidence-choice:hover {
+  border-color: var(--accent-ink);
+  background: var(--bg-hover);
+}
+.evidence-choice span {
+  display: grid;
+  gap: 2px;
+}
+.evidence-choice small {
+  color: var(--fg-muted);
+}
+.investigation-safety {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+}
+.investigation-safety code {
+  color: var(--accent-ink);
+  font-size: var(--font-xs);
+}
+.investigation-cta {
+  margin-top: var(--space-4);
+}
+@media (max-width: 720px) {
+  .investigation-grid {
+    grid-template-columns: 1fr;
+  }
+}

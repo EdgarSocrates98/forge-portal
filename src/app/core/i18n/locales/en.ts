@@ -327,6 +327,16 @@ export const EN: Record<string, string> = {
   'tasks.newInvestigation': 'New investigation',
   'tasks.newInvestigation.hint':
     'Describe the problem or goal. The Forge will propose a specialist plan for your review.',
+  'tasks.investigation.evidence': 'Authorized evidence',
+  'tasks.investigation.safety': 'Guardrails',
+  'tasks.investigation.safetyHint':
+    'Investigation starts with local reads. Nothing is written or sent without explicit authorization in the plan.',
+  'tasks.investigation.plan': 'Build federated plan',
+  'tasks.investigation.planTitle': 'Investigation plan',
+  'tasks.investigation.execute': 'Run investigation',
+  'tasks.investigation.receipt': 'Investigation receipt',
+  'tasks.investigation.receiptHint':
+    'This receipt is persisted evidence from The Forge and can be shared with the rest of the family.',
   'apiOperations.title': 'API Operations',
   'apiOperations.subtitle': 'Move from a real contract to evidence and the next safe action.',
   'apiOperations.eyebrow': 'Decision surface',

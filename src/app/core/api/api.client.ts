@@ -13,6 +13,8 @@ import {
   GraphBundle,
   HostDetection,
   InstallationReceipt,
+  InvestigationPlanResponse,
+  InvestigationReceipt,
   InstallSelection,
   McpServerDescriptor,
   MetricsReport,
@@ -274,6 +276,24 @@ export class PortalApi {
       plan_token: planToken,
       confirm: 'execute',
     });
+  }
+  investigationPlan(input: {
+    intent: string;
+    inputs?: string[];
+    authorized_risks?: string[];
+    max_providers?: number;
+  }) {
+    return this.post<InvestigationPlanResponse>('/investigations/plan', input);
+  }
+  investigationRun(plan: Record<string, unknown>, planToken: string) {
+    return this.post<InvestigationReceipt>('/investigations/run', {
+      plan,
+      plan_token: planToken,
+      confirm: 'execute',
+    });
+  }
+  investigations() {
+    return this.get<{ schema: string; runs: Record<string, unknown>[] }>('/investigations');
   }
   graphs() {
     return this.get<GraphBundle>('/graphs');

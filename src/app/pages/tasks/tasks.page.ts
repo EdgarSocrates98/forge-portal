@@ -7,6 +7,7 @@ import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import {
   InstallationReceipt,
+  InvestigationReceipt,
   MetricsEvent,
   MetricsReport,
   TaskExecution,
@@ -26,6 +27,7 @@ import { buildReplay, buildTimeline, fmtTaskDuration } from './tasks.data';
 interface PendingPlan {
   plan_token: string;
   plan: Record<string, unknown>;
+  kind?: 'task' | 'investigation';
   /** Envelope-level correlation_id never reaches the page — the client's
    *  unwrap() returns `data` only. We surface the payload field when the
    *  server puts it there; otherwise the plan card shows '—'. */
@@ -114,9 +116,44 @@ interface PendingPlan {
     </section>
 
     @if (newInvestigation() === '1') {
-      <section class="card investigation-start" data-section="new-investigation" role="status">
+      <section class="card investigation-start" data-section="new-investigation">
         <h2>{{ 'tasks.newInvestigation' | t }}</h2>
         <p class="muted">{{ 'tasks.newInvestigation.hint' | t }}</p>
+        <div class="investigation-grid">
+          <div>
+            <span class="lbl">{{ 'tasks.investigation.evidence' | t }}</span>
+            <div class="evidence-list" role="group" [attr.aria-label]="'tasks.investigation.evidence' | t">
+              @for (item of investigationEvidence; track item.id) {
+                <label class="evidence-choice">
+                  <input
+                    type="checkbox"
+                    [checked]="investigationInputs().includes(item.id)"
+                    (change)="toggleInvestigationInput(item.id)"
+                    [disabled]="busy()"
+                  />
+                  <span>
+                    <strong>{{ item.label }}</strong>
+                    <small>{{ item.hint }}</small>
+                  </span>
+                </label>
+              }
+            </div>
+          </div>
+          <div class="investigation-safety">
+            <span class="eyebrow">{{ 'tasks.investigation.safety' | t }}</span>
+            <p class="muted">{{ 'tasks.investigation.safetyHint' | t }}</p>
+            <code>LOCAL_READ · max 4 specialists</code>
+          </div>
+        </div>
+        <button
+          class="btn btn--primary investigation-cta"
+          data-action="investigation-plan"
+          [disabled]="busy() || !intent().trim()"
+          (click)="plan()"
+        >
+          <ui-icon name="tasks" [size]="14" />
+          {{ 'tasks.investigation.plan' | t }}
+        </button>
       </section>
     }
 
@@ -152,7 +189,7 @@ interface PendingPlan {
 
     @if (pending(); as p) {
       <section class="card" data-lift data-section="plan">
-        <h2>{{ 'tasks.plan' | t }}</h2>
+        <h2>{{ p.kind === 'investigation' ? ('tasks.investigation.planTitle' | t) : ('tasks.plan' | t) }}</h2>
         <p class="muted">{{ 'tasks.plan.review' | t }}</p>
 
         <dl class="plan-card">
@@ -170,6 +207,16 @@ interface PendingPlan {
             <dt>{{ 'tasks.plan.intent' | t }}</dt>
             <dd>{{ planField(p.plan, 'intent') }}</dd>
           </div>
+          @if (p.kind === 'investigation') {
+            <div class="kv">
+              <dt>{{ 'tasks.investigation.evidence' | t }}</dt>
+              <dd>{{ planList(p.plan, 'inputs') }}</dd>
+            </div>
+            <div class="kv">
+              <dt>{{ 'tasks.investigation.safety' | t }}</dt>
+              <dd><code>{{ planList(p.plan, 'authorized_risks') }}</code></dd>
+            </div>
+          }
           <div class="kv">
             <dt>{{ 'tasks.correlation' | t }}</dt>
             <dd class="corr" [attr.title]="realCorrelation(planCorrelation(p))">
@@ -199,9 +246,31 @@ interface PendingPlan {
             (click)="execute(p.plan, p.plan_token)"
           >
             <ui-icon name="tasks" [size]="14" />
-            {{ 'tasks.execute' | t }}
+            {{ p.kind === 'investigation' ? ('tasks.investigation.execute' | t) : ('tasks.execute' | t) }}
           </button>
           <button class="btn" (click)="pending.set(null)">{{ 'state.cancel' | t }}</button>
+        </div>
+      </section>
+    }
+
+    @if (investigationReceipt(); as r) {
+      <section class="card investigation-receipt" data-lift data-section="investigation-receipt" aria-live="polite">
+        <h2>{{ 'tasks.investigation.receipt' | t }}</h2>
+        <p class="receipt__status">
+          <ui-state-badge [state]="r.status" />
+          <span class="muted">{{ r.path }}</span>
+        </p>
+        <p class="muted">{{ 'tasks.investigation.receiptHint' | t }}</p>
+        <details class="raw">
+          <summary>{{ 'fdoc.raw' | t }}</summary>
+          <pre>{{ investigationReceiptText(r) }}</pre>
+        </details>
+        <div class="row">
+          <button class="btn" data-action="export-investigation" (click)="exportInvestigation(r)">
+            <ui-icon name="install" [size]="14" />
+            {{ 'tasks.export' | t }}
+          </button>
+          <button class="btn" (click)="investigationReceipt.set(null)">{{ 'state.close' | t }}</button>
         </div>
       </section>
     }
@@ -898,6 +967,25 @@ export class TasksPage {
   private readonly intentInput = viewChild<ElementRef<HTMLInputElement>>('intentInput');
 
   readonly intent = signal('');
+  readonly investigationInputs = signal<string[]>(['runtime_log']);
+  readonly investigationReceipt = signal<InvestigationReceipt | null>(null);
+  readonly investigationEvidence = [
+    {
+      id: 'runtime_log',
+      label: 'Runtime logs',
+      hint: 'Use logs already available in the workspace.',
+    },
+    {
+      id: 'spark_event_log',
+      label: 'Spark event log',
+      hint: 'Include Spark event evidence when present.',
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      hint: 'Let specialists inspect local configuration metadata.',
+    },
+  ] as const;
   readonly pending = signal<PendingPlan | null>(null);
   readonly receipt = signal<InstallationReceipt | null>(null);
   readonly tasks = signal<TaskExecution[]>([]);
@@ -1074,11 +1162,20 @@ export class TasksPage {
     this.stale.set(null);
     this.receipt.set(null);
     try {
-      const r = await firstValueFrom(this.api.tasksPlan({ intent: this.intent() }));
+      const investigation = this.newInvestigation() === '1';
+      const r = investigation
+        ? await firstValueFrom(
+            this.api.investigationPlan({
+              intent: this.intent(),
+              inputs: this.investigationInputs(),
+            }),
+          )
+        : await firstValueFrom(this.api.tasksPlan({ intent: this.intent() }));
       const cid = (r as Record<string, unknown>)['correlation_id'];
       this.pending.set({
         plan_token: r.plan_token,
-        plan: r.plan,
+        plan: r.plan as Record<string, unknown>,
+        kind: investigation ? 'investigation' : 'task',
         correlation_id: typeof cid === 'string' && cid ? cid : null,
       });
     } catch (e) {
@@ -1094,7 +1191,13 @@ export class TasksPage {
     this.executing.set(true);
     this.error.set(null);
     try {
-      this.receipt.set(await firstValueFrom(this.api.tasksExecute(plan, planToken)));
+      if (plan['operation'] === 'federated_investigation') {
+        this.investigationReceipt.set(
+          await firstValueFrom(this.api.investigationRun(plan, planToken)),
+        );
+      } else {
+        this.receipt.set(await firstValueFrom(this.api.tasksExecute(plan, planToken)));
+      }
       this.pending.set(null);
       await this.load();
     } catch (e) {
@@ -1128,6 +1231,32 @@ export class TasksPage {
     const a = document.createElement('a');
     a.href = url;
     a.download = r.task?.id ? `receipt-${r.task.id}.json` : 'receipt.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  toggleInvestigationInput(id: string): void {
+    const current = this.investigationInputs();
+    this.investigationInputs.set(
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    );
+  }
+
+  planList(plan: Record<string, unknown>, key: string): string {
+    const value = plan[key];
+    return Array.isArray(value) && value.length ? value.map(String).join(', ') : '—';
+  }
+
+  investigationReceiptText(r: InvestigationReceipt): string {
+    return JSON.stringify(r, null, 2);
+  }
+
+  exportInvestigation(r: InvestigationReceipt): void {
+    const blob = new Blob([JSON.stringify(r, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'investigation-receipt.json';
     a.click();
     URL.revokeObjectURL(url);
   }
