@@ -56,7 +56,20 @@ O Portal também possui uma superfície terminal mínima e útil, sem dependênc
 adicionais: `forge-portal` abre a home TUI em um terminal, `forge-portal wizard`
 guia host/porta com confirmação explícita, e `forge-portal status` produz o
 contrato local. Em pipes e CI, o mesmo fluxo degrada para JSON honesto; o
-servidor web só é iniciado pelo comando explícito de start.
+servidor web só é iniciado pelo comando explícito de start. O pacote publicado
+inclui o bundle Angular e, quando instalado fora do checkout, `forge-portal start`
+usa um servidor estático Node embutido; assim a instalação de produção
+não depende de `@angular/cli` ou de um diretório do repositório:
+
+```bash
+npm install forge-portal-app
+npx forge-portal
+npx forge-portal status
+npx forge-portal start
+```
+
+No checkout, onde as dependências de desenvolvimento existem, `start` continua
+delegando para `ng serve`.
 
 Gates de qualidade deste repo:
 

@@ -10,12 +10,16 @@
  */
 
 import { spawn } from 'node:child_process';
+import { createServer } from 'node:http';
+import { existsSync } from 'node:fs';
+import { readFile, stat } from 'node:fs/promises';
 import { createInterface } from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const PORTAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const STATIC_ROOT = path.join(PORTAL_ROOT, 'dist', 'forge-portal-app', 'browser');
 const TTY = Boolean(process.stdin.isTTY && process.stdout.isTTY);
 const VERSION = '1.1.1';
 
@@ -52,12 +56,83 @@ function npmCommand() {
   return process.platform === 'win32' ? 'npm.cmd' : 'npm';
 }
 
+function contentType(file) {
+  return {
+    '.css': 'text/css; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.ico': 'image/x-icon',
+    '.js': 'text/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.map': 'application/json; charset=utf-8',
+    '.svg': 'image/svg+xml',
+    '.txt': 'text/plain; charset=utf-8',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+  }[path.extname(file).toLowerCase()] || 'application/octet-stream';
+}
+
+async function startStaticServer({ host = '127.0.0.1', port = '4200' } = {}) {
+  const index = path.join(STATIC_ROOT, 'index.html');
+  try {
+    await stat(index);
+  } catch {
+    output.write('Portal build not found. Run `npm run build` in the checkout first.\n');
+    process.exitCode = 1;
+    return;
+  }
+  const server = createServer(async (request, response) => {
+    let requestPath;
+    try {
+      requestPath = decodeURIComponent((request.url || '/').split('?', 1)[0]);
+    } catch {
+      response.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' });
+      response.end('Malformed Portal asset path.\n');
+      return;
+    }
+    const relative = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '');
+    const candidate = path.resolve(STATIC_ROOT, relative);
+    const insideRoot = candidate === STATIC_ROOT || candidate.startsWith(`${STATIC_ROOT}${path.sep}`);
+    let file = insideRoot ? candidate : index;
+    try {
+      const info = await stat(file);
+      if (!info.isFile()) file = index;
+    } catch {
+      file = index;
+    }
+    try {
+      const body = await readFile(file);
+      response.writeHead(200, { 'content-type': contentType(file), 'cache-control': 'no-cache' });
+      response.end(body);
+    } catch {
+      response.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' });
+      response.end('Portal static server could not read the requested asset.\n');
+    }
+  });
+  server.on('error', (error) => {
+    output.write(`Unable to start Portal: ${error.message}\n`);
+    process.exitCode = 1;
+  });
+  server.listen(Number(port), host, () => {
+    const address = server.address();
+    const actualPort = typeof address === 'object' && address ? address.port : port;
+    output.write(`Portal ready at http://${host}:${actualPort}/ (packaged static build)\n`);
+  });
+  const close = () => server.close(() => process.exit(0));
+  process.once('SIGINT', close);
+  process.once('SIGTERM', close);
+}
+
 function startServer({ host = '127.0.0.1', port = '4200' } = {}) {
   output.write(`Starting Portal at http://${host}:${port}/\n`);
+  const angularCli = path.join(PORTAL_ROOT, 'node_modules', '@angular', 'cli', 'bin', 'ng.js');
+  if (!existsSync(angularCli)) {
+    void startStaticServer({ host, port });
+    return;
+  }
   const child = spawn(npmCommand(), ['run', 'start', '--', '--host', host, '--port', port], {
     cwd: PORTAL_ROOT,
     stdio: 'inherit',
-    shell: false,
+    shell: process.platform === 'win32',
   });
   child.on('error', (error) => {
     output.write(`Unable to start Portal: ${error.message}\n`);
