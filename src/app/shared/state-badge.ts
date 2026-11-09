@@ -133,8 +133,14 @@ export class StateBadge {
   private readonly i18n = inject(I18nService);
   readonly state = input.required<string>();
   readonly labelOverride = input<string | null>(null);
+  /** Explicit tone override for vocabularies the built-in map does not
+   *  cover (e.g. api-sentinel states driven by `SentinelApi` surfaces).
+   *  Never downgrades — the caller passes the honest mapping. */
+  readonly kindOverride = input<BadgeKind | null>(null);
 
-  readonly kind = computed<BadgeKind>(() => STATE_KIND[this.state()] ?? 'muted');
+  readonly kind = computed<BadgeKind>(
+    () => this.kindOverride() ?? STATE_KIND[this.state()] ?? 'muted',
+  );
   readonly label = computed(() => {
     const override = this.labelOverride();
     if (override) return override;
