@@ -132,6 +132,9 @@ export interface PfObsidianVaultDescriptor {
   provenance?: Record<string, unknown>;
   warnings?: string[];
   unresolved?: string[];
+  vault_record_id?: string;
+  label?: string;
+  status?: 'active' | 'revoked' | string;
 }
 
 export interface PfObsidianImport extends PfDocument {

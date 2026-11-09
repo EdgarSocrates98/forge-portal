@@ -141,6 +141,13 @@ export class PfApi {
       );
   }
 
+  private delete<T>(path: string): Observable<T> {
+    return this.http.delete<ApiEnvelope<T>>(this.url(path), { headers: this.authHeaders() }).pipe(
+      map((env) => this.unwrap(env)),
+      catchError((e) => this.fail(e)),
+    );
+  }
+
   private authHeaders(): Record<string, string> {
     const h: Record<string, string> = { 'Content-Type': 'application/json' };
     const token = this.token();
@@ -286,6 +293,23 @@ export class PfApi {
   obsidianStatus(pid: string) {
     return this.get<PfObsidianVaultDescriptor>(
       `/products/${encodeURIComponent(pid)}/documents/obsidian/status`,
+    );
+  }
+  obsidianVaults(workspaceId?: string) {
+    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
+    return this.get<{ schema?: string; items: PfObsidianVaultDescriptor[] }>(
+      `/obsidian/vaults${query}`,
+    );
+  }
+  connectObsidianVault(input: { workspace_id: string; path: string; label?: string }) {
+    return this.post<PfObsidianVaultDescriptor>('/obsidian/vaults', {
+      ...input,
+      confirm: 'connect',
+    });
+  }
+  revokeObsidianVault(vaultRecordId: string) {
+    return this.delete<{ revoked: boolean; vault_record_id: string }>(
+      `/obsidian/vaults/${encodeURIComponent(vaultRecordId)}`,
     );
   }
   obsidianHistory(pid: string, limit = 50) {

@@ -302,6 +302,74 @@ import { ToastService } from '../../../shared/toast';
                 {{ (obsidianVaultBusy() ? 'state.loading' : 'pf.knowledge.capture.checkVault') | t }}
               </button>
             </div>
+            <details class="obsidian-vault-connect">
+              <summary>{{ 'pf.knowledge.capture.manageVault' | t }}</summary>
+              <p class="muted small">{{ 'pf.knowledge.capture.manageVaultHelp' | t }}</p>
+              @if (obsidianVault()?.vault_record_id; as vaultRecordId) {
+                <div class="obsidian-vault-connect__active" role="status">
+                  <div>
+                    <strong>{{ 'pf.knowledge.capture.connectedVault' | t }}</strong>
+                    <span class="muted small"
+                      >{{ obsidianVault()?.label || ('pf.knowledge.capture.unnamedVault' | t) }} ·
+                      {{ 'pf.knowledge.capture.pathHidden' | t }}</span
+                    >
+                  </div>
+                  <button
+                    class="btn btn--danger"
+                    type="button"
+                    [disabled]="obsidianVaultConnectBusy()"
+                    (click)="revokeObsidianVault(vaultRecordId)"
+                  >
+                    {{
+                      (obsidianVaultConnectBusy()
+                        ? 'state.loading'
+                        : 'pf.knowledge.capture.disconnectVault') | t
+                    }}
+                  </button>
+                </div>
+              } @else {
+                <div class="obsidian-vault-connect__form">
+                  <label class="field">
+                    <span>{{ 'pf.knowledge.capture.vaultHostPath' | t }}</span>
+                    <input
+                      class="input"
+                      type="text"
+                      autocomplete="off"
+                      [value]="obsidianConnectPath()"
+                      (input)="obsidianConnectPath.set($any($event.target).value)"
+                      placeholder="C:/vaults/team"
+                    />
+                  </label>
+                  <label class="field">
+                    <span>{{ 'pf.knowledge.capture.vaultLabel' | t }}</span>
+                    <input
+                      class="input"
+                      type="text"
+                      [value]="obsidianConnectLabel()"
+                      (input)="obsidianConnectLabel.set($any($event.target).value)"
+                      placeholder="Meu cofre de engenharia"
+                    />
+                  </label>
+                  <button
+                    class="btn btn--primary"
+                    type="button"
+                    [disabled]="
+                      obsidianVaultConnectBusy() ||
+                      !obsidianConnectPath().trim() ||
+                      !obsidianVault()?.workspace ||
+                      obsidianVault()?.workspace === 'local'
+                    "
+                    (click)="connectObsidianVault()"
+                  >
+                    {{
+                      (obsidianVaultConnectBusy()
+                        ? 'state.loading'
+                        : 'pf.knowledge.capture.connectVault') | t
+                    }}
+                  </button>
+                </div>
+              }
+            </details>
             <label class="field capture__path-field">
               <span>{{ 'pf.knowledge.capture.obsidianPath' | t }}</span>
               <input
@@ -1154,6 +1222,9 @@ export class PfKnowledgeTab implements OnInit {
   readonly obsidianHistory = signal<PfObsidianHistory | null>(null);
   readonly obsidianVault = signal<PfObsidianVaultDescriptor | null>(null);
   readonly obsidianVaultBusy = signal(false);
+  readonly obsidianVaultConnectBusy = signal(false);
+  readonly obsidianConnectPath = signal('');
+  readonly obsidianConnectLabel = signal('');
   readonly obsidianBaselineHash = signal('');
   readonly obsidianExportBusy = signal(false);
 
@@ -1271,6 +1342,51 @@ export class PfKnowledgeTab implements OnInit {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.obsidianVaultBusy.set(false);
+    }
+  }
+
+  async connectObsidianVault(): Promise<void> {
+    const path = this.obsidianConnectPath().trim();
+    const workspaceId = this.obsidianVault()?.workspace;
+    if (!path || !workspaceId || workspaceId === 'local' || this.obsidianVaultConnectBusy()) return;
+    this.obsidianVaultConnectBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianVault.set(
+        await firstValueFrom(
+          this.api.connectObsidianVault({
+            workspace_id: workspaceId,
+            path,
+            ...(this.obsidianConnectLabel().trim()
+              ? { label: this.obsidianConnectLabel().trim() }
+              : {}),
+          }),
+        ),
+      );
+      this.obsidianConnectPath.set('');
+      this.obsidianConnectLabel.set('');
+      this.toast.show(this.i18n.t('pf.knowledge.capture.vaultConnected'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultConnectBusy.set(false);
+    }
+  }
+
+  async revokeObsidianVault(vaultRecordId: string): Promise<void> {
+    if (this.obsidianVaultConnectBusy()) return;
+    const confirmed = globalThis.confirm(this.i18n.t('pf.knowledge.capture.disconnectConfirm'));
+    if (!confirmed) return;
+    this.obsidianVaultConnectBusy.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.api.revokeObsidianVault(vaultRecordId));
+      await this.loadObsidianStatus();
+      this.toast.show(this.i18n.t('pf.knowledge.capture.vaultDisconnected'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultConnectBusy.set(false);
     }
   }
 

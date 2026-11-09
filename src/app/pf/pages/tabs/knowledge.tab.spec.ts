@@ -328,6 +328,67 @@ describe('PfKnowledgeTab — source capture', () => {
     expect(c.obsidianVault()?.provenance?.['path_hash']).toHaveLength(64);
   });
 
+  it('connects and disconnects a scoped vault without exposing its host path', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      obsidianStatus: vi.fn(() =>
+        of({
+          schema: 'theforge/ObsidianVaultDescriptor/v1',
+          workspace: 'ws-1',
+          vault_id: 'unconfigured',
+          path: '.',
+          source: 'product-forge',
+          detected: false,
+          capabilities: [],
+          warnings: ['No vault assigned'],
+        }),
+      ),
+      connectObsidianVault: vi.fn(() =>
+        of({
+          schema: 'theforge/ObsidianVaultDescriptor/v1',
+          workspace: 'ws-1',
+          vault_id: 'vault-123',
+          vault_record_id: 'vault-record-1',
+          label: 'Engineering',
+          path: '.',
+          source: 'product-forge',
+          detected: true,
+          capabilities: ['preview'],
+        }),
+      ),
+      revokeObsidianVault: vi.fn(() => of({ revoked: true, vault_record_id: 'vault-record-1' })),
+    };
+    vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+
+    await c.loadObsidianStatus();
+    c.obsidianConnectPath.set('C:/service-host/vaults/engineering');
+    c.obsidianConnectLabel.set('Engineering');
+    await c.connectObsidianVault();
+    expect(api.connectObsidianVault).toHaveBeenCalledWith({
+      workspace_id: 'ws-1',
+      path: 'C:/service-host/vaults/engineering',
+      label: 'Engineering',
+    });
+    expect(c.obsidianVault()?.vault_record_id).toBe('vault-record-1');
+    expect(c.obsidianVault()?.path).toBe('.');
+
+    await c.revokeObsidianVault('vault-record-1');
+    expect(api.revokeObsidianVault).toHaveBeenCalledWith('vault-record-1');
+    expect(c.obsidianVault()?.detected).toBe(false);
+  });
+
   it('offers guarded rollback only for receipts with a backup', async () => {
     const api = {
       documents: vi.fn(() => of({ items: [] })),

@@ -1481,6 +1481,20 @@ export const EN: Record<string, string> = {
   'pf.knowledge.capture.obsidianReady': 'Ready for preview and reviewed sync',
   'pf.knowledge.capture.obsidianNotReady': 'Not available',
   'pf.knowledge.capture.obsidianStatusHint': 'Check the configured vault before selecting a note.',
+  'pf.knowledge.capture.manageVault': 'Manage vault connection',
+  'pf.knowledge.capture.manageVaultHelp':
+    'The path stays protected in the service. Use a folder inside the administrator-approved root.',
+  'pf.knowledge.capture.connectedVault': 'Connected vault',
+  'pf.knowledge.capture.unnamedVault': 'Unnamed vault',
+  'pf.knowledge.capture.pathHidden': 'protected path',
+  'pf.knowledge.capture.disconnectVault': 'Disconnect vault',
+  'pf.knowledge.capture.vaultHostPath': 'Folder path on the service host',
+  'pf.knowledge.capture.vaultLabel': 'Name to recognize this vault',
+  'pf.knowledge.capture.connectVault': 'Connect vault',
+  'pf.knowledge.capture.vaultConnected': 'Vault connected securely',
+  'pf.knowledge.capture.disconnectConfirm':
+    'Disconnect this vault? Files will not be deleted; only this workspace link will be revoked.',
+  'pf.knowledge.capture.vaultDisconnected': 'Vault disconnected; no files were deleted',
   'pf.knowledge.capture.checkVault': 'Check vault',
   'pf.knowledge.capture.obsidianPath': 'Vault path',
   'pf.knowledge.capture.obsidianPathHelp':

@@ -992,6 +992,38 @@ page-settings {
 }
 
 /* disclosure polish — details/summary */
+pf-knowledge-tab .obsidian-vault-connect {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 4%, var(--bg-card));
+}
+pf-knowledge-tab .obsidian-vault-connect summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+pf-knowledge-tab .obsidian-vault-connect__form,
+pf-knowledge-tab .obsidian-vault-connect__active {
+  display: grid;
+  gap: var(--space-3);
+}
+pf-knowledge-tab .obsidian-vault-connect__active {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+pf-knowledge-tab .obsidian-vault-connect__active > div,
+pf-knowledge-tab .obsidian-vault-connect__form .field {
+  display: grid;
+  gap: var(--space-1);
+}
+@media (min-width: 48rem) {
+  pf-knowledge-tab .obsidian-vault-connect__form {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.55fr) auto;
+    align-items: end;
+  }
+}
 details > summary {
   cursor: pointer;
   font-weight: 600;

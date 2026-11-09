@@ -1496,6 +1496,20 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.obsidianReady': 'Pronto para preview e sincronização revisada',
   'pf.knowledge.capture.obsidianNotReady': 'Indisponível',
   'pf.knowledge.capture.obsidianStatusHint': 'Verifique o cofre configurado antes de escolher uma nota.',
+  'pf.knowledge.capture.manageVault': 'Gerenciar conexão do cofre',
+  'pf.knowledge.capture.manageVaultHelp':
+    'O caminho fica protegido no serviço. Use uma pasta dentro da raiz autorizada pelo administrador.',
+  'pf.knowledge.capture.connectedVault': 'Cofre conectado',
+  'pf.knowledge.capture.unnamedVault': 'Cofre sem nome',
+  'pf.knowledge.capture.pathHidden': 'caminho protegido',
+  'pf.knowledge.capture.disconnectVault': 'Desconectar cofre',
+  'pf.knowledge.capture.vaultHostPath': 'Caminho da pasta no host do serviço',
+  'pf.knowledge.capture.vaultLabel': 'Nome para reconhecer este cofre',
+  'pf.knowledge.capture.connectVault': 'Conectar cofre',
+  'pf.knowledge.capture.vaultConnected': 'Cofre conectado com segurança',
+  'pf.knowledge.capture.disconnectConfirm':
+    'Desconectar este cofre? Os arquivos não serão apagados; apenas o vínculo deste workspace será revogado.',
+  'pf.knowledge.capture.vaultDisconnected': 'Cofre desconectado; nenhum arquivo foi apagado',
   'pf.knowledge.capture.checkVault': 'Verificar cofre',
   'pf.knowledge.capture.obsidianPath': 'Caminho no cofre',
   'pf.knowledge.capture.obsidianPathHelp':
