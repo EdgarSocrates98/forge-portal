@@ -292,4 +292,39 @@ describe('PfKnowledgeTab — source capture', () => {
       baseline_hash: 'hash-old',
     });
   });
+
+  it('checks the authorized vault and renders only safe capability metadata', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      obsidianStatus: vi.fn(() =>
+        of({
+          schema: 'theforge/ObsidianVaultDescriptor/v1',
+          workspace: 'ws-1',
+          vault_id: 'vault-123',
+          path: '.',
+          source: 'product-forge',
+          detected: true,
+          capabilities: ['preview', 'import_read_only', 'reviewed_sync'],
+          provenance: { path_hash: 'a'.repeat(64) },
+        }),
+      ),
+    };
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+    await c.loadObsidianStatus();
+    expect(api.obsidianStatus).toHaveBeenCalledWith('p1');
+    expect(c.obsidianVault()?.detected).toBe(true);
+    expect(c.obsidianVault()?.capabilities).toContain('reviewed_sync');
+    expect(c.obsidianVault()?.provenance?.['path_hash']).toHaveLength(64);
+  });
 });
