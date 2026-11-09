@@ -22,6 +22,8 @@ import { ForgeDoc, UiForgeDoc } from '../../shared/forge-doc';
 import { UiSkeleton } from '../../shared/skeleton';
 import { UiPager, pageSlice } from '../../shared/pager';
 import { Source } from '../explorer/forges.data';
+import { PfApi } from '../../pf/pf-api.service';
+import { PfInvestigationImport, PfProduct } from '../../pf/pf.models';
 import { buildReplay, buildTimeline, fmtTaskDuration } from './tasks.data';
 
 interface PendingPlan {
@@ -272,6 +274,55 @@ interface PendingPlan {
           </button>
           <button class="btn" (click)="investigationReceipt.set(null)">{{ 'state.close' | t }}</button>
         </div>
+
+        <section class="handoff" data-section="investigation-handoff" aria-labelledby="handoff-title">
+          <div>
+            <h3 id="handoff-title">{{ 'tasks.investigation.handoff.title' | t }}</h3>
+            <p class="muted">{{ 'tasks.investigation.handoff.hint' | t }}</p>
+          </div>
+          @if (pfProductsState() === 'idle') {
+            <button class="btn" data-action="load-product-forge" [disabled]="pfBusy()" (click)="loadProductForgeProducts()">
+              <ui-icon name="search" [size]="14" />
+              {{ 'tasks.investigation.handoff.findProducts' | t }}
+            </button>
+          } @else if (pfProductsState() === 'loading') {
+            <p class="muted" role="status">{{ 'tasks.investigation.handoff.loading' | t }}</p>
+          } @else if (pfProducts().length) {
+            <div class="handoff__controls">
+              <label class="lbl" for="handoff-product">{{ 'tasks.investigation.handoff.product' | t }}</label>
+              <select id="handoff-product" class="input" [ngModel]="pfProductId()" (ngModelChange)="pfProductId.set($event)" [disabled]="pfBusy()">
+                <option value="">{{ 'tasks.investigation.handoff.choose' | t }}</option>
+                @for (product of pfProducts(); track product.id) {
+                  <option [value]="product.id">{{ product.name }} · {{ product.id }}</option>
+                }
+              </select>
+              <button class="btn btn--primary" data-action="import-investigation" [disabled]="pfBusy() || !pfProductId()" (click)="importInvestigation(r)">
+                <ui-icon name="knowledge" [size]="14" />
+                {{ 'tasks.investigation.handoff.import' | t }}
+              </button>
+            </div>
+          } @else {
+            <p class="muted" role="status">
+              {{ 'tasks.investigation.handoff.unavailable' | t }}
+              <a class="linklike" routerLink="/pf/settings">{{ 'tasks.investigation.handoff.settings' | t }}</a>
+            </p>
+          }
+          @if (pfImportError(); as e) {
+            <p class="refusal" role="alert"><code>{{ e.body.code }}</code> {{ e.body.message }}</p>
+          }
+          @if (pfImportResult(); as result) {
+            <p class="handoff__success" role="status">
+              <ui-state-badge state="supported" />
+              {{ 'tasks.investigation.handoff.done' | t }}
+              <a class="linklike" [routerLink]="['/pf/products', pfProductId()]" [queryParams]="{ tab: 'knowledge' }">
+                {{ 'tasks.investigation.handoff.open' | t }}
+              </a>
+              @if (result.suggested_obsidian_path) {
+                <code>{{ result.suggested_obsidian_path }}</code>
+              }
+            </p>
+          }
+        </section>
       </section>
     }
 
@@ -954,6 +1005,7 @@ interface PendingPlan {
 })
 export class TasksPage {
   private readonly api = inject(PortalApi);
+  private readonly pf = inject(PfApi);
 
   /** Route `?task=` deep-link (withComponentInputBinding) — dashboard
    *  rows, graph/knowledge inspectors and the history row links all
@@ -969,6 +1021,12 @@ export class TasksPage {
   readonly intent = signal('');
   readonly investigationInputs = signal<string[]>(['runtime_log']);
   readonly investigationReceipt = signal<InvestigationReceipt | null>(null);
+  readonly pfProducts = signal<PfProduct[]>([]);
+  readonly pfProductId = signal('');
+  readonly pfProductsState = signal<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
+  readonly pfImportResult = signal<PfInvestigationImport | null>(null);
+  readonly pfImportError = signal<ApiError | null>(null);
+  readonly pfBusy = signal(false);
   readonly investigationEvidence = [
     {
       id: 'runtime_log',
@@ -1161,6 +1219,8 @@ export class TasksPage {
     this.error.set(null);
     this.stale.set(null);
     this.receipt.set(null);
+    this.pfImportResult.set(null);
+    this.pfImportError.set(null);
     try {
       const investigation = this.newInvestigation() === '1';
       const r = investigation
@@ -1195,6 +1255,11 @@ export class TasksPage {
         this.investigationReceipt.set(
           await firstValueFrom(this.api.investigationRun(plan, planToken)),
         );
+        this.pfProducts.set([]);
+        this.pfProductId.set('');
+        this.pfProductsState.set('idle');
+        this.pfImportResult.set(null);
+        this.pfImportError.set(null);
       } else {
         this.receipt.set(await firstValueFrom(this.api.tasksExecute(plan, planToken)));
       }
@@ -1259,6 +1324,40 @@ export class TasksPage {
     a.download = 'investigation-receipt.json';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async loadProductForgeProducts(): Promise<void> {
+    if (this.pfBusy() || this.pfProductsState() === 'loading') return;
+    this.pfBusy.set(true);
+    this.pfProductsState.set('loading');
+    this.pfImportError.set(null);
+    try {
+      const result = await firstValueFrom(this.pf.products());
+      this.pfProducts.set(result.items ?? []);
+      this.pfProductsState.set('ready');
+    } catch (e) {
+      this.pfProducts.set([]);
+      this.pfProductsState.set('unavailable');
+      this.pfImportError.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.pfBusy.set(false);
+    }
+  }
+
+  async importInvestigation(r: InvestigationReceipt): Promise<void> {
+    const productId = this.pfProductId();
+    if (this.pfBusy() || !productId || !r.report || typeof r.report !== 'object') return;
+    this.pfBusy.set(true);
+    this.pfImportError.set(null);
+    try {
+      this.pfImportResult.set(
+        await firstValueFrom(this.pf.importInvestigation(productId, r.report, 'internal')),
+      );
+    } catch (e) {
+      this.pfImportError.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.pfBusy.set(false);
+    }
   }
 
   planText(plan: Record<string, unknown>): string {

@@ -143,6 +143,34 @@ describe('PfApi', () => {
     expect((await p).document.title).toBe('Docs');
   });
 
+  it('imports a governed The Forge investigation with explicit confirmation', async () => {
+    const report = {
+      schema: 'theforge/OrchestrationReport/v1',
+      kind: 'run',
+      intent: 'diagnose spark',
+      correlation_id: 'orch-1',
+    };
+    const p = firstValueFrom(api.importInvestigation('p 1', report, 'internal', 'Spark report'));
+    const req = http.expectOne(`${BASE}/products/p%201/documents/from-investigation`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      confirm: 'import',
+      report,
+      classification: 'internal',
+      title: 'Spark report',
+    });
+    req.flush(
+      envelope({
+        id: 'doc-investigation',
+        title: 'Spark report',
+        state: 'imported',
+        source_kind: 'the-forge-investigation',
+        suggested_obsidian_path: 'investigations/diagnose-spark-orch-1.md',
+      }),
+    );
+    expect((await p).source_kind).toBe('the-forge-investigation');
+  });
+
   it('uses scoped Obsidian vault endpoints and keeps the host path request-only', async () => {
     const list = firstValueFrom(api.obsidianVaults('ws 1'));
     http.expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`).flush(

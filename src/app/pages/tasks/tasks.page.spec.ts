@@ -5,6 +5,7 @@ import { TasksPage } from './tasks.page';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
 import { I18nService } from '../../core/i18n/i18n.service';
+import { PfApi } from '../../pf/pf-api.service';
 import {
   InstallationReceipt,
   InvestigationPlanResponse,
@@ -131,6 +132,21 @@ function fakeApi(overrides: Partial<Record<keyof PortalApi, unknown>> = {}): Por
   } as unknown as PortalApi;
 }
 
+function fakePfApi(): PfApi {
+  return {
+    products: vi.fn(() => of({ items: [{ id: 'p1', name: 'Spark knowledge' }] })),
+    importInvestigation: vi.fn(() =>
+      of({
+        id: 'doc-investigation',
+        title: 'Investigation',
+        state: 'imported',
+        source_kind: 'the-forge-investigation',
+        suggested_obsidian_path: 'investigations/diagnose-spark-orch-1.md',
+      }),
+    ),
+  } as unknown as PfApi;
+}
+
 const text = (el: Element | null | undefined) => el?.textContent ?? '';
 const section = (el: HTMLElement, name: string) =>
   el.querySelector(`[data-section="${name}"]`) as HTMLElement | null;
@@ -138,15 +154,20 @@ const section = (el: HTMLElement, name: string) =>
 describe('TasksPage — Execution Center', () => {
   async function setup(overrides: Partial<Record<keyof PortalApi, unknown>> = {}) {
     const api = fakeApi(overrides);
+    const pf = fakePfApi();
     await TestBed.configureTestingModule({
       imports: [TasksPage],
-      providers: [provideRouter([]), { provide: PortalApi, useValue: api }],
+      providers: [
+        provideRouter([]),
+        { provide: PortalApi, useValue: api },
+        { provide: PfApi, useValue: pf },
+      ],
     }).compileComponents();
     await TestBed.inject(I18nService).applyPreference('en');
     const fixture = TestBed.createComponent(TasksPage);
     await fixture.whenStable();
     fixture.detectChanges();
-    return { fixture, api, c: fixture.componentInstance, el: fixture.nativeElement as HTMLElement };
+    return { fixture, api, pf, c: fixture.componentInstance, el: fixture.nativeElement as HTMLElement };
   }
 
   it('runs plan → review → execute → receipt in order and refreshes history', async () => {
@@ -210,6 +231,27 @@ describe('TasksPage — Execution Center', () => {
     );
     expect(section(el, 'investigation-receipt')).toBeTruthy();
     expect(c.investigationReceipt()?.status).toBe('completed');
+  });
+
+  it('offers an explicit Product Forge handoff for the real investigation report', async () => {
+    const { fixture, pf, c, el } = await setup();
+    c.investigationReceipt.set(INVESTIGATION_RECEIPT);
+    fixture.detectChanges();
+
+    await c.loadProductForgeProducts();
+    expect(pf.products).toHaveBeenCalledTimes(1);
+    expect(c.pfProductsState()).toBe('ready');
+    c.pfProductId.set('p1');
+    await c.importInvestigation(INVESTIGATION_RECEIPT);
+    fixture.detectChanges();
+
+    expect(pf.importInvestigation).toHaveBeenCalledWith(
+      'p1',
+      INVESTIGATION_RECEIPT.report,
+      'internal',
+    );
+    expect(c.pfImportResult()?.suggested_obsidian_path).toContain('investigations/');
+    expect(text(section(el, 'investigation-handoff'))).toContain('Investigation indexed');
   });
 
   it('surfaces correlation ids on the plan card, receipt and history rows', async () => {

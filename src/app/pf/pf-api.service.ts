@@ -32,6 +32,7 @@ import {
   PfHealth,
   PfImpact,
   PfInitiative,
+  PfInvestigationImport,
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
@@ -283,6 +284,22 @@ export class PfApi {
     return this.post<PfWorkspaceImport>(
       `/products/${encodeURIComponent(pid)}/documents/from-workspace`,
       { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
+  }
+  importInvestigation(
+    pid: string,
+    report: Record<string, unknown>,
+    classification = 'internal',
+    title?: string,
+  ) {
+    return this.post<PfInvestigationImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-investigation`,
+      {
+        confirm: 'import',
+        report,
+        classification,
+        ...(title ? { title } : {}),
+      },
     );
   }
   obsidianPreview(pid: string, path: string) {

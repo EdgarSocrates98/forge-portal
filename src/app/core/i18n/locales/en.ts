@@ -337,6 +337,18 @@ export const EN: Record<string, string> = {
   'tasks.investigation.receipt': 'Investigation receipt',
   'tasks.investigation.receiptHint':
     'This receipt is persisted evidence from The Forge and can be shared with the rest of the family.',
+  'tasks.investigation.handoff.title': 'Share with Product Forge',
+  'tasks.investigation.handoff.hint':
+    'Index a redacted projection as provisional knowledge. Obsidian export remains reviewed and explicit.',
+  'tasks.investigation.handoff.findProducts': 'Find products',
+  'tasks.investigation.handoff.loading': 'Loading authorized products…',
+  'tasks.investigation.handoff.product': 'Destination product',
+  'tasks.investigation.handoff.choose': 'Choose a product',
+  'tasks.investigation.handoff.import': 'Index investigation',
+  'tasks.investigation.handoff.unavailable': 'Product Forge is not connected in this session.',
+  'tasks.investigation.handoff.settings': 'Configure connection',
+  'tasks.investigation.handoff.done': 'Investigation indexed as a draft.',
+  'tasks.investigation.handoff.open': 'Open knowledge',
   'apiOperations.title': 'API Operations',
   'apiOperations.subtitle': 'Move from a real contract to evidence and the next safe action.',
   'apiOperations.eyebrow': 'Decision surface',

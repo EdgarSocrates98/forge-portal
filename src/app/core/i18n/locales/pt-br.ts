@@ -337,6 +337,18 @@ export const PT_BR: Record<string, string> = {
   'tasks.investigation.receipt': 'Recibo da investigação',
   'tasks.investigation.receiptHint':
     'O recibo abaixo é a evidência persistida pelo The Forge e pode ser compartilhado com o restante da família.',
+  'tasks.investigation.handoff.title': 'Compartilhar com o Product Forge',
+  'tasks.investigation.handoff.hint':
+    'Indexe uma projeção redigida como conhecimento provisório. A exportação para Obsidian continua revisada e explícita.',
+  'tasks.investigation.handoff.findProducts': 'Encontrar produtos',
+  'tasks.investigation.handoff.loading': 'Consultando produtos autorizados…',
+  'tasks.investigation.handoff.product': 'Produto de destino',
+  'tasks.investigation.handoff.choose': 'Escolha um produto',
+  'tasks.investigation.handoff.import': 'Indexar investigação',
+  'tasks.investigation.handoff.unavailable': 'Product Forge não está conectado nesta sessão.',
+  'tasks.investigation.handoff.settings': 'Configurar conexão',
+  'tasks.investigation.handoff.done': 'Investigação indexada como draft.',
+  'tasks.investigation.handoff.open': 'Abrir conhecimento',
   'apiOperations.title': 'Operações de API',
   'apiOperations.subtitle': 'Vá do contrato real para a evidência e para a próxima ação segura.',
   'apiOperations.eyebrow': 'Superfície de decisão',

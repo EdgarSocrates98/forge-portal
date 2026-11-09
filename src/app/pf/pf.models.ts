@@ -106,6 +106,20 @@ export interface PfWorkspaceImport extends PfDocument {
   source_kind?: string;
 }
 
+/** productforge/InvestigationKnowledge/v1 — governed The Forge handoff. */
+export interface PfInvestigationImport extends PfDocument {
+  state?: 'imported' | 'already_imported' | string;
+  source_kind?: string;
+  suggested_obsidian_path?: string;
+  projection?: {
+    schema?: string;
+    content_hash?: string;
+    classification?: string;
+    trust_state?: string;
+    freshness?: string;
+  };
+}
+
 /** productforge/ObsidianDocument/v1 — bounded local vault preview. */
 export interface PfObsidianPreview {
   schema?: string;
