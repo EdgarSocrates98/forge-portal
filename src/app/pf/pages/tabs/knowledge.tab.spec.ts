@@ -188,7 +188,7 @@ describe('PfKnowledgeTab — source capture', () => {
       knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
       planObsidianSync: vi.fn(() =>
         of({
-          schema: 'forge/ObsidianSyncPlan/v1',
+          schema: 'theforge/ObsidianSyncPlan/v1',
           path: 'exports/runbook.md',
           content_hash: 'hash-new',
           outcome: 'created',
@@ -197,7 +197,7 @@ describe('PfKnowledgeTab — source capture', () => {
       ),
       exportObsidianDocument: vi.fn(() =>
         of({
-          receipt_schema: 'forge/ObsidianSyncReceipt/v1',
+          receipt_schema: 'theforge/ObsidianSyncReceipt/v1',
           path: 'exports/runbook.md',
           content_hash: 'hash-new',
           sync_state: 'created',
