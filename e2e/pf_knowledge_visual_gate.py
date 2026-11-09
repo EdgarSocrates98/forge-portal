@@ -79,6 +79,28 @@ def pf_payload(path: str, method: str) -> Any:
             "source_url": "https://docs.example.com/runbook",
             "source_kind": "url",
         }
+    if path.endswith("/documents/obsidian/preview"):
+        return {
+            "schema": "productforge/ObsidianDocument/v1",
+            "path": "runbooks/spark-diagnosis.md",
+            "title": "Spark diagnosis runbook",
+            "preview": "# Spark diagnosis\n\nValidated Obsidian vault preview.",
+            "content_hash": "sha256:obsidian-e2e",
+            "size": 52,
+            "state": "ready_for_import",
+            "provenance": {"adapter": "stdlib-obsidian-markdown", "cli_required": False},
+        }
+    if path.endswith("/documents/from-obsidian") and method == "POST":
+        return {
+            "id": "doc-obsidian-e2e",
+            "product_id": PRODUCT,
+            "title": "Spark diagnosis runbook",
+            "status": "indexed",
+            "chunk_count": 2,
+            "state": "imported",
+            "source_path": "runbooks/spark-diagnosis.md",
+            "source_kind": "obsidian",
+        }
     if path.endswith("/documents"):
         return {
             "items": [
@@ -154,6 +176,9 @@ def gate_page(page: Page, base: str, token: str, theme: str, width: int, height:
     page.set_viewport_size({"width": width, "height": height})
     page.goto(f"{base}{ROUTE}&forge_session={token}")
     page.wait_for_load_state("networkidle")
+    # The product defaults to pt-BR; this gate's interaction labels are
+    # English, so pin the fixture locale before the first stable render.
+    page.evaluate("localStorage.setItem('forge-portal.locale', 'en')")
     page.evaluate(f"localStorage.setItem('forge-portal.scheme', '{theme}')")
     page.reload()
     page.wait_for_load_state("networkidle")
@@ -185,6 +210,17 @@ def gate_page(page: Page, base: str, token: str, theme: str, width: int, height:
     preview_axe = page.evaluate(
         """async () => (await axe.run(document, {resultTypes: ['violations']})).violations"""
     )
+    html_preview_visible = page.get_by_text(
+        "Validated HTML preview for the visual gate.", exact=False
+    ).is_visible()
+    page.get_by_role("button", name="Obsidian vault").click()
+    page.get_by_label("Vault path").fill("runbooks/spark-diagnosis.md")
+    page.get_by_role("checkbox").check()
+    page.get_by_role("button", name="Preview from Obsidian").click()
+    page.get_by_text("Spark diagnosis runbook", exact=False).wait_for()
+    obsidian_preview_visible = page.get_by_text(
+        "Validated Obsidian vault preview.", exact=False
+    ).is_visible()
     return {
         "theme": theme,
         "viewport": f"{width}x{height}",
@@ -193,9 +229,8 @@ def gate_page(page: Page, base: str, token: str, theme: str, width: int, height:
         "horizontal_overflow": bool(overflow),
         "focus_without_ring": focus_bad,
         "defuddle_selected": selected == "defuddle",
-        "preview_visible": page.get_by_text(
-            "Validated HTML preview for the visual gate.", exact=False
-        ).is_visible(),
+        "preview_visible": html_preview_visible,
+        "obsidian_preview_visible": obsidian_preview_visible,
     }
 
 
@@ -248,6 +283,9 @@ def main(argv: list[str] | None = None) -> int:
         "focus_without_ring": sum(row["focus_without_ring"] for row in results),
         "defuddle_selection_failures": sum(1 for row in results if not row["defuddle_selected"]),
         "preview_failures": sum(1 for row in results if not row["preview_visible"]),
+        "obsidian_preview_failures": sum(
+            1 for row in results if not row["obsidian_preview_visible"]
+        ),
     }
     report["status"] = (
         "PASS"
@@ -260,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
                 "focus_without_ring",
                 "defuddle_selection_failures",
                 "preview_failures",
+                "obsidian_preview_failures",
             )
         )
         and report["cases"] == 8
@@ -280,6 +319,7 @@ def main(argv: list[str] | None = None) -> int:
                     "focus_without_ring",
                     "defuddle_selection_failures",
                     "preview_failures",
+                    "obsidian_preview_failures",
                     "status",
                 )
             },

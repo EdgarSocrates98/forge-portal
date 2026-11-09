@@ -171,7 +171,6 @@ const NAV: NavEntry[] = [
             <span
               class="topbar__workspace"
               [attr.title]="store.workspace()?.root ?? ('dashboard.noWorkspace' | t)"
-              [attr.aria-label]="store.workspace()?.name ?? ('dashboard.noWorkspace' | t)"
             >
               <ui-icon name="folder" [size]="14" />
               @if (store.workspace()?.name; as workspaceName) {
