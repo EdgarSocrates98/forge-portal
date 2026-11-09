@@ -688,6 +688,9 @@ export const EN: Record<string, string> = {
   'explorer.identity': 'Identity',
   'explorer.presence': 'Presence',
   'explorer.notes': 'Notes',
+  'explorer.workflows': 'Agentic workflows',
+  'explorer.readOnly': 'read-only',
+  'explorer.mutating': 'mutating',
   'explorer.checkout': 'Checkout',
 
   // registry operations — plan → review → confirm → execute via forge-cli (P1-003)

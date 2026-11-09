@@ -47,6 +47,14 @@ const SNAPSHOT: FederationSnapshot = {
       version: '2.0.0',
       checks: [{ id: 'cli', status: 'PASS' }],
       notes: ['uses shared venv'],
+      workflows: [
+        {
+          id: 'knowledge.evidence.list',
+          mode: 'DIAGNOSTIC_ONLY',
+          description: 'List evidence',
+          read_only: true,
+        },
+      ],
     },
     { provider: 'forge-doctor-api', status: 'BLOCKED', checkout: null },
   ],
@@ -117,6 +125,8 @@ describe('ForgeDetailPage', () => {
     expect(text(section(el, 'presence'))).toContain('command');
     expect(text(section(el, 'checks'))).toContain('cli');
     expect(text(section(el, 'notes'))).toContain('uses shared venv');
+    expect(text(section(el, 'workflows'))).toContain('knowledge.evidence.list');
+    expect(text(section(el, 'workflows'))).toContain('List evidence');
   });
 
   it('keeps absent fields explicit instead of filling them in', async () => {

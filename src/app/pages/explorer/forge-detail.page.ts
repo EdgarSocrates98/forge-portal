@@ -304,6 +304,36 @@ type DetailView =
           </ul>
         }
       </section>
+
+      <section class="card" data-section="workflows">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'explorer.workflows' | t }}</h2>
+            <p class="src"><code>GET /api/v1/federation</code></p>
+          </div>
+        </div>
+        @if (s.workflows === undefined) {
+          <div class="unv" role="note"><ui-state-badge state="UNVERIFIED" /></div>
+        } @else if (!s.workflows.length) {
+          <p class="muted">{{ 'state.none' | t }}</p>
+        } @else {
+          <ul class="workflows">
+            @for (workflow of s.workflows; track workflow.id) {
+              <li>
+                <code>{{ workflow.id }}</code>
+                @if (workflow.read_only === true) {
+                  <ui-state-badge state="supported" [labelOverride]="'explorer.readOnly' | t" />
+                } @else {
+                  <ui-state-badge state="supported" [labelOverride]="'explorer.mutating' | t" />
+                }
+                @if (workflow.description) {
+                  <small class="muted">{{ workflow.description }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
     }
 
     @if (view().kind === 'registry') {
@@ -423,7 +453,8 @@ type DetailView =
       margin-bottom: var(--space-3);
     }
     .checks,
-    .notes {
+    .notes,
+    .workflows {
       list-style: none;
       margin: var(--space-2) 0 0;
       padding: 0;
@@ -432,6 +463,12 @@ type DetailView =
     }
     .checks li {
       display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .workflows li {
+      display: grid;
+      grid-template-columns: minmax(0, auto) auto minmax(0, 1fr);
       align-items: center;
       gap: var(--space-2);
     }

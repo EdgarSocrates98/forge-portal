@@ -691,6 +691,9 @@ export const PT_BR: Record<string, string> = {
   'explorer.identity': 'Identidade',
   'explorer.presence': 'Presença',
   'explorer.notes': 'Notas',
+  'explorer.workflows': 'Workflows agentivos',
+  'explorer.readOnly': 'somente leitura',
+  'explorer.mutating': 'mutável',
   'explorer.checkout': 'Checkout',
 
   // operações de registry — plan → review → confirm → execute via forge-cli (P1-003)

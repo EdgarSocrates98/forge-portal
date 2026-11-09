@@ -391,8 +391,17 @@ export interface FederationSpecialist {
   checkout?: string | null;
   mcp?: Record<string, unknown> | null;
   checks?: { id: string; status: string; detail?: string }[];
+  workflows?: FederationWorkflow[];
+  workflow_count?: number;
   notes?: string[];
   [key: string]: unknown;
+}
+
+export interface FederationWorkflow {
+  id: string;
+  mode?: string;
+  description?: string;
+  read_only?: boolean;
 }
 
 export interface FederationSummary {
