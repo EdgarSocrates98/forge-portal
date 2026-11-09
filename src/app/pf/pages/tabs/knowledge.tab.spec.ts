@@ -128,4 +128,55 @@ describe('PfKnowledgeTab — source capture', () => {
     );
     expect(c.captureReceipt()?.id).toBe('doc-url-1');
   });
+
+  it('supports an Obsidian vault path with the same permission, preview and receipt gate', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      obsidianPreview: vi.fn(() =>
+        of({
+          schema: 'productforge/ObsidianDocument/v1',
+          path: 'runbooks/spark.md',
+          title: 'Spark runbook',
+          preview: '# Spark',
+          size: 7,
+          state: 'ready_for_import',
+        }),
+      ),
+      importObsidianDocument: vi.fn(() =>
+        of({
+          id: 'doc-obsidian-1',
+          title: 'Spark runbook',
+          product_id: 'p1',
+          source_path: 'runbooks/spark.md',
+          state: 'imported',
+        }),
+      ),
+    };
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+    c.selectCaptureMode('obsidian');
+    c.captureObsidianPath.set('runbooks/spark.md');
+    await c.capture();
+    expect(api.obsidianPreview).not.toHaveBeenCalled();
+    c.capturePermission.set(true);
+    await c.capture();
+    expect(api.obsidianPreview).toHaveBeenCalledWith('p1', 'runbooks/spark.md');
+    await c.confirmCapture();
+    expect(api.importObsidianDocument).toHaveBeenCalledWith(
+      'p1',
+      'runbooks/spark.md',
+      'Spark runbook',
+    );
+    expect(c.captureReceipt()?.id).toBe('doc-obsidian-1');
+  });
 });

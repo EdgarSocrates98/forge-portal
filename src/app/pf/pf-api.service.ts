@@ -36,6 +36,8 @@ import {
   PfKnowledgeHealth,
   PfKnowledgeSource,
   PfList,
+  PfObsidianImport,
+  PfObsidianPreview,
   PfMeeting,
   PfMetric,
   PfNlQueryResult,
@@ -269,6 +271,17 @@ export class PfApi {
   importWorkspaceDocument(pid: string, path: string, title?: string) {
     return this.post<PfWorkspaceImport>(
       `/products/${encodeURIComponent(pid)}/documents/from-workspace`,
+      { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
+  }
+  obsidianPreview(pid: string, path: string) {
+    return this.get<PfObsidianPreview>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/preview?path=${encodeURIComponent(path)}`,
+    );
+  }
+  importObsidianDocument(pid: string, path: string, title?: string) {
+    return this.post<PfObsidianImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-obsidian`,
       { confirm: 'import', path, ...(title ? { title } : {}) },
     );
   }

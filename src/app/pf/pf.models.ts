@@ -106,6 +106,24 @@ export interface PfWorkspaceImport extends PfDocument {
   source_kind?: string;
 }
 
+/** productforge/ObsidianDocument/v1 — bounded local vault preview. */
+export interface PfObsidianPreview {
+  schema?: string;
+  path: string;
+  title: string;
+  preview: string;
+  content_hash?: string;
+  size: number;
+  state: string;
+  provenance?: Record<string, unknown>;
+}
+
+export interface PfObsidianImport extends PfDocument {
+  state?: string;
+  source_path?: string;
+  source_kind?: string;
+}
+
 /** productforge/UrlDocument/v1 — bounded remote capture preview. */
 export interface PfUrlPreview {
   schema?: string;

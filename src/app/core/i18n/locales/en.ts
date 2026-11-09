@@ -1476,6 +1476,15 @@ export const EN: Record<string, string> = {
   'pf.knowledge.capture.type': 'Capture source type',
   'pf.knowledge.capture.workspace': 'Workspace',
   'pf.knowledge.capture.publicUrl': 'Public URL',
+  'pf.knowledge.capture.obsidian': 'Obsidian vault',
+  'pf.knowledge.capture.obsidianPath': 'Vault path',
+  'pf.knowledge.capture.obsidianPathHelp':
+    'Use a path relative to the configured vault. The server blocks traversal and non-Markdown files.',
+  'pf.knowledge.capture.obsidianPermission':
+    'I authorize reading this selected vault file for this import.',
+  'pf.knowledge.capture.previewing': 'Reading preview…',
+  'pf.knowledge.capture.previewObsidian': 'Preview from Obsidian',
+  'pf.knowledge.capture.editObsidianPath': 'Edit path',
   'pf.knowledge.capture.discovering': 'Discovering…',
   'pf.knowledge.capture.selectWorkspace': 'Select workspace source',
   'pf.knowledge.capture.sourceDocument': 'Source document',

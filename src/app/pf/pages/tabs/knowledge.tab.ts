@@ -19,6 +19,8 @@ import {
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfObsidianImport,
+  PfObsidianPreview,
   PfWorkspaceDiscovery,
   PfWorkspaceDocument,
   PfWorkspaceImport,
@@ -133,6 +135,14 @@ import { ToastService } from '../../../shared/toast';
           >
             {{ 'pf.knowledge.capture.publicUrl' | t }}
           </button>
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'obsidian'"
+            (click)="selectCaptureMode('obsidian')"
+          >
+            {{ 'pf.knowledge.capture.obsidian' | t }}
+          </button>
         </div>
 
         @if (captureMode() === 'workspace' && !workspaceDiscovery()) {
@@ -244,6 +254,96 @@ import { ToastService } from '../../../shared/toast';
             </div>
           }
 
+          @if (captureReceipt(); as receipt) {
+            <div class="capture__receipt" role="status" data-state="receipt">
+              <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
+              <span
+                >{{ 'pf.knowledge.capture.imported' | t }} <code>{{ receipt.title }}</code>
+                {{ 'pf.knowledge.capture.intoProduct' | t }}</span
+              >
+              <code>{{ receipt.id }}</code>
+              @if ($any(receipt).source_path) {
+                <span class="muted small"
+                  >{{ 'pf.knowledge.capture.source' | t }}: {{ $any(receipt).source_path }}</span
+                >
+              }
+            </div>
+          }
+        }
+
+        @if (captureMode() === 'obsidian') {
+          <div class="capture__review">
+            <label class="field capture__path-field">
+              <span>{{ 'pf.knowledge.capture.obsidianPath' | t }}</span>
+              <input
+                class="input"
+                type="text"
+                autocomplete="off"
+                [value]="captureObsidianPath()"
+                (input)="captureObsidianPath.set($any($event.target).value); capturePreview.set(null)"
+                placeholder="runbooks/spark-diagnosis.md"
+                aria-describedby="obsidian-capture-help"
+              />
+            </label>
+            <p id="obsidian-capture-help" class="muted small">
+              {{ 'pf.knowledge.capture.obsidianPathHelp' | t }}
+            </p>
+            <label class="check">
+              <input
+                type="checkbox"
+                [checked]="capturePermission()"
+                (change)="
+                  capturePermission.set($any($event.target).checked); capturePreview.set(null)
+                "
+              />
+              {{ 'pf.knowledge.capture.obsidianPermission' | t }}
+            </label>
+            <button
+              class="btn"
+              type="button"
+              [disabled]="captureBusy() || !capturePermission() || !captureObsidianPath().trim()"
+              (click)="capture()"
+            >
+              {{
+                (captureBusy()
+                  ? 'pf.knowledge.capture.previewing'
+                  : 'pf.knowledge.capture.previewObsidian'
+                ) | t
+              }}
+            </button>
+          </div>
+          @if (capturePreview(); as preview) {
+            <div class="capture__preview" data-state="preview">
+              <div class="capture__meta">
+                <strong>{{ 'pf.knowledge.capture.preview' | t }} · {{ preview.title }}</strong>
+                <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
+              </div>
+              <pre>{{ preview.preview }}</pre>
+              <div class="fg-row">
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="confirmCapture()"
+                >
+                  {{
+                    (captureBusy()
+                      ? 'pf.knowledge.capture.importing'
+                      : 'pf.knowledge.capture.confirmImport'
+                    ) | t
+                  }}
+                </button>
+                <button
+                  class="btn"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)"
+                >
+                  {{ 'pf.knowledge.capture.editObsidianPath' | t }}
+                </button>
+              </div>
+            </div>
+          }
           @if (captureReceipt(); as receipt) {
             <div class="capture__receipt" role="status" data-state="receipt">
               <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
@@ -858,11 +958,12 @@ export class PfKnowledgeTab implements OnInit {
   readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
   readonly captureSource = signal<PfWorkspaceDocument | null>(null);
   readonly capturePermission = signal(false);
-  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | null>(null);
-  readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | null>(null);
+  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | PfObsidianPreview | null>(null);
+  readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | PfObsidianImport | null>(null);
   readonly captureBusy = signal(false);
-  readonly captureMode = signal<'workspace' | 'url'>('workspace');
+  readonly captureMode = signal<'workspace' | 'url' | 'obsidian'>('workspace');
   readonly captureUrl = signal('');
+  readonly captureObsidianPath = signal('');
   readonly captureExtractor = signal<'stdlib' | 'defuddle'>('stdlib');
   readonly selectedDocument = signal<PfDocumentDetail | null>(null);
   readonly documentBusy = signal(false);
@@ -901,15 +1002,20 @@ export class PfKnowledgeTab implements OnInit {
   captureStep(): number {
     if (this.captureReceipt()) return 4;
     if (this.capturePreview()) return 4;
-    if (this.capturePermission() && (this.captureSource() || this.captureUrl().trim())) return 3;
-    if (this.captureSource() || this.captureUrl().trim()) return 2;
+    if (
+      this.capturePermission() &&
+      (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim())
+    )
+      return 3;
+    if (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim()) return 2;
     return 1;
   }
 
-  selectCaptureMode(mode: 'workspace' | 'url'): void {
+  selectCaptureMode(mode: 'workspace' | 'url' | 'obsidian'): void {
     this.captureMode.set(mode);
     this.captureSource.set(null);
     this.captureUrl.set('');
+    this.captureObsidianPath.set('');
     this.captureExtractor.set('stdlib');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
@@ -940,9 +1046,11 @@ export class PfKnowledgeTab implements OnInit {
   async capture(): Promise<void> {
     const source = this.captureSource();
     const url = this.captureUrl().trim();
+    const obsidianPath = this.captureObsidianPath().trim();
     if (
       (this.captureMode() === 'workspace' && !source) ||
       (this.captureMode() === 'url' && !url) ||
+      (this.captureMode() === 'obsidian' && !obsidianPath) ||
       !this.capturePermission() ||
       this.captureBusy()
     )
@@ -953,7 +1061,9 @@ export class PfKnowledgeTab implements OnInit {
       this.capturePreview.set(
         this.captureMode() === 'url'
           ? await firstValueFrom(this.api.urlPreview(this.pid(), url, this.captureExtractor()))
-          : await firstValueFrom(this.api.workspacePreview(source!.path)),
+          : this.captureMode() === 'obsidian'
+            ? await firstValueFrom(this.api.obsidianPreview(this.pid(), obsidianPath))
+            : await firstValueFrom(this.api.workspacePreview(source!.path)),
       );
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
@@ -966,9 +1076,11 @@ export class PfKnowledgeTab implements OnInit {
     const source = this.captureSource();
     const preview = this.capturePreview();
     const url = this.captureUrl().trim();
+    const obsidianPath = this.captureObsidianPath().trim();
     if (
       (this.captureMode() === 'workspace' && !source) ||
       (this.captureMode() === 'url' && !url) ||
+      (this.captureMode() === 'obsidian' && !obsidianPath) ||
       !preview ||
       !this.capturePermission() ||
       this.captureBusy()
@@ -982,9 +1094,13 @@ export class PfKnowledgeTab implements OnInit {
           ? await firstValueFrom(
               this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
             )
-          : await firstValueFrom(
-              this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
-            );
+          : this.captureMode() === 'obsidian'
+            ? await firstValueFrom(
+                this.api.importObsidianDocument(this.pid(), obsidianPath, preview.title),
+              )
+            : await firstValueFrom(
+                this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
+              );
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
       await this.load();
@@ -999,6 +1115,7 @@ export class PfKnowledgeTab implements OnInit {
     this.workspaceDiscovery.set(null);
     this.captureSource.set(null);
     this.captureUrl.set('');
+    this.captureObsidianPath.set('');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
     this.captureReceipt.set(null);
