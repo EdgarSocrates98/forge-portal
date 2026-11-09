@@ -438,6 +438,15 @@ import { ToastService } from '../../../shared/toast';
                 >
                   {{ 'pf.knowledge.capture.editObsidianPath' | t }}
                 </button>
+                @if (obsidianOpenUri($any(preview).path); as uri) {
+                  <a
+                    class="btn"
+                    [href]="uri"
+                    target="_blank"
+                    rel="noopener"
+                    >{{ 'pf.knowledge.capture.openInObsidian' | t }}</a
+                  >
+                }
               </div>
             </div>
           }
@@ -1561,6 +1570,14 @@ export class PfKnowledgeTab implements OnInit {
     } finally {
       this.obsidianExportBusy.set(false);
     }
+  }
+
+  obsidianOpenUri(path: string): string | null {
+    const vault = this.obsidianVault();
+    const vaultName = (vault?.label || vault?.vault_id || '').trim();
+    const notePath = path.trim();
+    if (!vaultName || !notePath || !vault?.detected) return null;
+    return `obsidian://open?vault=${encodeURIComponent(vaultName)}&file=${encodeURIComponent(notePath)}`;
   }
 
   private markdownFor(detail: PfDocumentDetail): string {

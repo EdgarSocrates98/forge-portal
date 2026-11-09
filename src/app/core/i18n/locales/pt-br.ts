@@ -1532,6 +1532,7 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.previewing': 'Lendo prévia…',
   'pf.knowledge.capture.previewObsidian': 'Visualizar do Obsidian',
   'pf.knowledge.capture.editObsidianPath': 'Editar caminho',
+  'pf.knowledge.capture.openInObsidian': 'Abrir no Obsidian',
   'pf.knowledge.capture.discovering': 'Descobrindo…',
   'pf.knowledge.capture.selectWorkspace': 'Selecionar fonte do workspace',
   'pf.knowledge.capture.sourceDocument': 'Documento de origem',

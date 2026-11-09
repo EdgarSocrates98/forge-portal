@@ -1517,6 +1517,7 @@ export const EN: Record<string, string> = {
   'pf.knowledge.capture.previewing': 'Reading preview…',
   'pf.knowledge.capture.previewObsidian': 'Preview from Obsidian',
   'pf.knowledge.capture.editObsidianPath': 'Edit path',
+  'pf.knowledge.capture.openInObsidian': 'Open in Obsidian',
   'pf.knowledge.capture.discovering': 'Discovering…',
   'pf.knowledge.capture.selectWorkspace': 'Select workspace source',
   'pf.knowledge.capture.sourceDocument': 'Source document',

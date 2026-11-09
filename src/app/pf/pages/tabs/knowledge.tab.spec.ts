@@ -178,6 +178,18 @@ describe('PfKnowledgeTab — source capture', () => {
       'Spark runbook',
     );
     expect(c.captureReceipt()?.id).toBe('doc-obsidian-1');
+    c.obsidianVault.set({
+      workspace: 'ws-1',
+      vault_id: 'vault-123',
+      label: 'Engineering',
+      path: '.',
+      source: 'product-forge',
+      detected: true,
+      capabilities: ['preview'],
+    });
+    expect(c.obsidianOpenUri('runbooks/spark.md')).toBe(
+      'obsidian://open?vault=Engineering&file=runbooks%2Fspark.md',
+    );
   });
 
   it('requires a real sync plan before exporting indexed content to Obsidian', async () => {
