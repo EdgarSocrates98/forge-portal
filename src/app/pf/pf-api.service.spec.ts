@@ -142,4 +142,36 @@ describe('PfApi', () => {
     );
     expect((await p).document.title).toBe('Docs');
   });
+
+  it('uses scoped Obsidian vault endpoints and keeps the host path request-only', async () => {
+    const list = firstValueFrom(api.obsidianVaults('ws 1'));
+    http.expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`).flush(
+      envelope({ items: [{ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }] }),
+    );
+    expect((await list).items[0].path).toBe('.');
+
+    const connected = firstValueFrom(
+      api.connectObsidianVault({
+        workspace_id: 'ws 1',
+        path: 'C:/service/vaults/team',
+        label: 'Team',
+      }),
+    );
+    const connectRequest = http.expectOne(`${BASE}/obsidian/vaults`);
+    expect(connectRequest.request.method).toBe('POST');
+    expect(connectRequest.request.body).toEqual({
+      workspace_id: 'ws 1',
+      path: 'C:/service/vaults/team',
+      label: 'Team',
+      confirm: 'connect',
+    });
+    connectRequest.flush(envelope({ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }));
+    await connected;
+
+    const revoked = firstValueFrom(api.revokeObsidianVault('vault/1'));
+    const revokeRequest = http.expectOne(`${BASE}/obsidian/vaults/vault%2F1`);
+    expect(revokeRequest.request.method).toBe('DELETE');
+    revokeRequest.flush(envelope({ revoked: true, vault_record_id: 'vault/1' }));
+    expect((await revoked).revoked).toBe(true);
+  });
 });
