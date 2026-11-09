@@ -154,8 +154,15 @@ export interface PfObsidianSyncReceipt {
   classification?: string;
   source?: string;
   backup_path?: string | null;
+  receipt_path?: string;
   warnings?: string[];
   unresolved?: string[];
+}
+
+export interface PfObsidianHistory {
+  schema?: string;
+  items: PfObsidianSyncReceipt[];
+  count?: number;
 }
 
 /** productforge/UrlDocument/v1 — bounded remote capture preview. */

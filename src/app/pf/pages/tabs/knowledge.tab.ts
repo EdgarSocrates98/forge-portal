@@ -20,6 +20,7 @@ import {
   PfKnowledgeHealth,
   PfKnowledgeSource,
   PfObsidianImport,
+  PfObsidianHistory,
   PfObsidianPreview,
   PfObsidianSyncPlan,
   PfObsidianSyncReceipt,
@@ -765,6 +766,33 @@ import { ToastService } from '../../../shared/toast';
                 }
               </div>
             }
+            <div class="fg-row obsidian-export__history-actions">
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy()"
+                (click)="loadObsidianHistory()"
+              >
+                {{ 'pf.knowledge.obsidianExport.history' | t }}
+              </button>
+            </div>
+            @if (obsidianHistory(); as history) {
+              <div class="obsidian-export__history" aria-live="polite">
+                <strong>{{ 'pf.knowledge.obsidianExport.history' | t }}</strong>
+                @if (history.items.length) {
+                  <ul>
+                    @for (item of history.items; track item.receipt_path ?? item.path + item.content_hash) {
+                      <li>
+                        <span>{{ item.path }} · {{ item.sync_state ?? item.state }}</span>
+                        <code>{{ item.content_hash }}</code>
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="muted small">{{ 'pf.knowledge.obsidianExport.historyEmpty' | t }}</p>
+                }
+              </div>
+            }
           </section>
           <p class="muted small">
             Versions: {{ detail.versions.items.length }} · relations:
@@ -1086,6 +1114,7 @@ export class PfKnowledgeTab implements OnInit {
   readonly obsidianExportPath = signal('exports/');
   readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
   readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
+  readonly obsidianHistory = signal<PfObsidianHistory | null>(null);
   readonly obsidianBaselineHash = signal('');
   readonly obsidianExportBusy = signal(false);
 
@@ -1253,6 +1282,7 @@ export class PfKnowledgeTab implements OnInit {
       this.obsidianPlan.set(null);
       this.obsidianReceipt.set(null);
       this.obsidianBaselineHash.set('');
+      this.obsidianHistory.set(null);
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -1279,6 +1309,7 @@ export class PfKnowledgeTab implements OnInit {
         ),
       );
       this.obsidianReceipt.set(null);
+      this.obsidianHistory.set(null);
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -1319,6 +1350,19 @@ export class PfKnowledgeTab implements OnInit {
       this.obsidianPlan.set(null);
       this.obsidianReceipt.set(null);
       this.toast.show(`Obsidian baseline loaded for "${preview.path}"`, 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async loadObsidianHistory(): Promise<void> {
+    if (this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianHistory.set(await firstValueFrom(this.api.obsidianHistory(this.pid())));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {

@@ -37,6 +37,7 @@ import {
   PfKnowledgeSource,
   PfList,
   PfObsidianImport,
+  PfObsidianHistory,
   PfObsidianPreview,
   PfObsidianSyncPlan,
   PfObsidianSyncReceipt,
@@ -279,6 +280,11 @@ export class PfApi {
   obsidianPreview(pid: string, path: string) {
     return this.get<PfObsidianPreview>(
       `/products/${encodeURIComponent(pid)}/documents/obsidian/preview?path=${encodeURIComponent(path)}`,
+    );
+  }
+  obsidianHistory(pid: string, limit = 50) {
+    return this.get<PfObsidianHistory>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/history?limit=${limit}`,
     );
   }
   importObsidianDocument(pid: string, path: string, title?: string) {

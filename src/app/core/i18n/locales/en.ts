@@ -1524,6 +1524,8 @@ export const EN: Record<string, string> = {
   'pf.knowledge.obsidianExport.confirm': 'Confirm export',
   'pf.knowledge.obsidianExport.exporting': 'Exporting…',
   'pf.knowledge.obsidianExport.receipt': 'Export receipt',
+  'pf.knowledge.obsidianExport.history': 'View export history',
+  'pf.knowledge.obsidianExport.historyEmpty': 'No Obsidian export receipt yet.',
   'pf.knowledge.extractionComplete': 'Extraction complete',
   'pf.knowledge.relations': 'relations',
   'pf.knowledge.questionPlaceholder': 'e.g. What metrics are tied to churn?',
