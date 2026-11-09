@@ -1477,6 +1477,11 @@ export const EN: Record<string, string> = {
   'pf.knowledge.capture.workspace': 'Workspace',
   'pf.knowledge.capture.publicUrl': 'Public URL',
   'pf.knowledge.capture.obsidian': 'Obsidian vault',
+  'pf.knowledge.capture.obsidianVault': 'Authorized vault',
+  'pf.knowledge.capture.obsidianReady': 'Ready for preview and reviewed sync',
+  'pf.knowledge.capture.obsidianNotReady': 'Not available',
+  'pf.knowledge.capture.obsidianStatusHint': 'Check the configured vault before selecting a note.',
+  'pf.knowledge.capture.checkVault': 'Check vault',
   'pf.knowledge.capture.obsidianPath': 'Vault path',
   'pf.knowledge.capture.obsidianPathHelp':
     'Use a path relative to the configured vault. The server blocks traversal and non-Markdown files.',

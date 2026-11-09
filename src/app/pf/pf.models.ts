@@ -118,6 +118,22 @@ export interface PfObsidianPreview {
   provenance?: Record<string, unknown>;
 }
 
+/** theforge/ObsidianVaultDescriptor/v1 — safe capability metadata only. */
+export interface PfObsidianVaultDescriptor {
+  schema?: string;
+  version?: string;
+  workspace: string;
+  vault_id: string;
+  path: string;
+  source: string;
+  classification?: string;
+  detected: boolean;
+  capabilities: string[];
+  provenance?: Record<string, unknown>;
+  warnings?: string[];
+  unresolved?: string[];
+}
+
 export interface PfObsidianImport extends PfDocument {
   state?: string;
   source_path?: string;

@@ -39,6 +39,7 @@ import {
   PfObsidianImport,
   PfObsidianHistory,
   PfObsidianPreview,
+  PfObsidianVaultDescriptor,
   PfObsidianSyncPlan,
   PfObsidianSyncReceipt,
   PfMeeting,
@@ -280,6 +281,11 @@ export class PfApi {
   obsidianPreview(pid: string, path: string) {
     return this.get<PfObsidianPreview>(
       `/products/${encodeURIComponent(pid)}/documents/obsidian/preview?path=${encodeURIComponent(path)}`,
+    );
+  }
+  obsidianStatus(pid: string) {
+    return this.get<PfObsidianVaultDescriptor>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/status`,
     );
   }
   obsidianHistory(pid: string, limit = 50) {

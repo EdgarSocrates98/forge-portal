@@ -1492,6 +1492,11 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.workspace': 'Workspace',
   'pf.knowledge.capture.publicUrl': 'URL pública',
   'pf.knowledge.capture.obsidian': 'Cofre Obsidian',
+  'pf.knowledge.capture.obsidianVault': 'Cofre autorizado',
+  'pf.knowledge.capture.obsidianReady': 'Pronto para preview e sincronização revisada',
+  'pf.knowledge.capture.obsidianNotReady': 'Indisponível',
+  'pf.knowledge.capture.obsidianStatusHint': 'Verifique o cofre configurado antes de escolher uma nota.',
+  'pf.knowledge.capture.checkVault': 'Verificar cofre',
   'pf.knowledge.capture.obsidianPath': 'Caminho no cofre',
   'pf.knowledge.capture.obsidianPathHelp':
     'Use um caminho relativo ao cofre configurado. O servidor bloqueia travessia de diretório e arquivos fora de Markdown.',

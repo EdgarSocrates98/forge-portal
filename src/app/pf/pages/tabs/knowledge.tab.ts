@@ -24,6 +24,7 @@ import {
   PfObsidianPreview,
   PfObsidianSyncPlan,
   PfObsidianSyncReceipt,
+  PfObsidianVaultDescriptor,
   PfWorkspaceDiscovery,
   PfWorkspaceDocument,
   PfWorkspaceImport,
@@ -276,6 +277,30 @@ import { ToastService } from '../../../shared/toast';
 
         @if (captureMode() === 'obsidian') {
           <div class="capture__review">
+            <div class="capture__vault-status" aria-live="polite">
+              <div>
+                <strong>{{ 'pf.knowledge.capture.obsidianVault' | t }}</strong>
+                @if (obsidianVault(); as vault) {
+                  <span class="muted small">
+                    {{ vault.detected ? ('pf.knowledge.capture.obsidianReady' | t) : ('pf.knowledge.capture.obsidianNotReady' | t) }}
+                    · <code>{{ vault.vault_id }}</code>
+                  </span>
+                  @for (warning of vault.warnings ?? []; track warning) {
+                    <span class="danger small">{{ warning }}</span>
+                  }
+                } @else {
+                  <span class="muted small">{{ 'pf.knowledge.capture.obsidianStatusHint' | t }}</span>
+                }
+              </div>
+              <button
+                class="btn"
+                type="button"
+                [disabled]="captureBusy() || obsidianVaultBusy()"
+                (click)="loadObsidianStatus()"
+              >
+                {{ (obsidianVaultBusy() ? 'state.loading' : 'pf.knowledge.capture.checkVault') | t }}
+              </button>
+            </div>
             <label class="field capture__path-field">
               <span>{{ 'pf.knowledge.capture.obsidianPath' | t }}</span>
               <input
@@ -1115,6 +1140,8 @@ export class PfKnowledgeTab implements OnInit {
   readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
   readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
   readonly obsidianHistory = signal<PfObsidianHistory | null>(null);
+  readonly obsidianVault = signal<PfObsidianVaultDescriptor | null>(null);
+  readonly obsidianVaultBusy = signal(false);
   readonly obsidianBaselineHash = signal('');
   readonly obsidianExportBusy = signal(false);
 
@@ -1219,6 +1246,19 @@ export class PfKnowledgeTab implements OnInit {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.captureBusy.set(false);
+    }
+  }
+
+  async loadObsidianStatus(): Promise<void> {
+    if (this.obsidianVaultBusy()) return;
+    this.obsidianVaultBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianVault.set(await firstValueFrom(this.api.obsidianStatus(this.pid())));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultBusy.set(false);
     }
   }
 
