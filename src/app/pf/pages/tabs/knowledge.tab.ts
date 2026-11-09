@@ -20,6 +20,7 @@ import {
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfKnowledgeState,
   PfObsidianImport,
   PfObsidianFileIndex,
   PfObsidianHistory,
@@ -783,6 +784,55 @@ import { ToastService } from '../../../shared/toast';
               <dd>{{ detail.versions.state }}</dd>
             </div>
           </dl>
+          <section class="knowledge-lifecycle" aria-labelledby="knowledge-lifecycle-title">
+            <div>
+              <h3 id="knowledge-lifecycle-title">{{ 'pf.knowledge.lifecycle.title' | t }}</h3>
+              <p class="muted small">{{ 'pf.knowledge.lifecycle.hint' | t }}</p>
+            </div>
+            <div class="fg-row">
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.nextState' | t }}</span>
+                <select
+                  class="input"
+                  [value]="knowledgeTarget()"
+                  (change)="knowledgeTarget.set($any($event.target).value)"
+                >
+                  @for (state of knowledgeTargets(detail); track state) {
+                    <option [value]="state">{{ state }}</option>
+                  }
+                </select>
+              </label>
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.evidence' | t }}</span>
+                <input
+                  class="input"
+                  [value]="knowledgeEvidence()"
+                  (input)="knowledgeEvidence.set($any($event.target).value)"
+                  [placeholder]="'pf.knowledge.lifecycle.evidencePlaceholder' | t"
+                />
+              </label>
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.reason' | t }}</span>
+                <input
+                  class="input"
+                  [value]="knowledgeReason()"
+                  (input)="knowledgeReason.set($any($event.target).value)"
+                  [placeholder]="'pf.knowledge.lifecycle.reasonPlaceholder' | t"
+                />
+              </label>
+              <button
+                class="btn btn--primary"
+                type="button"
+                [disabled]="knowledgeBusy() || !knowledgeTarget() || (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim())"
+                (click)="transitionKnowledge(detail)"
+              >
+                {{ knowledgeBusy() ? ('pf.knowledge.lifecycle.saving' | t) : ('pf.knowledge.lifecycle.save' | t) }}
+              </button>
+            </div>
+            @if (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim()) {
+              <p class="muted small">{{ 'pf.knowledge.lifecycle.evidenceRequired' | t }}</p>
+            }
+          </section>
           @if (detail.document.metadata; as metadata) {
             <p class="muted small">
               {{ 'pf.knowledge.provenanceAvailable' | t }}
@@ -1247,6 +1297,10 @@ export class PfKnowledgeTab implements OnInit {
   readonly captureExtractor = signal<'stdlib' | 'defuddle'>('stdlib');
   readonly selectedDocument = signal<PfDocumentDetail | null>(null);
   readonly documentBusy = signal(false);
+  readonly knowledgeBusy = signal(false);
+  readonly knowledgeTarget = signal<PfKnowledgeState>('reviewed');
+  readonly knowledgeEvidence = signal('');
+  readonly knowledgeReason = signal('');
   readonly obsidianExportPath = signal('exports/');
   readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
   readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
@@ -1496,6 +1550,9 @@ export class PfKnowledgeTab implements OnInit {
     try {
       const detail = await firstValueFrom(this.api.documentDetail(this.pid(), did));
       this.selectedDocument.set(detail);
+      this.knowledgeTarget.set(this.knowledgeTargets(detail)[0] ?? 'reviewed');
+      this.knowledgeEvidence.set('');
+      this.knowledgeReason.set('');
       this.obsidianExportPath.set(`exports/${this.slug(detail.document.title)}.md`);
       this.obsidianPlan.set(null);
       this.obsidianReceipt.set(null);
@@ -1505,6 +1562,51 @@ export class PfKnowledgeTab implements OnInit {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.documentBusy.set(false);
+    }
+  }
+
+  knowledgeTargets(detail: PfDocumentDetail): PfKnowledgeState[] {
+    const current = String(detail.document.metadata?.['knowledge_state'] ?? 'captured') as PfKnowledgeState;
+    const transitions: Record<PfKnowledgeState, PfKnowledgeState[]> = {
+      captured: ['draft', 'reviewed', 'rejected'],
+      draft: ['reviewed', 'rejected'],
+      reviewed: ['draft', 'validated', 'rejected'],
+      validated: ['reviewed', 'deprecated'],
+      deprecated: ['draft'],
+      rejected: ['draft'],
+    };
+    return transitions[current] ?? ['draft'];
+  }
+
+  async transitionKnowledge(detail: PfDocumentDetail): Promise<void> {
+    const target = this.knowledgeTarget();
+    const evidence = this.knowledgeEvidence()
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (!target || (target === 'validated' && !evidence.length) || this.knowledgeBusy()) return;
+    this.knowledgeBusy.set(true);
+    this.error.set(null);
+    try {
+      const result = await firstValueFrom(
+        this.api.transitionKnowledgeState(
+          this.pid(),
+          detail.document.id,
+          target,
+          evidence,
+          this.knowledgeReason(),
+        ),
+      );
+      this.selectedDocument.update((current) => current ? { ...current, document: result.document } : current);
+      this.docs.update((items) => items.map((item) => item.id === result.document.id ? result.document : item));
+      this.knowledgeTarget.set(this.knowledgeTargets({ ...detail, document: result.document })[0] ?? 'reviewed');
+      this.knowledgeEvidence.set('');
+      this.knowledgeReason.set('');
+      this.toast.show(this.i18n.t('pf.knowledge.lifecycle.saved'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.knowledgeBusy.set(false);
     }
   }
 

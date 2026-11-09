@@ -171,6 +171,22 @@ describe('PfApi', () => {
     expect((await p).source_kind).toBe('the-forge-investigation');
   });
 
+  it('transitions knowledge state with explicit evidence and confirmation', async () => {
+    const p = firstValueFrom(
+      api.transitionKnowledgeState('p 1', 'doc/1', 'validated', ['spark-job-42'], 'receipt checked'),
+    );
+    const req = http.expectOne(`${BASE}/products/p%201/documents/doc%2F1/knowledge-state`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      confirm: 'transition',
+      state: 'validated',
+      evidence_refs: ['spark-job-42'],
+      reason: 'receipt checked',
+    });
+    req.flush(envelope({ document: { id: 'doc/1' }, transition: { state: 'validated' } }));
+    expect((await p).transition.state).toBe('validated');
+  });
+
   it('uses scoped Obsidian vault endpoints and keeps the host path request-only', async () => {
     const list = firstValueFrom(api.obsidianVaults('ws 1'));
     http.expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`).flush(

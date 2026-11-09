@@ -36,6 +36,7 @@ import {
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfKnowledgeTransition,
   PfList,
   PfObsidianImport,
   PfObsidianHistory,
@@ -398,6 +399,23 @@ export class PfApi {
   documentDetail(pid: string, did: string) {
     return this.get<PfDocumentDetail>(
       `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}`,
+    );
+  }
+  transitionKnowledgeState(
+    pid: string,
+    did: string,
+    state: string,
+    evidenceRefs: string[] = [],
+    reason = '',
+  ) {
+    return this.post<PfKnowledgeTransition>(
+      `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}/knowledge-state`,
+      {
+        confirm: 'transition',
+        state,
+        evidence_refs: evidenceRefs,
+        ...(reason.trim() ? { reason: reason.trim() } : {}),
+      },
     );
   }
   documentSearch(pid: string, query: string, limit = 20) {

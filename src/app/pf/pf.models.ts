@@ -322,6 +322,24 @@ export interface PfDocument {
   metadata?: Record<string, unknown>;
 }
 
+export type PfKnowledgeState =
+  | 'captured'
+  | 'draft'
+  | 'reviewed'
+  | 'validated'
+  | 'deprecated'
+  | 'rejected';
+
+export interface PfKnowledgeTransition {
+  document: PfDocument;
+  transition: {
+    state: PfKnowledgeState;
+    previous_state: PfKnowledgeState;
+    changed: boolean;
+    evidence_refs?: string[];
+  };
+}
+
 export interface PfDocumentDetail {
   schema?: string;
   document: PfDocument;
