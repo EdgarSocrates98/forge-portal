@@ -124,6 +124,40 @@ export interface PfObsidianImport extends PfDocument {
   source_kind?: string;
 }
 
+export interface PfObsidianSyncPlan {
+  schema?: string;
+  workspace?: string;
+  vault_id?: string;
+  path: string;
+  source?: string;
+  classification?: string;
+  content_hash: string;
+  previous_hash?: string | null;
+  baseline_hash?: string | null;
+  outcome: 'created' | 'unchanged' | 'conflict' | 'updated' | string;
+  warnings?: string[];
+  unresolved?: string[];
+  planned_at?: string;
+}
+
+export interface PfObsidianSyncReceipt {
+  schema?: string;
+  receipt_schema?: string;
+  path: string;
+  title?: string;
+  content_hash: string;
+  previous_hash?: string | null;
+  size?: number;
+  state?: string;
+  sync_state?: string;
+  outcome?: string;
+  classification?: string;
+  source?: string;
+  backup_path?: string | null;
+  warnings?: string[];
+  unresolved?: string[];
+}
+
 /** productforge/UrlDocument/v1 — bounded remote capture preview. */
 export interface PfUrlPreview {
   schema?: string;

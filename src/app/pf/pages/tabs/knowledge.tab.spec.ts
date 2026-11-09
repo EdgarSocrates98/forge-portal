@@ -179,4 +179,58 @@ describe('PfKnowledgeTab — source capture', () => {
     );
     expect(c.captureReceipt()?.id).toBe('doc-obsidian-1');
   });
+
+  it('requires a real sync plan before exporting indexed content to Obsidian', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      planObsidianSync: vi.fn(() =>
+        of({
+          schema: 'forge/ObsidianSyncPlan/v1',
+          path: 'exports/runbook.md',
+          content_hash: 'hash-new',
+          outcome: 'created',
+          warnings: ['confirmation required for mutation'],
+        }),
+      ),
+      exportObsidianDocument: vi.fn(() =>
+        of({
+          receipt_schema: 'forge/ObsidianSyncReceipt/v1',
+          path: 'exports/runbook.md',
+          content_hash: 'hash-new',
+          sync_state: 'created',
+          outcome: 'exported',
+        }),
+      ),
+    };
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+    c.obsidianExportPath.set('exports/runbook.md');
+    const detail = {
+      document: { id: 'd1', title: 'Runbook' },
+      content: { chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }], chunk_count: 1 },
+    } as any;
+    await c.planObsidianExport(detail);
+    expect(api.planObsidianSync).toHaveBeenCalledWith('p1', {
+      path: 'exports/runbook.md',
+      content: '# Runbook\n\nUse Spark.',
+    });
+    const plan = c.obsidianPlan();
+    expect(plan?.outcome).toBe('created');
+    await c.exportToObsidian(detail, plan!);
+    expect(api.exportObsidianDocument).toHaveBeenCalledWith('p1', {
+      path: 'exports/runbook.md',
+      content: '# Runbook\n\nUse Spark.',
+    });
+    expect(c.obsidianReceipt()?.sync_state).toBe('created');
+  });
 });

@@ -21,6 +21,8 @@ import {
   PfKnowledgeSource,
   PfObsidianImport,
   PfObsidianPreview,
+  PfObsidianSyncPlan,
+  PfObsidianSyncReceipt,
   PfWorkspaceDiscovery,
   PfWorkspaceDocument,
   PfWorkspaceImport,
@@ -679,6 +681,78 @@ import { ToastService } from '../../../shared/toast';
               </article>
             }
           </div>
+          <section class="obsidian-export" aria-labelledby="obsidian-export-title">
+            <div>
+              <h3 id="obsidian-export-title">{{ 'pf.knowledge.obsidianExport.title' | t }}</h3>
+              <p class="muted small">{{ 'pf.knowledge.obsidianExport.description' | t }}</p>
+            </div>
+            <label class="field">
+              <span>{{ 'pf.knowledge.obsidianExport.path' | t }}</span>
+              <input
+                class="input"
+                type="text"
+                [value]="obsidianExportPath()"
+                (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null)"
+                placeholder="exports/spark-runbook.md"
+              />
+            </label>
+            <div class="fg-row">
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy() || !obsidianExportPath().trim()"
+                (click)="planObsidianExport(detail)"
+              >
+                {{
+                  (obsidianExportBusy()
+                    ? 'pf.knowledge.obsidianExport.planning'
+                    : 'pf.knowledge.obsidianExport.review'
+                  ) | t
+                }}
+              </button>
+            </div>
+            @if (obsidianPlan(); as plan) {
+              <div class="obsidian-export__plan" [attr.data-outcome]="plan.outcome">
+                <div class="obsidian-export__plan-head">
+                  <strong>{{ 'pf.knowledge.obsidianExport.plan' | t }}</strong>
+                  <ui-state-badge
+                    [state]="plan.outcome === 'conflict' ? 'error' : plan.outcome"
+                    [labelOverride]="plan.outcome"
+                  />
+                </div>
+                <p class="muted small">{{ plan.path }} · {{ plan.content_hash }}</p>
+                @for (warning of plan.warnings ?? []; track warning) {
+                  <p class="muted small">{{ warning }}</p>
+                }
+                @for (unresolved of plan.unresolved ?? []; track unresolved) {
+                  <p class="danger small">{{ unresolved }}</p>
+                }
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="obsidianExportBusy() || plan.outcome !== 'created'"
+                  (click)="exportToObsidian(detail, plan)"
+                >
+                  {{
+                    (obsidianExportBusy()
+                      ? 'pf.knowledge.obsidianExport.exporting'
+                      : 'pf.knowledge.obsidianExport.confirm'
+                    ) | t
+                  }}
+                </button>
+              </div>
+            }
+            @if (obsidianReceipt(); as receipt) {
+              <div class="obsidian-export__receipt" role="status">
+                <strong>{{ 'pf.knowledge.obsidianExport.receipt' | t }}</strong>
+                <span>{{ receipt.path }} · {{ receipt.sync_state ?? receipt.state }}</span>
+                <code>{{ receipt.content_hash }}</code>
+                @if (receipt.backup_path) {
+                  <span class="muted small">{{ receipt.backup_path }}</span>
+                }
+              </div>
+            }
+          </section>
           <p class="muted small">
             Versions: {{ detail.versions.items.length }} · relations:
             {{ detail.relations?.length ?? 0 }}
@@ -932,6 +1006,35 @@ import { ToastService } from '../../../shared/toast';
       display: grid;
       gap: var(--space-2);
     }
+    .obsidian-export {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+      padding: var(--space-4);
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+      border-radius: var(--radius-md);
+    }
+    .obsidian-export__plan,
+    .obsidian-export__receipt {
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+    }
+    .obsidian-export__plan[data-outcome='conflict'] {
+      border-color: color-mix(in srgb, var(--error) 55%, var(--border));
+    }
+    .obsidian-export__plan-head {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      align-items: center;
+    }
+    .danger {
+      color: var(--error);
+    }
   `,
 })
 export class PfKnowledgeTab implements OnInit {
@@ -967,6 +1070,10 @@ export class PfKnowledgeTab implements OnInit {
   readonly captureExtractor = signal<'stdlib' | 'defuddle'>('stdlib');
   readonly selectedDocument = signal<PfDocumentDetail | null>(null);
   readonly documentBusy = signal(false);
+  readonly obsidianExportPath = signal('exports/');
+  readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
+  readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
+  readonly obsidianExportBusy = signal(false);
 
   readonly markdownSources = computed(() =>
     (this.workspaceDiscovery()?.documents ?? []).filter(
@@ -1126,12 +1233,71 @@ export class PfKnowledgeTab implements OnInit {
     this.documentBusy.set(true);
     this.error.set(null);
     try {
-      this.selectedDocument.set(await firstValueFrom(this.api.documentDetail(this.pid(), did)));
+      const detail = await firstValueFrom(this.api.documentDetail(this.pid(), did));
+      this.selectedDocument.set(detail);
+      this.obsidianExportPath.set(`exports/${this.slug(detail.document.title)}.md`);
+      this.obsidianPlan.set(null);
+      this.obsidianReceipt.set(null);
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.documentBusy.set(false);
     }
+  }
+
+  async planObsidianExport(detail: PfDocumentDetail): Promise<void> {
+    const path = this.obsidianExportPath().trim();
+    const content = this.markdownFor(detail);
+    if (!path || !content || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianPlan.set(
+        await firstValueFrom(this.api.planObsidianSync(this.pid(), { path, content })),
+      );
+      this.obsidianReceipt.set(null);
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async exportToObsidian(detail: PfDocumentDetail, plan: PfObsidianSyncPlan): Promise<void> {
+    if (plan.outcome !== 'created' || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      const receipt = await firstValueFrom(
+        this.api.exportObsidianDocument(this.pid(), {
+          path: plan.path,
+          content: this.markdownFor(detail),
+        }),
+      );
+      this.obsidianReceipt.set(receipt);
+      this.toast.show(`Obsidian note "${receipt.path}" exported`, 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  private markdownFor(detail: PfDocumentDetail): string {
+    return [`# ${detail.document.title}`, ...detail.content.chunks.map((chunk) => chunk.text)].join(
+      '\n\n',
+    );
+  }
+
+  private slug(title: string): string {
+    return (
+      title
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'document'
+    );
   }
 
   synthBadge(s: string): string {

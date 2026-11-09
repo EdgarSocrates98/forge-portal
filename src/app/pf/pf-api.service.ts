@@ -38,6 +38,8 @@ import {
   PfList,
   PfObsidianImport,
   PfObsidianPreview,
+  PfObsidianSyncPlan,
+  PfObsidianSyncReceipt,
   PfMeeting,
   PfMetric,
   PfNlQueryResult,
@@ -283,6 +285,21 @@ export class PfApi {
     return this.post<PfObsidianImport>(
       `/products/${encodeURIComponent(pid)}/documents/from-obsidian`,
       { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
+  }
+  planObsidianSync(pid: string, input: { path: string; content: string; baseline_hash?: string }) {
+    return this.post<PfObsidianSyncPlan>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/sync-plan`,
+      input,
+    );
+  }
+  exportObsidianDocument(
+    pid: string,
+    input: { path: string; content: string; baseline_hash?: string; classification?: string },
+  ) {
+    return this.post<PfObsidianSyncReceipt>(
+      `/products/${encodeURIComponent(pid)}/documents/to-obsidian`,
+      { ...input, confirm: 'export' },
     );
   }
   urlPreview(pid: string, url: string, extractor: 'stdlib' | 'defuddle' = 'stdlib') {
