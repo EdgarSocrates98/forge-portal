@@ -1655,8 +1655,7 @@ export const PT_BR: Record<string, string> = {
   // api-sentinel — superfície de operações (/api-operations)
   'sentinel.page.subtitle':
     'Operações vivas do API Sentinel — serviços, incidentes, SLOs, capacidades.',
-  'sentinel.page.unreachable':
-    'API Sentinel inalcançável neste endereço — confira a conexão.',
+  'sentinel.page.unreachable': 'API Sentinel inalcançável neste endereço — confira a conexão.',
   'sentinel.tabs.services': 'Serviços',
   'sentinel.tabs.incidents': 'Incidentes',
   'sentinel.tabs.status': 'Estado do Sentinel',

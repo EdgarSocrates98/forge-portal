@@ -57,7 +57,8 @@ const TAB_IDS = new Set(['services', 'incidents', 'status']);
           <ui-state-badge
             [state]="h.state"
             [kindOverride]="kind(h.state)"
-            [labelOverride]="stateLabel(h.state)" />
+            [labelOverride]="stateLabel(h.state)"
+          />
           <code class="mono">api-sentinel {{ h.version }} · {{ api.baseUrl() }}</code>
         }
         <button class="btn" type="button" (click)="connOpen.set(!connOpen())">

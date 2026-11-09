@@ -4,10 +4,7 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
 import { ApiError } from '../../core/api/api.error';
 import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
-import {
-  SENTINEL_DEFAULT_BASE_URL,
-  SentinelApi,
-} from '../../sentinel/sentinel-api.service';
+import { SENTINEL_DEFAULT_BASE_URL, SentinelApi } from '../../sentinel/sentinel-api.service';
 import { SentinelHealth } from '../../sentinel/sentinel.models';
 import { sentinelFailure } from '../../sentinel/sentinel-states';
 

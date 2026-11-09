@@ -25,11 +25,7 @@ import {
   SentinelInvestigationResponse,
   SentinelTimelineResponse,
 } from '../../sentinel/sentinel.models';
-import {
-  confidenceRank,
-  isAuthFailure,
-  sentinelKind,
-} from '../../sentinel/sentinel-states';
+import { confidenceRank, isAuthFailure, sentinelKind } from '../../sentinel/sentinel-states';
 
 interface TimelineItem {
   at: string;
@@ -66,15 +62,29 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
       <ui-error [error]="e" (retry)="load()" />
     } @else if (!selectedId()) {
       <div class="filter" role="group" [attr.aria-label]="'sentinel.inc.filter' | t">
-        <button class="btn" type="button" [attr.data-active]="statusFilter() === 'open' || null" (click)="setFilter('open')">
+        <button
+          class="btn"
+          type="button"
+          [attr.data-active]="statusFilter() === 'open' || null"
+          (click)="setFilter('open')"
+        >
           {{ 'sentinel.inc.open' | t }}
         </button>
-        <button class="btn" type="button" [attr.data-active]="statusFilter() === 'all' || null" (click)="setFilter('all')">
+        <button
+          class="btn"
+          type="button"
+          [attr.data-active]="statusFilter() === 'all' || null"
+          (click)="setFilter('all')"
+        >
           {{ 'sentinel.inc.all' | t }}
         </button>
       </div>
       @if (incidents().length === 0) {
-        <ui-empty icon="inbox" [title]="'sentinel.inc.empty' | t" [hint]="'sentinel.inc.emptyDesc' | t" />
+        <ui-empty
+          icon="inbox"
+          [title]="'sentinel.inc.empty' | t"
+          [hint]="'sentinel.inc.emptyDesc' | t"
+        />
       } @else {
         <div class="table-wrap card">
           <table>
@@ -89,15 +99,32 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
             </thead>
             <tbody>
               @for (i of incidents(); track i.incident_id) {
-                <tr class="row" tabindex="0" (click)="select(i.incident_id)" (keydown.enter)="select(i.incident_id)">
+                <tr
+                  class="row"
+                  tabindex="0"
+                  (click)="select(i.incident_id)"
+                  (keydown.enter)="select(i.incident_id)"
+                >
                   <td>
                     <strong>{{ i.title }}</strong>
                     <div class="sub mono">{{ i.incident_id }}</div>
                   </td>
-                  <td><ui-state-badge [state]="i.severity" [kindOverride]="kind(i.severity)" [labelOverride]="stateLabel(i.severity)" /></td>
-                  <td><ui-state-badge [state]="i.status" [kindOverride]="kind(i.status)" [labelOverride]="stateLabel(i.status)" /></td>
+                  <td>
+                    <ui-state-badge
+                      [state]="i.severity"
+                      [kindOverride]="kind(i.severity)"
+                      [labelOverride]="stateLabel(i.severity)"
+                    />
+                  </td>
+                  <td>
+                    <ui-state-badge
+                      [state]="i.status"
+                      [kindOverride]="kind(i.status)"
+                      [labelOverride]="stateLabel(i.status)"
+                    />
+                  </td>
                   <td class="mono">{{ i.service_id }}</td>
-                  <td class="num">{{ i.detected_at | date:'short' }}</td>
+                  <td class="num">{{ i.detected_at | date: 'short' }}</td>
                 </tr>
               }
             </tbody>
@@ -117,30 +144,51 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
           <div class="hero__head">
             <div>
               <h2>{{ b.detail.detail.incident.title }}</h2>
-              <div class="sub mono">{{ b.detail.detail.incident.incident_id }} · {{ b.detail.detail.incident.service_id }}</div>
+              <div class="sub mono">
+                {{ b.detail.detail.incident.incident_id }} ·
+                {{ b.detail.detail.incident.service_id }}
+              </div>
             </div>
             <div class="chips">
-              <ui-state-badge [state]="b.detail.detail.incident.severity" [kindOverride]="kind(b.detail.detail.incident.severity)" [labelOverride]="stateLabel(b.detail.detail.incident.severity)" />
-              <ui-state-badge [state]="b.detail.detail.incident.status" [kindOverride]="kind(b.detail.detail.incident.status)" [labelOverride]="stateLabel(b.detail.detail.incident.status)" />
+              <ui-state-badge
+                [state]="b.detail.detail.incident.severity"
+                [kindOverride]="kind(b.detail.detail.incident.severity)"
+                [labelOverride]="stateLabel(b.detail.detail.incident.severity)"
+              />
+              <ui-state-badge
+                [state]="b.detail.detail.incident.status"
+                [kindOverride]="kind(b.detail.detail.incident.status)"
+                [labelOverride]="stateLabel(b.detail.detail.incident.status)"
+              />
             </div>
           </div>
           <p class="muted">
-            {{ 'sentinel.inc.firstObserved' | t }} {{ b.detail.detail.incident.first_observed_at | date:'medium' }}
-            · {{ 'sentinel.col.detected' | t }} {{ b.detail.detail.incident.detected_at | date:'medium' }}
+            {{ 'sentinel.inc.firstObserved' | t }}
+            {{ b.detail.detail.incident.first_observed_at | date: 'medium' }} ·
+            {{ 'sentinel.col.detected' | t }}
+            {{ b.detail.detail.incident.detected_at | date: 'medium' }}
             @if (b.detail.detail.incident.resolved_at) {
-              · {{ 'sentinel.inc.resolved' | t }} {{ b.detail.detail.incident.resolved_at | date:'medium' }}
+              · {{ 'sentinel.inc.resolved' | t }}
+              {{ b.detail.detail.incident.resolved_at | date: 'medium' }}
             }
             · {{ 'sentinel.inc.revision' | t }} {{ b.detail.detail.incident.revision }}
           </p>
           @if (b.detail.detail.incident.rule_refs.length) {
             <p class="muted mono small">
               @for (r of b.detail.detail.incident.rule_refs; track r.rule_id) {
-                <span class="rule">{{ r.detector_id }}@{{ r.detector_version }} · {{ r.rule_id }}@{{ r.rule_revision }}</span>
+                <span class="rule"
+                  >{{ r.detector_id }}@{{ r.detector_version }} · {{ r.rule_id }}@{{
+                    r.rule_revision
+                  }}</span
+                >
               }
             </p>
           }
           @if (b.detail.detail.incident.limitations.length) {
-            <p class="unknowns">{{ 'sentinel.limitations' | t }}: {{ b.detail.detail.incident.limitations.join(' · ') }}</p>
+            <p class="unknowns">
+              {{ 'sentinel.limitations' | t }}:
+              {{ b.detail.detail.incident.limitations.join(' · ') }}
+            </p>
           }
         </section>
 
@@ -154,9 +202,14 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
               <div class="hyp card-inset">
                 <div class="ladder" role="list" [attr.aria-label]="'sentinel.inc.ladder' | t">
                   @for (rung of ladder; track rung) {
-                    <span class="rung" role="listitem"
-                      [attr.data-active]="confidenceRank(h.confidence) >= confidenceRank(rung) || null"
-                      [attr.data-current]="h.confidence === rung || null">
+                    <span
+                      class="rung"
+                      role="listitem"
+                      [attr.data-active]="
+                        confidenceRank(h.confidence) >= confidenceRank(rung) || null
+                      "
+                      [attr.data-current]="h.confidence === rung || null"
+                    >
                       {{ stateLabel(rung) }}
                     </span>
                   }
@@ -166,13 +219,17 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
                 </div>
                 <p class="hyp__text">{{ h.text }}</p>
                 <p class="muted small">
-                  {{ 'sentinel.inc.evidenceFor' | t }} {{ h.evidence_for.length }}
-                  · {{ 'sentinel.inc.evidenceAgainst' | t }} {{ h.evidence_against.length }}
-                  · {{ h.updated_at | date:'short' }}
-                  @if (h.note) { · {{ h.note }} }
+                  {{ 'sentinel.inc.evidenceFor' | t }} {{ h.evidence_for.length }} ·
+                  {{ 'sentinel.inc.evidenceAgainst' | t }} {{ h.evidence_against.length }} ·
+                  {{ h.updated_at | date: 'short' }}
+                  @if (h.note) {
+                    · {{ h.note }}
+                  }
                 </p>
                 @if (h.unknowns.length) {
-                  <p class="unknowns">{{ 'sentinel.unknowns' | t }}: {{ h.unknowns.join(' · ') }}</p>
+                  <p class="unknowns">
+                    {{ 'sentinel.unknowns' | t }}: {{ h.unknowns.join(' · ') }}
+                  </p>
                 }
               </div>
             }
@@ -181,8 +238,13 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
             <h4>{{ 'sentinel.inc.verifications' | t }}</h4>
             @for (v of b.detail.detail.incident.verifications; track v.verification_id) {
               <p class="ver">
-                <ui-state-badge [state]="v.verdict" [kindOverride]="kind(v.verdict)" [labelOverride]="stateLabel(v.verdict)" />
-                <span class="mono">{{ v.verification_id }}</span> — {{ v.executor }} · {{ v.executed_at | date:'short' }}
+                <ui-state-badge
+                  [state]="v.verdict"
+                  [kindOverride]="kind(v.verdict)"
+                  [labelOverride]="stateLabel(v.verdict)"
+                />
+                <span class="mono">{{ v.verification_id }}</span> — {{ v.executor }} ·
+                {{ v.executed_at | date: 'short' }}
                 <span class="muted">{{ v.detail }}</span>
               </p>
             }
@@ -196,17 +258,31 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
             @for (a of b.detail.detail.anomalies; track a.anomaly_id) {
               <div class="card-inset">
                 <p>
-                  <ui-state-badge [state]="a.severity" [kindOverride]="kind(a.severity)" [labelOverride]="stateLabel(a.severity)" />
-                  <ui-state-badge [state]="a.status" [kindOverride]="kind(a.status)" [labelOverride]="stateLabel(a.status)" />
+                  <ui-state-badge
+                    [state]="a.severity"
+                    [kindOverride]="kind(a.severity)"
+                    [labelOverride]="stateLabel(a.severity)"
+                  />
+                  <ui-state-badge
+                    [state]="a.status"
+                    [kindOverride]="kind(a.status)"
+                    [labelOverride]="stateLabel(a.status)"
+                  />
                   <span class="mono">{{ a.anomaly_id }}</span>
-                  <span class="muted">{{ a.window_start | date:'shortTime' }}–{{ a.window_end | date:'shortTime' }}</span>
+                  <span class="muted"
+                    >{{ a.window_start | date: 'shortTime' }}–{{
+                      a.window_end | date: 'shortTime'
+                    }}</span
+                  >
                 </p>
                 <p>{{ a.explanation.summary }}</p>
                 @if (a.explanation.math) {
                   <pre class="math mono">{{ a.explanation.math }}</pre>
                 }
                 @if (a.unknowns.length) {
-                  <p class="unknowns">{{ 'sentinel.unknowns' | t }}: {{ a.unknowns.join(' · ') }}</p>
+                  <p class="unknowns">
+                    {{ 'sentinel.unknowns' | t }}: {{ a.unknowns.join(' · ') }}
+                  </p>
                 }
               </div>
             }
@@ -216,13 +292,19 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
         <!-- evidence -->
         <section class="card">
           <h3>{{ 'sentinel.inc.evidence' | t }}</h3>
-          @if (b.detail.detail.evidence.length === 0 && b.detail.detail.evidence_unresolved.length === 0) {
+          @if (
+            b.detail.detail.evidence.length === 0 &&
+            b.detail.detail.evidence_unresolved.length === 0
+          ) {
             <p class="muted">{{ 'sentinel.inc.noEvidence' | t }}</p>
           }
           @for (ev of b.detail.detail.evidence; track ev.evidence_id) {
             <p class="mono small">
-              {{ ev.evidence_id }} · {{ ev.kind }} · {{ ev.size_bytes }}B · {{ ev.hash.slice(0, 23) }}…
-              @if (ev.truncated) { <span class="muted">({{ 'sentinel.inc.truncated' | t }})</span> }
+              {{ ev.evidence_id }} · {{ ev.kind }} · {{ ev.size_bytes }}B ·
+              {{ ev.hash.slice(0, 23) }}…
+              @if (ev.truncated) {
+                <span class="muted">({{ 'sentinel.inc.truncated' | t }})</span>
+              }
             </p>
           }
           @if (b.detail.detail.evidence_unresolved.length) {
@@ -245,14 +327,20 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
             <ol class="timeline">
               @for (item of timelineItems(b.timeline); track $index) {
                 <li class="tl">
-                  <span class="tl__at mono">{{ item.at | date:'short' }}</span>
+                  <span class="tl__at mono">{{ item.at | date: 'short' }}</span>
                   <div>
                     <ui-state-badge [state]="item.kind" kind="muted" [labelOverride]="item.kind" />
                     @if (item.confidence) {
-                      <ui-state-badge [state]="item.confidence" [kindOverride]="kind(item.confidence)" [labelOverride]="stateLabel(item.confidence)" />
+                      <ui-state-badge
+                        [state]="item.confidence"
+                        [kindOverride]="kind(item.confidence)"
+                        [labelOverride]="stateLabel(item.confidence)"
+                      />
                     }
                     <strong>{{ item.title }}</strong>
-                    @if (item.detail) { <div class="muted small">{{ item.detail }}</div> }
+                    @if (item.detail) {
+                      <div class="muted small">{{ item.detail }}</div>
+                    }
                     <div class="muted small">{{ item.actor }}</div>
                   </div>
                 </li>
@@ -262,7 +350,9 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
               <p class="unknowns">{{ 'sentinel.inc.timelineTruncated' | t }}</p>
             }
             @if (b.timeline.timeline.unknowns.length) {
-              <p class="unknowns">{{ 'sentinel.unknowns' | t }}: {{ b.timeline.timeline.unknowns.join(' · ') }}</p>
+              <p class="unknowns">
+                {{ 'sentinel.unknowns' | t }}: {{ b.timeline.timeline.unknowns.join(' · ') }}
+              </p>
             }
           }
         </section>
@@ -271,30 +361,47 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
         <section class="card">
           <div class="inv__head">
             <h3>{{ 'sentinel.inv.title' | t }}</h3>
-            <button class="btn btn--primary" type="button" [disabled]="running()" (click)="runInvestigation()">
+            <button
+              class="btn btn--primary"
+              type="button"
+              [disabled]="running()"
+              (click)="runInvestigation()"
+            >
               {{ running() ? ('sentinel.inv.running' | t) : ('sentinel.inv.run' | t) }}
             </button>
           </div>
           <div aria-live="polite">
             @if (invError(); as ie) {
               @if (isAuth(ie)) {
-                <p class="unknowns" role="alert">{{ 'sentinel.inv.blocked' | t }} <code>{{ ie.body.code }}</code></p>
+                <p class="unknowns" role="alert">
+                  {{ 'sentinel.inv.blocked' | t }} <code>{{ ie.body.code }}</code>
+                </p>
               } @else {
                 <ui-error [error]="ie" />
               }
             }
             @if (investigation(); as inv) {
               <p>
-                <ui-state-badge [state]="inv.investigation.status" [kindOverride]="kind(inv.investigation.status)" [labelOverride]="stateLabel(inv.investigation.status)" />
+                <ui-state-badge
+                  [state]="inv.investigation.status"
+                  [kindOverride]="kind(inv.investigation.status)"
+                  [labelOverride]="stateLabel(inv.investigation.status)"
+                />
                 <code class="mono">{{ inv.investigation.investigation_id }}</code>
-                @if (inv.replayed) { <span class="muted">({{ 'sentinel.inv.replayed' | t }})</span> }
+                @if (inv.replayed) {
+                  <span class="muted">({{ 'sentinel.inv.replayed' | t }})</span>
+                }
               </p>
               @if (investigationSummary(); as s) {
                 <dl class="pack">
-                  <dt>{{ 'sentinel.inv.verdict' | t }}</dt><dd>{{ s.verdict || '—' }}</dd>
-                  <dt>{{ 'sentinel.inv.suspectedOrigin' | t }}</dt><dd class="mono">{{ s.suspected || '—' }}</dd>
-                  <dt>{{ 'sentinel.inv.unknowns' | t }}</dt><dd>{{ s.unknowns || '—' }}</dd>
-                  <dt>{{ 'sentinel.inv.structural' | t }}</dt><dd class="mono">{{ s.structural || '—' }}</dd>
+                  <dt>{{ 'sentinel.inv.verdict' | t }}</dt>
+                  <dd>{{ s.verdict || '—' }}</dd>
+                  <dt>{{ 'sentinel.inv.suspectedOrigin' | t }}</dt>
+                  <dd class="mono">{{ s.suspected || '—' }}</dd>
+                  <dt>{{ 'sentinel.inv.unknowns' | t }}</dt>
+                  <dd>{{ s.unknowns || '—' }}</dd>
+                  <dt>{{ 'sentinel.inv.structural' | t }}</dt>
+                  <dd class="mono">{{ s.structural || '—' }}</dd>
                 </dl>
               }
             }
@@ -304,8 +411,12 @@ const LADDER = ['OBSERVED', 'CORRELATED', 'HYPOTHESIZED', 'VERIFIED'] as const;
             @for (pi of b.timeline!.timeline.investigations; track pi.investigation_id) {
               <p class="mono small">
                 {{ pi.investigation_id }} ·
-                <ui-state-badge [state]="pi.status" [kindOverride]="kind(pi.status)" [labelOverride]="stateLabel(pi.status)" />
-                · {{ pi.created_at | date:'short' }}
+                <ui-state-badge
+                  [state]="pi.status"
+                  [kindOverride]="kind(pi.status)"
+                  [labelOverride]="stateLabel(pi.status)"
+                />
+                · {{ pi.created_at | date: 'short' }}
               </p>
             }
           }
@@ -596,9 +707,7 @@ export class SentinelIncidents {
     this.running.set(true);
     this.invError.set(null);
     try {
-      this.investigation.set(
-        await firstValueFrom(this.api.startInvestigation(id)),
-      );
+      this.investigation.set(await firstValueFrom(this.api.startInvestigation(id)));
     } catch (e) {
       this.invError.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -611,7 +720,10 @@ export class SentinelIncidents {
     if (!r || typeof r !== 'object') return null;
     return {
       verdict: String(r['verdict'] ?? ''),
-      suspected: typeof r['suspected_origin'] === 'string' ? r['suspected_origin'] : JSON.stringify(r['suspected_origin'] ?? ''),
+      suspected:
+        typeof r['suspected_origin'] === 'string'
+          ? r['suspected_origin']
+          : JSON.stringify(r['suspected_origin'] ?? ''),
       unknowns: Array.isArray(r['unknowns']) ? (r['unknowns'] as unknown[]).join(' · ') : '',
       structural:
         (r['context_pack'] as Record<string, unknown> | undefined)?.['structural_context'] != null
