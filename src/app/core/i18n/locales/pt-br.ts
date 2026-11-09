@@ -1491,6 +1491,15 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.type': 'Tipo da fonte a capturar',
   'pf.knowledge.capture.workspace': 'Workspace',
   'pf.knowledge.capture.publicUrl': 'URL pública',
+  'pf.knowledge.capture.obsidian': 'Cofre Obsidian',
+  'pf.knowledge.capture.obsidianPath': 'Caminho no cofre',
+  'pf.knowledge.capture.obsidianPathHelp':
+    'Use um caminho relativo ao cofre configurado. O servidor bloqueia travessia de diretório e arquivos fora de Markdown.',
+  'pf.knowledge.capture.obsidianPermission':
+    'Autorizo ler este arquivo selecionado do cofre para esta importação.',
+  'pf.knowledge.capture.previewing': 'Lendo prévia…',
+  'pf.knowledge.capture.previewObsidian': 'Visualizar do Obsidian',
+  'pf.knowledge.capture.editObsidianPath': 'Editar caminho',
   'pf.knowledge.capture.discovering': 'Descobrindo…',
   'pf.knowledge.capture.selectWorkspace': 'Selecionar fonte do workspace',
   'pf.knowledge.capture.sourceDocument': 'Documento de origem',
