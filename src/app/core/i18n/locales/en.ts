@@ -1516,6 +1516,8 @@ export const EN: Record<string, string> = {
   'pf.knowledge.obsidianExport.description':
     'The Portal calculates a plan first. Export only happens after review and creates a new Markdown note by default.',
   'pf.knowledge.obsidianExport.path': 'Vault destination',
+  'pf.knowledge.obsidianExport.loadBaseline': 'Load existing baseline',
+  'pf.knowledge.obsidianExport.baseline': 'Baseline hash',
   'pf.knowledge.obsidianExport.review': 'Review export',
   'pf.knowledge.obsidianExport.planning': 'Planning…',
   'pf.knowledge.obsidianExport.plan': 'Sync plan',

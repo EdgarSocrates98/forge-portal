@@ -692,11 +692,19 @@ import { ToastService } from '../../../shared/toast';
                 class="input"
                 type="text"
                 [value]="obsidianExportPath()"
-                (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null)"
+                (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null); obsidianBaselineHash.set('')"
                 placeholder="exports/spark-runbook.md"
               />
             </label>
             <div class="fg-row">
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy() || !obsidianExportPath().trim()"
+                (click)="loadObsidianBaseline()"
+              >
+                {{ 'pf.knowledge.obsidianExport.loadBaseline' | t }}
+              </button>
               <button
                 class="btn"
                 type="button"
@@ -711,6 +719,11 @@ import { ToastService } from '../../../shared/toast';
                 }}
               </button>
             </div>
+            @if (obsidianBaselineHash(); as baseline) {
+              <p class="muted small obsidian-export__baseline">
+                {{ 'pf.knowledge.obsidianExport.baseline' | t }}: <code>{{ baseline }}</code>
+              </p>
+            }
             @if (obsidianPlan(); as plan) {
               <div class="obsidian-export__plan" [attr.data-outcome]="plan.outcome">
                 <div class="obsidian-export__plan-head">
@@ -730,7 +743,7 @@ import { ToastService } from '../../../shared/toast';
                 <button
                   class="btn btn--primary"
                   type="button"
-                  [disabled]="obsidianExportBusy() || plan.outcome !== 'created'"
+                  [disabled]="obsidianExportBusy() || !['created', 'updated'].includes(plan.outcome)"
                   (click)="exportToObsidian(detail, plan)"
                 >
                   {{
@@ -1073,6 +1086,7 @@ export class PfKnowledgeTab implements OnInit {
   readonly obsidianExportPath = signal('exports/');
   readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
   readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
+  readonly obsidianBaselineHash = signal('');
   readonly obsidianExportBusy = signal(false);
 
   readonly markdownSources = computed(() =>
@@ -1238,6 +1252,7 @@ export class PfKnowledgeTab implements OnInit {
       this.obsidianExportPath.set(`exports/${this.slug(detail.document.title)}.md`);
       this.obsidianPlan.set(null);
       this.obsidianReceipt.set(null);
+      this.obsidianBaselineHash.set('');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
@@ -1253,7 +1268,15 @@ export class PfKnowledgeTab implements OnInit {
     this.error.set(null);
     try {
       this.obsidianPlan.set(
-        await firstValueFrom(this.api.planObsidianSync(this.pid(), { path, content })),
+        await firstValueFrom(
+          this.api.planObsidianSync(this.pid(), {
+            path,
+            content,
+            ...(this.obsidianBaselineHash()
+              ? { baseline_hash: this.obsidianBaselineHash() }
+              : {}),
+          }),
+        ),
       );
       this.obsidianReceipt.set(null);
     } catch (e) {
@@ -1264,7 +1287,7 @@ export class PfKnowledgeTab implements OnInit {
   }
 
   async exportToObsidian(detail: PfDocumentDetail, plan: PfObsidianSyncPlan): Promise<void> {
-    if (plan.outcome !== 'created' || this.obsidianExportBusy()) return;
+    if (!['created', 'updated'].includes(plan.outcome) || this.obsidianExportBusy()) return;
     this.obsidianExportBusy.set(true);
     this.error.set(null);
     try {
@@ -1272,10 +1295,30 @@ export class PfKnowledgeTab implements OnInit {
         this.api.exportObsidianDocument(this.pid(), {
           path: plan.path,
           content: this.markdownFor(detail),
+          ...(plan.previous_hash ? { baseline_hash: plan.previous_hash } : {}),
         }),
       );
       this.obsidianReceipt.set(receipt);
       this.toast.show(`Obsidian note "${receipt.path}" exported`, 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async loadObsidianBaseline(): Promise<void> {
+    const path = this.obsidianExportPath().trim();
+    if (!path || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      const preview = await firstValueFrom(this.api.obsidianPreview(this.pid(), path));
+      if (!preview.content_hash) throw new ApiError(422, { code: 'OBSIDIAN-MISSING-HASH' });
+      this.obsidianBaselineHash.set(preview.content_hash);
+      this.obsidianPlan.set(null);
+      this.obsidianReceipt.set(null);
+      this.toast.show(`Obsidian baseline loaded for "${preview.path}"`, 'success');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {

@@ -233,4 +233,63 @@ describe('PfKnowledgeTab — source capture', () => {
     });
     expect(c.obsidianReceipt()?.sync_state).toBe('created');
   });
+
+  it('loads an existing baseline and permits an explicit reviewed update', async () => {
+    const api = {
+      documents: vi.fn(() => of({ items: [] })),
+      knowledgeSources: vi.fn(() => of({ items: [] })),
+      knowledgeHealth: vi.fn(() => of({ score: 1 })),
+      knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
+      obsidianPreview: vi.fn(() =>
+        of({ path: 'exports/runbook.md', title: 'Runbook', content_hash: 'hash-old', size: 10, state: 'ready' }),
+      ),
+      planObsidianSync: vi.fn(() =>
+        of({
+          schema: 'theforge/ObsidianSyncPlan/v1',
+          path: 'exports/runbook.md',
+          content_hash: 'hash-new',
+          previous_hash: 'hash-old',
+          baseline_hash: 'hash-old',
+          outcome: 'updated',
+        }),
+      ),
+      exportObsidianDocument: vi.fn(() =>
+        of({
+          receipt_schema: 'theforge/ObsidianSyncReceipt/v1',
+          path: 'exports/runbook.md',
+          content_hash: 'hash-new',
+          previous_hash: 'hash-old',
+          sync_state: 'updated',
+        }),
+      ),
+    };
+    TestBed.configureTestingModule({
+      imports: [PfKnowledgeTab],
+      providers: [{ provide: PfApi, useValue: api }],
+    });
+    const fixture = TestBed.createComponent(PfKnowledgeTab);
+    fixture.componentRef.setInput('pid', 'p1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const c = fixture.componentInstance;
+    c.obsidianExportPath.set('exports/runbook.md');
+    await c.loadObsidianBaseline();
+    expect(c.obsidianBaselineHash()).toBe('hash-old');
+    const detail = {
+      document: { id: 'd1', title: 'Runbook' },
+      content: { chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }], chunk_count: 1 },
+    } as any;
+    await c.planObsidianExport(detail);
+    expect(api.planObsidianSync).toHaveBeenCalledWith('p1', {
+      path: 'exports/runbook.md',
+      content: '# Runbook\n\nUse Spark.',
+      baseline_hash: 'hash-old',
+    });
+    await c.exportToObsidian(detail, c.obsidianPlan()!);
+    expect(api.exportObsidianDocument).toHaveBeenCalledWith('p1', {
+      path: 'exports/runbook.md',
+      content: '# Runbook\n\nUse Spark.',
+      baseline_hash: 'hash-old',
+    });
+  });
 });

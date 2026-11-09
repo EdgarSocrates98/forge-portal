@@ -1531,6 +1531,8 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.obsidianExport.description':
     'O Portal primeiro calcula um plano. A exportação só acontece depois da sua revisão e cria um novo Markdown por padrão.',
   'pf.knowledge.obsidianExport.path': 'Destino no cofre',
+  'pf.knowledge.obsidianExport.loadBaseline': 'Carregar baseline existente',
+  'pf.knowledge.obsidianExport.baseline': 'Hash do baseline',
   'pf.knowledge.obsidianExport.review': 'Revisar exportação',
   'pf.knowledge.obsidianExport.planning': 'Planejando…',
   'pf.knowledge.obsidianExport.plan': 'Plano de sincronização',
