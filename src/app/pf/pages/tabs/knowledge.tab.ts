@@ -1438,6 +1438,7 @@ export class PfKnowledgeTab implements OnInit {
         ),
       );
       this.toast.show(this.i18n.t('pf.knowledge.obsidianExport.rolledBack'), 'success');
+      this.obsidianExportBusy.set(false);
       await this.loadObsidianHistory();
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
