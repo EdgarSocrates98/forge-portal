@@ -1506,6 +1506,9 @@ export const EN: Record<string, string> = {
   'pf.knowledge.capture.obsidianReady': 'Ready for preview and reviewed sync',
   'pf.knowledge.capture.obsidianNotReady': 'Not available',
   'pf.knowledge.capture.obsidianStatusHint': 'Check the configured vault before selecting a note.',
+  'pf.knowledge.capture.discoveredNotes': 'Authorized Markdown notes discovered',
+  'pf.knowledge.capture.discoveredNotesLimited': 'showing the first page',
+  'pf.knowledge.capture.refreshNotes': 'Refresh notes',
   'pf.knowledge.capture.manageVault': 'Manage vault connection',
   'pf.knowledge.capture.manageVaultHelp':
     'The path stays protected in the service. Use a folder inside the administrator-approved root.',

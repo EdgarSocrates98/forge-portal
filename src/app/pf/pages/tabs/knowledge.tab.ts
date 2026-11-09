@@ -21,6 +21,7 @@ import {
   PfKnowledgeHealth,
   PfKnowledgeSource,
   PfObsidianImport,
+  PfObsidianFileIndex,
   PfObsidianHistory,
   PfObsidianPreview,
   PfObsidianSyncPlan,
@@ -375,6 +376,7 @@ import { ToastService } from '../../../shared/toast';
               <input
                 class="input"
                 type="text"
+                list="obsidian-path-suggestions"
                 autocomplete="off"
                 [value]="captureObsidianPath()"
                 (input)="captureObsidianPath.set($any($event.target).value); capturePreview.set(null)"
@@ -385,6 +387,17 @@ import { ToastService } from '../../../shared/toast';
             <p id="obsidian-capture-help" class="muted small">
               {{ 'pf.knowledge.capture.obsidianPathHelp' | t }}
             </p>
+            @if (obsidianFiles(); as files) {
+              <p class="muted small obsidian-file-index" role="status">
+                {{ 'pf.knowledge.capture.discoveredNotes' | t }}: {{ files.count ?? files.items.length }}
+                @if (files.truncated) {
+                  · {{ 'pf.knowledge.capture.discoveredNotesLimited' | t }}
+                }
+                <button class="linklike" type="button" [disabled]="obsidianVaultBusy()" (click)="loadObsidianFiles()">
+                  {{ 'pf.knowledge.capture.refreshNotes' | t }}
+                </button>
+              </p>
+            }
             <label class="check">
               <input
                 type="checkbox"
@@ -795,11 +808,20 @@ import { ToastService } from '../../../shared/toast';
               <input
                 class="input"
                 type="text"
+                list="obsidian-path-suggestions"
                 [value]="obsidianExportPath()"
                 (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null); obsidianBaselineHash.set('')"
                 placeholder="exports/spark-runbook.md"
               />
             </label>
+            <datalist id="obsidian-path-suggestions">
+              @for (file of obsidianFiles()?.items ?? []; track file.path) {
+                <option [value]="file.path">{{ file.title }}</option>
+              }
+            </datalist>
+            @if (obsidianFiles()?.warnings?.length) {
+              <p class="muted small">{{ obsidianFiles()!.warnings![0] }}</p>
+            }
             <div class="fg-row">
               <button
                 class="btn"
@@ -1229,6 +1251,7 @@ export class PfKnowledgeTab implements OnInit {
   readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
   readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
   readonly obsidianHistory = signal<PfObsidianHistory | null>(null);
+  readonly obsidianFiles = signal<PfObsidianFileIndex | null>(null);
   readonly obsidianVault = signal<PfObsidianVaultDescriptor | null>(null);
   readonly obsidianVaultBusy = signal(false);
   readonly obsidianVaultConnectBusy = signal(false);
@@ -1346,7 +1369,25 @@ export class PfKnowledgeTab implements OnInit {
     this.obsidianVaultBusy.set(true);
     this.error.set(null);
     try {
-      this.obsidianVault.set(await firstValueFrom(this.api.obsidianStatus(this.pid())));
+      const vault = await firstValueFrom(this.api.obsidianStatus(this.pid()));
+      this.obsidianVault.set(vault);
+      if (vault.detected && typeof this.api.obsidianFiles === 'function') {
+        this.obsidianFiles.set(await firstValueFrom(this.api.obsidianFiles(this.pid())));
+      } else {
+        this.obsidianFiles.set(null);
+      }
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultBusy.set(false);
+    }
+  }
+
+  async loadObsidianFiles(): Promise<void> {
+    if (this.obsidianVaultBusy() || !this.obsidianVault()?.detected) return;
+    this.obsidianVaultBusy.set(true);
+    try {
+      this.obsidianFiles.set(await firstValueFrom(this.api.obsidianFiles(this.pid())));
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {

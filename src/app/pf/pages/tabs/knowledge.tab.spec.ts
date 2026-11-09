@@ -323,6 +323,13 @@ describe('PfKnowledgeTab — source capture', () => {
           provenance: { path_hash: 'a'.repeat(64) },
         }),
       ),
+      obsidianFiles: vi.fn(() =>
+        of({
+          schema: 'theforge/ObsidianVaultFileIndex/v1',
+          items: [{ path: 'runbooks/spark.md', title: 'Spark', size: 42 }],
+          count: 1,
+        }),
+      ),
     };
     TestBed.configureTestingModule({
       imports: [PfKnowledgeTab],
@@ -338,6 +345,8 @@ describe('PfKnowledgeTab — source capture', () => {
     expect(c.obsidianVault()?.detected).toBe(true);
     expect(c.obsidianVault()?.capabilities).toContain('reviewed_sync');
     expect(c.obsidianVault()?.provenance?.['path_hash']).toHaveLength(64);
+    expect(api.obsidianFiles).toHaveBeenCalledWith('p1');
+    expect(c.obsidianFiles()?.items[0].path).toBe('runbooks/spark.md');
   });
 
   it('connects and disconnects a scoped vault without exposing its host path', async () => {

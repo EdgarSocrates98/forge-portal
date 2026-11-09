@@ -151,6 +151,24 @@ export interface PfObsidianVaultDescriptor {
   status?: 'active' | 'revoked' | string;
 }
 
+/** theforge/ObsidianVaultFileIndex/v1 — body-free authorized path discovery. */
+export interface PfObsidianFileIndexItem {
+  path: string;
+  title: string;
+  size: number;
+  modified_at?: string;
+}
+
+export interface PfObsidianFileIndex {
+  schema?: string;
+  version?: string;
+  prefix?: string;
+  items: PfObsidianFileIndexItem[];
+  count?: number;
+  truncated?: boolean;
+  warnings?: string[];
+}
+
 export interface PfObsidianImport extends PfDocument {
   state?: string;
   source_path?: string;

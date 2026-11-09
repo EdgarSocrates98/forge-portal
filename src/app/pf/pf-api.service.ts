@@ -39,6 +39,7 @@ import {
   PfList,
   PfObsidianImport,
   PfObsidianHistory,
+  PfObsidianFileIndex,
   PfObsidianPreview,
   PfObsidianVaultDescriptor,
   PfObsidianSyncPlan,
@@ -310,6 +311,12 @@ export class PfApi {
   obsidianStatus(pid: string) {
     return this.get<PfObsidianVaultDescriptor>(
       `/products/${encodeURIComponent(pid)}/documents/obsidian/status`,
+    );
+  }
+  obsidianFiles(pid: string, prefix = '', limit = 200) {
+    const query = `?prefix=${encodeURIComponent(prefix)}&limit=${limit}`;
+    return this.get<PfObsidianFileIndex>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/files${query}`,
     );
   }
   obsidianVaults(workspaceId?: string) {

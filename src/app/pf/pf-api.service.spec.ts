@@ -202,4 +202,18 @@ describe('PfApi', () => {
     revokeRequest.flush(envelope({ revoked: true, vault_record_id: 'vault/1' }));
     expect((await revoked).revoked).toBe(true);
   });
+
+  it('loads a bounded body-free Obsidian path index', async () => {
+    const p = firstValueFrom(api.obsidianFiles('p 1', 'runbooks', 25));
+    http
+      .expectOne(`${BASE}/products/p%201/documents/obsidian/files?prefix=runbooks&limit=25`)
+      .flush(
+        envelope({
+          schema: 'theforge/ObsidianVaultFileIndex/v1',
+          items: [{ path: 'runbooks/spark.md', title: 'Spark', size: 42 }],
+          count: 1,
+        }),
+      );
+    expect((await p).items[0].path).toBe('runbooks/spark.md');
+  });
 });

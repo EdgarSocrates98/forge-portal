@@ -1521,6 +1521,9 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.obsidianReady': 'Pronto para preview e sincronização revisada',
   'pf.knowledge.capture.obsidianNotReady': 'Indisponível',
   'pf.knowledge.capture.obsidianStatusHint': 'Verifique o cofre configurado antes de escolher uma nota.',
+  'pf.knowledge.capture.discoveredNotes': 'Notas Markdown autorizadas encontradas',
+  'pf.knowledge.capture.discoveredNotesLimited': 'exibindo a primeira página',
+  'pf.knowledge.capture.refreshNotes': 'Atualizar notas',
   'pf.knowledge.capture.manageVault': 'Gerenciar conexão do cofre',
   'pf.knowledge.capture.manageVaultHelp':
     'O caminho fica protegido no serviço. Use uma pasta dentro da raiz autorizada pelo administrador.',
