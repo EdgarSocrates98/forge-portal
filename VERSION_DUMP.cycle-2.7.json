@@ -1,0 +1,9 @@
+{
+  "cycle": "2.7",
+  "repository": "forge-portal",
+  "version": "1.1.1",
+  "tag": "v1.1.1",
+  "source_commit": "f84050e5f95a7521e81da0f9425c6071c57a28c2",
+  "version_source": "package.json",
+  "verified_at": "2026-11-10"
+}
