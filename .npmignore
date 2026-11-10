@@ -1,0 +1,24 @@
+# Development dependencies and local state
+node_modules/
+.codebase-memory/
+.audit-work/
+.angular/
+coverage/
+.cache/
+
+# Validation artifacts are not part of the distributable Portal
+audit/
+e2e/
+tests/
+factory/
+artifacts/
+*.png
+*.webp
+*.log
+
+# Local Python/build state
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.coverage

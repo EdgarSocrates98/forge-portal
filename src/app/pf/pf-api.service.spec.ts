@@ -142,4 +142,94 @@ describe('PfApi', () => {
     );
     expect((await p).document.title).toBe('Docs');
   });
+
+  it('imports a governed The Forge investigation with explicit confirmation', async () => {
+    const report = {
+      schema: 'theforge/OrchestrationReport/v1',
+      kind: 'run',
+      intent: 'diagnose spark',
+      correlation_id: 'orch-1',
+    };
+    const p = firstValueFrom(api.importInvestigation('p 1', report, 'internal', 'Spark report'));
+    const req = http.expectOne(`${BASE}/products/p%201/documents/from-investigation`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      confirm: 'import',
+      report,
+      classification: 'internal',
+      title: 'Spark report',
+    });
+    req.flush(
+      envelope({
+        id: 'doc-investigation',
+        title: 'Spark report',
+        state: 'imported',
+        source_kind: 'the-forge-investigation',
+        suggested_obsidian_path: 'investigations/diagnose-spark-orch-1.md',
+      }),
+    );
+    expect((await p).source_kind).toBe('the-forge-investigation');
+  });
+
+  it('transitions knowledge state with explicit evidence and confirmation', async () => {
+    const p = firstValueFrom(
+      api.transitionKnowledgeState('p 1', 'doc/1', 'validated', ['spark-job-42'], 'receipt checked'),
+    );
+    const req = http.expectOne(`${BASE}/products/p%201/documents/doc%2F1/knowledge-state`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      confirm: 'transition',
+      state: 'validated',
+      evidence_refs: ['spark-job-42'],
+      reason: 'receipt checked',
+    });
+    req.flush(envelope({ document: { id: 'doc/1' }, transition: { state: 'validated' } }));
+    expect((await p).transition.state).toBe('validated');
+  });
+
+  it('uses scoped Obsidian vault endpoints and keeps the host path request-only', async () => {
+    const list = firstValueFrom(api.obsidianVaults('ws 1'));
+    http.expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`).flush(
+      envelope({ items: [{ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }] }),
+    );
+    expect((await list).items[0].path).toBe('.');
+
+    const connected = firstValueFrom(
+      api.connectObsidianVault({
+        workspace_id: 'ws 1',
+        path: 'C:/service/vaults/team',
+        label: 'Team',
+      }),
+    );
+    const connectRequest = http.expectOne(`${BASE}/obsidian/vaults`);
+    expect(connectRequest.request.method).toBe('POST');
+    expect(connectRequest.request.body).toEqual({
+      workspace_id: 'ws 1',
+      path: 'C:/service/vaults/team',
+      label: 'Team',
+      confirm: 'connect',
+    });
+    connectRequest.flush(envelope({ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }));
+    await connected;
+
+    const revoked = firstValueFrom(api.revokeObsidianVault('vault/1'));
+    const revokeRequest = http.expectOne(`${BASE}/obsidian/vaults/vault%2F1`);
+    expect(revokeRequest.request.method).toBe('DELETE');
+    revokeRequest.flush(envelope({ revoked: true, vault_record_id: 'vault/1' }));
+    expect((await revoked).revoked).toBe(true);
+  });
+
+  it('loads a bounded body-free Obsidian path index', async () => {
+    const p = firstValueFrom(api.obsidianFiles('p 1', 'runbooks', 25));
+    http
+      .expectOne(`${BASE}/products/p%201/documents/obsidian/files?prefix=runbooks&limit=25`)
+      .flush(
+        envelope({
+          schema: 'theforge/ObsidianVaultFileIndex/v1',
+          items: [{ path: 'runbooks/spark.md', title: 'Spark', size: 42 }],
+          count: 1,
+        }),
+      );
+    expect((await p).items[0].path).toBe('runbooks/spark.md');
+  });
 });

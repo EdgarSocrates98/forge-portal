@@ -106,6 +106,128 @@ export interface PfWorkspaceImport extends PfDocument {
   source_kind?: string;
 }
 
+/** productforge/InvestigationKnowledge/v1 — governed The Forge handoff. */
+export interface PfInvestigationImport extends PfDocument {
+  state?: 'imported' | 'already_imported' | string;
+  source_kind?: string;
+  suggested_obsidian_path?: string;
+  projection?: {
+    schema?: string;
+    content_hash?: string;
+    classification?: string;
+    trust_state?: string;
+    freshness?: string;
+  };
+}
+
+/** productforge/ObsidianDocument/v1 — bounded local vault preview. */
+export interface PfObsidianPreview {
+  schema?: string;
+  path: string;
+  title: string;
+  preview: string;
+  content_hash?: string;
+  size: number;
+  state: string;
+  provenance?: Record<string, unknown>;
+}
+
+/** theforge/ObsidianVaultDescriptor/v1 — safe capability metadata only. */
+export interface PfObsidianVaultDescriptor {
+  schema?: string;
+  version?: string;
+  workspace: string;
+  vault_id: string;
+  path: string;
+  source: string;
+  classification?: string;
+  detected: boolean;
+  capabilities: string[];
+  provenance?: Record<string, unknown>;
+  warnings?: string[];
+  unresolved?: string[];
+  vault_record_id?: string;
+  label?: string;
+  status?: 'active' | 'revoked' | string;
+}
+
+/** theforge/ObsidianVaultFileIndex/v1 — body-free authorized path discovery. */
+export interface PfObsidianFileIndexItem {
+  path: string;
+  title: string;
+  size: number;
+  modified_at?: string;
+}
+
+export interface PfObsidianFileIndex {
+  schema?: string;
+  version?: string;
+  prefix?: string;
+  items: PfObsidianFileIndexItem[];
+  count?: number;
+  truncated?: boolean;
+  warnings?: string[];
+}
+
+export interface PfObsidianImport extends PfDocument {
+  state?: string;
+  source_path?: string;
+  source_kind?: string;
+}
+
+export interface PfObsidianSyncPlan {
+  schema?: string;
+  workspace?: string;
+  vault_id?: string;
+  path: string;
+  source?: string;
+  classification?: string;
+  content_hash: string;
+  previous_hash?: string | null;
+  baseline_hash?: string | null;
+  outcome:
+    | 'created'
+    | 'unchanged'
+    | 'conflict'
+    | 'updated'
+    | 'skipped'
+    | 'denied'
+    | 'failed'
+    | 'rolled_back'
+    | string;
+  warnings?: string[];
+  unresolved?: string[];
+  planned_at?: string;
+}
+
+export interface PfObsidianSyncReceipt {
+  schema?: string;
+  receipt_schema?: string;
+  path: string;
+  title?: string;
+  content_hash: string;
+  previous_hash?: string | null;
+  size?: number;
+  state?: string;
+  sync_state?: string;
+  outcome?: string;
+  classification?: string;
+  source?: string;
+  backup_path?: string | null;
+  receipt_path?: string;
+  workspace?: string;
+  vault_id?: string;
+  provenance?: Record<string, string>;
+  warnings?: string[];
+  unresolved?: string[];
+}
+
+export interface PfObsidianHistory {
+  schema?: string;
+  items: PfObsidianSyncReceipt[];
+  count?: number;
+}
+
 /** productforge/UrlDocument/v1 — bounded remote capture preview. */
 export interface PfUrlPreview {
   schema?: string;
@@ -198,6 +320,24 @@ export interface PfDocument {
   content_hash?: string;
   created_at?: string;
   metadata?: Record<string, unknown>;
+}
+
+export type PfKnowledgeState =
+  | 'captured'
+  | 'draft'
+  | 'reviewed'
+  | 'validated'
+  | 'deprecated'
+  | 'rejected';
+
+export interface PfKnowledgeTransition {
+  document: PfDocument;
+  transition: {
+    state: PfKnowledgeState;
+    previous_state: PfKnowledgeState;
+    changed: boolean;
+    evidence_refs?: string[];
+  };
 }
 
 export interface PfDocumentDetail {

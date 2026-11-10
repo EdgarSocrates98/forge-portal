@@ -32,10 +32,19 @@ import {
   PfHealth,
   PfImpact,
   PfInitiative,
+  PfInvestigationImport,
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfKnowledgeTransition,
   PfList,
+  PfObsidianImport,
+  PfObsidianHistory,
+  PfObsidianFileIndex,
+  PfObsidianPreview,
+  PfObsidianVaultDescriptor,
+  PfObsidianSyncPlan,
+  PfObsidianSyncReceipt,
   PfMeeting,
   PfMetric,
   PfNlQueryResult,
@@ -133,6 +142,13 @@ export class PfApi {
         map((env) => this.unwrap(env)),
         catchError((e) => this.fail(e)),
       );
+  }
+
+  private delete<T>(path: string): Observable<T> {
+    return this.http.delete<ApiEnvelope<T>>(this.url(path), { headers: this.authHeaders() }).pipe(
+      map((env) => this.unwrap(env)),
+      catchError((e) => this.fail(e)),
+    );
   }
 
   private authHeaders(): Record<string, string> {
@@ -272,6 +288,90 @@ export class PfApi {
       { confirm: 'import', path, ...(title ? { title } : {}) },
     );
   }
+  importInvestigation(
+    pid: string,
+    report: Record<string, unknown>,
+    classification = 'internal',
+    title?: string,
+  ) {
+    return this.post<PfInvestigationImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-investigation`,
+      {
+        confirm: 'import',
+        report,
+        classification,
+        ...(title ? { title } : {}),
+      },
+    );
+  }
+  obsidianPreview(pid: string, path: string) {
+    return this.get<PfObsidianPreview>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/preview?path=${encodeURIComponent(path)}`,
+    );
+  }
+  obsidianStatus(pid: string) {
+    return this.get<PfObsidianVaultDescriptor>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/status`,
+    );
+  }
+  obsidianFiles(pid: string, prefix = '', limit = 200) {
+    const query = `?prefix=${encodeURIComponent(prefix)}&limit=${limit}`;
+    return this.get<PfObsidianFileIndex>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/files${query}`,
+    );
+  }
+  obsidianVaults(workspaceId?: string) {
+    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
+    return this.get<{ schema?: string; items: PfObsidianVaultDescriptor[] }>(
+      `/obsidian/vaults${query}`,
+    );
+  }
+  connectObsidianVault(input: { workspace_id: string; path: string; label?: string }) {
+    return this.post<PfObsidianVaultDescriptor>('/obsidian/vaults', {
+      ...input,
+      confirm: 'connect',
+    });
+  }
+  revokeObsidianVault(vaultRecordId: string) {
+    return this.delete<{ revoked: boolean; vault_record_id: string }>(
+      `/obsidian/vaults/${encodeURIComponent(vaultRecordId)}`,
+    );
+  }
+  obsidianHistory(pid: string, limit = 50) {
+    return this.get<PfObsidianHistory>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/history?limit=${limit}`,
+    );
+  }
+  importObsidianDocument(pid: string, path: string, title?: string) {
+    return this.post<PfObsidianImport>(
+      `/products/${encodeURIComponent(pid)}/documents/from-obsidian`,
+      { confirm: 'import', path, ...(title ? { title } : {}) },
+    );
+  }
+  planObsidianSync(pid: string, input: { path: string; content: string; baseline_hash?: string }) {
+    return this.post<PfObsidianSyncPlan>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/sync-plan`,
+      input,
+    );
+  }
+  exportObsidianDocument(
+    pid: string,
+    input: { path: string; content: string; baseline_hash?: string; classification?: string },
+  ) {
+    return this.post<PfObsidianSyncReceipt>(
+      `/products/${encodeURIComponent(pid)}/documents/to-obsidian`,
+      { ...input, confirm: 'export' },
+    );
+  }
+  rollbackObsidianDocument(
+    pid: string,
+    input: { path: string; receipt_path: string; source?: string },
+  ) {
+    return this.post<PfObsidianSyncReceipt>(
+      `/products/${encodeURIComponent(pid)}/documents/obsidian/rollback`,
+      { ...input, confirm: 'rollback' },
+    );
+  }
   urlPreview(pid: string, url: string, extractor: 'stdlib' | 'defuddle' = 'stdlib') {
     return this.get<PfUrlPreview>(
       `/products/${encodeURIComponent(pid)}/documents/url/preview?url=${encodeURIComponent(url)}&extractor=${extractor}`,
@@ -299,6 +399,23 @@ export class PfApi {
   documentDetail(pid: string, did: string) {
     return this.get<PfDocumentDetail>(
       `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}`,
+    );
+  }
+  transitionKnowledgeState(
+    pid: string,
+    did: string,
+    state: string,
+    evidenceRefs: string[] = [],
+    reason = '',
+  ) {
+    return this.post<PfKnowledgeTransition>(
+      `/products/${encodeURIComponent(pid)}/documents/${encodeURIComponent(did)}/knowledge-state`,
+      {
+        confirm: 'transition',
+        state,
+        evidence_refs: evidenceRefs,
+        ...(reason.trim() ? { reason: reason.trim() } : {}),
+      },
     );
   }
   documentSearch(pid: string, query: string, limit = 20) {

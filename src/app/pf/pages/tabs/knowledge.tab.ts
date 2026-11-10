@@ -1,4 +1,5 @@
 import { TPipe } from '../../../core/i18n/i18n.pipe';
+import { I18nService } from '../../../core/i18n/i18n.service';
 import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -19,6 +20,14 @@ import {
   PfKnowledgeAnswer,
   PfKnowledgeHealth,
   PfKnowledgeSource,
+  PfKnowledgeState,
+  PfObsidianImport,
+  PfObsidianFileIndex,
+  PfObsidianHistory,
+  PfObsidianPreview,
+  PfObsidianSyncPlan,
+  PfObsidianSyncReceipt,
+  PfObsidianVaultDescriptor,
   PfWorkspaceDiscovery,
   PfWorkspaceDocument,
   PfWorkspaceImport,
@@ -133,6 +142,14 @@ import { ToastService } from '../../../shared/toast';
           >
             {{ 'pf.knowledge.capture.publicUrl' | t }}
           </button>
+          <button
+            class="btn"
+            type="button"
+            [class.btn--primary]="captureMode() === 'obsidian'"
+            (click)="selectCaptureMode('obsidian')"
+          >
+            {{ 'pf.knowledge.capture.obsidian' | t }}
+          </button>
         </div>
 
         @if (captureMode() === 'workspace' && !workspaceDiscovery()) {
@@ -244,6 +261,209 @@ import { ToastService } from '../../../shared/toast';
             </div>
           }
 
+          @if (captureReceipt(); as receipt) {
+            <div class="capture__receipt" role="status" data-state="receipt">
+              <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
+              <span
+                >{{ 'pf.knowledge.capture.imported' | t }} <code>{{ receipt.title }}</code>
+                {{ 'pf.knowledge.capture.intoProduct' | t }}</span
+              >
+              <code>{{ receipt.id }}</code>
+              @if ($any(receipt).source_path) {
+                <span class="muted small"
+                  >{{ 'pf.knowledge.capture.source' | t }}: {{ $any(receipt).source_path }}</span
+                >
+              }
+            </div>
+          }
+        }
+
+        @if (captureMode() === 'obsidian') {
+          <div class="capture__review">
+            <div class="capture__vault-status" aria-live="polite">
+              <div>
+                <strong>{{ 'pf.knowledge.capture.obsidianVault' | t }}</strong>
+                @if (obsidianVault(); as vault) {
+                  <span class="muted small">
+                    {{ vault.detected ? ('pf.knowledge.capture.obsidianReady' | t) : ('pf.knowledge.capture.obsidianNotReady' | t) }}
+                    · <code>{{ vault.vault_id }}</code>
+                  </span>
+                  @for (warning of vault.warnings ?? []; track warning) {
+                    <span class="danger small">{{ warning }}</span>
+                  }
+                } @else {
+                  <span class="muted small">{{ 'pf.knowledge.capture.obsidianStatusHint' | t }}</span>
+                }
+              </div>
+              <button
+                class="btn"
+                type="button"
+                [disabled]="captureBusy() || obsidianVaultBusy()"
+                (click)="loadObsidianStatus()"
+              >
+                {{ (obsidianVaultBusy() ? 'state.loading' : 'pf.knowledge.capture.checkVault') | t }}
+              </button>
+            </div>
+            <details class="obsidian-vault-connect">
+              <summary>{{ 'pf.knowledge.capture.manageVault' | t }}</summary>
+              <p class="muted small">{{ 'pf.knowledge.capture.manageVaultHelp' | t }}</p>
+              @if (obsidianVault()?.vault_record_id; as vaultRecordId) {
+                <div class="obsidian-vault-connect__active" role="status">
+                  <div>
+                    <strong>{{ 'pf.knowledge.capture.connectedVault' | t }}</strong>
+                    <span class="muted small"
+                      >{{ obsidianVault()?.label || ('pf.knowledge.capture.unnamedVault' | t) }} ·
+                      {{ 'pf.knowledge.capture.pathHidden' | t }}</span
+                    >
+                  </div>
+                  <button
+                    class="btn btn--danger"
+                    type="button"
+                    [disabled]="obsidianVaultConnectBusy()"
+                    (click)="revokeObsidianVault(vaultRecordId)"
+                  >
+                    {{
+                      (obsidianVaultConnectBusy()
+                        ? 'state.loading'
+                        : 'pf.knowledge.capture.disconnectVault') | t
+                    }}
+                  </button>
+                </div>
+              } @else {
+                <div class="obsidian-vault-connect__form">
+                  <label class="field">
+                    <span>{{ 'pf.knowledge.capture.vaultHostPath' | t }}</span>
+                    <input
+                      class="input"
+                      type="text"
+                      autocomplete="off"
+                      [value]="obsidianConnectPath()"
+                      (input)="obsidianConnectPath.set($any($event.target).value)"
+                      placeholder="C:/vaults/team"
+                    />
+                  </label>
+                  <label class="field">
+                    <span>{{ 'pf.knowledge.capture.vaultLabel' | t }}</span>
+                    <input
+                      class="input"
+                      type="text"
+                      [value]="obsidianConnectLabel()"
+                      (input)="obsidianConnectLabel.set($any($event.target).value)"
+                      placeholder="Meu cofre de engenharia"
+                    />
+                  </label>
+                  <button
+                    class="btn btn--primary"
+                    type="button"
+                    [disabled]="
+                      obsidianVaultConnectBusy() ||
+                      !obsidianConnectPath().trim() ||
+                      !obsidianVault()?.workspace ||
+                      obsidianVault()?.workspace === 'local'
+                    "
+                    (click)="connectObsidianVault()"
+                  >
+                    {{
+                      (obsidianVaultConnectBusy()
+                        ? 'state.loading'
+                        : 'pf.knowledge.capture.connectVault') | t
+                    }}
+                  </button>
+                </div>
+              }
+            </details>
+            <label class="field capture__path-field">
+              <span>{{ 'pf.knowledge.capture.obsidianPath' | t }}</span>
+              <input
+                class="input"
+                type="text"
+                list="obsidian-path-suggestions"
+                autocomplete="off"
+                [value]="captureObsidianPath()"
+                (input)="captureObsidianPath.set($any($event.target).value); capturePreview.set(null)"
+                placeholder="runbooks/spark-diagnosis.md"
+                aria-describedby="obsidian-capture-help"
+              />
+            </label>
+            <p id="obsidian-capture-help" class="muted small">
+              {{ 'pf.knowledge.capture.obsidianPathHelp' | t }}
+            </p>
+            @if (obsidianFiles(); as files) {
+              <p class="muted small obsidian-file-index" role="status">
+                {{ 'pf.knowledge.capture.discoveredNotes' | t }}: {{ files.count ?? files.items.length }}
+                @if (files.truncated) {
+                  · {{ 'pf.knowledge.capture.discoveredNotesLimited' | t }}
+                }
+                <button class="linklike" type="button" [disabled]="obsidianVaultBusy()" (click)="loadObsidianFiles()">
+                  {{ 'pf.knowledge.capture.refreshNotes' | t }}
+                </button>
+              </p>
+            }
+            <label class="check">
+              <input
+                type="checkbox"
+                [checked]="capturePermission()"
+                (change)="
+                  capturePermission.set($any($event.target).checked); capturePreview.set(null)
+                "
+              />
+              {{ 'pf.knowledge.capture.obsidianPermission' | t }}
+            </label>
+            <button
+              class="btn"
+              type="button"
+              [disabled]="captureBusy() || !capturePermission() || !captureObsidianPath().trim()"
+              (click)="capture()"
+            >
+              {{
+                (captureBusy()
+                  ? 'pf.knowledge.capture.previewing'
+                  : 'pf.knowledge.capture.previewObsidian'
+                ) | t
+              }}
+            </button>
+          </div>
+          @if (capturePreview(); as preview) {
+            <div class="capture__preview" data-state="preview">
+              <div class="capture__meta">
+                <strong>{{ 'pf.knowledge.capture.preview' | t }} · {{ preview.title }}</strong>
+                <span class="muted small">{{ preview.size }} bytes · {{ preview.state }}</span>
+              </div>
+              <pre>{{ preview.preview }}</pre>
+              <div class="fg-row">
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="confirmCapture()"
+                >
+                  {{
+                    (captureBusy()
+                      ? 'pf.knowledge.capture.importing'
+                      : 'pf.knowledge.capture.confirmImport'
+                    ) | t
+                  }}
+                </button>
+                <button
+                  class="btn"
+                  type="button"
+                  [disabled]="captureBusy()"
+                  (click)="capturePreview.set(null)"
+                >
+                  {{ 'pf.knowledge.capture.editObsidianPath' | t }}
+                </button>
+                @if (obsidianOpenUri($any(preview).path); as uri) {
+                  <a
+                    class="btn"
+                    [href]="uri"
+                    target="_blank"
+                    rel="noopener"
+                    >{{ 'pf.knowledge.capture.openInObsidian' | t }}</a
+                  >
+                }
+              </div>
+            </div>
+          }
           @if (captureReceipt(); as receipt) {
             <div class="capture__receipt" role="status" data-state="receipt">
               <strong>{{ 'pf.knowledge.capture.receipt' | t }}</strong>
@@ -564,6 +784,55 @@ import { ToastService } from '../../../shared/toast';
               <dd>{{ detail.versions.state }}</dd>
             </div>
           </dl>
+          <section class="knowledge-lifecycle" aria-labelledby="knowledge-lifecycle-title">
+            <div>
+              <h3 id="knowledge-lifecycle-title">{{ 'pf.knowledge.lifecycle.title' | t }}</h3>
+              <p class="muted small">{{ 'pf.knowledge.lifecycle.hint' | t }}</p>
+            </div>
+            <div class="fg-row">
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.nextState' | t }}</span>
+                <select
+                  class="input"
+                  [value]="knowledgeTarget()"
+                  (change)="knowledgeTarget.set($any($event.target).value)"
+                >
+                  @for (state of knowledgeTargets(detail); track state) {
+                    <option [value]="state">{{ state }}</option>
+                  }
+                </select>
+              </label>
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.evidence' | t }}</span>
+                <input
+                  class="input"
+                  [value]="knowledgeEvidence()"
+                  (input)="knowledgeEvidence.set($any($event.target).value)"
+                  [placeholder]="'pf.knowledge.lifecycle.evidencePlaceholder' | t"
+                />
+              </label>
+              <label class="field">
+                <span>{{ 'pf.knowledge.lifecycle.reason' | t }}</span>
+                <input
+                  class="input"
+                  [value]="knowledgeReason()"
+                  (input)="knowledgeReason.set($any($event.target).value)"
+                  [placeholder]="'pf.knowledge.lifecycle.reasonPlaceholder' | t"
+                />
+              </label>
+              <button
+                class="btn btn--primary"
+                type="button"
+                [disabled]="knowledgeBusy() || !knowledgeTarget() || (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim())"
+                (click)="transitionKnowledge(detail)"
+              >
+                {{ knowledgeBusy() ? ('pf.knowledge.lifecycle.saving' | t) : ('pf.knowledge.lifecycle.save' | t) }}
+              </button>
+            </div>
+            @if (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim()) {
+              <p class="muted small">{{ 'pf.knowledge.lifecycle.evidenceRequired' | t }}</p>
+            }
+          </section>
           @if (detail.document.metadata; as metadata) {
             <p class="muted small">
               {{ 'pf.knowledge.provenanceAvailable' | t }}
@@ -579,6 +848,137 @@ import { ToastService } from '../../../shared/toast';
               </article>
             }
           </div>
+          <section class="obsidian-export" aria-labelledby="obsidian-export-title">
+            <div>
+              <h3 id="obsidian-export-title">{{ 'pf.knowledge.obsidianExport.title' | t }}</h3>
+              <p class="muted small">{{ 'pf.knowledge.obsidianExport.description' | t }}</p>
+            </div>
+            <label class="field">
+              <span>{{ 'pf.knowledge.obsidianExport.path' | t }}</span>
+              <input
+                class="input"
+                type="text"
+                list="obsidian-path-suggestions"
+                [value]="obsidianExportPath()"
+                (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null); obsidianBaselineHash.set('')"
+                placeholder="exports/spark-runbook.md"
+              />
+            </label>
+            <datalist id="obsidian-path-suggestions">
+              @for (file of obsidianFiles()?.items ?? []; track file.path) {
+                <option [value]="file.path">{{ file.title }}</option>
+              }
+            </datalist>
+            @if (obsidianFiles()?.warnings?.length) {
+              <p class="muted small">{{ obsidianFiles()!.warnings![0] }}</p>
+            }
+            <div class="fg-row">
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy() || !obsidianExportPath().trim()"
+                (click)="loadObsidianBaseline()"
+              >
+                {{ 'pf.knowledge.obsidianExport.loadBaseline' | t }}
+              </button>
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy() || !obsidianExportPath().trim()"
+                (click)="planObsidianExport(detail)"
+              >
+                {{
+                  (obsidianExportBusy()
+                    ? 'pf.knowledge.obsidianExport.planning'
+                    : 'pf.knowledge.obsidianExport.review'
+                  ) | t
+                }}
+              </button>
+            </div>
+            @if (obsidianBaselineHash(); as baseline) {
+              <p class="muted small obsidian-export__baseline">
+                {{ 'pf.knowledge.obsidianExport.baseline' | t }}: <code>{{ baseline }}</code>
+              </p>
+            }
+            @if (obsidianPlan(); as plan) {
+              <div class="obsidian-export__plan" [attr.data-outcome]="plan.outcome">
+                <div class="obsidian-export__plan-head">
+                  <strong>{{ 'pf.knowledge.obsidianExport.plan' | t }}</strong>
+                  <ui-state-badge
+                    [state]="plan.outcome === 'conflict' ? 'error' : plan.outcome"
+                    [labelOverride]="plan.outcome"
+                  />
+                </div>
+                <p class="muted small">{{ plan.path }} · {{ plan.content_hash }}</p>
+                @for (warning of plan.warnings ?? []; track warning) {
+                  <p class="muted small">{{ warning }}</p>
+                }
+                @for (unresolved of plan.unresolved ?? []; track unresolved) {
+                  <p class="danger small">{{ unresolved }}</p>
+                }
+                <button
+                  class="btn btn--primary"
+                  type="button"
+                  [disabled]="obsidianExportBusy() || !['created', 'updated'].includes(plan.outcome)"
+                  (click)="exportToObsidian(detail, plan)"
+                >
+                  {{
+                    (obsidianExportBusy()
+                      ? 'pf.knowledge.obsidianExport.exporting'
+                      : 'pf.knowledge.obsidianExport.confirm'
+                    ) | t
+                  }}
+                </button>
+              </div>
+            }
+            @if (obsidianReceipt(); as receipt) {
+              <div class="obsidian-export__receipt" role="status">
+                <strong>{{ 'pf.knowledge.obsidianExport.receipt' | t }}</strong>
+                <span>{{ receipt.path }} · {{ receipt.sync_state ?? receipt.state }}</span>
+                <code>{{ receipt.content_hash }}</code>
+                @if (receipt.backup_path) {
+                  <span class="muted small">{{ receipt.backup_path }}</span>
+                }
+              </div>
+            }
+            <div class="fg-row obsidian-export__history-actions">
+              <button
+                class="btn"
+                type="button"
+                [disabled]="obsidianExportBusy()"
+                (click)="loadObsidianHistory()"
+              >
+                {{ 'pf.knowledge.obsidianExport.history' | t }}
+              </button>
+            </div>
+            @if (obsidianHistory(); as history) {
+              <div class="obsidian-export__history" aria-live="polite">
+                <strong>{{ 'pf.knowledge.obsidianExport.history' | t }}</strong>
+                @if (history.items.length) {
+                  <ul>
+                    @for (item of history.items; track item.receipt_path ?? item.path + item.content_hash) {
+                      <li>
+                        <span>{{ item.path }} · {{ item.sync_state ?? item.state }}</span>
+                        <code>{{ item.content_hash }}</code>
+                        @if (item.backup_path && item.receipt_path) {
+                          <button
+                            class="btn btn--small"
+                            type="button"
+                            [disabled]="obsidianExportBusy()"
+                            (click)="rollbackObsidian(item)"
+                          >
+                            {{ 'pf.knowledge.obsidianExport.rollback' | t }}
+                          </button>
+                        }
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="muted small">{{ 'pf.knowledge.obsidianExport.historyEmpty' | t }}</p>
+                }
+              </div>
+            }
+          </section>
           <p class="muted small">
             Versions: {{ detail.versions.items.length }} · relations:
             {{ detail.relations?.length ?? 0 }}
@@ -832,11 +1232,41 @@ import { ToastService } from '../../../shared/toast';
       display: grid;
       gap: var(--space-2);
     }
+    .obsidian-export {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+      padding: var(--space-4);
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+      border-radius: var(--radius-md);
+    }
+    .obsidian-export__plan,
+    .obsidian-export__receipt {
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+    }
+    .obsidian-export__plan[data-outcome='conflict'] {
+      border-color: color-mix(in srgb, var(--error) 55%, var(--border));
+    }
+    .obsidian-export__plan-head {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      align-items: center;
+    }
+    .danger {
+      color: var(--error);
+    }
   `,
 })
 export class PfKnowledgeTab implements OnInit {
   private readonly api = inject(PfApi);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
   readonly pid = input.required<string>();
 
   readonly docs = signal<PfDocument[]>([]);
@@ -858,14 +1288,31 @@ export class PfKnowledgeTab implements OnInit {
   readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
   readonly captureSource = signal<PfWorkspaceDocument | null>(null);
   readonly capturePermission = signal(false);
-  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | null>(null);
-  readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | null>(null);
+  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | PfObsidianPreview | null>(null);
+  readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | PfObsidianImport | null>(null);
   readonly captureBusy = signal(false);
-  readonly captureMode = signal<'workspace' | 'url'>('workspace');
+  readonly captureMode = signal<'workspace' | 'url' | 'obsidian'>('workspace');
   readonly captureUrl = signal('');
+  readonly captureObsidianPath = signal('');
   readonly captureExtractor = signal<'stdlib' | 'defuddle'>('stdlib');
   readonly selectedDocument = signal<PfDocumentDetail | null>(null);
   readonly documentBusy = signal(false);
+  readonly knowledgeBusy = signal(false);
+  readonly knowledgeTarget = signal<PfKnowledgeState>('reviewed');
+  readonly knowledgeEvidence = signal('');
+  readonly knowledgeReason = signal('');
+  readonly obsidianExportPath = signal('exports/');
+  readonly obsidianPlan = signal<PfObsidianSyncPlan | null>(null);
+  readonly obsidianReceipt = signal<PfObsidianSyncReceipt | null>(null);
+  readonly obsidianHistory = signal<PfObsidianHistory | null>(null);
+  readonly obsidianFiles = signal<PfObsidianFileIndex | null>(null);
+  readonly obsidianVault = signal<PfObsidianVaultDescriptor | null>(null);
+  readonly obsidianVaultBusy = signal(false);
+  readonly obsidianVaultConnectBusy = signal(false);
+  readonly obsidianConnectPath = signal('');
+  readonly obsidianConnectLabel = signal('');
+  readonly obsidianBaselineHash = signal('');
+  readonly obsidianExportBusy = signal(false);
 
   readonly markdownSources = computed(() =>
     (this.workspaceDiscovery()?.documents ?? []).filter(
@@ -901,15 +1348,20 @@ export class PfKnowledgeTab implements OnInit {
   captureStep(): number {
     if (this.captureReceipt()) return 4;
     if (this.capturePreview()) return 4;
-    if (this.capturePermission() && (this.captureSource() || this.captureUrl().trim())) return 3;
-    if (this.captureSource() || this.captureUrl().trim()) return 2;
+    if (
+      this.capturePermission() &&
+      (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim())
+    )
+      return 3;
+    if (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim()) return 2;
     return 1;
   }
 
-  selectCaptureMode(mode: 'workspace' | 'url'): void {
+  selectCaptureMode(mode: 'workspace' | 'url' | 'obsidian'): void {
     this.captureMode.set(mode);
     this.captureSource.set(null);
     this.captureUrl.set('');
+    this.captureObsidianPath.set('');
     this.captureExtractor.set('stdlib');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
@@ -940,9 +1392,11 @@ export class PfKnowledgeTab implements OnInit {
   async capture(): Promise<void> {
     const source = this.captureSource();
     const url = this.captureUrl().trim();
+    const obsidianPath = this.captureObsidianPath().trim();
     if (
       (this.captureMode() === 'workspace' && !source) ||
       (this.captureMode() === 'url' && !url) ||
+      (this.captureMode() === 'obsidian' && !obsidianPath) ||
       !this.capturePermission() ||
       this.captureBusy()
     )
@@ -953,7 +1407,9 @@ export class PfKnowledgeTab implements OnInit {
       this.capturePreview.set(
         this.captureMode() === 'url'
           ? await firstValueFrom(this.api.urlPreview(this.pid(), url, this.captureExtractor()))
-          : await firstValueFrom(this.api.workspacePreview(source!.path)),
+          : this.captureMode() === 'obsidian'
+            ? await firstValueFrom(this.api.obsidianPreview(this.pid(), obsidianPath))
+            : await firstValueFrom(this.api.workspacePreview(source!.path)),
       );
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
@@ -962,13 +1418,91 @@ export class PfKnowledgeTab implements OnInit {
     }
   }
 
+  async loadObsidianStatus(): Promise<void> {
+    if (this.obsidianVaultBusy()) return;
+    this.obsidianVaultBusy.set(true);
+    this.error.set(null);
+    try {
+      const vault = await firstValueFrom(this.api.obsidianStatus(this.pid()));
+      this.obsidianVault.set(vault);
+      if (vault.detected && typeof this.api.obsidianFiles === 'function') {
+        this.obsidianFiles.set(await firstValueFrom(this.api.obsidianFiles(this.pid())));
+      } else {
+        this.obsidianFiles.set(null);
+      }
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultBusy.set(false);
+    }
+  }
+
+  async loadObsidianFiles(): Promise<void> {
+    if (this.obsidianVaultBusy() || !this.obsidianVault()?.detected) return;
+    this.obsidianVaultBusy.set(true);
+    try {
+      this.obsidianFiles.set(await firstValueFrom(this.api.obsidianFiles(this.pid())));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultBusy.set(false);
+    }
+  }
+
+  async connectObsidianVault(): Promise<void> {
+    const path = this.obsidianConnectPath().trim();
+    const workspaceId = this.obsidianVault()?.workspace;
+    if (!path || !workspaceId || workspaceId === 'local' || this.obsidianVaultConnectBusy()) return;
+    this.obsidianVaultConnectBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianVault.set(
+        await firstValueFrom(
+          this.api.connectObsidianVault({
+            workspace_id: workspaceId,
+            path,
+            ...(this.obsidianConnectLabel().trim()
+              ? { label: this.obsidianConnectLabel().trim() }
+              : {}),
+          }),
+        ),
+      );
+      this.obsidianConnectPath.set('');
+      this.obsidianConnectLabel.set('');
+      this.toast.show(this.i18n.t('pf.knowledge.capture.vaultConnected'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultConnectBusy.set(false);
+    }
+  }
+
+  async revokeObsidianVault(vaultRecordId: string): Promise<void> {
+    if (this.obsidianVaultConnectBusy()) return;
+    const confirmed = globalThis.confirm(this.i18n.t('pf.knowledge.capture.disconnectConfirm'));
+    if (!confirmed) return;
+    this.obsidianVaultConnectBusy.set(true);
+    this.error.set(null);
+    try {
+      await firstValueFrom(this.api.revokeObsidianVault(vaultRecordId));
+      await this.loadObsidianStatus();
+      this.toast.show(this.i18n.t('pf.knowledge.capture.vaultDisconnected'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianVaultConnectBusy.set(false);
+    }
+  }
+
   async confirmCapture(): Promise<void> {
     const source = this.captureSource();
     const preview = this.capturePreview();
     const url = this.captureUrl().trim();
+    const obsidianPath = this.captureObsidianPath().trim();
     if (
       (this.captureMode() === 'workspace' && !source) ||
       (this.captureMode() === 'url' && !url) ||
+      (this.captureMode() === 'obsidian' && !obsidianPath) ||
       !preview ||
       !this.capturePermission() ||
       this.captureBusy()
@@ -982,9 +1516,13 @@ export class PfKnowledgeTab implements OnInit {
           ? await firstValueFrom(
               this.api.importUrlDocument(this.pid(), url, preview.title, this.captureExtractor()),
             )
-          : await firstValueFrom(
-              this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
-            );
+          : this.captureMode() === 'obsidian'
+            ? await firstValueFrom(
+                this.api.importObsidianDocument(this.pid(), obsidianPath, preview.title),
+              )
+            : await firstValueFrom(
+                this.api.importWorkspaceDocument(this.pid(), source!.path, preview.title),
+              );
       this.captureReceipt.set(receipt);
       this.toast.show(`Document "${receipt.title}" imported`, 'success');
       await this.load();
@@ -999,6 +1537,7 @@ export class PfKnowledgeTab implements OnInit {
     this.workspaceDiscovery.set(null);
     this.captureSource.set(null);
     this.captureUrl.set('');
+    this.captureObsidianPath.set('');
     this.capturePermission.set(false);
     this.capturePreview.set(null);
     this.captureReceipt.set(null);
@@ -1009,12 +1548,196 @@ export class PfKnowledgeTab implements OnInit {
     this.documentBusy.set(true);
     this.error.set(null);
     try {
-      this.selectedDocument.set(await firstValueFrom(this.api.documentDetail(this.pid(), did)));
+      const detail = await firstValueFrom(this.api.documentDetail(this.pid(), did));
+      this.selectedDocument.set(detail);
+      this.knowledgeTarget.set(this.knowledgeTargets(detail)[0] ?? 'reviewed');
+      this.knowledgeEvidence.set('');
+      this.knowledgeReason.set('');
+      this.obsidianExportPath.set(`exports/${this.slug(detail.document.title)}.md`);
+      this.obsidianPlan.set(null);
+      this.obsidianReceipt.set(null);
+      this.obsidianBaselineHash.set('');
+      this.obsidianHistory.set(null);
     } catch (e) {
       this.error.set(e instanceof ApiError ? e : new ApiError(0));
     } finally {
       this.documentBusy.set(false);
     }
+  }
+
+  knowledgeTargets(detail: PfDocumentDetail): PfKnowledgeState[] {
+    const current = String(detail.document.metadata?.['knowledge_state'] ?? 'captured') as PfKnowledgeState;
+    const transitions: Record<PfKnowledgeState, PfKnowledgeState[]> = {
+      captured: ['draft', 'reviewed', 'rejected'],
+      draft: ['reviewed', 'rejected'],
+      reviewed: ['draft', 'validated', 'rejected'],
+      validated: ['reviewed', 'deprecated'],
+      deprecated: ['draft'],
+      rejected: ['draft'],
+    };
+    return transitions[current] ?? ['draft'];
+  }
+
+  async transitionKnowledge(detail: PfDocumentDetail): Promise<void> {
+    const target = this.knowledgeTarget();
+    const evidence = this.knowledgeEvidence()
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (!target || (target === 'validated' && !evidence.length) || this.knowledgeBusy()) return;
+    this.knowledgeBusy.set(true);
+    this.error.set(null);
+    try {
+      const result = await firstValueFrom(
+        this.api.transitionKnowledgeState(
+          this.pid(),
+          detail.document.id,
+          target,
+          evidence,
+          this.knowledgeReason(),
+        ),
+      );
+      this.selectedDocument.update((current) => current ? { ...current, document: result.document } : current);
+      this.docs.update((items) => items.map((item) => item.id === result.document.id ? result.document : item));
+      this.knowledgeTarget.set(this.knowledgeTargets({ ...detail, document: result.document })[0] ?? 'reviewed');
+      this.knowledgeEvidence.set('');
+      this.knowledgeReason.set('');
+      this.toast.show(this.i18n.t('pf.knowledge.lifecycle.saved'), 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.knowledgeBusy.set(false);
+    }
+  }
+
+  async planObsidianExport(detail: PfDocumentDetail): Promise<void> {
+    const path = this.obsidianExportPath().trim();
+    const content = this.markdownFor(detail);
+    if (!path || !content || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianPlan.set(
+        await firstValueFrom(
+          this.api.planObsidianSync(this.pid(), {
+            path,
+            content,
+            ...(this.obsidianBaselineHash()
+              ? { baseline_hash: this.obsidianBaselineHash() }
+              : {}),
+          }),
+        ),
+      );
+      this.obsidianReceipt.set(null);
+      this.obsidianHistory.set(null);
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async exportToObsidian(detail: PfDocumentDetail, plan: PfObsidianSyncPlan): Promise<void> {
+    if (!['created', 'updated'].includes(plan.outcome) || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      const receipt = await firstValueFrom(
+        this.api.exportObsidianDocument(this.pid(), {
+          path: plan.path,
+          content: this.markdownFor(detail),
+          ...(plan.previous_hash ? { baseline_hash: plan.previous_hash } : {}),
+        }),
+      );
+      this.obsidianReceipt.set(receipt);
+      this.toast.show(`Obsidian note "${receipt.path}" exported`, 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async loadObsidianBaseline(): Promise<void> {
+    const path = this.obsidianExportPath().trim();
+    if (!path || this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      const preview = await firstValueFrom(this.api.obsidianPreview(this.pid(), path));
+      if (!preview.content_hash) throw new ApiError(422, { code: 'OBSIDIAN-MISSING-HASH' });
+      this.obsidianBaselineHash.set(preview.content_hash);
+      this.obsidianPlan.set(null);
+      this.obsidianReceipt.set(null);
+      this.toast.show(`Obsidian baseline loaded for "${preview.path}"`, 'success');
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async loadObsidianHistory(): Promise<void> {
+    if (this.obsidianExportBusy()) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianHistory.set(await firstValueFrom(this.api.obsidianHistory(this.pid())));
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  async rollbackObsidian(receipt: PfObsidianSyncReceipt): Promise<void> {
+    if (!receipt.backup_path || !receipt.receipt_path || this.obsidianExportBusy()) return;
+    const confirmed = globalThis.confirm(this.i18n.t('pf.knowledge.obsidianExport.rollbackConfirm'));
+    if (!confirmed) return;
+    this.obsidianExportBusy.set(true);
+    this.error.set(null);
+    try {
+      this.obsidianReceipt.set(
+        await firstValueFrom(
+          this.api.rollbackObsidianDocument(this.pid(), {
+            path: receipt.path,
+            receipt_path: receipt.receipt_path,
+          }),
+        ),
+      );
+      this.toast.show(this.i18n.t('pf.knowledge.obsidianExport.rolledBack'), 'success');
+      this.obsidianExportBusy.set(false);
+      await this.loadObsidianHistory();
+    } catch (e) {
+      this.error.set(e instanceof ApiError ? e : new ApiError(0));
+    } finally {
+      this.obsidianExportBusy.set(false);
+    }
+  }
+
+  obsidianOpenUri(path: string): string | null {
+    const vault = this.obsidianVault();
+    const vaultName = (vault?.label || vault?.vault_id || '').trim();
+    const notePath = path.trim();
+    if (!vaultName || !notePath || !vault?.detected) return null;
+    return `obsidian://open?vault=${encodeURIComponent(vaultName)}&file=${encodeURIComponent(notePath)}`;
+  }
+
+  private markdownFor(detail: PfDocumentDetail): string {
+    return [`# ${detail.document.title}`, ...detail.content.chunks.map((chunk) => chunk.text)].join(
+      '\n\n',
+    );
+  }
+
+  private slug(title: string): string {
+    return (
+      title
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'document'
+    );
   }
 
   synthBadge(s: string): string {
