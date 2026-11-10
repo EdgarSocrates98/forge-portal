@@ -229,7 +229,10 @@ describe('PfKnowledgeTab — source capture', () => {
     c.obsidianExportPath.set('exports/runbook.md');
     const detail = {
       document: { id: 'd1', title: 'Runbook' },
-      content: { chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }], chunk_count: 1 },
+      content: {
+        chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }],
+        chunk_count: 1,
+      },
     } as any;
     await c.planObsidianExport(detail);
     expect(api.planObsidianSync).toHaveBeenCalledWith('p1', {
@@ -253,7 +256,13 @@ describe('PfKnowledgeTab — source capture', () => {
       knowledgeHealth: vi.fn(() => of({ score: 1 })),
       knowledgeGraph: vi.fn(() => of({ stats: { nodes: 0, edges: 0 } })),
       obsidianPreview: vi.fn(() =>
-        of({ path: 'exports/runbook.md', title: 'Runbook', content_hash: 'hash-old', size: 10, state: 'ready' }),
+        of({
+          path: 'exports/runbook.md',
+          title: 'Runbook',
+          content_hash: 'hash-old',
+          size: 10,
+          state: 'ready',
+        }),
       ),
       planObsidianSync: vi.fn(() =>
         of({
@@ -289,7 +298,10 @@ describe('PfKnowledgeTab — source capture', () => {
     expect(c.obsidianBaselineHash()).toBe('hash-old');
     const detail = {
       document: { id: 'd1', title: 'Runbook' },
-      content: { chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }], chunk_count: 1 },
+      content: {
+        chunks: [{ id: 'c1', document_id: 'd1', seq: 0, text: 'Use Spark.' }],
+        chunk_count: 1,
+      },
     } as any;
     await c.planObsidianExport(detail);
     expect(api.planObsidianSync).toHaveBeenCalledWith('p1', {

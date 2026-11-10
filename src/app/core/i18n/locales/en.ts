@@ -1575,7 +1575,8 @@ export const EN: Record<string, string> = {
   'pf.knowledge.obsidianExport.history': 'View export history',
   'pf.knowledge.obsidianExport.historyEmpty': 'No Obsidian export receipt yet.',
   'pf.knowledge.obsidianExport.rollback': 'Restore this version',
-  'pf.knowledge.obsidianExport.rollbackConfirm': 'Restore this Obsidian version from its backup? Manual edits after the export will block the operation.',
+  'pf.knowledge.obsidianExport.rollbackConfirm':
+    'Restore this Obsidian version from its backup? Manual edits after the export will block the operation.',
   'pf.knowledge.obsidianExport.rolledBack': 'Obsidian version restored',
   'pf.knowledge.extractionComplete': 'Extraction complete',
   'pf.knowledge.relations': 'relations',
@@ -1593,13 +1594,15 @@ export const EN: Record<string, string> = {
     'Provenance metadata is available to the authorized product scope.',
   'pf.knowledge.indexedContent': 'Indexed content',
   'pf.knowledge.lifecycle.title': 'Knowledge lifecycle',
-  'pf.knowledge.lifecycle.hint': 'Indexing does not make a document authoritative. Promote it only after review and evidence.',
+  'pf.knowledge.lifecycle.hint':
+    'Indexing does not make a document authoritative. Promote it only after review and evidence.',
   'pf.knowledge.lifecycle.nextState': 'Next state',
   'pf.knowledge.lifecycle.evidence': 'Evidence references',
   'pf.knowledge.lifecycle.evidencePlaceholder': 'run-42, ticket-183',
   'pf.knowledge.lifecycle.reason': 'Reason',
   'pf.knowledge.lifecycle.reasonPlaceholder': 'What was checked?',
-  'pf.knowledge.lifecycle.evidenceRequired': 'Validated knowledge requires at least one evidence reference.',
+  'pf.knowledge.lifecycle.evidenceRequired':
+    'Validated knowledge requires at least one evidence reference.',
   'pf.knowledge.lifecycle.save': 'Save state',
   'pf.knowledge.lifecycle.saving': 'Saving…',
   'pf.knowledge.lifecycle.saved': 'Knowledge state updated',
@@ -1723,8 +1726,7 @@ export const EN: Record<string, string> = {
   // api-sentinel — operations surface (/api-operations)
   'sentinel.page.subtitle':
     'Live API Sentinel operations — services, incidents, SLOs, capabilities.',
-  'sentinel.page.unreachable':
-    'API Sentinel unreachable at this address — check the connection.',
+  'sentinel.page.unreachable': 'API Sentinel unreachable at this address — check the connection.',
   'sentinel.tabs.services': 'Services',
   'sentinel.tabs.incidents': 'Incidents',
   'sentinel.tabs.status': 'Sentinel status',

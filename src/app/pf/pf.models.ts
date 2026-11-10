@@ -323,12 +323,7 @@ export interface PfDocument {
 }
 
 export type PfKnowledgeState =
-  | 'captured'
-  | 'draft'
-  | 'reviewed'
-  | 'validated'
-  | 'deprecated'
-  | 'rejected';
+  'captured' | 'draft' | 'reviewed' | 'validated' | 'deprecated' | 'rejected';
 
 export interface PfKnowledgeTransition {
   document: PfDocument;

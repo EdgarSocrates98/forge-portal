@@ -124,7 +124,11 @@ interface PendingPlan {
         <div class="investigation-grid">
           <div>
             <span class="lbl">{{ 'tasks.investigation.evidence' | t }}</span>
-            <div class="evidence-list" role="group" [attr.aria-label]="'tasks.investigation.evidence' | t">
+            <div
+              class="evidence-list"
+              role="group"
+              [attr.aria-label]="'tasks.investigation.evidence' | t"
+            >
               @for (item of investigationEvidence; track item.id) {
                 <label class="evidence-choice">
                   <input
@@ -191,7 +195,11 @@ interface PendingPlan {
 
     @if (pending(); as p) {
       <section class="card" data-lift data-section="plan">
-        <h2>{{ p.kind === 'investigation' ? ('tasks.investigation.planTitle' | t) : ('tasks.plan' | t) }}</h2>
+        <h2>
+          {{
+            p.kind === 'investigation' ? ('tasks.investigation.planTitle' | t) : ('tasks.plan' | t)
+          }}
+        </h2>
         <p class="muted">{{ 'tasks.plan.review' | t }}</p>
 
         <dl class="plan-card">
@@ -216,7 +224,9 @@ interface PendingPlan {
             </div>
             <div class="kv">
               <dt>{{ 'tasks.investigation.safety' | t }}</dt>
-              <dd><code>{{ planList(p.plan, 'authorized_risks') }}</code></dd>
+              <dd>
+                <code>{{ planList(p.plan, 'authorized_risks') }}</code>
+              </dd>
             </div>
           }
           <div class="kv">
@@ -248,7 +258,11 @@ interface PendingPlan {
             (click)="execute(p.plan, p.plan_token)"
           >
             <ui-icon name="tasks" [size]="14" />
-            {{ p.kind === 'investigation' ? ('tasks.investigation.execute' | t) : ('tasks.execute' | t) }}
+            {{
+              p.kind === 'investigation'
+                ? ('tasks.investigation.execute' | t)
+                : ('tasks.execute' | t)
+            }}
           </button>
           <button class="btn" (click)="pending.set(null)">{{ 'state.cancel' | t }}</button>
         </div>
@@ -256,7 +270,12 @@ interface PendingPlan {
     }
 
     @if (investigationReceipt(); as r) {
-      <section class="card investigation-receipt" data-lift data-section="investigation-receipt" aria-live="polite">
+      <section
+        class="card investigation-receipt"
+        data-lift
+        data-section="investigation-receipt"
+        aria-live="polite"
+      >
         <h2>{{ 'tasks.investigation.receipt' | t }}</h2>
         <p class="receipt__status">
           <ui-state-badge [state]="r.status" />
@@ -272,16 +291,27 @@ interface PendingPlan {
             <ui-icon name="install" [size]="14" />
             {{ 'tasks.export' | t }}
           </button>
-          <button class="btn" (click)="investigationReceipt.set(null)">{{ 'state.close' | t }}</button>
+          <button class="btn" (click)="investigationReceipt.set(null)">
+            {{ 'state.close' | t }}
+          </button>
         </div>
 
-        <section class="handoff" data-section="investigation-handoff" aria-labelledby="handoff-title">
+        <section
+          class="handoff"
+          data-section="investigation-handoff"
+          aria-labelledby="handoff-title"
+        >
           <div>
             <h3 id="handoff-title">{{ 'tasks.investigation.handoff.title' | t }}</h3>
             <p class="muted">{{ 'tasks.investigation.handoff.hint' | t }}</p>
           </div>
           @if (pfProductsState() === 'idle') {
-            <button class="btn" data-action="load-product-forge" [disabled]="pfBusy()" (click)="loadProductForgeProducts()">
+            <button
+              class="btn"
+              data-action="load-product-forge"
+              [disabled]="pfBusy()"
+              (click)="loadProductForgeProducts()"
+            >
               <ui-icon name="search" [size]="14" />
               {{ 'tasks.investigation.handoff.findProducts' | t }}
             </button>
@@ -289,14 +319,27 @@ interface PendingPlan {
             <p class="muted" role="status">{{ 'tasks.investigation.handoff.loading' | t }}</p>
           } @else if (pfProducts().length) {
             <div class="handoff__controls">
-              <label class="lbl" for="handoff-product">{{ 'tasks.investigation.handoff.product' | t }}</label>
-              <select id="handoff-product" class="input" [ngModel]="pfProductId()" (ngModelChange)="pfProductId.set($event)" [disabled]="pfBusy()">
+              <label class="lbl" for="handoff-product">{{
+                'tasks.investigation.handoff.product' | t
+              }}</label>
+              <select
+                id="handoff-product"
+                class="input"
+                [ngModel]="pfProductId()"
+                (ngModelChange)="pfProductId.set($event)"
+                [disabled]="pfBusy()"
+              >
                 <option value="">{{ 'tasks.investigation.handoff.choose' | t }}</option>
                 @for (product of pfProducts(); track product.id) {
                   <option [value]="product.id">{{ product.name }} · {{ product.id }}</option>
                 }
               </select>
-              <button class="btn btn--primary" data-action="import-investigation" [disabled]="pfBusy() || !pfProductId()" (click)="importInvestigation(r)">
+              <button
+                class="btn btn--primary"
+                data-action="import-investigation"
+                [disabled]="pfBusy() || !pfProductId()"
+                (click)="importInvestigation(r)"
+              >
                 <ui-icon name="knowledge" [size]="14" />
                 {{ 'tasks.investigation.handoff.import' | t }}
               </button>
@@ -304,17 +347,25 @@ interface PendingPlan {
           } @else {
             <p class="muted" role="status">
               {{ 'tasks.investigation.handoff.unavailable' | t }}
-              <a class="linklike" routerLink="/pf/settings">{{ 'tasks.investigation.handoff.settings' | t }}</a>
+              <a class="linklike" routerLink="/pf/settings">{{
+                'tasks.investigation.handoff.settings' | t
+              }}</a>
             </p>
           }
           @if (pfImportError(); as e) {
-            <p class="refusal" role="alert"><code>{{ e.body.code }}</code> {{ e.body.message }}</p>
+            <p class="refusal" role="alert">
+              <code>{{ e.body.code }}</code> {{ e.body.message }}
+            </p>
           }
           @if (pfImportResult(); as result) {
             <p class="handoff__success" role="status">
               <ui-state-badge state="supported" />
               {{ 'tasks.investigation.handoff.done' | t }}
-              <a class="linklike" [routerLink]="['/pf/products', pfProductId()]" [queryParams]="{ tab: 'knowledge' }">
+              <a
+                class="linklike"
+                [routerLink]="['/pf/products', pfProductId()]"
+                [queryParams]="{ tab: 'knowledge' }"
+              >
                 {{ 'tasks.investigation.handoff.open' | t }}
               </a>
               @if (result.suggested_obsidian_path) {
