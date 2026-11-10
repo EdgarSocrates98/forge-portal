@@ -110,7 +110,11 @@ export function sentinelFailure(err: ApiError | null | undefined): SentinelFailu
   if (err.status === 401 || code === 'sentinel.unauthorized') return 'unauthorized';
   if (err.status === 403 || code === 'sentinel.forbidden') return 'forbidden';
   if (err.status === 404 || code === 'sentinel.not_found') return 'not_found';
-  if (err.status === 409 || code === 'sentinel.conflict' || code === 'sentinel.integration_refused') {
+  if (
+    err.status === 409 ||
+    code === 'sentinel.conflict' ||
+    code === 'sentinel.integration_refused'
+  ) {
     return 'conflict';
   }
   if (err.status === 422) return 'validation';

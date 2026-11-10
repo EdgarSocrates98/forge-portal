@@ -285,14 +285,20 @@ import { ToastService } from '../../../shared/toast';
                 <strong>{{ 'pf.knowledge.capture.obsidianVault' | t }}</strong>
                 @if (obsidianVault(); as vault) {
                   <span class="muted small">
-                    {{ vault.detected ? ('pf.knowledge.capture.obsidianReady' | t) : ('pf.knowledge.capture.obsidianNotReady' | t) }}
+                    {{
+                      vault.detected
+                        ? ('pf.knowledge.capture.obsidianReady' | t)
+                        : ('pf.knowledge.capture.obsidianNotReady' | t)
+                    }}
                     · <code>{{ vault.vault_id }}</code>
                   </span>
                   @for (warning of vault.warnings ?? []; track warning) {
                     <span class="danger small">{{ warning }}</span>
                   }
                 } @else {
-                  <span class="muted small">{{ 'pf.knowledge.capture.obsidianStatusHint' | t }}</span>
+                  <span class="muted small">{{
+                    'pf.knowledge.capture.obsidianStatusHint' | t
+                  }}</span>
                 }
               </div>
               <button
@@ -301,7 +307,9 @@ import { ToastService } from '../../../shared/toast';
                 [disabled]="captureBusy() || obsidianVaultBusy()"
                 (click)="loadObsidianStatus()"
               >
-                {{ (obsidianVaultBusy() ? 'state.loading' : 'pf.knowledge.capture.checkVault') | t }}
+                {{
+                  (obsidianVaultBusy() ? 'state.loading' : 'pf.knowledge.capture.checkVault') | t
+                }}
               </button>
             </div>
             <details class="obsidian-vault-connect">
@@ -325,7 +333,8 @@ import { ToastService } from '../../../shared/toast';
                     {{
                       (obsidianVaultConnectBusy()
                         ? 'state.loading'
-                        : 'pf.knowledge.capture.disconnectVault') | t
+                        : 'pf.knowledge.capture.disconnectVault'
+                      ) | t
                     }}
                   </button>
                 </div>
@@ -366,7 +375,8 @@ import { ToastService } from '../../../shared/toast';
                     {{
                       (obsidianVaultConnectBusy()
                         ? 'state.loading'
-                        : 'pf.knowledge.capture.connectVault') | t
+                        : 'pf.knowledge.capture.connectVault'
+                      ) | t
                     }}
                   </button>
                 </div>
@@ -380,7 +390,9 @@ import { ToastService } from '../../../shared/toast';
                 list="obsidian-path-suggestions"
                 autocomplete="off"
                 [value]="captureObsidianPath()"
-                (input)="captureObsidianPath.set($any($event.target).value); capturePreview.set(null)"
+                (input)="
+                  captureObsidianPath.set($any($event.target).value); capturePreview.set(null)
+                "
                 placeholder="runbooks/spark-diagnosis.md"
                 aria-describedby="obsidian-capture-help"
               />
@@ -390,11 +402,17 @@ import { ToastService } from '../../../shared/toast';
             </p>
             @if (obsidianFiles(); as files) {
               <p class="muted small obsidian-file-index" role="status">
-                {{ 'pf.knowledge.capture.discoveredNotes' | t }}: {{ files.count ?? files.items.length }}
+                {{ 'pf.knowledge.capture.discoveredNotes' | t }}:
+                {{ files.count ?? files.items.length }}
                 @if (files.truncated) {
                   · {{ 'pf.knowledge.capture.discoveredNotesLimited' | t }}
                 }
-                <button class="linklike" type="button" [disabled]="obsidianVaultBusy()" (click)="loadObsidianFiles()">
+                <button
+                  class="linklike"
+                  type="button"
+                  [disabled]="obsidianVaultBusy()"
+                  (click)="loadObsidianFiles()"
+                >
                   {{ 'pf.knowledge.capture.refreshNotes' | t }}
                 </button>
               </p>
@@ -453,13 +471,9 @@ import { ToastService } from '../../../shared/toast';
                   {{ 'pf.knowledge.capture.editObsidianPath' | t }}
                 </button>
                 @if (obsidianOpenUri($any(preview).path); as uri) {
-                  <a
-                    class="btn"
-                    [href]="uri"
-                    target="_blank"
-                    rel="noopener"
-                    >{{ 'pf.knowledge.capture.openInObsidian' | t }}</a
-                  >
+                  <a class="btn" [href]="uri" target="_blank" rel="noopener">{{
+                    'pf.knowledge.capture.openInObsidian' | t
+                  }}</a>
                 }
               </div>
             </div>
@@ -823,10 +837,18 @@ import { ToastService } from '../../../shared/toast';
               <button
                 class="btn btn--primary"
                 type="button"
-                [disabled]="knowledgeBusy() || !knowledgeTarget() || (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim())"
+                [disabled]="
+                  knowledgeBusy() ||
+                  !knowledgeTarget() ||
+                  (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim())
+                "
                 (click)="transitionKnowledge(detail)"
               >
-                {{ knowledgeBusy() ? ('pf.knowledge.lifecycle.saving' | t) : ('pf.knowledge.lifecycle.save' | t) }}
+                {{
+                  knowledgeBusy()
+                    ? ('pf.knowledge.lifecycle.saving' | t)
+                    : ('pf.knowledge.lifecycle.save' | t)
+                }}
               </button>
             </div>
             @if (knowledgeTarget() === 'validated' && !knowledgeEvidence().trim()) {
@@ -860,7 +882,11 @@ import { ToastService } from '../../../shared/toast';
                 type="text"
                 list="obsidian-path-suggestions"
                 [value]="obsidianExportPath()"
-                (input)="obsidianExportPath.set($any($event.target).value); obsidianPlan.set(null); obsidianBaselineHash.set('')"
+                (input)="
+                  obsidianExportPath.set($any($event.target).value);
+                  obsidianPlan.set(null);
+                  obsidianBaselineHash.set('')
+                "
                 placeholder="exports/spark-runbook.md"
               />
             </label>
@@ -919,7 +945,9 @@ import { ToastService } from '../../../shared/toast';
                 <button
                   class="btn btn--primary"
                   type="button"
-                  [disabled]="obsidianExportBusy() || !['created', 'updated'].includes(plan.outcome)"
+                  [disabled]="
+                    obsidianExportBusy() || !['created', 'updated'].includes(plan.outcome)
+                  "
                   (click)="exportToObsidian(detail, plan)"
                 >
                   {{
@@ -956,7 +984,10 @@ import { ToastService } from '../../../shared/toast';
                 <strong>{{ 'pf.knowledge.obsidianExport.history' | t }}</strong>
                 @if (history.items.length) {
                   <ul>
-                    @for (item of history.items; track item.receipt_path ?? item.path + item.content_hash) {
+                    @for (
+                      item of history.items;
+                      track item.receipt_path ?? item.path + item.content_hash
+                    ) {
                       <li>
                         <span>{{ item.path }} · {{ item.sync_state ?? item.state }}</span>
                         <code>{{ item.content_hash }}</code>
@@ -1288,7 +1319,9 @@ export class PfKnowledgeTab implements OnInit {
   readonly workspaceDiscovery = signal<PfWorkspaceDiscovery | null>(null);
   readonly captureSource = signal<PfWorkspaceDocument | null>(null);
   readonly capturePermission = signal(false);
-  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | PfObsidianPreview | null>(null);
+  readonly capturePreview = signal<PfWorkspacePreview | PfUrlPreview | PfObsidianPreview | null>(
+    null,
+  );
   readonly captureReceipt = signal<PfWorkspaceImport | PfUrlImport | PfObsidianImport | null>(null);
   readonly captureBusy = signal(false);
   readonly captureMode = signal<'workspace' | 'url' | 'obsidian'>('workspace');
@@ -1353,7 +1386,8 @@ export class PfKnowledgeTab implements OnInit {
       (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim())
     )
       return 3;
-    if (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim()) return 2;
+    if (this.captureSource() || this.captureUrl().trim() || this.captureObsidianPath().trim())
+      return 2;
     return 1;
   }
 
@@ -1566,7 +1600,9 @@ export class PfKnowledgeTab implements OnInit {
   }
 
   knowledgeTargets(detail: PfDocumentDetail): PfKnowledgeState[] {
-    const current = String(detail.document.metadata?.['knowledge_state'] ?? 'captured') as PfKnowledgeState;
+    const current = String(
+      detail.document.metadata?.['knowledge_state'] ?? 'captured',
+    ) as PfKnowledgeState;
     const transitions: Record<PfKnowledgeState, PfKnowledgeState[]> = {
       captured: ['draft', 'reviewed', 'rejected'],
       draft: ['reviewed', 'rejected'],
@@ -1597,9 +1633,15 @@ export class PfKnowledgeTab implements OnInit {
           this.knowledgeReason(),
         ),
       );
-      this.selectedDocument.update((current) => current ? { ...current, document: result.document } : current);
-      this.docs.update((items) => items.map((item) => item.id === result.document.id ? result.document : item));
-      this.knowledgeTarget.set(this.knowledgeTargets({ ...detail, document: result.document })[0] ?? 'reviewed');
+      this.selectedDocument.update((current) =>
+        current ? { ...current, document: result.document } : current,
+      );
+      this.docs.update((items) =>
+        items.map((item) => (item.id === result.document.id ? result.document : item)),
+      );
+      this.knowledgeTarget.set(
+        this.knowledgeTargets({ ...detail, document: result.document })[0] ?? 'reviewed',
+      );
       this.knowledgeEvidence.set('');
       this.knowledgeReason.set('');
       this.toast.show(this.i18n.t('pf.knowledge.lifecycle.saved'), 'success');
@@ -1622,9 +1664,7 @@ export class PfKnowledgeTab implements OnInit {
           this.api.planObsidianSync(this.pid(), {
             path,
             content,
-            ...(this.obsidianBaselineHash()
-              ? { baseline_hash: this.obsidianBaselineHash() }
-              : {}),
+            ...(this.obsidianBaselineHash() ? { baseline_hash: this.obsidianBaselineHash() } : {}),
           }),
         ),
       );
@@ -1692,7 +1732,9 @@ export class PfKnowledgeTab implements OnInit {
 
   async rollbackObsidian(receipt: PfObsidianSyncReceipt): Promise<void> {
     if (!receipt.backup_path || !receipt.receipt_path || this.obsidianExportBusy()) return;
-    const confirmed = globalThis.confirm(this.i18n.t('pf.knowledge.obsidianExport.rollbackConfirm'));
+    const confirmed = globalThis.confirm(
+      this.i18n.t('pf.knowledge.obsidianExport.rollbackConfirm'),
+    );
     if (!confirmed) return;
     this.obsidianExportBusy.set(true);
     this.error.set(null);

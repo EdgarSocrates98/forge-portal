@@ -81,7 +81,13 @@ const INVESTIGATION_RECEIPT: InvestigationReceipt = {
   status: 'completed',
   path: 'C:/workspace/.forge/orchestrations/orch.json',
   report: { kind: 'run', findings: [] },
-  actions: [{ kind: 'investigation', path: 'C:/workspace/.forge/orchestrations/orch.json', status: 'completed' }],
+  actions: [
+    {
+      kind: 'investigation',
+      path: 'C:/workspace/.forge/orchestrations/orch.json',
+      status: 'completed',
+    },
+  ],
 };
 
 const STALE = () =>
@@ -167,7 +173,13 @@ describe('TasksPage — Execution Center', () => {
     const fixture = TestBed.createComponent(TasksPage);
     await fixture.whenStable();
     fixture.detectChanges();
-    return { fixture, api, pf, c: fixture.componentInstance, el: fixture.nativeElement as HTMLElement };
+    return {
+      fixture,
+      api,
+      pf,
+      c: fixture.componentInstance,
+      el: fixture.nativeElement as HTMLElement,
+    };
   }
 
   it('runs plan → review → execute → receipt in order and refreshes history', async () => {

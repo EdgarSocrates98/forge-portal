@@ -1520,7 +1520,8 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.capture.obsidianVault': 'Cofre autorizado',
   'pf.knowledge.capture.obsidianReady': 'Pronto para preview e sincronização revisada',
   'pf.knowledge.capture.obsidianNotReady': 'Indisponível',
-  'pf.knowledge.capture.obsidianStatusHint': 'Verifique o cofre configurado antes de escolher uma nota.',
+  'pf.knowledge.capture.obsidianStatusHint':
+    'Verifique o cofre configurado antes de escolher uma nota.',
   'pf.knowledge.capture.discoveredNotes': 'Notas Markdown autorizadas encontradas',
   'pf.knowledge.capture.discoveredNotesLimited': 'exibindo a primeira página',
   'pf.knowledge.capture.refreshNotes': 'Atualizar notas',
@@ -1590,7 +1591,8 @@ export const PT_BR: Record<string, string> = {
   'pf.knowledge.obsidianExport.history': 'Ver histórico de exportações',
   'pf.knowledge.obsidianExport.historyEmpty': 'Ainda não há recibos de exportação Obsidian.',
   'pf.knowledge.obsidianExport.rollback': 'Restaurar esta versão',
-  'pf.knowledge.obsidianExport.rollbackConfirm': 'Restaurar esta versão do Obsidian a partir do backup? Edições manuais posteriores bloquearão a operação.',
+  'pf.knowledge.obsidianExport.rollbackConfirm':
+    'Restaurar esta versão do Obsidian a partir do backup? Edições manuais posteriores bloquearão a operação.',
   'pf.knowledge.obsidianExport.rolledBack': 'Versão do Obsidian restaurada',
   'pf.knowledge.extractionComplete': 'Extração concluída',
   'pf.knowledge.relations': 'relações',
@@ -1608,13 +1610,15 @@ export const PT_BR: Record<string, string> = {
     'Os metadados de proveniência estão disponíveis para o escopo autorizado do produto.',
   'pf.knowledge.indexedContent': 'Conteúdo indexado',
   'pf.knowledge.lifecycle.title': 'Ciclo de vida do conhecimento',
-  'pf.knowledge.lifecycle.hint': 'Indexação não torna um documento autoritativo. Promova somente após revisão e evidência.',
+  'pf.knowledge.lifecycle.hint':
+    'Indexação não torna um documento autoritativo. Promova somente após revisão e evidência.',
   'pf.knowledge.lifecycle.nextState': 'Próximo estado',
   'pf.knowledge.lifecycle.evidence': 'Referências de evidência',
   'pf.knowledge.lifecycle.evidencePlaceholder': 'job-42, chamado-183',
   'pf.knowledge.lifecycle.reason': 'Motivo',
   'pf.knowledge.lifecycle.reasonPlaceholder': 'O que foi verificado?',
-  'pf.knowledge.lifecycle.evidenceRequired': 'Conhecimento validado exige ao menos uma referência de evidência.',
+  'pf.knowledge.lifecycle.evidenceRequired':
+    'Conhecimento validado exige ao menos uma referência de evidência.',
   'pf.knowledge.lifecycle.save': 'Salvar estado',
   'pf.knowledge.lifecycle.saving': 'Salvando…',
   'pf.knowledge.lifecycle.saved': 'Estado do conhecimento atualizado',
@@ -1740,8 +1744,7 @@ export const PT_BR: Record<string, string> = {
   // api-sentinel — superfície de operações (/api-operations)
   'sentinel.page.subtitle':
     'Operações vivas do API Sentinel — serviços, incidentes, SLOs, capacidades.',
-  'sentinel.page.unreachable':
-    'API Sentinel inalcançável neste endereço — confira a conexão.',
+  'sentinel.page.unreachable': 'API Sentinel inalcançável neste endereço — confira a conexão.',
   'sentinel.tabs.services': 'Serviços',
   'sentinel.tabs.incidents': 'Incidentes',
   'sentinel.tabs.status': 'Estado do Sentinel',

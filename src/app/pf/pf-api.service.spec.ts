@@ -173,7 +173,13 @@ describe('PfApi', () => {
 
   it('transitions knowledge state with explicit evidence and confirmation', async () => {
     const p = firstValueFrom(
-      api.transitionKnowledgeState('p 1', 'doc/1', 'validated', ['spark-job-42'], 'receipt checked'),
+      api.transitionKnowledgeState(
+        'p 1',
+        'doc/1',
+        'validated',
+        ['spark-job-42'],
+        'receipt checked',
+      ),
     );
     const req = http.expectOne(`${BASE}/products/p%201/documents/doc%2F1/knowledge-state`);
     expect(req.request.method).toBe('POST');
@@ -189,9 +195,9 @@ describe('PfApi', () => {
 
   it('uses scoped Obsidian vault endpoints and keeps the host path request-only', async () => {
     const list = firstValueFrom(api.obsidianVaults('ws 1'));
-    http.expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`).flush(
-      envelope({ items: [{ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }] }),
-    );
+    http
+      .expectOne(`${BASE}/obsidian/vaults?workspace_id=ws%201`)
+      .flush(envelope({ items: [{ vault_record_id: 'vault-1', workspace: 'ws 1', path: '.' }] }));
     expect((await list).items[0].path).toBe('.');
 
     const connected = firstValueFrom(
