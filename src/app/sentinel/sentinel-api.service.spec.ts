@@ -13,12 +13,15 @@ import { SentinelServiceListResponse } from './sentinel.models';
 
 const BASE = SENTINEL_DEFAULT_BASE_URL;
 
-function problem(
-  status: number,
-  code: string,
-  detail = 'refused',
-): Record<string, unknown> {
-  return { type: `urn:api-sentinel:${code.split('.').pop()}`, title: code, status, detail, code, details: {} };
+function problem(status: number, code: string, detail = 'refused'): Record<string, unknown> {
+  return {
+    type: `urn:api-sentinel:${code.split('.').pop()}`,
+    title: code,
+    status,
+    detail,
+    code,
+    details: {},
+  };
 }
 
 async function rejected(p: Promise<unknown>): Promise<ApiError> {
@@ -101,10 +104,12 @@ describe('SentinelApi', () => {
 
   it('maps application/problem+json verbatim to ApiError', async () => {
     const p = firstValueFrom(api.services());
-    http.expectOne(`${BASE}/v1/services`).flush(problem(401, 'sentinel.unauthorized', 'missing_credentials'), {
-      status: 401,
-      statusText: 'Unauthorized',
-    });
+    http
+      .expectOne(`${BASE}/v1/services`)
+      .flush(problem(401, 'sentinel.unauthorized', 'missing_credentials'), {
+        status: 401,
+        statusText: 'Unauthorized',
+      });
     const err = await rejected(p);
     expect(err.status).toBe(401);
     expect(err.body.code).toBe('sentinel.unauthorized');
@@ -113,10 +118,12 @@ describe('SentinelApi', () => {
 
   it('maps a 403 scope denial to its real code', async () => {
     const p = firstValueFrom(api.startInvestigation('inc_1'));
-    http.expectOne(`${BASE}/v1/incidents/inc_1/investigations`).flush(
-      problem(403, 'sentinel.forbidden', 'scope investigate required'),
-      { status: 403, statusText: 'Forbidden' },
-    );
+    http
+      .expectOne(`${BASE}/v1/incidents/inc_1/investigations`)
+      .flush(problem(403, 'sentinel.forbidden', 'scope investigate required'), {
+        status: 403,
+        statusText: 'Forbidden',
+      });
     const err = await rejected(p);
     expect(err.body.code).toBe('sentinel.forbidden');
   });

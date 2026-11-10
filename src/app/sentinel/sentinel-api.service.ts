@@ -151,9 +151,7 @@ export class SentinelApi {
   }
 
   service(serviceId: string) {
-    return this.get<SentinelServiceDetailResponse>(
-      `/services/${encodeURIComponent(serviceId)}`,
-    );
+    return this.get<SentinelServiceDetailResponse>(`/services/${encodeURIComponent(serviceId)}`);
   }
 
   serviceOperations(serviceId: string) {
@@ -164,7 +162,12 @@ export class SentinelApi {
 
   serviceMetrics(
     serviceId: string,
-    opts: { windowStart?: string; windowEnd?: string; operationId?: string; maxWindows?: number } = {},
+    opts: {
+      windowStart?: string;
+      windowEnd?: string;
+      operationId?: string;
+      maxWindows?: number;
+    } = {},
   ) {
     const params = new URLSearchParams();
     if (opts.windowStart) params.set('window_start', opts.windowStart);
@@ -178,9 +181,7 @@ export class SentinelApi {
   }
 
   serviceSlos(serviceId: string) {
-    return this.get<SentinelSloPanelResponse>(
-      `/services/${encodeURIComponent(serviceId)}/slos`,
-    );
+    return this.get<SentinelSloPanelResponse>(`/services/${encodeURIComponent(serviceId)}/slos`);
   }
 
   // -- incidents --------------------------------------------------------------
@@ -194,9 +195,7 @@ export class SentinelApi {
   }
 
   incident(incidentId: string) {
-    return this.get<SentinelIncidentDetailResponse>(
-      `/incidents/${encodeURIComponent(incidentId)}`,
-    );
+    return this.get<SentinelIncidentDetailResponse>(`/incidents/${encodeURIComponent(incidentId)}`);
   }
 
   incidentTimeline(incidentId: string) {

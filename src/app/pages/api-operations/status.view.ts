@@ -37,19 +37,31 @@ import { sentinelKind } from '../../sentinel/sentinel-states';
         <section class="card">
           <h3>{{ 'sentinel.status.health' | t }}</h3>
           <p>
-            <ui-state-badge [state]="h.state" [kindOverride]="kind(h.state)" [labelOverride]="stateLabel(h.state)" />
+            <ui-state-badge
+              [state]="h.state"
+              [kindOverride]="kind(h.state)"
+              [labelOverride]="stateLabel(h.state)"
+            />
             <code class="mono">api-sentinel {{ h.version }}</code>
           </p>
           <dl class="kv">
             <dt>{{ 'sentinel.status.workspace' | t }}</dt>
-            <dd>{{ h.workspace_initialized ? ('sentinel.status.initialized' | t) : ('sentinel.status.notInitialized' | t) }}</dd>
+            <dd>
+              {{
+                h.workspace_initialized
+                  ? ('sentinel.status.initialized' | t)
+                  : ('sentinel.status.notInitialized' | t)
+              }}
+            </dd>
             <dt>{{ 'sentinel.status.database' | t }}</dt>
             <dd class="mono">{{ h.database }}</dd>
           </dl>
           @if (capCounts(h).length) {
             <p class="muted small">
               {{ 'sentinel.status.capabilityCounts' | t }}:
-              @for (c of capCounts(h); track c[0]) { <code>{{ c[0] }}={{ c[1] }}</code> }
+              @for (c of capCounts(h); track c[0]) {
+                <code>{{ c[0] }}={{ c[1] }}</code>
+              }
             </p>
           }
           @if (sentinelPairs(h).length) {
@@ -57,7 +69,8 @@ import { sentinelKind } from '../../sentinel/sentinel-states';
               <summary>{{ 'sentinel.status.selfState' | t }}</summary>
               <dl class="kv">
                 @for (p of sentinelPairs(h); track p[0]) {
-                  <dt class="mono">{{ p[0] }}</dt><dd class="mono">{{ p[1] }}</dd>
+                  <dt class="mono">{{ p[0] }}</dt>
+                  <dd class="mono">{{ p[1] }}</dd>
                 }
               </dl>
             </details>
@@ -86,13 +99,25 @@ import { sentinelKind } from '../../sentinel/sentinel-states';
                 @for (cap of c.capabilities; track cap.capability_id) {
                   <tr>
                     <td class="mono">{{ cap.capability_id }}</td>
-                    <td><ui-state-badge [state]="cap.status" [kindOverride]="kind(cap.status)" [labelOverride]="stateLabel(cap.status)" /></td>
+                    <td>
+                      <ui-state-badge
+                        [state]="cap.status"
+                        [kindOverride]="kind(cap.status)"
+                        [labelOverride]="stateLabel(cap.status)"
+                      />
+                    </td>
                     <td>
                       @if (cap.stage) {
-                        <ui-state-badge [state]="cap.stage" [kindOverride]="kind(cap.stage)" [labelOverride]="stateLabel(cap.stage)" />
-                      } @else { — }
+                        <ui-state-badge
+                          [state]="cap.stage"
+                          [kindOverride]="kind(cap.stage)"
+                          [labelOverride]="stateLabel(cap.stage)"
+                        />
+                      } @else {
+                        —
+                      }
                     </td>
-                    <td class="num">{{ cap.since ? (cap.since | date:'short') : '—' }}</td>
+                    <td class="num">{{ cap.since ? (cap.since | date: 'short') : '—' }}</td>
                     <td class="muted">{{ cap.notes }}</td>
                   </tr>
                 }
@@ -126,7 +151,8 @@ import { sentinelKind } from '../../sentinel/sentinel-states';
                         <ui-state-badge
                           [state]="str(row['state'])"
                           [kindOverride]="kind(str(row['state']))"
-                          [labelOverride]="stateLabel(str(row['state']))" />
+                          [labelOverride]="stateLabel(str(row['state']))"
+                        />
                       </td>
                       <td class="muted">{{ detailText(row) }}</td>
                     </tr>
@@ -164,12 +190,17 @@ import { sentinelKind } from '../../sentinel/sentinel-states';
                       <td class="mono">{{ src.source_id }}</td>
                       <td>{{ src.registered }}</td>
                       <td class="num">{{ src.observations }}</td>
-                      <td class="num">{{ src.latest_window_end ? (src.latest_window_end | date:'HH:mm:ss') : '—' }}</td>
+                      <td class="num">
+                        {{
+                          src.latest_window_end ? (src.latest_window_end | date: 'HH:mm:ss') : '—'
+                        }}
+                      </td>
                       <td>
                         <ui-state-badge
                           [state]="src.stale ? 'stale' : 'fresh'"
                           [kindOverride]="kind(src.stale ? 'stale' : 'fresh')"
-                          [labelOverride]="stateLabel(src.stale ? 'stale' : 'fresh')" />
+                          [labelOverride]="stateLabel(src.stale ? 'stale' : 'fresh')"
+                        />
                       </td>
                     </tr>
                   }

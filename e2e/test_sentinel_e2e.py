@@ -36,8 +36,8 @@ import subprocess
 import tempfile
 import threading
 import time
-import urllib.request
 import urllib.error
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -75,7 +75,9 @@ def _env() -> dict[str, str]:
 
 def run(args: list[str], ws: Path, timeout: int = 120) -> dict:
     cmd = [str(CLI), *args, "--workspace", str(ws)]
-    proc = subprocess.run(cmd, capture_output=True, text=True, env=_env(), timeout=timeout)
+    proc = subprocess.run(
+        cmd, capture_output=True, text=True, env=_env(), timeout=timeout, check=False
+    )
     out = proc.stdout.strip()
     try:
         data = json.loads(out) if out else None
@@ -258,8 +260,8 @@ def sentinel(portal_static):
     _step("services register", all(svc.values()), json.dumps(svc))
 
     src: dict[str, str] = {}
-    for name in svc:
-        c = run(["sources", "--register", "jsonl-file", "--service-id", svc[name], "--json"], ws)
+    for name, service_id in svc.items():
+        c = run(["sources", "--register", "jsonl-file", "--service-id", service_id, "--json"], ws)
         src[name] = str((c["json"] or {}).get("source_id", ""))
     _step("sources register", all(src.values()), json.dumps(src))
 

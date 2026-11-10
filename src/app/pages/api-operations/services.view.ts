@@ -27,12 +27,7 @@ import {
   SentinelSloPanelResponse,
   SentinelWindowAggregate,
 } from '../../sentinel/sentinel.models';
-import {
-  fmtMs,
-  fmtRate,
-  fmtRatio,
-  sentinelKind,
-} from '../../sentinel/sentinel-states';
+import { fmtMs, fmtRate, fmtRatio, sentinelKind } from '../../sentinel/sentinel-states';
 
 interface DetailBundle {
   detail: SentinelServiceDetailResponse;
@@ -91,7 +86,11 @@ interface DetailBundle {
             [hint]="'sentinel.services.emptyDesc' | t"
           />
         } @else {
-          <div class="table-wrap card" role="region" [attr.aria-label]="'sentinel.services.title' | t">
+          <div
+            class="table-wrap card"
+            role="region"
+            [attr.aria-label]="'sentinel.services.title' | t"
+          >
             <table>
               <thead>
                 <tr>
@@ -107,16 +106,35 @@ interface DetailBundle {
               </thead>
               <tbody>
                 @for (s of l.services; track s.service.service_id) {
-                  <tr class="row" tabindex="0" (click)="select(s.service.service_id)" (keydown.enter)="select(s.service.service_id)">
+                  <tr
+                    class="row"
+                    tabindex="0"
+                    (click)="select(s.service.service_id)"
+                    (keydown.enter)="select(s.service.service_id)"
+                  >
                     <td>
                       <strong>{{ s.service.display_name || s.service.service_name }}</strong>
-                      <div class="sub mono">{{ s.service.service_id }} · {{ s.service.environment_id }}</div>
+                      <div class="sub mono">
+                        {{ s.service.service_id }} · {{ s.service.environment_id }}
+                      </div>
                     </td>
                     <td>
-                      <ui-state-badge [state]="s.health.state" [kindOverride]="kind(s.health.state)" [labelOverride]="stateLabel(s.health.state)" />
+                      <ui-state-badge
+                        [state]="s.health.state"
+                        [kindOverride]="kind(s.health.state)"
+                        [labelOverride]="stateLabel(s.health.state)"
+                      />
                     </td>
-                    <td><span class="cond">{{ s.health.condition }}</span></td>
-                    <td class="num">{{ s.health.latest_window_end ? (s.health.latest_window_end | date:'HH:mm:ss') : '—' }}</td>
+                    <td>
+                      <span class="cond">{{ s.health.condition }}</span>
+                    </td>
+                    <td class="num">
+                      {{
+                        s.health.latest_window_end
+                          ? (s.health.latest_window_end | date: 'HH:mm:ss')
+                          : '—'
+                      }}
+                    </td>
                     <td class="num">{{ fmtRatio(s.health.latest_indicators?.error_ratio) }}</td>
                     <td class="num">{{ fmtMs(s.health.latest_indicators?.latency_p95_ms) }}</td>
                     <td class="num">{{ s.open_incidents }}</td>
@@ -144,36 +162,87 @@ interface DetailBundle {
           <section class="card hero">
             <div class="hero__head">
               <div>
-                <h2>{{ b.detail.detail.service.display_name || b.detail.detail.service.service_name }}</h2>
+                <h2>
+                  {{ b.detail.detail.service.display_name || b.detail.detail.service.service_name }}
+                </h2>
                 <div class="sub mono">
-                  {{ b.detail.detail.service.service_id }} · env {{ b.detail.detail.service.environment_id }}
-                  @if (b.detail.detail.service.namespace) { · ns {{ b.detail.detail.service.namespace }} }
+                  {{ b.detail.detail.service.service_id }} · env
+                  {{ b.detail.detail.service.environment_id }}
+                  @if (b.detail.detail.service.namespace) {
+                    · ns {{ b.detail.detail.service.namespace }}
+                  }
                 </div>
               </div>
               <div class="chips">
-                <ui-state-badge [state]="b.detail.detail.health.state" [kindOverride]="kind(b.detail.detail.health.state)" [labelOverride]="stateLabel(b.detail.detail.health.state)" />
-                <ui-state-badge [state]="b.detail.detail.health.condition" [kindOverride]="kind(b.detail.detail.health.condition)" [labelOverride]="stateLabel(b.detail.detail.health.condition)" />
+                <ui-state-badge
+                  [state]="b.detail.detail.health.state"
+                  [kindOverride]="kind(b.detail.detail.health.state)"
+                  [labelOverride]="stateLabel(b.detail.detail.health.state)"
+                />
+                <ui-state-badge
+                  [state]="b.detail.detail.health.condition"
+                  [kindOverride]="kind(b.detail.detail.health.condition)"
+                  [labelOverride]="stateLabel(b.detail.detail.health.condition)"
+                />
               </div>
             </div>
             <p class="muted">
-              {{ 'sentinel.detail.evaluatedAt' | t }} {{ b.detail.detail.health.evaluated_at | date:'medium' }}
-              · {{ 'sentinel.col.window' | t }} {{ b.detail.detail.health.latest_window_start | date:'HH:mm' }}–{{ b.detail.detail.health.latest_window_end | date:'HH:mm' }}
+              {{ 'sentinel.detail.evaluatedAt' | t }}
+              {{ b.detail.detail.health.evaluated_at | date: 'medium' }} ·
+              {{ 'sentinel.col.window' | t }}
+              {{ b.detail.detail.health.latest_window_start | date: 'HH:mm' }}–{{
+                b.detail.detail.health.latest_window_end | date: 'HH:mm'
+              }}
             </p>
 
             <!-- latest indicators, explicit units + absent honesty -->
             <div class="mgrid">
-              <div class="m"><span>{{ 'sentinel.metric.reqRate' | t }}</span><strong>{{ fmtRate(b.detail.detail.health.latest_indicators?.request_rate) }}</strong></div>
-              <div class="m"><span>{{ 'sentinel.metric.errRatio' | t }}</span><strong>{{ fmtRatio(b.detail.detail.health.latest_indicators?.error_ratio) }}</strong></div>
-              <div class="m"><span>{{ 'sentinel.metric.p50' | t }}</span><strong>{{ fmtMs(b.detail.detail.health.latest_indicators?.latency_p50_ms) }}</strong></div>
-              <div class="m"><span>{{ 'sentinel.metric.p95' | t }}</span><strong>{{ fmtMs(b.detail.detail.health.latest_indicators?.latency_p95_ms) }}</strong></div>
-              <div class="m"><span>{{ 'sentinel.metric.p99' | t }}</span><strong>{{ fmtMs(b.detail.detail.health.latest_indicators?.latency_p99_ms) }}</strong></div>
-              <div class="m"><span>{{ 'sentinel.metric.quality' | t }}</span><strong>{{ b.detail.detail.health.quality }}</strong></div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.reqRate' | t }}</span
+                ><strong>{{
+                  fmtRate(b.detail.detail.health.latest_indicators?.request_rate)
+                }}</strong>
+              </div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.errRatio' | t }}</span
+                ><strong>{{
+                  fmtRatio(b.detail.detail.health.latest_indicators?.error_ratio)
+                }}</strong>
+              </div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.p50' | t }}</span
+                ><strong>{{
+                  fmtMs(b.detail.detail.health.latest_indicators?.latency_p50_ms)
+                }}</strong>
+              </div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.p95' | t }}</span
+                ><strong>{{
+                  fmtMs(b.detail.detail.health.latest_indicators?.latency_p95_ms)
+                }}</strong>
+              </div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.p99' | t }}</span
+                ><strong>{{
+                  fmtMs(b.detail.detail.health.latest_indicators?.latency_p99_ms)
+                }}</strong>
+              </div>
+              <div class="m">
+                <span>{{ 'sentinel.metric.quality' | t }}</span
+                ><strong>{{ b.detail.detail.health.quality }}</strong>
+              </div>
             </div>
             @if (b.detail.detail.health.absent_indicators.length) {
-              <p class="unknowns">{{ 'sentinel.absentIndicators' | t }}: {{ b.detail.detail.health.absent_indicators.join(', ') }}</p>
+              <p class="unknowns">
+                {{ 'sentinel.absentIndicators' | t }}:
+                {{ b.detail.detail.health.absent_indicators.join(', ') }}
+              </p>
             }
             @if (b.detail.detail.health.limitations.length) {
-              <p class="unknowns">{{ 'sentinel.limitations' | t }}: {{ b.detail.detail.health.limitations.join(' · ') }}</p>
+              <p class="unknowns">
+                {{ 'sentinel.limitations' | t }}:
+                {{ b.detail.detail.health.limitations.join(' · ') }}
+              </p>
             }
           </section>
 
@@ -184,13 +253,17 @@ interface DetailBundle {
               <ui-state-badge
                 [state]="b.detail.links.correspondence.state"
                 [kindOverride]="kind(b.detail.links.correspondence.state)"
-                [labelOverride]="stateLabel(b.detail.links.correspondence.state)" />
+                [labelOverride]="stateLabel(b.detail.links.correspondence.state)"
+              />
               {{ b.detail.links.correspondence.reason }}
             </p>
             @if (b.detail.links.links.length) {
               <ul class="refs">
                 @for (r of b.detail.links.links; track r.kind + r.ref) {
-                  <li><code>{{ r.kind }}:{{ r.ref }}</code> <span class="muted">({{ r.provenance }})</span></li>
+                  <li>
+                    <code>{{ r.kind }}:{{ r.ref }}</code>
+                    <span class="muted">({{ r.provenance }})</span>
+                  </li>
                 }
               </ul>
             }
@@ -224,7 +297,11 @@ interface DetailBundle {
                           <td>{{ o.provenance }}</td>
                           <td class="num">{{ o.observations }}</td>
                           <td class="mono">{{ o.sources.join(', ') }}</td>
-                          <td class="num">{{ o.latest_window_end ? (o.latest_window_end | date:'HH:mm:ss') : '—' }}</td>
+                          <td class="num">
+                            {{
+                              o.latest_window_end ? (o.latest_window_end | date: 'HH:mm:ss') : '—'
+                            }}
+                          </td>
                         </tr>
                       }
                     </tbody>
@@ -232,7 +309,9 @@ interface DetailBundle {
                 </div>
               }
               @if (b.operations.unknowns.length) {
-                <p class="unknowns">{{ 'sentinel.unknowns' | t }}: {{ b.operations.unknowns.join(' · ') }}</p>
+                <p class="unknowns">
+                  {{ 'sentinel.unknowns' | t }}: {{ b.operations.unknowns.join(' · ') }}
+                </p>
               }
             }
           </section>
@@ -244,9 +323,11 @@ interface DetailBundle {
               <ui-error [error]="me" />
             } @else if (b.metrics; as m) {
               <p class="muted">
-                {{ m.metrics.observations }} {{ 'sentinel.metrics.observations' | t }}
-                · {{ 'sentinel.metrics.units' | t }}:
-                @for (u of unitPairs(m); track u[0]) { <code>{{ u[0] }}={{ u[1] }}</code> }
+                {{ m.metrics.observations }} {{ 'sentinel.metrics.observations' | t }} ·
+                {{ 'sentinel.metrics.units' | t }}:
+                @for (u of unitPairs(m); track u[0]) {
+                  <code>{{ u[0] }}={{ u[1] }}</code>
+                }
               </p>
               @if (m.metrics.windows.length === 0) {
                 <p class="muted">{{ 'sentinel.metrics.empty' | t }}</p>
@@ -266,12 +347,18 @@ interface DetailBundle {
                     <tbody>
                       @for (row of metricRows(m); track row.key) {
                         <tr>
-                          <td class="num">{{ row.end | date:'HH:mm:ss' }}</td>
+                          <td class="num">{{ row.end | date: 'HH:mm:ss' }}</td>
                           <td class="mono">{{ row.op || '—' }}</td>
                           <td class="num">{{ row.eligible }}</td>
                           <td class="num">{{ fmtRatio(row.err) }}</td>
                           <td class="num">{{ fmtMs(row.p95) }}</td>
-                          <td><ui-state-badge [state]="row.quality" [kindOverride]="kind(row.quality)" [labelOverride]="stateLabel(row.quality)" /></td>
+                          <td>
+                            <ui-state-badge
+                              [state]="row.quality"
+                              [kindOverride]="kind(row.quality)"
+                              [labelOverride]="stateLabel(row.quality)"
+                            />
+                          </td>
                         </tr>
                       }
                     </tbody>
@@ -279,10 +366,14 @@ interface DetailBundle {
                 </div>
               }
               @if (m.metrics.gaps.length) {
-                <p class="unknowns">{{ 'sentinel.metrics.gaps' | t }}: {{ m.metrics.gaps.length }}</p>
+                <p class="unknowns">
+                  {{ 'sentinel.metrics.gaps' | t }}: {{ m.metrics.gaps.length }}
+                </p>
               }
               @if (m.metrics.limitations.length) {
-                <p class="unknowns">{{ 'sentinel.limitations' | t }}: {{ m.metrics.limitations.join(' · ') }}</p>
+                <p class="unknowns">
+                  {{ 'sentinel.limitations' | t }}: {{ m.metrics.limitations.join(' · ') }}
+                </p>
               }
             }
           </section>
@@ -302,21 +393,28 @@ interface DetailBundle {
                       <div class="slo__head">
                         <code>{{ s.definition.slo_id }}</code>
                         @if (s.latest_assessment; as a) {
-                          <ui-state-badge [state]="a.state" [kindOverride]="kind(a.state)" [labelOverride]="stateLabel(a.state)" />
+                          <ui-state-badge
+                            [state]="a.state"
+                            [kindOverride]="kind(a.state)"
+                            [labelOverride]="stateLabel(a.state)"
+                          />
                         } @else {
-                          <ui-state-badge state="NOT_RUN" [kindOverride]="'unv'" [labelOverride]="'sentinel.state.NOT_RUN' | t" />
+                          <ui-state-badge
+                            state="NOT_RUN"
+                            [kindOverride]="'unv'"
+                            [labelOverride]="'sentinel.state.NOT_RUN' | t"
+                          />
                         }
                       </div>
                       <p class="slo__line">
-                        {{ s.definition.sli_kind }} · target {{ s.definition.target }}
-                        · {{ 'sentinel.slos.window' | t }} {{ s.definition.window_seconds / 60 }}m
+                        {{ s.definition.sli_kind }} · target {{ s.definition.target }} ·
+                        {{ 'sentinel.slos.window' | t }} {{ s.definition.window_seconds / 60 }}m
                       </p>
                       @if (s.latest_assessment; as a) {
                         <p class="slo__line">
-                          SLI {{ fmtRatio(a.sli) }}
-                          · {{ 'sentinel.slos.budgetLeft' | t }} {{ fmtRatio(a.budget_remaining) }}
-                          · {{ 'sentinel.metric.quality' | t }} {{ a.quality }}
-                          · {{ a.eligible }} {{ 'sentinel.col.eligible' | t }}
+                          SLI {{ fmtRatio(a.sli) }} · {{ 'sentinel.slos.budgetLeft' | t }}
+                          {{ fmtRatio(a.budget_remaining) }} · {{ 'sentinel.metric.quality' | t }}
+                          {{ a.quality }} · {{ a.eligible }} {{ 'sentinel.col.eligible' | t }}
                         </p>
                         @if (a.limitations.length) {
                           <p class="unknowns">{{ a.limitations.join(' · ') }}</p>
@@ -354,12 +452,23 @@ interface DetailBundle {
                         <td>{{ src.kind }}</td>
                         <td>{{ sourceHealth(src.source_id)?.registered ?? '—' }}</td>
                         <td class="num">{{ sourceHealth(src.source_id)?.observations ?? '—' }}</td>
-                        <td class="num">{{ sourceHealth(src.source_id)?.latest_window_end ? (sourceHealth(src.source_id)!.latest_window_end! | date:'HH:mm:ss') : '—' }}</td>
+                        <td class="num">
+                          {{
+                            sourceHealth(src.source_id)?.latest_window_end
+                              ? (sourceHealth(src.source_id)!.latest_window_end! | date: 'HH:mm:ss')
+                              : '—'
+                          }}
+                        </td>
                         <td>
                           <ui-state-badge
                             [state]="sourceHealth(src.source_id)?.stale ? 'stale' : 'fresh'"
-                            [kindOverride]="kind(sourceHealth(src.source_id)?.stale ? 'stale' : 'fresh')"
-                            [labelOverride]="stateLabel(sourceHealth(src.source_id)?.stale ? 'stale' : 'fresh')" />
+                            [kindOverride]="
+                              kind(sourceHealth(src.source_id)?.stale ? 'stale' : 'fresh')
+                            "
+                            [labelOverride]="
+                              stateLabel(sourceHealth(src.source_id)?.stale ? 'stale' : 'fresh')
+                            "
+                          />
                         </td>
                       </tr>
                     }
@@ -606,7 +715,9 @@ export class SentinelServices {
   }
 
   sourceHealth(sourceId: string) {
-    return this.bundle()?.detail.detail.health.sources.find((s) => s.source_id === sourceId) ?? null;
+    return (
+      this.bundle()?.detail.detail.health.sources.find((s) => s.source_id === sourceId) ?? null
+    );
   }
 
   countBy(l: SentinelServiceListResponse, state: string): number {
