@@ -2383,8 +2383,8 @@ tr[data-selected] td {
   animation-timing-function: ease-out;
 }
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+  :root:not([data-motion='full'])::view-transition-old(root),
+  :root:not([data-motion='full'])::view-transition-new(root) {
     animation: none;
   }
 }
