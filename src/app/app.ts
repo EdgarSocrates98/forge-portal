@@ -1,6 +1,15 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { PortalStore } from './core/portal/portal.store';
 import { PrefsStore } from './core/prefs/prefs.store';
 import { I18nService } from './core/i18n/i18n.service';
@@ -92,6 +101,7 @@ const NAV: NavEntry[] = [
   },
   template: `
     <a class="skip-link" href="#content">{{ 'nav.skip' | t }}</a>
+    <div class="nav-progress" [attr.data-active]="navigating() || null" aria-hidden="true"></div>
     <div class="shell">
       <aside
         class="shell__side"
@@ -264,6 +274,10 @@ export class App {
   private navigated = false;
   readonly mobileNavOpen = signal(false);
   readonly currentRoute = signal('/dashboard');
+  /** Route-level progress: instant feedback on nav click — the bar
+   *  animates while the router resolves, so even a cached page feels
+   *  responsive before `withViewTransitions` takes over. */
+  readonly navigating = signal(false);
 
   readonly visibleNav = computed(() =>
     this.nav
@@ -320,6 +334,13 @@ export class App {
   constructor() {
     void this.store.bootstrap();
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
+      if (e instanceof NavigationStart) {
+        this.navigating.set(true);
+        return;
+      }
+      if (e instanceof NavigationEnd || e instanceof NavigationCancel || e instanceof NavigationError) {
+        this.navigating.set(false);
+      }
       if (!(e instanceof NavigationEnd)) return;
       this.currentRoute.set(e.urlAfterRedirects);
       this.closeMobileNav();
