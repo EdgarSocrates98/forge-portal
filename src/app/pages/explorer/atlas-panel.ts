@@ -80,9 +80,7 @@ import { Source, stamp } from './forges.data';
             <span class="muted">{{ doc.service }}@{{ doc.api_version ?? '?' }}</span>
           }
           @if (doc.checked_at) {
-            <span class="muted"
-              >{{ 'atlas.checkedAt' | t: { time: stamp(doc.checked_at) } }}</span
-            >
+            <span class="muted">{{ 'atlas.checkedAt' | t: { time: stamp(doc.checked_at) } }}</span>
           }
         </div>
 

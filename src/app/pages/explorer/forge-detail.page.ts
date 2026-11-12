@@ -387,7 +387,7 @@ type DetailView =
         } @else if (ctxSection()!.state !== 'registered') {
           <div class="unv" role="note">
             <ui-state-badge [state]="ctxBadge(ctxSection()!)" />
-            <span>{{ ('context.section.' + ctxSection()!.state) | t }}</span>
+            <span>{{ 'context.section.' + ctxSection()!.state | t }}</span>
             @if (ctxSection()!.path) {
               <code class="muted">{{ ctxSection()!.path }}</code>
             }
@@ -415,9 +415,9 @@ type DetailView =
                 @if (ctx()!.health) {
                   <ui-state-badge [state]="ctx()!.health!" />
                   @if (ctx()!.health_checks !== null) {
-                    <small class="muted"
-                      >{{ 'context.checks' | t: { count: ctx()!.health_checks ?? 0 } }}</small
-                    >
+                    <small class="muted">{{
+                      'context.checks' | t: { count: ctx()!.health_checks ?? 0 }
+                    }}</small>
                   }
                 } @else {
                   <ui-state-badge state="UNVERIFIED" />

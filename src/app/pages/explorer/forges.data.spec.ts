@@ -1,9 +1,5 @@
 import { buildForgeRows, specialistVersion } from './forges.data';
-import {
-  FederationSnapshot,
-  PortalDescriptor,
-  PortalHealth,
-} from '../../core/api/api.models';
+import { FederationSnapshot, PortalDescriptor, PortalHealth } from '../../core/api/api.models';
 
 const DESCRIPTOR: PortalDescriptor = {
   forge_id: 'the-forge',

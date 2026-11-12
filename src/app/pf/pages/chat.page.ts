@@ -351,9 +351,7 @@ interface ChatAttachment {
               @if (busy()) {
                 <div class="msg msg--ghost" data-k="assistant">
                   <span class="msg__k">assistant</span>
-                  <span class="dots" aria-label="agent is working"
-                    ><i></i><i></i><i></i
-                  ></span>
+                  <span class="dots" aria-label="agent is working"><i></i><i></i><i></i></span>
                 </div>
               }
               @if (!items().length) {
@@ -396,8 +394,9 @@ interface ChatAttachment {
                       type="button"
                       aria-label="remove attachment"
                       (click)="dropAttachment(a.label)"
-                      >×</button
-                    ></span
+                    >
+                      ×
+                    </button></span
                   >
                 }
               </div>
@@ -419,11 +418,7 @@ interface ChatAttachment {
                   <label
                     class="tbtn"
                     title="Attach an image (provider may refuse — surfaced honestly)"
-                    >🖼<input
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      (change)="attachImage($event)"
+                    >🖼<input type="file" accept="image/*" hidden (change)="attachImage($event)"
                   /></label>
                   <button
                     class="tbtn"
@@ -446,7 +441,8 @@ interface ChatAttachment {
                   </select>
                   <span class="tok mono" title="Session tokens · last turn delta">
                     @if (usage(); as u) {
-                      {{ u.in + u.out | number }} tok@if (lastTurn(); as lt) {
+                      {{ u.in + u.out | number }} tok
+                      @if (lastTurn(); as lt) {
                         <em> (+{{ lt }})</em>
                       }
                     } @else {
