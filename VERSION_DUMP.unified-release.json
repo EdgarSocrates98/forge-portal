@@ -1,0 +1,9 @@
+{
+  "cycle": "unified-release",
+  "repository": "forge-portal",
+  "version": "1.1.3",
+  "tag": "v1.1.3",
+  "source_commit": "9313eaa8bccc833d0c99bc53c5157d569dd414ce",
+  "version_source": "pyproject.toml|package.json|__init__",
+  "verified_at": "2026-11-12"
+}
