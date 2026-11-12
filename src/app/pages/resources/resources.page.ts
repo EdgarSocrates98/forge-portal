@@ -33,16 +33,7 @@ const norm = (s: string): string =>
 @Component({
   selector: 'page-resources',
   standalone: true,
-  imports: [
-    TPipe,
-    PageHeader,
-    StateBadge,
-    EmptyState,
-    ErrorState,
-    UiIcon,
-    UiSkeleton,
-    UiFilterBar,
-  ],
+  imports: [TPipe, PageHeader, StateBadge, EmptyState, ErrorState, UiIcon, UiSkeleton, UiFilterBar],
   template: `
     <ui-page-header
       [title]="'resources.title' | t"
@@ -120,22 +111,28 @@ const norm = (s: string): string =>
       </ui-filter-bar>
 
       <p class="muted count">
-        {{ filtered().length }} / {{ d.resources.length }} {{ 'resources.count' | t }}
-        · {{ unavailableCount() }} {{ 'resources.unavailable' | t }}
+        {{ filtered().length }} / {{ d.resources.length }} {{ 'resources.count' | t }} ·
+        {{ unavailableCount() }} {{ 'resources.unavailable' | t }}
       </p>
 
       @if (selected(); as sel) {
         <section class="card detail fg-enter" data-section="resource-detail" aria-live="polite">
           <header class="detail__head">
             <h2><ui-icon name="gem" [size]="15" />{{ sel.id }}</h2>
-            <button class="icon-btn" (click)="selected.set(null)" [attr.aria-label]="'state.close' | t">
+            <button
+              class="icon-btn"
+              (click)="selected.set(null)"
+              [attr.aria-label]="'state.close' | t"
+            >
               <ui-icon name="chevron-right" [size]="14" />
             </button>
           </header>
           <dl class="kv">
             <div>
               <dt>{{ 'resources.forge' | t }}</dt>
-              <dd><code>{{ sel.forge_id }}</code></dd>
+              <dd>
+                <code>{{ sel.forge_id }}</code>
+              </dd>
             </div>
             <div>
               <dt>{{ 'resources.kind' | t }}</dt>
@@ -148,7 +145,10 @@ const norm = (s: string): string =>
             <div>
               <dt>{{ 'resources.state' | t }}</dt>
               <dd>
-                <ui-state-badge [state]="mapState(sel.availability)" [labelOverride]="sel.availability" />
+                <ui-state-badge
+                  [state]="mapState(sel.availability)"
+                  [labelOverride]="sel.availability"
+                />
                 @if (sel.unavailable_reason) {
                   <small class="muted">{{ sel.unavailable_reason }}</small>
                 }
@@ -156,12 +156,16 @@ const norm = (s: string): string =>
             </div>
             <div>
               <dt>{{ 'resources.location' | t }}</dt>
-              <dd><code>{{ sel.location ?? ('state.absent' | t) }}</code></dd>
+              <dd>
+                <code>{{ sel.location ?? ('state.absent' | t) }}</code>
+              </dd>
             </div>
             @if (sel.packaged_location) {
               <div>
                 <dt>{{ 'resources.packaged' | t }}</dt>
-                <dd><code>{{ sel.packaged_location }}</code></dd>
+                <dd>
+                  <code>{{ sel.packaged_location }}</code>
+                </dd>
               </div>
             }
             <div>
@@ -193,7 +197,9 @@ const norm = (s: string): string =>
           <tbody>
             @for (r of paged(); track r.forge_id + ':' + r.id) {
               <tr>
-                <td><code>{{ r.forge_id }}</code></td>
+                <td>
+                  <code>{{ r.forge_id }}</code>
+                </td>
                 <td>
                   <strong>{{ r.id }}</strong>
                   <p class="muted">{{ r.description }}</p>
@@ -201,7 +207,10 @@ const norm = (s: string): string =>
                 <td>{{ r.kind ?? '—' }}</td>
                 <td>{{ r.resource_class ?? '—' }}</td>
                 <td>
-                  <ui-state-badge [state]="mapState(r.availability)" [labelOverride]="r.availability" />
+                  <ui-state-badge
+                    [state]="mapState(r.availability)"
+                    [labelOverride]="r.availability"
+                  />
                 </td>
                 <td>
                   <button

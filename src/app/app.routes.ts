@@ -49,8 +49,7 @@ export const routes: Routes = [
   },
   {
     path: 'resources',
-    loadComponent: () =>
-      import('./pages/resources/resources.page').then((m) => m.ResourcesPage),
+    loadComponent: () => import('./pages/resources/resources.page').then((m) => m.ResourcesPage),
   },
   {
     path: 'agents',
