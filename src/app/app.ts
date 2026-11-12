@@ -37,6 +37,7 @@ const NAV: NavEntry[] = [
       { route: '/forges', label: 'nav.forges', icon: 'gem', capability: 'federation' },
       { route: '/agents', label: 'nav.agents', icon: 'agents' },
       { route: '/skills', label: 'nav.skills', icon: 'skills' },
+      { route: '/resources', label: 'nav.resources', icon: 'gem' },
       { route: '/mcp', label: 'nav.mcp', icon: 'mcp' },
       { route: '/knowledge', label: 'nav.knowledge', icon: 'knowledge' },
       { route: '/pf', label: 'nav.productForge', icon: 'gem' },

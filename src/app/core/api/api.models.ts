@@ -624,3 +624,22 @@ export interface LabData {
   reports: LabReport[];
   notes: string[];
 }
+export interface ResourceEntry {
+  forge_id: string;
+  id: string;
+  kind: string | null;
+  resource_class: string | null;
+  availability: string;
+  unavailable_reason: string | null;
+  location: string | null;
+  packaged_location?: string | null;
+  tags: string[];
+  description: string | null;
+  format: string | null;
+}
+export interface WorkspaceResources {
+  workspace: string | null;
+  forges: string[];
+  resources: ResourceEntry[];
+  errors: string[];
+}
