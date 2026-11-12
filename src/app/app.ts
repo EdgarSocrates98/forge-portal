@@ -338,7 +338,11 @@ export class App {
         this.navigating.set(true);
         return;
       }
-      if (e instanceof NavigationEnd || e instanceof NavigationCancel || e instanceof NavigationError) {
+      if (
+        e instanceof NavigationEnd ||
+        e instanceof NavigationCancel ||
+        e instanceof NavigationError
+      ) {
         this.navigating.set(false);
       }
       if (!(e instanceof NavigationEnd)) return;
