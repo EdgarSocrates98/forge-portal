@@ -1312,6 +1312,7 @@ export const PT_BR: Record<string, string> = {
     'pré-visualização não renderizada — use baixar',
   'pf.artifactViewer.previewTruncated': 'pré-visualização truncada',
   'pf.chat.approvalRequested': 'aprovação solicitada',
+  'pf.chat.assistant': 'assistente',
   'pf.chat.autoConnectDescription':
     'O Product Forge inicia e autentica o Bridge automaticamente. Você não precisa copiar tokens ou configurar portas.',
   'pf.chat.approve': 'Aprovar',

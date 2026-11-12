@@ -350,7 +350,7 @@ interface ChatAttachment {
               }
               @if (busy()) {
                 <div class="msg msg--ghost" data-k="assistant">
-                  <span class="msg__k">assistant</span>
+                  <span class="msg__k">{{ 'pf.chat.assistant' | t }}</span>
                   <span class="dots" aria-label="agent is working"><i></i><i></i><i></i></span>
                 </div>
               }

@@ -1300,6 +1300,7 @@ export const EN: Record<string, string> = {
   'pf.artifactViewer.previewNotRenderedUseDownload': 'preview not rendered — use download',
   'pf.artifactViewer.previewTruncated': 'preview truncated',
   'pf.chat.approvalRequested': 'approval requested',
+  'pf.chat.assistant': 'assistant',
   'pf.chat.autoConnectDescription':
     'Product Forge starts and authenticates the Bridge automatically. No tokens or port configuration are needed.',
   'pf.chat.approve': 'Approve',
