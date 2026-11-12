@@ -99,6 +99,7 @@ def _reset_state(server):
     yield
     server.adapter.install_count = 0
     server.rate_limiter._hits.clear()
+    server.cache.clear()
 
 
 def call(server: fp.PortalServer, method: str, path: str, *, body=None, session=True, headers=None, raw_body=None):
@@ -771,3 +772,76 @@ class TestRegistryOps:
         assert env["data"]["status"] == "plan-failed"
         assert env["data"]["plan"]["preview"]["installed"] is False
         assert calls == []
+
+
+# ---------------------------------------------------------------------------
+# response cache — opt-in TTL ops, honest headers, mutation invalidation
+
+
+class TestResponseCache:
+    def test_second_get_is_hit(self, server):
+        _, _, h1 = call(server, "GET", "/api/v1/capabilities")
+        assert h1.get("X-Portal-Cache") == "miss"
+        status, env, h2 = call(server, "GET", "/api/v1/capabilities")
+        assert status == 200
+        assert h2.get("X-Portal-Cache") == "hit"
+        assert "data" in env
+
+    def test_cache_control_is_honest_max_age(self, server):
+        _, _, h = call(server, "GET", "/api/v1/environment")
+        assert h.get("Cache-Control", "").startswith("private, max-age=")
+        assert "no-store" not in h.get("Cache-Control", "")
+
+    def test_uncached_op_stays_no_store(self, server):
+        _, _, h = call(server, "GET", "/api/v1/skills")
+        assert h.get("Cache-Control") == "no-store"
+        assert "X-Portal-Cache" not in h
+
+    def test_etag_and_304(self, server):
+        _, _, h1 = call(server, "GET", "/api/v1/capabilities")
+        etag = h1.get("ETag")
+        assert etag
+        status, _, h2 = call(
+            server, "GET", "/api/v1/capabilities", headers={"If-None-Match": etag}
+        )
+        assert status == 304
+        assert h2.get("X-Portal-Cache") == "hit"
+
+    def test_fresh_query_bypasses(self, server):
+        call(server, "GET", "/api/v1/capabilities")
+        _, _, h = call(server, "GET", "/api/v1/capabilities?fresh=1")
+        assert h.get("X-Portal-Cache") == "bypass"
+
+    def test_request_no_cache_bypasses(self, server):
+        call(server, "GET", "/api/v1/capabilities")
+        _, _, h = call(
+            server, "GET", "/api/v1/capabilities", headers={"Cache-Control": "no-cache"}
+        )
+        assert h.get("X-Portal-Cache") == "bypass"
+
+    def test_mutation_invalidates(self, server):
+        call(server, "GET", "/api/v1/capabilities")
+        _, _, h = call(server, "GET", "/api/v1/capabilities")
+        assert h.get("X-Portal-Cache") == "hit"
+        status, _, _ = call(server, "POST", "/api/v1/installation/plan", body={})
+        assert status == 200
+        _, _, h2 = call(server, "GET", "/api/v1/capabilities")
+        assert h2.get("X-Portal-Cache") == "miss"
+
+    def test_query_variants_are_distinct(self, server):
+        call(server, "GET", "/api/v1/capabilities?a=1")
+        _, _, h = call(server, "GET", "/api/v1/capabilities?a=2")
+        assert h.get("X-Portal-Cache") == "miss"
+
+    def test_ttl_expiry_refetches(self):
+        cache = fp.ResponseCache()
+        cache.put(("k", ()), 0.05, {"v": 1})
+        assert cache.get(("k", ())) is not None
+        time.sleep(0.08)
+        assert cache.get(("k", ())) is None
+
+    def test_etag_stable_for_same_payload(self):
+        cache = fp.ResponseCache()
+        e1 = cache.put(("k", ()), 30, {"a": 1, "b": 2})
+        e2 = cache.put(("k2", ()), 30, {"b": 2, "a": 1})
+        assert e1 == e2

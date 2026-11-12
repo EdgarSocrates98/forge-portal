@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Exec(forge-portal --version)",
+      "Exec(forge-portal doctor)"
+    ]
+  }
+}

@@ -5,6 +5,7 @@ import { ApiError } from '../../core/api/api.error';
 import {
   FederationSnapshot,
   FederationSpecialist,
+  ForgeContextProjection,
   PortalDescriptor,
   PortalHealth,
 } from '../../core/api/api.models';
@@ -80,6 +81,11 @@ export interface ForgeRow {
   checkout: string | null | undefined;
   mcp: Record<string, unknown> | null | undefined;
   specialist: FederationSpecialist | null;
+  /** forge/context-registry/v1 projection joined from the federation
+   *  snapshot — `undefined` when the context registry has no entry for
+   *  this forge (or the serving adapter does not project context) →
+   *  render UNVERIFIED, never a fabricated state. */
+  context: ForgeContextProjection | undefined;
 }
 
 const VERSION_KEYS = ['version', 'revision', 'ref', 'release'] as const;
@@ -108,6 +114,7 @@ export function buildForgeRows(
 ): ForgeRow[] {
   const rows: ForgeRow[] = [];
   const seen = new Set<string>();
+  const ctxById = snapshot?.context?.forges ?? {};
   if (descriptor) {
     seen.add(descriptor.forge_id);
     rows.push({
@@ -121,6 +128,7 @@ export function buildForgeRows(
       checkout: undefined, // PortalApi does not report a checkout → unverified
       mcp: undefined,
       specialist: null,
+      context: ctxById[descriptor.forge_id],
     });
   }
   for (const s of snapshot?.specialists ?? []) {
@@ -136,6 +144,7 @@ export function buildForgeRows(
       checkout: s.checkout,
       mcp: s.mcp,
       specialist: s,
+      context: ctxById[s.provider],
     });
   }
   for (const id of snapshot?.installed_forges ?? []) {
@@ -152,6 +161,7 @@ export function buildForgeRows(
       checkout: undefined,
       mcp: undefined,
       specialist: null,
+      context: ctxById[id],
     });
   }
   return rows;

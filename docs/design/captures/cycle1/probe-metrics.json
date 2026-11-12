@@ -87,19 +87,12 @@
   },
   "routes": {
     "base/dashboard": {
-      "clipped": [
-        {
-          "tag": "code",
-          "cls": "path",
-          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "inScroller": false
-        }
-      ],
+      "clipped": [],
       "targets": [
-        "a \"E2E Forge\" 69x16",
-        "a \"e2e-forge\" 63x16",
-        "a \"e2e-forge\" 63x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"E2E Forge\" 62x19",
+        "a \"e2e-forge\" 62x19",
+        "a \"e2e-forge\" 62x19"
       ],
       "axe": [],
       "focusTrail": [
@@ -179,6 +172,7 @@
     "base/install": {
       "clipped": [],
       "targets": [
+        "a \"Saiba mais\" 63x17",
         "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",
@@ -353,16 +347,10 @@
       "focusNoRing": []
     },
     "base/forges": {
-      "clipped": [
-        {
-          "tag": "code",
-          "cls": "path",
-          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "inScroller": false
-        }
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
       ],
-      "targets": [],
       "axe": [],
       "focusTrail": [
         {
@@ -852,7 +840,8 @@
     "base/mcp": {
       "clipped": [],
       "targets": [
-        "a \"devin\" 37x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"devin\" 35x19"
       ],
       "axe": [],
       "focusTrail": [
@@ -931,7 +920,9 @@
     },
     "base/skills": {
       "clipped": [],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -1009,7 +1000,9 @@
     },
     "base/agents": {
       "clipped": [],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -1087,7 +1080,9 @@
     },
     "base/tasks": {
       "clipped": [],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -1168,6 +1163,20 @@
         {
           "tag": "span",
           "cls": "fed__label",
+          "text": "Reviewer",
+          "title": "Reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "agent:reviewer",
+          "title": "agent:reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
           "text": "agents",
           "title": "agents",
           "inScroller": false
@@ -1191,20 +1200,6 @@
           "cls": "fed__id",
           "text": "capability:federation",
           "title": "capability:federation",
-          "inScroller": false
-        },
-        {
-          "tag": "span",
-          "cls": "fed__label",
-          "text": "graph",
-          "title": "graph",
-          "inScroller": false
-        },
-        {
-          "tag": "code",
-          "cls": "fed__id",
-          "text": "capability:graph",
-          "title": "capability:graph",
           "inScroller": false
         },
         {
@@ -1247,6 +1242,20 @@
           "cls": "fed__id",
           "text": "capability:knowledge",
           "title": "capability:knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "mcp",
+          "title": "mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:mcp",
+          "title": "capability:mcp",
           "inScroller": false
         },
         {
@@ -1308,6 +1317,48 @@
         {
           "tag": "span",
           "cls": "fed__label",
+          "text": "claude",
+          "title": "claude",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:claude",
+          "title": "host:claude",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "codex",
+          "title": "codex",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:codex",
+          "title": "host:codex",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "devin",
+          "title": "devin",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:devin",
+          "title": "host:devin",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
           "text": "e2e-forge-mcp",
           "title": "e2e-forge-mcp",
           "inScroller": false
@@ -1318,9 +1369,25 @@
           "text": "mcp:e2e-forge-mcp",
           "title": "mcp:e2e-forge-mcp",
           "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "Analyze",
+          "title": "Analyze",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "skill:analyze",
+          "title": "skill:analyze",
+          "inScroller": false
         }
       ],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -1399,6 +1466,87 @@
     "base/observe": {
       "clipped": [],
       "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "base/execution": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17",
+        "a \"Pular para a lista de eventos\" 1x1"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -1723,9 +1871,92 @@
       ],
       "focusNoRing": []
     },
+    "base/guide": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
     "base/settings": {
       "clipped": [],
       "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",
@@ -1809,25 +2040,18 @@
       "focusNoRing": []
     },
     "dense/dashboard": {
-      "clipped": [
-        {
-          "tag": "code",
-          "cls": "path",
-          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "inScroller": false
-        }
-      ],
+      "clipped": [],
       "targets": [
-        "a \"E2E Forge\" 69x16",
-        "a \"e2e-forge\" 63x16",
-        "a \"api-forge\" 60x16",
-        "a \"spark-forge-aws\" 108x16",
-        "a \"e2e-forge\" 63x16",
-        "a \"api-forge\" 60x16",
-        "a \"spark-forge-aws\" 108x16",
-        "a \"installation status refresh with\" 554x16",
-        "a \"mcp handshake verify\" 147x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"E2E Forge\" 62x19",
+        "a \"e2e-forge\" 62x19",
+        "a \"api-forge\" 59x19",
+        "a \"spark-forge-aws\" 103x19",
+        "a \"e2e-forge\" 62x19",
+        "a \"api-forge\" 59x19",
+        "a \"spark-forge-aws\" 103x19",
+        "a \"installation status refresh with\" 531x19",
+        "a \"mcp handshake verify\" 139x19"
       ],
       "axe": [],
       "focusTrail": [
@@ -1907,6 +2131,7 @@
     "dense/install": {
       "clipped": [],
       "targets": [
+        "a \"Saiba mais\" 63x17",
         "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",
@@ -2081,16 +2306,10 @@
       "focusNoRing": []
     },
     "dense/forges": {
-      "clipped": [
-        {
-          "tag": "code",
-          "cls": "path",
-          "text": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "title": "/home/edgar/Documentos/projetos/forjas/forge-portal",
-          "inScroller": false
-        }
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
       ],
-      "targets": [],
       "axe": [],
       "focusTrail": [
         {
@@ -2580,8 +2799,9 @@
     "dense/mcp": {
       "clipped": [],
       "targets": [
-        "a \"devin\" 37x16",
-        "a \"claude\" 44x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"devin\" 35x19",
+        "a \"claude\" 42x19"
       ],
       "axe": [],
       "focusTrail": [
@@ -2661,9 +2881,10 @@
     "dense/skills": {
       "clipped": [],
       "targets": [
-        "a \"devin\" 37x16",
-        "a \"claude\" 44x16",
-        "a \"devin\" 37x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"devin\" 35x19",
+        "a \"claude\" 42x19",
+        "a \"devin\" 35x19"
       ],
       "axe": [],
       "focusTrail": [
@@ -2742,7 +2963,9 @@
     },
     "dense/agents": {
       "clipped": [],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -2826,32 +3049,14 @@
           "text": "installation status refresh with a deliberately long lab",
           "title": "installation status refresh with a deliberately long label to probe timeline truncation",
           "inScroller": false
-        },
-        {
-          "tag": "span",
-          "cls": "tl__track",
-          "text": "",
-          "title": null,
-          "inScroller": false
         }
       ],
       "targets": [
-        "a \"mcp handshake verify\" 147x16"
+        "a \"Saiba mais\" 63x17",
+        "a \"mcp handshake verify\" 139x19",
+        "a \"installation status refresh with\" 531x19"
       ],
-      "axe": [
-        {
-          "id": "aria-allowed-role",
-          "impact": "minor",
-          "nodes": [
-            [
-              "button[aria-label=\"mcp handshake verify\"]"
-            ],
-            [
-              ".tl__row[type=\"button\"][role=\"listitem\"]:nth-child(3)"
-            ]
-          ]
-        }
-      ],
+      "axe": [],
       "focusTrail": [
         {
           "tag": "a",
@@ -2945,6 +3150,20 @@
         {
           "tag": "span",
           "cls": "fed__label",
+          "text": "Reviewer",
+          "title": "Reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "agent:reviewer",
+          "title": "agent:reviewer",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
           "text": "agents",
           "title": "agents",
           "inScroller": false
@@ -2968,20 +3187,6 @@
           "cls": "fed__id",
           "text": "capability:federation",
           "title": "capability:federation",
-          "inScroller": false
-        },
-        {
-          "tag": "span",
-          "cls": "fed__label",
-          "text": "graph",
-          "title": "graph",
-          "inScroller": false
-        },
-        {
-          "tag": "code",
-          "cls": "fed__id",
-          "text": "capability:graph",
-          "title": "capability:graph",
           "inScroller": false
         },
         {
@@ -3024,6 +3229,20 @@
           "cls": "fed__id",
           "text": "capability:knowledge",
           "title": "capability:knowledge",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "mcp",
+          "title": "mcp",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "capability:mcp",
+          "title": "capability:mcp",
           "inScroller": false
         },
         {
@@ -3085,6 +3304,34 @@
         {
           "tag": "span",
           "cls": "fed__label",
+          "text": "claude",
+          "title": "claude",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:claude",
+          "title": "host:claude",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
+          "text": "devin",
+          "title": "devin",
+          "inScroller": false
+        },
+        {
+          "tag": "code",
+          "cls": "fed__id",
+          "text": "host:devin",
+          "title": "host:devin",
+          "inScroller": false
+        },
+        {
+          "tag": "span",
+          "cls": "fed__label",
           "text": "e2e-forge-mcp",
           "title": "e2e-forge-mcp",
           "inScroller": false
@@ -3141,15 +3388,15 @@
         {
           "tag": "span",
           "cls": "fed__label",
-          "text": "Graph export",
-          "title": "Graph export",
+          "text": "Analyze",
+          "title": "Analyze",
           "inScroller": false
         },
         {
           "tag": "code",
           "cls": "fed__id",
-          "text": "skill:graph-export",
-          "title": "skill:graph-export",
+          "text": "skill:analyze",
+          "title": "skill:analyze",
           "inScroller": false
         },
         {
@@ -3167,7 +3414,9 @@
           "inScroller": false
         }
       ],
-      "targets": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -3246,6 +3495,87 @@
     "dense/observe": {
       "clipped": [],
       "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
+    "dense/execution": {
+      "clipped": [],
+      "targets": [
+        "a \"Saiba mais\" 63x17",
+        "a \"Pular para a lista de eventos\" 1x1"
+      ],
       "axe": [],
       "focusTrail": [
         {
@@ -3654,9 +3984,92 @@
       ],
       "focusNoRing": []
     },
+    "dense/guide": {
+      "clipped": [],
+      "targets": [],
+      "axe": [],
+      "focusTrail": [
+        {
+          "tag": "a",
+          "cls": "skip-link",
+          "outline": "solid 2px",
+          "shadow": true,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "brand",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        },
+        {
+          "tag": "a",
+          "cls": "nav__item",
+          "outline": "solid 2px",
+          "shadow": false,
+          "visible": true
+        }
+      ],
+      "focusNoRing": []
+    },
     "dense/settings": {
       "clipped": [],
       "targets": [
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
+        "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",
         "input \"\" 13x13",

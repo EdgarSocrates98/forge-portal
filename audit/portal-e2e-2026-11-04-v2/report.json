@@ -1,0 +1,3280 @@
+{
+  "base_url": "http://127.0.0.1:4310/?forge_session=5bozOuBXm6f-LW_2neAwQJdODRvVEGce",
+  "routes": [
+    {
+      "route": "/dashboard",
+      "url": "http://127.0.0.1:4310/dashboard",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Painel",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "buttons": 13,
+      "links": 23,
+      "inputs": 0,
+      "unnamed_controls": 7,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'length')\n    at Ft (http://127.0.0.1:4310/chunk-ClZlovtJ.js:1:19724)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at JD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68195)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'length')\n    at Ft (http://127.0.0.1:4310/chunk-ClZlovtJ.js:1:19724)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at JD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68195)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\dashboard.png"
+    },
+    {
+      "route": "/install",
+      "url": "http://127.0.0.1:4310/install",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "",
+        "1\nDescobrir",
+        "Hosts de IA detectados neste ambiente",
+        "2\nSelecionar",
+        "Escopo",
+        "Componentes",
+        "3\nConfigurar",
+        "Hosts de IA",
+        "Perfil de instalação",
+        "Perfil de execução",
+        "Pronto para instalar",
+        "Operações"
+      ],
+      "buttons": 8,
+      "links": 19,
+      "inputs": 19,
+      "unnamed_controls": 23,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'length')\n    at fe (http://127.0.0.1:4310/chunk-Bk_9Ho72.js:1:2656)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at JD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68195)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'length')\n    at fe (http://127.0.0.1:4310/chunk-Bk_9Ho72.js:1:2656)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at JD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68195)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\install.png"
+    },
+    {
+      "route": "/config",
+      "url": "http://127.0.0.1:4310/config",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Centro de configuração",
+        "Ambiente da conta",
+        "Preparar alterações",
+        "Aplicar alterações"
+      ],
+      "buttons": 5,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\config.png"
+    },
+    {
+      "route": "/forges",
+      "url": "http://127.0.0.1:4310/forges",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Explorador de Forjas",
+        "Operações de registry",
+        "Estado do registry"
+      ],
+      "buttons": 15,
+      "links": 21,
+      "inputs": 1,
+      "unnamed_controls": 9,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\forges.png"
+    },
+    {
+      "route": "/forges/code-atlas-forge",
+      "url": "http://127.0.0.1:4310/forges/code-atlas-forge",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "code-atlas-forge"
+      ],
+      "buttons": 5,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\forges__code-atlas-forge.png"
+    },
+    {
+      "route": "/match",
+      "url": "http://127.0.0.1:4310/match",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Busca de capacidades"
+      ],
+      "buttons": 9,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 5,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\match.png"
+    },
+    {
+      "route": "/federation",
+      "url": "http://127.0.0.1:4310/federation",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Família de Forjas"
+      ],
+      "buttons": 5,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\federation.png"
+    },
+    {
+      "route": "/profiles",
+      "url": "http://127.0.0.1:4310/profiles",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Perfis",
+        "Comparar perfis"
+      ],
+      "buttons": 4,
+      "links": 20,
+      "inputs": 2,
+      "unnamed_controls": 0,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/profiles",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\profiles.png"
+    },
+    {
+      "route": "/hosts",
+      "url": "http://127.0.0.1:4310/hosts",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Hosts de IA"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\hosts.png"
+    },
+    {
+      "route": "/mcp",
+      "url": "http://127.0.0.1:4310/mcp",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "MCP",
+        "Servidores",
+        "Inspetor",
+        "Relatório de compatibilidade"
+      ],
+      "buttons": 8,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 2,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\mcp.png"
+    },
+    {
+      "route": "/skills",
+      "url": "http://127.0.0.1:4310/skills",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Skills"
+      ],
+      "buttons": 6,
+      "links": 21,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\skills.png"
+    },
+    {
+      "route": "/agents",
+      "url": "http://127.0.0.1:4310/agents",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Agents"
+      ],
+      "buttons": 9,
+      "links": 21,
+      "inputs": 0,
+      "unnamed_controls": 4,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\agents.png"
+    },
+    {
+      "route": "/tasks",
+      "url": "http://127.0.0.1:4310/tasks",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Tarefas",
+        "Operações",
+        "Tarefas recentes"
+      ],
+      "buttons": 7,
+      "links": 21,
+      "inputs": 1,
+      "unnamed_controls": 2,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\tasks.png"
+    },
+    {
+      "route": "/graph",
+      "url": "http://127.0.0.1:4310/graph",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Graph Studio",
+        "Grafo federado do ecossistema\nFederado"
+      ],
+      "buttons": 25,
+      "links": 21,
+      "inputs": 1,
+      "unnamed_controls": 20,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/capabilities",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\graph.png"
+    },
+    {
+      "route": "/observe",
+      "url": "http://127.0.0.1:4310/observe",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Observabilidade"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/metrics",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\observe.png"
+    },
+    {
+      "route": "/execution",
+      "url": "http://127.0.0.1:4310/execution",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Execução"
+      ],
+      "buttons": 6,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\execution.png"
+    },
+    {
+      "route": "/lab",
+      "url": "http://127.0.0.1:4310/lab",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Forge Lab"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/lab",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\lab.png"
+    },
+    {
+      "route": "/versions",
+      "url": "http://127.0.0.1:4310/versions",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Versões"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 1,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/versions",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\versions.png"
+    },
+    {
+      "route": "/knowledge",
+      "url": "http://127.0.0.1:4310/knowledge",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Conhecimento",
+        "Entidades observadas",
+        "Documentos",
+        "Recomendações explicáveis"
+      ],
+      "buttons": 21,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 17,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        },
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/federation",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/skills",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/agents",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/mcp/servers",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/hosts",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/tasks",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/events",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/graphs",
+          "status": 404
+        }
+      ],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\knowledge.png"
+    },
+    {
+      "route": "/guide",
+      "url": "http://127.0.0.1:4310/guide",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Guia do portal",
+        "Por onde começar",
+        "O que é uma Forja",
+        "O que são agents",
+        "O que são skills",
+        "O que é MCP",
+        "Explorar grafos",
+        "Instalar componentes",
+        "Diagnosticar problemas",
+        "Interpretar evidências"
+      ],
+      "buttons": 4,
+      "links": 44,
+      "inputs": 0,
+      "unnamed_controls": 0,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\guide.png"
+    },
+    {
+      "route": "/settings",
+      "url": "http://127.0.0.1:4310/settings",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Configurações",
+        "Idioma",
+        "Tema",
+        "Densidade visual",
+        "Animações",
+        "Dicas de contexto",
+        "Sobre"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 11,
+      "unnamed_controls": 12,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\settings.png"
+    },
+    {
+      "route": "/pf",
+      "url": "http://127.0.0.1:4310/pf",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Product Forge Studio",
+        "Workspaces",
+        "Novo produto",
+        "Workspace agêntico",
+        "Produtos"
+      ],
+      "buttons": 7,
+      "links": 33,
+      "inputs": 4,
+      "unnamed_controls": 5,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf.png"
+    },
+    {
+      "route": "/pf/products",
+      "url": "http://127.0.0.1:4310/pf/products",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Products",
+        "Novo produto"
+      ],
+      "buttons": 6,
+      "links": 19,
+      "inputs": 3,
+      "unnamed_controls": 4,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__products.png"
+    },
+    {
+      "route": "/pf/boards",
+      "url": "http://127.0.0.1:4310/pf/boards",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Boards & roadmaps"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 2,
+      "unnamed_controls": 2,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__boards.png"
+    },
+    {
+      "route": "/pf/proposals",
+      "url": "http://127.0.0.1:4310/pf/proposals",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Propostas de tarefas",
+        "Nenhuma proposta pendente"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 1,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__proposals.png"
+    },
+    {
+      "route": "/pf/settings",
+      "url": "http://127.0.0.1:4310/pf/settings",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Engine settings",
+        "Conexão",
+        "Status"
+      ],
+      "buttons": 6,
+      "links": 20,
+      "inputs": 2,
+      "unnamed_controls": 4,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__settings.png"
+    },
+    {
+      "route": "/pf/chat",
+      "url": "http://127.0.0.1:4310/pf/chat",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Chat Studio",
+        "Sessões",
+        "Contexto"
+      ],
+      "buttons": 18,
+      "links": 19,
+      "inputs": 4,
+      "unnamed_controls": 13,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__chat.png"
+    },
+    {
+      "route": "/pf/control-center",
+      "url": "http://127.0.0.1:4310/pf/control-center",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Agent Control Center",
+        "Sessions (0)",
+        "Pending approvals (0)",
+        "Provedores"
+      ],
+      "buttons": 4,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 0,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/intel/mode",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "url": "http://127.0.0.1:4310/api/v1/bridge/providers",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__control-center.png"
+    },
+    {
+      "route": "/pf/diagnostics",
+      "url": "http://127.0.0.1:4310/pf/diagnostics",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Central de Diagnóstico",
+        "Bridge",
+        "",
+        ""
+      ],
+      "buttons": 4,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 0,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'version')\n    at le (http://127.0.0.1:4310/chunk-DqGge3_y.js:1:5367)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at JD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68195)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__diagnostics.png"
+    },
+    {
+      "route": "/pf/compare",
+      "url": "http://127.0.0.1:4310/pf/compare",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Session Compare"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 2,
+      "unnamed_controls": 1,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__compare.png"
+    },
+    {
+      "route": "/pf/lens",
+      "url": "http://127.0.0.1:4310/pf/lens",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Forge Lens",
+        "Saúde do contexto da sessão",
+        "Inteligência do workspace",
+        "Roteamento de provedor"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 3,
+      "unnamed_controls": 2,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__lens.png"
+    },
+    {
+      "route": "/pf/artifacts",
+      "url": "http://127.0.0.1:4310/pf/artifacts",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Artifact Studio",
+        "Artefatos da sessão",
+        "Arquivos do workspace"
+      ],
+      "buttons": 5,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 0,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__artifacts.png"
+    },
+    {
+      "route": "/pf/workflows",
+      "url": "http://127.0.0.1:4310/pf/workflows",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Workflow Builder",
+        "Comece de um template",
+        "Canvas",
+        "Documento do workflow"
+      ],
+      "buttons": 10,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 6,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__workflows.png"
+    },
+    {
+      "route": "/pf/templates",
+      "url": "http://127.0.0.1:4310/pf/templates",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Agent Templates",
+        "Knowledge Curator",
+        "Data Investigator",
+        "Release Sentinel",
+        "Publish Pipeline"
+      ],
+      "buttons": 8,
+      "links": 19,
+      "inputs": 0,
+      "unnamed_controls": 4,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__templates.png"
+    },
+    {
+      "route": "/pf/intelligence",
+      "url": "http://127.0.0.1:4310/pf/intelligence",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Product Intelligence",
+        "Qualidade da sessão",
+        "Decisões",
+        "FinOps do workspace"
+      ],
+      "buttons": 4,
+      "links": 19,
+      "inputs": 1,
+      "unnamed_controls": 0,
+      "console_errors": [
+        {
+          "type": "error",
+          "text": "ERROR TypeError: Cannot read properties of undefined (reading 'length')\n    at ee (http://127.0.0.1:4310/chunk-CPbShhYl.js:1:3256)\n    at om (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:60900)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:66994)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)\n    at KD (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67155)\n    at Cu (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68427)\n    at Im (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:68259)\n    at Em (http://127.0.0.1:4310/chunk-Cr_lqVLj.js:4:67999)"
+        }
+      ],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__intelligence.png"
+    },
+    {
+      "route": "/pf/onboarding",
+      "url": "http://127.0.0.1:4310/pf/onboarding",
+      "status": 200,
+      "title": "ForgePortalApp",
+      "headings": [
+        "Onboarding",
+        "1 · Perfil do engine"
+      ],
+      "buttons": 6,
+      "links": 20,
+      "inputs": 0,
+      "unnamed_controls": 2,
+      "console_errors": [],
+      "console_warnings": [],
+      "failed_requests": [],
+      "bad_responses": [],
+      "screenshot": "audit\\portal-e2e-2026-11-04-v2\\pf__onboarding.png"
+    }
+  ],
+  "summary": {
+    "total": 36,
+    "passed_http": 36,
+    "route_errors": 0,
+    "console_error_routes": 20,
+    "failed_request_routes": 28,
+    "bad_response_routes": 19
+  }
+}

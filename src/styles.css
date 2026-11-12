@@ -2374,3 +2374,17 @@ tr[data-selected] td {
     grid-template-columns: 1fr;
   }
 }
+
+/* Route view transitions — quick cross-fade between pages; disabled under
+   reduced-motion so the transition never fights accessibility settings. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 160ms;
+  animation-timing-function: ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full'])::view-transition-old(root),
+  :root:not([data-motion='full'])::view-transition-new(root) {
+    animation: none;
+  }
+}

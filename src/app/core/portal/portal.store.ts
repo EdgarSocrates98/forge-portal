@@ -89,5 +89,15 @@ export class PortalStore {
     this.refreshedAt.set(new Date().toISOString());
     this.theme.setForge(payload.descriptor.theme ?? payload.descriptor.forge_id);
     this.status.set(payload.health.state === 'DEGRADED' ? 'degraded' : 'ready');
+    // Warm the catalog reads most pages hit right after bootstrap —
+    // navigation then renders from the memo instead of a fresh request.
+    this.api.prefetch([
+      { path: '/capabilities', ttlMs: 60_000 },
+      { path: '/skills', ttlMs: 15_000 },
+      { path: '/agents', ttlMs: 15_000 },
+      { path: '/hosts', ttlMs: 15_000 },
+      { path: '/profiles', ttlMs: 15_000 },
+      { path: '/registry/state', ttlMs: 10_000 },
+    ]);
   }
 }

@@ -765,13 +765,20 @@ class TestSecurityHeadersEverywhere:
     _EXPECTED: ClassVar[dict[str, str]] = {
         "X-Content-Type-Options": "nosniff",
         "Referrer-Policy": "no-referrer",
-        "Cache-Control": "no-store",
         "X-Frame-Options": "DENY",
     }
 
-    def _assert_headers(self, hdrs: dict) -> None:
+    def _assert_headers(self, hdrs: dict, *, cacheable: bool = False) -> None:
         for k, v in self._EXPECTED.items():
             assert hdrs.get(k) == v, f"{k}: {hdrs.get(k)!r}"
+        # Opt-in cacheable ops emit `private, max-age=N` — loopback-private
+        # only, never `public`/shared. Everything else stays no-store.
+        cc = hdrs.get("Cache-Control", "")
+        if cacheable:
+            assert cc.startswith("private, max-age="), f"Cache-Control: {cc!r}"
+            assert "no-store" not in cc and "public" not in cc
+        else:
+            assert cc == "no-store", f"Cache-Control: {cc!r}"
         assert "default-src 'self'" in hdrs.get("Content-Security-Policy", "")
         pp = hdrs.get("Permissions-Policy", "")
         assert "camera=()" in pp and "browsing-topics=()" in pp
@@ -788,7 +795,11 @@ class TestSecurityHeadersEverywhere:
             assert "text/html" in hdrs.get("Content-Type", "")
 
     def test_api_and_static_200_carry_full_header_set(self, server):
+        # /health is a cache_ttl opt-in op — honest `private, max-age`.
         _, _, hdrs = call(server, "GET", "/api/v1/health")
+        self._assert_headers(hdrs, cacheable=True)
+        # An uncached op keeps the strict no-store contract.
+        _, _, hdrs = call(server, "GET", "/api/v1/secrets")
         self._assert_headers(hdrs)
         _, _, hdrs = call(server, "GET", "/", session=False)
         self._assert_headers(hdrs)

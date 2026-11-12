@@ -1,9 +1,12 @@
 import { TPipe } from '../../core/i18n/i18n.pipe';
+import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
+  ViewChild,
   computed,
   inject,
   signal,
@@ -52,6 +55,36 @@ const TEMPLATES = [
   'Review the decision journal for unresolved items.',
 ];
 
+/** pf-* skill catalog exposed in the slash palette — id + one-line
+ *  trigger. Selecting a skill seeds a visible `[skill:id]` prefix the
+ *  host agent can read; nothing is hidden from the user. */
+const SKILLS: { id: string; hint: string }[] = [
+  { id: 'pf-product-strategy', hint: 'vision, context package, decisions' },
+  { id: 'pf-analytics', hint: 'explore sources, schemas, metrics' },
+  { id: 'pf-sql', hint: 'author and run safe read-only SQL' },
+  { id: 'pf-dashboards', hint: 'KPI cards and charts from real runs' },
+  { id: 'pf-knowledge', hint: 'import docs, FTS search with citations' },
+  { id: 'pf-requirements', hint: 'PRDs and user stories from knowledge' },
+  { id: 'pf-prioritization', hint: 'RICE/WSJF deterministic scoring' },
+  { id: 'pf-product-discovery', hint: 'opportunities and hypotheses' },
+  { id: 'pf-reporting', hint: 'executive and periodic reports' },
+  { id: 'pf-apis', hint: 'OpenAPI import, diff, breaking changes' },
+  { id: 'pf-data-products', hint: 'contracts, validation, lineage' },
+  { id: 'pf-agent-factory', hint: 'create, eval and publish agents' },
+  { id: 'pf-aws', hint: 'Athena, Glue, QuickSight states' },
+  { id: 'pf-azure', hint: 'Fabric, Power BI, KQL workspaces' },
+  { id: 'pf-finops', hint: 'run budgets, cloud cost honesty' },
+  { id: 'pf-governance', hint: 'approvals, audit trail, policy gates' },
+];
+
+const EFFORTS = ['low', 'medium', 'high'] as const;
+type Effort = (typeof EFFORTS)[number];
+
+interface ChatAttachment {
+  label: string;
+  payload: Record<string, unknown>;
+}
+
 /** Chat Studio (Cycle 20) — multi-agent sessions over the local Forge
  *  Agent Bridge: pairing gate, session sidebar w/ metadata, event-driven
  *  timeline, approvals, plan/artifact/usage surfaces, 3 experience modes. */
@@ -68,6 +101,7 @@ const TEMPLATES = [
     StateBadge,
     UiSkeleton,
     TPipe,
+    DecimalPipe,
   ],
   template: `
     <div class="studio" [attr.data-mode]="mode()">
@@ -314,6 +348,12 @@ const TEMPLATES = [
                   }
                 }
               }
+              @if (busy()) {
+                <div class="msg msg--ghost" data-k="assistant">
+                  <span class="msg__k">{{ 'pf.chat.assistant' | t }}</span>
+                  <span class="dots" aria-label="agent is working"><i></i><i></i><i></i></span>
+                </div>
+              }
               @if (!items().length) {
                 <ui-empty icon="agents" title="Send your first prompt" />
               }
@@ -329,30 +369,100 @@ const TEMPLATES = [
                 <button class="tpl" (click)="draft.set(t)">{{ t }}</button>
               }
             </div>
-            <form class="composer" (submit)="send($event)">
-              <textarea
-                class="input"
-                rows="2"
-                [value]="draft()"
-                (input)="draft.set($any($event.target).value)"
-                (keydown.enter)="enterSend($event)"
-                placeholder="Ask the agent… (Enter sends, Shift+Enter new line)"
-                [disabled]="!session()"
-                aria-label="Prompt"
-              ></textarea>
-              <div class="composer__acts">
-                <button
-                  class="btn btn--primary"
-                  type="submit"
-                  [disabled]="busy() || !session() || !draft().trim()"
-                >
-                  {{ busy() ? 'Running…' : 'Send' }}
-                </button>
-                @if (lastError()) {
-                  <button class="btn btn--mini" type="button" (click)="retry()">
-                    {{ 'pf.chat.retry' | t }}
+            @if (slashItems().length) {
+              <div class="slash" role="listbox" aria-label="Skills">
+                @for (s of slashItems(); track s.id) {
+                  <button
+                    class="slash__i"
+                    role="option"
+                    [attr.aria-selected]="false"
+                    (click)="applySkill(s.id)"
+                  >
+                    <code>/{{ s.id }}</code>
+                    <span class="muted small">{{ s.hint }}</span>
                   </button>
                 }
+              </div>
+            }
+            @if (attachments().length) {
+              <div class="chips" aria-label="Attachments">
+                @for (a of attachments(); track a.label) {
+                  <span class="chip"
+                    >📎 {{ a.label }}
+                    <button
+                      class="chip__x"
+                      type="button"
+                      aria-label="remove attachment"
+                      (click)="dropAttachment(a.label)"
+                    >
+                      ×
+                    </button></span
+                  >
+                }
+              </div>
+            }
+            <form class="composer" (submit)="send($event)">
+              <div class="composer__box" [attr.data-busy]="busy() || null">
+                <textarea
+                  class="composer__ta"
+                  rows="2"
+                  [value]="draft()"
+                  (input)="onDraft($any($event.target).value)"
+                  (keydown.enter)="enterSend($event)"
+                  (keydown.escape)="slash.set(null)"
+                  placeholder="Ask the agent…  / for skills · @ not needed, attach below"
+                  [disabled]="!session()"
+                  aria-label="Prompt"
+                ></textarea>
+                <div class="composer__bar">
+                  <label
+                    class="tbtn"
+                    title="Attach an image (provider may refuse — surfaced honestly)"
+                    >🖼<input type="file" accept="image/*" hidden (change)="attachImage($event)"
+                  /></label>
+                  <button
+                    class="tbtn"
+                    type="button"
+                    title="Attach workspace file"
+                    (click)="pickWorkspaceFile()"
+                  >
+                    📄
+                  </button>
+                  <select
+                    class="tbtn effort"
+                    [value]="effort()"
+                    (change)="effort.set($any($event.target).value)"
+                    title="Effort preference — sent to the provider; applied when supported"
+                    aria-label="Effort"
+                  >
+                    @for (e of EFFORTS; track e) {
+                      <option [value]="e">⚡{{ e }}</option>
+                    }
+                  </select>
+                  <span class="tok mono" title="Session tokens · last turn delta">
+                    @if (usage(); as u) {
+                      {{ u.in + u.out | number }} tok
+                      @if (lastTurn(); as lt) {
+                        <em> (+{{ lt }})</em>
+                      }
+                    } @else {
+                      — tok
+                    }
+                  </span>
+                  <span class="spacer"></span>
+                  @if (lastError()) {
+                    <button class="btn btn--mini" type="button" (click)="retry()">
+                      {{ 'pf.chat.retry' | t }}
+                    </button>
+                  }
+                  <button
+                    class="btn btn--primary send"
+                    type="submit"
+                    [disabled]="busy() || !session() || !draft().trim()"
+                  >
+                    {{ busy() ? 'Running…' : 'Send ⏎' }}
+                  </button>
+                </div>
               </div>
             </form>
           </section>
@@ -649,6 +759,174 @@ const TEMPLATES = [
       border-radius: var(--radius-md);
       padding: var(--space-2) var(--space-3);
       max-width: 88%;
+      animation: msg-in 0.22s ease-out;
+    }
+    @keyframes msg-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    .msg--ghost {
+      opacity: 0.75;
+      border: 1px dashed var(--border);
+      background: var(--bg-hover);
+    }
+    .dots {
+      display: inline-flex;
+      gap: 4px;
+      padding: var(--space-1) 0;
+    }
+    .dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--fg-muted);
+      animation: dot-b 1.2s infinite;
+    }
+    .dots i:nth-child(2) {
+      animation-delay: 0.18s;
+    }
+    .dots i:nth-child(3) {
+      animation-delay: 0.36s;
+    }
+    @keyframes dot-b {
+      0%,
+      60%,
+      100% {
+        transform: none;
+        opacity: 0.4;
+      }
+      30% {
+        transform: translateY(-4px);
+        opacity: 1;
+      }
+    }
+    .slash {
+      display: grid;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card, var(--bg-hover));
+      max-height: 14rem;
+      overflow-y: auto;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .slash__i {
+      display: flex;
+      gap: var(--space-3);
+      align-items: baseline;
+      padding: var(--space-2) var(--space-3);
+      border: 0;
+      background: none;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .slash__i:hover {
+      background: var(--bg-hover);
+    }
+    .slash__i code {
+      color: var(--accent, var(--fg));
+      font-size: var(--font-xs);
+      white-space: nowrap;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 2px var(--space-2);
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+    }
+    .chip__x {
+      border: 0;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: var(--font-sm);
+      padding: 0 2px;
+    }
+    .composer__box {
+      display: grid;
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .composer__box:focus-within {
+      border-color: var(--accent, var(--fg));
+    }
+    .composer__box[data-busy] {
+      border-color: color-mix(in srgb, var(--accent, var(--fg)) 55%, var(--border));
+    }
+    .composer__ta {
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      padding: var(--space-3);
+      resize: vertical;
+      min-height: 3.4rem;
+    }
+    .composer__ta:focus {
+      outline: none;
+    }
+    .composer__bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-2);
+      border-top: 1px solid var(--border);
+      background: var(--bg-hover);
+    }
+    .tbtn {
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm, 6px);
+      background: none;
+      color: var(--fg-muted);
+      font: inherit;
+      font-size: var(--font-sm);
+      padding: 3px var(--space-2);
+      cursor: pointer;
+    }
+    .tbtn:hover {
+      border-color: var(--border);
+      color: var(--fg);
+    }
+    .tbtn.effort {
+      font-size: var(--font-xs);
+    }
+    .tok {
+      font-size: var(--font-xs);
+      color: var(--fg-muted);
+      white-space: nowrap;
+    }
+    .tok em {
+      font-style: normal;
+      color: var(--accent, var(--fg));
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .msg {
+        animation: none;
+      }
+      .dots i {
+        animation: none;
+        opacity: 0.6;
+      }
     }
     .msg__b {
       font-size: var(--font-sm);
@@ -713,14 +991,8 @@ const TEMPLATES = [
       gap: var(--space-2);
       align-items: end;
     }
-    .composer .input {
-      flex: 1;
-      resize: vertical;
-      font: inherit;
-    }
-    .composer__acts {
-      display: grid;
-      gap: var(--space-1);
+    .send {
+      white-space: nowrap;
     }
     .studio[data-mode='simple'] .side,
     .studio[data-mode='simple'] .ctx {
@@ -783,6 +1055,11 @@ export class PfChatPage implements OnInit, OnDestroy {
   private readonly confirm = inject(ConfirmService);
 
   readonly TEMPLATES = TEMPLATES;
+  readonly EFFORTS = EFFORTS;
+  readonly effort = signal<Effort>('medium');
+  readonly attachments = signal<ChatAttachment[]>([]);
+  readonly slash = signal<string | null>(null);
+  readonly lastTurn = signal<number | null>(null);
   readonly modes = ['simple', 'visual', 'advanced'] as const;
   readonly mode = signal<'simple' | 'visual' | 'advanced'>('visual');
   readonly paired = signal(false);
@@ -830,6 +1107,13 @@ export class PfChatPage implements OnInit, OnDestroy {
   readonly latestAssistant = computed(
     () => [...this.items()].reverse().find((item) => item.kind === 'assistant')?.text ?? '',
   );
+  readonly slashItems = computed(() => {
+    const f = this.slash();
+    if (f === null) return [];
+    const t = f.toLowerCase();
+    return SKILLS.filter((s) => !t || s.id.includes(t)).slice(0, 8);
+  });
+  @ViewChild('tl') private tl?: ElementRef<HTMLElement>;
 
   readonly filteredSessions = computed(() => {
     const term = this.q().toLowerCase();
@@ -851,7 +1135,7 @@ export class PfChatPage implements OnInit, OnDestroy {
     const evs = this.lastEvents().filter((e) => e.type === 'usage.updated');
     if (!evs.length) return null;
     const p = evs[evs.length - 1].payload;
-    return { in: p['tokens_in'] ?? 0, out: p['tokens_out'] ?? 0 };
+    return { in: Number(p['tokens_in'] ?? 0), out: Number(p['tokens_out'] ?? 0) };
   });
   readonly plan = computed(() => {
     const evs = this.lastEvents().filter((e) => e.type === 'plan.updated');
@@ -1058,10 +1342,30 @@ export class PfChatPage implements OnInit, OnDestroy {
     this.busy.set(true);
     this.lastError.set(null);
     this.draft.set('');
-    this.items.update((l) => [...l, { kind: 'user', text }]);
+    this.slash.set(null);
+    const atts = this.attachments();
+    this.attachments.set([]);
+    const beforeIn = Number(this.usage()?.in ?? 0);
+    const beforeOut = Number(this.usage()?.out ?? 0);
+    this.items.update((l) => [
+      ...l,
+      {
+        kind: 'user',
+        text,
+        meta: atts.length ? `📎 ${atts.map((a) => a.label).join(', ')}` : undefined,
+      },
+    ]);
+    this.scrollEnd();
     try {
-      await firstValueFrom(this.api.chatPrompt(s.id, text, s.provider));
+      await firstValueFrom(
+        this.api.chatPrompt(s.id, text, s.provider, {
+          attachments: atts.map((a) => a.payload),
+          effort: this.effort(),
+        }),
+      );
       await this.pullEvents(s);
+      const u = this.usage();
+      if (u) this.lastTurn.set(Number(u.in) + Number(u.out) - beforeIn - beforeOut);
     } catch (e) {
       const st = e instanceof ApiError ? String(e.status) : 'transport';
       this.lastError.set(st);
@@ -1072,6 +1376,69 @@ export class PfChatPage implements OnInit, OnDestroy {
     } finally {
       this.busy.set(false);
     }
+  }
+
+  onDraft(v: string): void {
+    this.draft.set(v);
+    const m = /^\/(\S*)$/.exec(v.trimStart());
+    this.slash.set(m ? m[1] : null);
+  }
+
+  applySkill(id: string): void {
+    this.slash.set(null);
+    this.draft.set(`[skill:${id}] `);
+  }
+
+  dropAttachment(label: string): void {
+    this.attachments.update((l) => l.filter((a) => a.label !== label));
+  }
+
+  attachImage(ev: Event): void {
+    const file = (ev.target as HTMLInputElement).files?.[0];
+    (ev.target as HTMLInputElement).value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      this.toast.show('image too large (5MB max)', 'error');
+      return;
+    }
+    const r = new FileReader();
+    r.onload = () => {
+      const b64 = String(r.result).split(',')[1] ?? '';
+      this.attachments.update((l) => [
+        ...l,
+        {
+          label: file.name,
+          payload: {
+            type: 'image',
+            data: { type: 'base64', media_type: file.type, data: b64 },
+          },
+        },
+      ]);
+    };
+    r.readAsDataURL(file);
+  }
+
+  pickWorkspaceFile(): void {
+    const list = this.files().length ? this.files() : null;
+    if (!list) {
+      void this.loadFiles().then(() => this.pickWorkspaceFile());
+      return;
+    }
+    const name = globalThis.prompt?.(
+      `Workspace file to attach:\n${list
+        .filter((f) => !f.dir)
+        .map((f) => f.name)
+        .join('\n')}`,
+    );
+    if (!name) return;
+    this.attachments.update((l) => [...l, { label: name, payload: { path: name } }]);
+  }
+
+  private scrollEnd(): void {
+    setTimeout(() => {
+      const el = this.tl?.nativeElement;
+      if (el) el.scrollTop = el.scrollHeight;
+    });
   }
 
   async retry(): Promise<void> {
@@ -1370,6 +1737,9 @@ export class PfChatPage implements OnInit, OnDestroy {
           }
       }
     }
-    if (out.length) this.items.update((l) => [...l, ...out]);
+    if (out.length) {
+      this.items.update((l) => [...l, ...out]);
+      this.scrollEnd();
+    }
   }
 }

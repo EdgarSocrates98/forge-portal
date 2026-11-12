@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 WORKSPACE = ROOT.parent
 SERVER_SRC = ROOT / "portal_core" / "forge_portal.py"
 TELEMETRY_SRC = ROOT / "portal_core" / "telemetry.py"
+ATLAS_SRC = ROOT / "portal_core" / "atlas_ops.py"
 ASSETS_SRC = ROOT / "dist" / "forge-portal-app" / "browser"
 # Única fonte de verdade da versão do portal — portal_core/forge_portal.py
 # (vendored verbatim para dentro dos pacotes; package.json é validado
@@ -73,6 +74,7 @@ def manifest_for(
     assets_dir: Path,
     server_path: Path = SERVER_SRC,
     telemetry_hash: str | None = None,
+    extra_hashes: dict[str, str] | None = None,
 ) -> dict:
     files = {}
     for p in sorted(assets_dir.rglob("*")):
@@ -90,6 +92,9 @@ def manifest_for(
     if telemetry_hash is not None:
         manifest["telemetry_generation"] = telemetry_hash[:16]
         manifest["telemetry_sha256"] = telemetry_hash
+    for key, h in sorted((extra_hashes or {}).items()):
+        manifest[f"{key}_generation"] = h[:16]
+        manifest[f"{key}_sha256"] = h
     return manifest
 
 
@@ -123,19 +128,29 @@ def pf_manifest(assets_dir: Path, previous: dict) -> dict:
     return manifest
 
 
-def telemetry_source(target: dict[str, str]) -> bytes:
-    """`_portal_telemetry.py` content for a target. The canonical module
-    does `import forge_portal as fp` (portal_core flat layout); vendored
+def _module_source(src: Path, target: dict[str, str]) -> bytes:
+    """Vendored satellite-module content for a target. Canonical modules
+    do `import forge_portal as fp` (portal_core flat layout); vendored
     copies must reference the vendored `_forge_portal` instead — package
     targets use `from <pkg> import _forge_portal`, flat dirs (scripts/)
     use `import _forge_portal`."""
-    text = TELEMETRY_SRC.read_text(encoding="utf-8")
+    text = src.read_text(encoding="utf-8")
     if target.get("flat"):
         line = "import _forge_portal as fp"
     else:
         pkg = Path(target["pkg"]).name
         line = f"from {pkg} import _forge_portal as fp"
     return text.replace("import forge_portal as fp", line, 1).encode("utf-8")
+
+
+def telemetry_source(target: dict[str, str]) -> bytes:
+    """`_portal_telemetry.py` content for a target (see _module_source)."""
+    return _module_source(TELEMETRY_SRC, target)
+
+
+def atlas_source(target: dict[str, str]) -> bytes:
+    """`_portal_atlas.py` content for a target (see _module_source)."""
+    return _module_source(ATLAS_SRC, target)
 
 
 def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[str]:
@@ -197,11 +212,15 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
 
     server_dst = repo / target["pkg"] / "_forge_portal.py"
     telemetry_dst = repo / target["pkg"] / "_portal_telemetry.py"
+    atlas_dst = repo / target["pkg"] / "_portal_atlas.py"
 
     telemetry_bytes = telemetry_source(target) if TELEMETRY_SRC.is_file() else None
     telemetry_hash = (
         hashlib.sha256(telemetry_bytes).hexdigest() if telemetry_bytes else None
     )
+    atlas_bytes = atlas_source(target) if ATLAS_SRC.is_file() else None
+    atlas_hash = hashlib.sha256(atlas_bytes).hexdigest() if atlas_bytes else None
+    extra_hashes = {"atlas": atlas_hash} if atlas_hash else None
 
     diffs: list[Path] = []
     if server_dst.is_file() and sha256(server_dst) == sha256(SERVER_SRC):
@@ -215,8 +234,16 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
         else:
             diffs.append(telemetry_dst)
 
+    if atlas_bytes is not None:
+        if atlas_dst.is_file() and atlas_dst.read_bytes() == atlas_bytes:
+            notes.append(f"  atlas: parity ok ({atlas_dst.name})")
+        else:
+            diffs.append(atlas_dst)
+
     if ASSETS_SRC.is_dir():
-        new_manifest = manifest_for(ASSETS_SRC, telemetry_hash=telemetry_hash)
+        new_manifest = manifest_for(
+            ASSETS_SRC, telemetry_hash=telemetry_hash, extra_hashes=extra_hashes
+        )
         old_manifest = {}
         if manifest_dst.is_file():
             try:
@@ -243,6 +270,10 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
         telemetry_dst.write_bytes(telemetry_bytes)
         notes.append(f"  wrote {telemetry_dst.relative_to(repo)}")
 
+    if atlas_bytes is not None:
+        atlas_dst.write_bytes(atlas_bytes)
+        notes.append(f"  wrote {atlas_dst.relative_to(repo)}")
+
     if ASSETS_SRC.is_dir():
         if assets_dst.is_dir():
             shutil.rmtree(assets_dst)
@@ -250,7 +281,12 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
         manifest_dst.parent.mkdir(parents=True, exist_ok=True)
         manifest_dst.write_text(
             json.dumps(
-                manifest_for(assets_dst, server_dst, telemetry_hash=telemetry_hash),
+                manifest_for(
+                    assets_dst,
+                    server_dst,
+                    telemetry_hash=telemetry_hash,
+                    extra_hashes=extra_hashes,
+                ),
                 indent=2,
                 sort_keys=True,
             )
