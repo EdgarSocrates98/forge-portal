@@ -1,10 +1,19 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MonoTypeOperatorFunction, Observable, catchError, map, of, throwError } from 'rxjs';
+import {
+  MonoTypeOperatorFunction,
+  Observable,
+  catchError,
+  map,
+  of,
+  shareReplay,
+  throwError,
+} from 'rxjs';
 import {
   AgentDescriptor,
   AccountEnvironment,
   ApiEnvelope,
+  AtlasStatus,
   BootstrapPayload,
   DocHit,
   FederationPlanResponse,
@@ -44,14 +53,52 @@ import { ApiError } from './api.error';
 export class PortalApi {
   private readonly http = inject(HttpClient);
 
+  /**
+   * Client-side read memo — complements the server's `cache_ttl` headers.
+   * A hit replays the last SUCCESSFUL response for `ttlMs`; errors are
+   * never memoized (a failing op must keep failing honestly). Every POST
+   * clears the whole map, mirroring the server's invalidation contract.
+   */
+  private readonly memo = new Map<string, { at: number; value$: Observable<unknown> }>();
+
   private get<T>(path: string): Observable<T> {
     return this.http.get<ApiEnvelope<T>>(`/api/v1${path}`).pipe(map((env) => this.unwrap(env)));
   }
 
+  private memoGet<T>(path: string, ttlMs: number): Observable<T> {
+    const hit = this.memo.get(path);
+    if (hit && Date.now() - hit.at < ttlMs) return hit.value$ as Observable<T>;
+    const value$ = this.get<T>(path).pipe(shareReplay({ bufferSize: 1, refCount: false }));
+    value$.subscribe({
+      next: () => this.memo.set(path, { at: Date.now(), value$ }),
+      error: () => this.memo.delete(path),
+    });
+    return value$;
+  }
+
+  /** Drop every memoized read — mutations already call this; pages may too. */
+  invalidate(): void {
+    this.memo.clear();
+  }
+
+  /**
+   * Warm the reads every landing page is likely to need. Fire-and-forget —
+   * failures are ignored here because the real page call surfaces its own
+   * honest error state.
+   */
+  prefetch(paths: readonly { path: string; ttlMs: number }[]): void {
+    for (const { path, ttlMs } of paths) {
+      this.memoGet(path, ttlMs).subscribe({ error: () => undefined });
+    }
+  }
+
   private post<T>(path: string, body: unknown): Observable<T> {
-    return this.http
-      .post<ApiEnvelope<T>>(`/api/v1${path}`, body)
-      .pipe(map((env) => this.unwrap(env)));
+    return this.http.post<ApiEnvelope<T>>(`/api/v1${path}`, body).pipe(
+      map((env) => {
+        this.memo.clear();
+        return this.unwrap(env);
+      }),
+    );
   }
 
   private unwrap<T>(env: ApiEnvelope<T>): T {
@@ -103,15 +150,15 @@ export class PortalApi {
     );
   }
   capabilities() {
-    return this.get<PortalCapability[]>('/capabilities');
+    return this.memoGet<PortalCapability[]>('/capabilities', 60_000);
   }
   installationStatus() {
-    return this.get<PortalHealth>('/installation/status').pipe(
+    return this.memoGet<PortalHealth>('/installation/status', 5_000).pipe(
       map((health) => this.normalizeHealth(health as unknown as Record<string, unknown>)),
     );
   }
   accountEnvironment() {
-    return this.get<AccountEnvironment>('/environment');
+    return this.memoGet<AccountEnvironment>('/environment', 30_000);
   }
   installationPlan(
     input: Partial<InstallSelection> & {
@@ -146,8 +193,19 @@ export class PortalApi {
       }),
     );
   }
+  /**
+   * Code Atlas probe — `GET /api/v1/atlas/status` (the adapter probes
+   * loopback :8741 read-only; the portal never talks to atlas directly).
+   * NOT memoized: every call is a fresh verdict, guarded server-side by
+   * the op's cache_ttl. A 404 (forge without the op) surfaces via the
+   * Source's `unavailable` flag — no fabricated fallback, the probe's
+   * own `unavailable` state already means "atlas is down".
+   */
+  atlasStatus() {
+    return this.get<AtlasStatus>('/atlas/status');
+  }
   registryState() {
-    return this.get<RegistryState>('/registry/state');
+    return this.memoGet<RegistryState>('/registry/state', 10_000);
   }
   registryPlan(input: { action: RegistryAction; forge: string }) {
     return this.post<RegistryPlanResponse>('/registry/plan', input);
@@ -177,7 +235,7 @@ export class PortalApi {
     });
   }
   profiles() {
-    return this.get<ProfileDescriptor[]>('/profiles').pipe(
+    return this.memoGet<ProfileDescriptor[]>('/profiles', 15_000).pipe(
       this.unavailable<ProfileDescriptor[]>([]),
     );
   }
@@ -185,7 +243,9 @@ export class PortalApi {
     return this.post<InstallationReceipt>('/profiles/apply', { profile, confirm: 'apply' });
   }
   hosts() {
-    return this.get<HostDetection[]>('/hosts').pipe(this.unavailable<HostDetection[]>([]));
+    return this.memoGet<HostDetection[]>('/hosts', 15_000).pipe(
+      this.unavailable<HostDetection[]>([]),
+    );
   }
   hostsLaunch(host: string) {
     return this.post<{ command: string | null; refusal?: string; detail?: string }>(
@@ -194,7 +254,7 @@ export class PortalApi {
     );
   }
   mcpServers() {
-    return this.get<McpServerDescriptor[]>('/mcp/servers').pipe(
+    return this.memoGet<McpServerDescriptor[]>('/mcp/servers', 15_000).pipe(
       this.unavailable<McpServerDescriptor[]>([]),
     );
   }
@@ -205,13 +265,13 @@ export class PortalApi {
     /* wire tolerance: the contract types declare these arrays required, but
      * an adapter may omit them — decode absent lists as [] so the page
      * renders its UNVERIFIED state instead of crashing change detection. */
-    return this.get<SkillDescriptor[]>('/skills').pipe(
+    return this.memoGet<SkillDescriptor[]>('/skills', 15_000).pipe(
       this.unavailable<SkillDescriptor[]>([]),
       map((xs) => xs.map((s) => ({ ...s, hosts: s.hosts ?? [] }))),
     );
   }
   agents() {
-    return this.get<AgentDescriptor[]>('/agents').pipe(
+    return this.memoGet<AgentDescriptor[]>('/agents', 15_000).pipe(
       map((xs) =>
         xs.map((a) => ({
           ...a,
@@ -251,7 +311,7 @@ export class PortalApi {
     return this.get<TaskEventReport>(`/tasks/${encodeURIComponent(taskId)}/events`);
   }
   versions() {
-    return this.get<VersionInfo>('/versions').pipe(
+    return this.memoGet<VersionInfo>('/versions', 15_000).pipe(
       this.unavailable<VersionInfo>({
         installed: { version: null, origin: null, channel: null },
         available: { version: null, source: 'unavailable' },
@@ -263,7 +323,7 @@ export class PortalApi {
     );
   }
   lab() {
-    return this.get<LabData>('/lab').pipe(
+    return this.memoGet<LabData>('/lab', 15_000).pipe(
       this.unavailable<LabData>({ dir: null, runs: [], reports: [], notes: [] }),
     );
   }
@@ -296,7 +356,7 @@ export class PortalApi {
     return this.get<{ schema: string; runs: Record<string, unknown>[] }>('/investigations');
   }
   graphs() {
-    return this.get<GraphBundle>('/graphs');
+    return this.memoGet<GraphBundle>('/graphs', 15_000);
   }
   docsSearch(query: string, limit = 20) {
     return this.get<DocHit[]>(`/docs/search?q=${encodeURIComponent(query)}&limit=${limit}`);

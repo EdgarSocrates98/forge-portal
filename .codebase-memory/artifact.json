@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "5f8258d8eca79e0e8bbf46c53f58f639b4688fea",
+    "indexed_at": "2026-11-07T11:33:12Z",
+    "project": "E-projetos-FORJAS-forge-portal",
+    "nodes": 3340,
+    "edges": 9444,
+    "original_size": 22937600,
+    "compressed_size": 2382102,
+    "compression_level": 9
+}

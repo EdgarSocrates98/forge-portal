@@ -1,0 +1,3467 @@
+[
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\"",
+      "code \"host:codex\"",
+      "span \"devin\""
+    ],
+    "route": "/graph",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "w1920",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\""
+    ],
+    "route": "/graph",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "d1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=863",
+      "thead. right=863",
+      "tr. right=863",
+      "th. right=863",
+      "tbody. right=863",
+      "tr. right=863",
+      "td. right=863",
+      "ui-state-badge. right=851",
+      "span.badge right=851",
+      "tr. right=863",
+      "td. right=863",
+      "span.muted right=839",
+      "table.table right=770",
+      "thead. right=770",
+      "tr. right=770",
+      "th. right=770",
+      "tbody. right=770",
+      "tr. right=770",
+      "td. right=770"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/dashboard",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/install",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=987",
+      "thead. right=987",
+      "tr. right=987",
+      "th. right=823",
+      "th. right=902",
+      "th. right=987",
+      "tbody. right=987",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811",
+      "td. right=902",
+      "td. right=987",
+      "span.muted right=965",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811",
+      "td. right=902",
+      "td. right=987",
+      "span.muted right=965",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/config",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1043",
+      "thead. right=1043",
+      "tr. right=1043",
+      "th. right=857",
+      "th. right=986",
+      "th. right=1043",
+      "span.sr-only right=998",
+      "tbody. right=1043",
+      "tr. right=1043",
+      "td. right=857",
+      "td. right=986",
+      "ui-state-badge. right=974",
+      "span.badge right=974",
+      "td. right=1043",
+      "a.icon-btn right=1031",
+      "ui-icon. right=1022",
+      "svg. right=1022",
+      "path. right=1017",
+      "tr. right=1043",
+      "td. right=857",
+      "code.path right=845",
+      "td. right=986",
+      "span.muted right=962",
+      "td. right=1043",
+      "a.icon-btn right=1031"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\""
+    ],
+    "route": "/forges",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/forges/self",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/match",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/federation",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/profiles",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/hosts",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1025",
+      "thead. right=1025",
+      "tr. right=1025",
+      "th. right=871",
+      "th. right=968",
+      "th. right=1025",
+      "span.sr-only right=980",
+      "tbody. right=1025",
+      "tr. right=1025",
+      "td. right=871",
+      "td. right=968",
+      "td. right=1025",
+      "button.icon-btn right=1013",
+      "ui-icon. right=1004",
+      "svg. right=1004",
+      "path. right=998",
+      "table.table right=1147",
+      "thead. right=1147",
+      "tr. right=1147",
+      "th. right=842",
+      "th. right=951",
+      "th. right=1050",
+      "th. right=1147",
+      "tbody. right=1147",
+      "tr. right=1147"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=853",
+      "thead. right=853",
+      "tr. right=853",
+      "th. right=783",
+      "th. right=853",
+      "span.sr-only right=795",
+      "tbody. right=853",
+      "tr. right=853",
+      "td. right=783",
+      "td. right=853",
+      "button.icon-btn right=828",
+      "ui-icon. right=819",
+      "svg. right=819",
+      "path. right=813"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/agents",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/tasks",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"graph\"",
+      "code \"capability:graph\"",
+      "code \"capability:knowledge\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/graph",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1125",
+      "thead. right=1125",
+      "tr. right=1125",
+      "th. right=823",
+      "th. right=925",
+      "th. right=1040",
+      "th. right=1125",
+      "tbody. right=1125",
+      "tr. right=1125",
+      "td. right=823",
+      "ui-state-badge. right=800",
+      "span.badge right=800",
+      "td. right=925",
+      "td. right=1040",
+      "code.corr right=1000",
+      "td. right=1125",
+      "span.muted right=1066",
+      "tr. right=1125",
+      "td. right=823",
+      "ui-state-badge. right=800",
+      "span.badge right=800",
+      "td. right=925",
+      "td. right=1040",
+      "code.corr right=1000",
+      "td. right=1125"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/observe",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1145",
+      "thead. right=1145",
+      "tr. right=1145",
+      "th. right=944",
+      "th. right=1034",
+      "th. right=1145",
+      "tbody. right=1145",
+      "tr. right=1145",
+      "td.flow right=944",
+      "td.num right=1034",
+      "span.muted right=970",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145",
+      "td.flow right=944",
+      "td.num right=1034",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145",
+      "td.flow right=944",
+      "td.num right=1034",
+      "span.muted right=970",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/lab",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/versions",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/knowledge",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/guide",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/settings",
+    "tag": "t768",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=599",
+      "thead. right=599",
+      "tr. right=599",
+      "th. right=469",
+      "th. right=599",
+      "tbody. right=599",
+      "tr. right=599",
+      "td. right=469",
+      "td. right=599",
+      "ui-state-badge. right=587",
+      "span.badge right=587",
+      "tr. right=599",
+      "td. right=469",
+      "code.path right=457",
+      "td. right=599",
+      "span.muted right=575",
+      "table.table right=506",
+      "thead. right=506",
+      "tr. right=506",
+      "th. right=419",
+      "th. right=506",
+      "tbody. right=506",
+      "tr. right=506",
+      "td. right=419",
+      "td. right=506"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/dashboard",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/install",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=723",
+      "thead. right=723",
+      "tr. right=723",
+      "th. right=415",
+      "th. right=559",
+      "th. right=638",
+      "th. right=723",
+      "tbody. right=723",
+      "tr. right=723",
+      "td. right=415",
+      "td. right=559",
+      "ui-state-badge. right=547",
+      "span.badge right=547",
+      "td. right=638",
+      "td. right=723",
+      "span.muted right=701",
+      "tr. right=723",
+      "td. right=415",
+      "td. right=559",
+      "ui-state-badge. right=547",
+      "span.badge right=547",
+      "td. right=638",
+      "td. right=723",
+      "span.muted right=701",
+      "tr. right=723"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/config",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=779",
+      "thead. right=779",
+      "tr. right=779",
+      "th. right=593",
+      "th. right=722",
+      "th. right=779",
+      "span.sr-only right=734",
+      "tbody. right=779",
+      "tr. right=779",
+      "td. right=593",
+      "ui-state-badge. right=470",
+      "span.badge right=470",
+      "td. right=722",
+      "ui-state-badge. right=710",
+      "span.badge right=710",
+      "td. right=779",
+      "a.icon-btn right=767",
+      "ui-icon. right=758",
+      "svg. right=758",
+      "path. right=753",
+      "tr. right=779",
+      "td. right=593",
+      "code.path right=581",
+      "td. right=722",
+      "span.muted right=698"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\""
+    ],
+    "route": "/forges",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/forges/self",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/match",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/federation",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/profiles",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/hosts",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=761",
+      "thead. right=761",
+      "tr. right=761",
+      "th. right=483",
+      "th. right=607",
+      "th. right=704",
+      "th. right=761",
+      "span.sr-only right=716",
+      "tbody. right=761",
+      "tr. right=761",
+      "td. right=483",
+      "td. right=607",
+      "td. right=704",
+      "td. right=761",
+      "button.icon-btn right=749",
+      "ui-icon. right=740",
+      "svg. right=740",
+      "path. right=734",
+      "table.table right=883",
+      "thead. right=883",
+      "tr. right=883",
+      "th. right=477",
+      "th. right=578",
+      "th. right=687",
+      "th. right=786"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=589",
+      "thead. right=589",
+      "tr. right=589",
+      "th. right=519",
+      "th. right=589",
+      "span.sr-only right=531",
+      "tbody. right=589",
+      "tr. right=589",
+      "td. right=519",
+      "ui-state-badge. right=477",
+      "span.badge right=477",
+      "td. right=589",
+      "button.icon-btn right=564",
+      "ui-icon. right=555",
+      "svg. right=555",
+      "path. right=549"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/agents",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/tasks",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"devin\"",
+      "code \"host:devin\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/graph",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=861",
+      "thead. right=861",
+      "tr. right=861",
+      "th. right=448",
+      "th. right=559",
+      "th. right=661",
+      "th. right=776",
+      "th. right=861",
+      "tbody. right=861",
+      "tr. right=861",
+      "td.nowrap right=448",
+      "td. right=559",
+      "ui-state-badge. right=536",
+      "span.badge right=536",
+      "td. right=661",
+      "td. right=776",
+      "code.corr right=736",
+      "td. right=861",
+      "span.muted right=802",
+      "tr. right=861",
+      "td.nowrap right=448",
+      "td. right=559",
+      "ui-state-badge. right=536",
+      "span.badge right=536",
+      "td. right=661"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/observe",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=881",
+      "thead. right=881",
+      "tr. right=881",
+      "th. right=449",
+      "th. right=681",
+      "th. right=770",
+      "th. right=881",
+      "tbody. right=881",
+      "tr. right=881",
+      "td. right=449",
+      "ui-state-badge. right=430",
+      "span.badge right=430",
+      "td.flow right=681",
+      "td.num right=770",
+      "span.muted right=707",
+      "td. right=881",
+      "code.corr right=845",
+      "tr. right=881",
+      "td. right=449",
+      "ui-state-badge. right=403",
+      "span.badge right=403",
+      "td.flow right=681",
+      "td.num right=770",
+      "td. right=881",
+      "code.corr right=845"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/lab",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/versions",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/knowledge",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/guide",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/settings",
+    "tag": "m390",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/tasks",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"codex\""
+    ],
+    "route": "/graph",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/knowledge",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "light1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "zoom200-1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "zoom400-1366",
+    "variant": "base"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"installation status refresh with a deliberately \"",
+      "span \"Tarefa\""
+    ],
+    "route": "/tasks",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"devin\""
+    ],
+    "route": "/graph",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"mcp handshake verify\"",
+      "code \"operation:task-fail\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Graph export\"",
+      "code \"skill:graph-export\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/knowledge",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1920,
+    "innerW": 1920,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "w1920",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"installation status refresh with a deliberately \"",
+      "span \"Tarefa\""
+    ],
+    "route": "/tasks",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\""
+    ],
+    "route": "/graph",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"mcp handshake verify\"",
+      "code \"operation:task-fail\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Graph export\"",
+      "code \"skill:graph-export\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/knowledge",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "d1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=913",
+      "thead. right=913",
+      "tr. right=913",
+      "th. right=784",
+      "th. right=913",
+      "tbody. right=913",
+      "tr. right=913",
+      "td. right=784",
+      "td. right=913",
+      "ui-state-badge. right=901",
+      "span.badge right=901",
+      "tr. right=913",
+      "td. right=784",
+      "code.path right=772",
+      "td. right=913",
+      "span.muted right=889",
+      "tr. right=913",
+      "td. right=784",
+      "td. right=913",
+      "span.muted right=857",
+      "tr. right=913",
+      "td. right=784",
+      "td. right=913",
+      "span.muted right=857",
+      "table.table right=834"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/dashboard",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/install",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=987",
+      "thead. right=987",
+      "tr. right=987",
+      "th. right=823",
+      "th. right=902",
+      "th. right=987",
+      "tbody. right=987",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811",
+      "td. right=902",
+      "td. right=987",
+      "span.muted right=965",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811",
+      "td. right=902",
+      "td. right=987",
+      "span.muted right=965",
+      "tr. right=987",
+      "td. right=823",
+      "ui-state-badge. right=811",
+      "span.badge right=811"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/config",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1094",
+      "thead. right=1094",
+      "tr. right=1094",
+      "th. right=907",
+      "th. right=1037",
+      "th. right=1094",
+      "span.sr-only right=1049",
+      "tbody. right=1094",
+      "tr. right=1094",
+      "td. right=907",
+      "ui-state-badge. right=785",
+      "span.badge right=785",
+      "td. right=1037",
+      "ui-state-badge. right=1025",
+      "span.badge right=1025",
+      "td. right=1094",
+      "a.icon-btn right=1082",
+      "ui-icon. right=1073",
+      "svg. right=1073",
+      "path. right=1067",
+      "tr. right=1094",
+      "td. right=907",
+      "code.path right=895",
+      "td. right=1037",
+      "span.muted right=1013"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\""
+    ],
+    "route": "/forges",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/forges/self",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/match",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/federation",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/profiles",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/hosts",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1039",
+      "thead. right=1039",
+      "tr. right=1039",
+      "th. right=780",
+      "th. right=885",
+      "th. right=982",
+      "th. right=1039",
+      "span.sr-only right=994",
+      "tbody. right=1039",
+      "tr. right=1039",
+      "td. right=780",
+      "td. right=885",
+      "td. right=982",
+      "td. right=1039",
+      "button.icon-btn right=1027",
+      "ui-icon. right=1018",
+      "svg. right=1018",
+      "path. right=1012",
+      "tr. right=1039",
+      "td. right=780",
+      "td. right=885",
+      "span.muted right=852",
+      "td. right=982",
+      "td. right=1039",
+      "button.icon-btn right=1027"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=853",
+      "thead. right=853",
+      "tr. right=853",
+      "th. right=796",
+      "th. right=853",
+      "span.sr-only right=808",
+      "tbody. right=853",
+      "tr. right=853",
+      "td. right=796",
+      "td. right=853",
+      "button.icon-btn right=841",
+      "ui-icon. right=832",
+      "svg. right=832",
+      "path. right=826",
+      "tr. right=853",
+      "td. right=796",
+      "td. right=853",
+      "button.icon-btn right=841",
+      "ui-icon. right=832",
+      "svg. right=832",
+      "path. right=826",
+      "tr. right=853",
+      "td. right=796",
+      "ui-state-badge. right=784",
+      "span.badge right=784"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/agents",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=827",
+      "thead. right=827",
+      "tr. right=827",
+      "th. right=827",
+      "tbody. right=827",
+      "tr. right=827",
+      "td. right=827",
+      "tr. right=827",
+      "td. right=827"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"installation status refresh with a deliberately \"",
+      "span \"Tarefa\""
+    ],
+    "route": "/tasks",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"graph\"",
+      "code \"capability:graph\"",
+      "code \"capability:knowledge\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"mcp handshake verify\"",
+      "code \"operation:task-fail\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Graph export\"",
+      "code \"skill:graph-export\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/graph",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1125",
+      "thead. right=1125",
+      "tr. right=1125",
+      "th. right=823",
+      "th. right=925",
+      "th. right=1040",
+      "th. right=1125",
+      "tbody. right=1125",
+      "tr. right=1125",
+      "td. right=823",
+      "ui-state-badge. right=800",
+      "span.badge right=800",
+      "td. right=925",
+      "td. right=1040",
+      "code.corr right=1000",
+      "td. right=1125",
+      "span.muted right=1066",
+      "tr. right=1125",
+      "td. right=823",
+      "ui-state-badge. right=773",
+      "span.badge right=773",
+      "td. right=925",
+      "td. right=1040",
+      "code.corr right=1000",
+      "td. right=1125"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/observe",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=1145",
+      "thead. right=1145",
+      "tr. right=1145",
+      "th. right=945",
+      "th. right=1034",
+      "th. right=1145",
+      "tbody. right=1145",
+      "tr. right=1145",
+      "td.flow right=945",
+      "td.num right=1034",
+      "span.muted right=971",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145",
+      "td.flow right=945",
+      "td.num right=1034",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145",
+      "td.flow right=945",
+      "td.num right=1034",
+      "span.muted right=971",
+      "td. right=1145",
+      "code.corr right=1109",
+      "tr. right=1145"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/lab",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/versions",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/knowledge",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/guide",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 768,
+    "innerW": 768,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/settings",
+    "tag": "t768",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=649",
+      "thead. right=649",
+      "tr. right=649",
+      "th. right=520",
+      "th. right=649",
+      "tbody. right=649",
+      "tr. right=649",
+      "td. right=520",
+      "ui-state-badge. right=397",
+      "span.badge right=397",
+      "td. right=649",
+      "ui-state-badge. right=637",
+      "span.badge right=637",
+      "tr. right=649",
+      "td. right=520",
+      "code.path right=508",
+      "td. right=649",
+      "span.muted right=625",
+      "tr. right=649",
+      "td. right=520",
+      "td. right=649",
+      "span.muted right=593",
+      "tr. right=649",
+      "td. right=520",
+      "td. right=649"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/dashboard",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/install",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=723",
+      "thead. right=723",
+      "tr. right=723",
+      "th. right=415",
+      "th. right=559",
+      "th. right=638",
+      "th. right=723",
+      "tbody. right=723",
+      "tr. right=723",
+      "td. right=415",
+      "td. right=559",
+      "ui-state-badge. right=547",
+      "span.badge right=547",
+      "td. right=638",
+      "td. right=723",
+      "span.muted right=701",
+      "tr. right=723",
+      "td. right=415",
+      "td. right=559",
+      "ui-state-badge. right=547",
+      "span.badge right=547",
+      "td. right=638",
+      "td. right=723",
+      "span.muted right=701",
+      "tr. right=723"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/config",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=830",
+      "thead. right=830",
+      "tr. right=830",
+      "th. right=403",
+      "th. right=643",
+      "th. right=773",
+      "th. right=830",
+      "span.sr-only right=785",
+      "tbody. right=830",
+      "tr. right=830",
+      "td. right=403",
+      "td. right=643",
+      "ui-state-badge. right=521",
+      "span.badge right=521",
+      "td. right=773",
+      "ui-state-badge. right=761",
+      "span.badge right=761",
+      "td. right=830",
+      "a.icon-btn right=818",
+      "ui-icon. right=809",
+      "svg. right=809",
+      "path. right=803",
+      "tr. right=830",
+      "td. right=403",
+      "td. right=643"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "code \"e2e-forge\""
+    ],
+    "route": "/forges",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/forges/self",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/match",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/federation",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/profiles",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/hosts",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=775",
+      "thead. right=775",
+      "tr. right=775",
+      "th. right=516",
+      "th. right=621",
+      "th. right=718",
+      "th. right=775",
+      "span.sr-only right=730",
+      "tbody. right=775",
+      "tr. right=775",
+      "td. right=516",
+      "td. right=621",
+      "td. right=718",
+      "td. right=775",
+      "button.icon-btn right=763",
+      "ui-icon. right=754",
+      "svg. right=754",
+      "path. right=748",
+      "tr. right=775",
+      "td. right=516",
+      "ui-state-badge. right=504",
+      "span.badge right=504",
+      "td. right=621",
+      "span.muted right=588",
+      "td. right=718"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=589",
+      "thead. right=589",
+      "tr. right=589",
+      "th. right=402",
+      "th. right=532",
+      "th. right=589",
+      "span.sr-only right=544",
+      "tbody. right=589",
+      "tr. right=589",
+      "td. right=402",
+      "td. right=532",
+      "a.linklike right=449",
+      "a.linklike right=497",
+      "td. right=589",
+      "button.icon-btn right=577",
+      "ui-icon. right=568",
+      "svg. right=568",
+      "path. right=562",
+      "tr. right=589",
+      "td. right=402",
+      "td. right=532",
+      "a.linklike right=449",
+      "td. right=589",
+      "button.icon-btn right=577",
+      "ui-icon. right=568"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/agents",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=563",
+      "thead. right=563",
+      "tr. right=563",
+      "th. right=416",
+      "th. right=502",
+      "th. right=563",
+      "tbody. right=563",
+      "tr. right=563",
+      "td.corr right=416",
+      "code. right=404",
+      "td.num right=502",
+      "td. right=563",
+      "tr. right=563",
+      "td.corr right=416",
+      "code. right=404",
+      "td.num right=502",
+      "td. right=563"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"installation status refresh with a deliberately \"",
+      "span \"Tarefa\""
+    ],
+    "route": "/tasks",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"claude\"",
+      "code \"host:claude\"",
+      "span \"devin\"",
+      "code \"host:devin\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\""
+    ],
+    "route": "/graph",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=861",
+      "thead. right=861",
+      "tr. right=861",
+      "th. right=448",
+      "th. right=559",
+      "th. right=661",
+      "th. right=776",
+      "th. right=861",
+      "tbody. right=861",
+      "tr. right=861",
+      "td.nowrap right=448",
+      "td. right=559",
+      "ui-state-badge. right=536",
+      "span.badge right=536",
+      "td. right=661",
+      "td. right=776",
+      "code.corr right=736",
+      "td. right=861",
+      "span.muted right=802",
+      "tr. right=861",
+      "td.nowrap right=448",
+      "td. right=559",
+      "ui-state-badge. right=509",
+      "span.badge right=509",
+      "td. right=661"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/observe",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [
+      "table.table right=881",
+      "thead. right=881",
+      "tr. right=881",
+      "th. right=449",
+      "th. right=681",
+      "th. right=770",
+      "th. right=881",
+      "tbody. right=881",
+      "tr. right=881",
+      "td. right=449",
+      "ui-state-badge. right=430",
+      "span.badge right=430",
+      "td.flow right=681",
+      "td.num right=770",
+      "span.muted right=707",
+      "td. right=881",
+      "code.corr right=845",
+      "tr. right=881",
+      "td. right=449",
+      "ui-state-badge. right=430",
+      "span.badge right=430",
+      "td.flow right=681",
+      "td.num right=770",
+      "span.muted right=707",
+      "td. right=881"
+    ],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/lab",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/versions",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\"",
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"mcp handshake verify\"",
+      "code \"operation:task-fail\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Graph export\"",
+      "code \"skill:graph-export\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/knowledge",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/guide",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 390,
+    "innerW": 390,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Nenhum workspace aberto\""
+    ],
+    "route": "/settings",
+    "tag": "m390",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/install",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/config",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/forges",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/forges/self",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/match",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/federation",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/profiles",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/hosts",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Sim\"",
+      "span \"Não\""
+    ],
+    "route": "/mcp",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Ver detalhes\""
+    ],
+    "route": "/skills",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/agents",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"installation status refresh with a deliberately \"",
+      "span \"Tarefa\""
+    ],
+    "route": "/tasks",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"Reviewer\"",
+      "code \"agent:reviewer\"",
+      "span \"agents\"",
+      "code \"capability:agents\"",
+      "span \"federation\"",
+      "code \"capability:federation\"",
+      "span \"hosts\"",
+      "code \"capability:hosts\"",
+      "span \"install\"",
+      "code \"capability:install\"",
+      "span \"knowledge\"",
+      "code \"capability:knowledge\"",
+      "span \"mcp\"",
+      "code \"capability:mcp\"",
+      "span \"profiles\"",
+      "code \"capability:profiles\"",
+      "span \"skills\"",
+      "code \"capability:skills\"",
+      "span \"tasks\"",
+      "code \"capability:tasks\"",
+      "span \"e2e-forge\"",
+      "code \"forge:e2e-forge\"",
+      "span \"claude\""
+    ],
+    "route": "/graph",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/observe",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "a \"Pular para a lista de eventos\""
+    ],
+    "route": "/execution",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/lab",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/versions",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [
+      "span \"Glue incremental performance architect\"",
+      "code \"agent:glue-incremental-performance-architect\"",
+      "span \"e2e-forge-mcp\"",
+      "code \"mcp:e2e-forge-mcp\"",
+      "span \"e2e-forge-mcp-secondary-with-a-very-long-server-\"",
+      "code \"mcp:e2e-forge-mcp-secondary-with-a-very-long-ser\"",
+      "span \"mcp handshake verify\"",
+      "code \"operation:task-fail\"",
+      "span \"installation status refresh with a deliberately \"",
+      "code \"operation:task-running-long-label-for-timeline-o\"",
+      "span \"Graph export\"",
+      "code \"skill:graph-export\"",
+      "span \"Spark performance tuning — advanced diagnostics\"",
+      "code \"skill:spark-performance-tuning-advanced-diagnost\""
+    ],
+    "route": "/knowledge",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/guide",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/settings",
+    "tag": "light1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "zoom200-1366",
+    "variant": "dense"
+  },
+  {
+    "scrollW": 1366,
+    "innerW": 1366,
+    "overflowX": 0,
+    "overflowing": [],
+    "clipped": [],
+    "route": "/dashboard",
+    "tag": "zoom400-1366",
+    "variant": "dense"
+  }
+]

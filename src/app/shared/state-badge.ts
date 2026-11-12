@@ -42,6 +42,16 @@ const STATE_KIND: Record<string, BadgeKind> = {
   LOADING: 'info',
   EMPTY: 'muted',
   UNAVAILABLE: 'unv',
+  // forge/context/v1 granular vocabulary — manifest state
+  // (available|degraded|unavailable) and health
+  // (healthy|degraded|unverified|broken). A *declared* unavailable is
+  // real negative evidence → error, unlike UNAVAILABLE's "unreachable"
+  // above which stays unv; the atlas panel overrides to unv for that.
+  available: 'ok',
+  degraded: 'warn',
+  unavailable: 'error',
+  healthy: 'ok',
+  broken: 'error',
   // generic
   ok: 'ok',
   warn: 'warn',
@@ -77,6 +87,13 @@ const I18N_PREFIX: Record<string, string> = {
   MISSING: 'environmentState.',
   INVALID: 'environmentState.',
   UNSET: 'environmentState.',
+  // forge/context/v1 — manifest state labels (health shares
+  // 'degraded'/'unverified' labels; healthy|broken get their own keys)
+  available: 'contextState.',
+  degraded: 'contextState.',
+  unavailable: 'contextState.',
+  healthy: 'contextHealth.',
+  broken: 'contextHealth.',
 };
 
 /** Badge semântico — mapeia qualquer estado do contrato para tom+label i18n. */

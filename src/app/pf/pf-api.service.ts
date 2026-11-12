@@ -203,12 +203,24 @@ export class PfApi {
   chatCreate(input: { provider: string; product_id?: string; model?: string }) {
     return this.post<BridgeSession>('/chat/sessions', { confirm: 'create', ...input });
   }
-  chatPrompt(sid: string, text: string, provider?: string) {
+  chatPrompt(
+    sid: string,
+    text: string,
+    provider?: string,
+    opts?: { attachments?: Record<string, unknown>[]; effort?: string },
+  ) {
     return this.post<{ accepted: boolean }>(`/chat/sessions/${encodeURIComponent(sid)}/prompt`, {
       confirm: 'send',
       text,
       provider,
+      ...(opts?.attachments?.length ? { attachments: opts.attachments } : {}),
+      ...(opts?.effort ? { effort: opts.effort } : {}),
     });
+  }
+  pfSkills() {
+    return this.get<{ items: { id: string; name: string; description?: string }[] }>(
+      '/skills',
+    ).pipe(map((r) => r.items));
   }
   chatEvents(sid: string, provider?: string, after_seq = 0) {
     return this.post<{ items: BridgeEvent[] }>(`/chat/sessions/${encodeURIComponent(sid)}/events`, {

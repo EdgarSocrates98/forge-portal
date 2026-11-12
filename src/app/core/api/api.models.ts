@@ -416,6 +416,96 @@ export interface FederationSnapshot {
   installed_forges: string[];
   registry: { count: number; path: string };
   summary: FederationSummary;
+  /**
+   * forge/context-registry/v1 projection — the serving forge's
+   * `.forge/context/` read verbatim by the adapter. Optional: older
+   * adapters (and forges without the context engine) omit the key —
+   * render that as UNVERIFIED, never as "absent".
+   */
+  context?: ContextRegistryProjection;
+}
+
+// ---- forge/context-registry/v1 — granular per-forge projection ------
+//
+// Served inside the federation snapshot by adapters that vendor the
+// forge-context engine. Every field the manifest/registry never
+// recorded stays `null` — the UI must not interpolate. Vocabularies
+// come from `forge/context/v1`: manifest state
+// available|degraded|unavailable, health
+// healthy|degraded|unverified|broken, kind from FORGE_KINDS.
+export type ForgeContextSectionState = 'registered' | 'absent' | 'corrupt' | 'unverified';
+
+export type ForgeKind =
+  | 'specialist'
+  | 'orchestrator'
+  | 'diagnostic-provider'
+  | 'code-intelligence'
+  | 'observability'
+  | 'user-interface'
+  | 'cli-runtime';
+
+export type ForgeManifestState = 'available' | 'degraded' | 'unavailable';
+export type ForgeHealthState = 'healthy' | 'degraded' | 'unverified' | 'broken';
+
+export interface ForgeContextProjection {
+  state: ForgeManifestState | string | null;
+  kind: ForgeKind | string | null;
+  health: ForgeHealthState | string | null;
+  health_checks: number | null;
+  degraded_reasons: string[];
+  /** Discovery mechanisms the capability manifest declared
+   *  (native-runtime|cli|mcp|bundled|workspace-file), deduped. */
+  discovery: string[];
+  discovery_manifest: string | null;
+  scope: string | null;
+  profile: string | null;
+  updated_at: string | null;
+}
+
+export interface ContextRegistryProjection {
+  schema?: string;
+  state: ForgeContextSectionState;
+  path?: string | null;
+  count?: number;
+  detail?: string;
+  forges: Record<string, ForgeContextProjection>;
+}
+
+// ---- forge/PortalAtlasStatus/1 — GET /api/v1/atlas/status ------------
+//
+// The adapter's read-only loopback probe of code-atlas
+// (default http://127.0.0.1:8741, GET /api/v1/health + /index/status).
+// Three named states — a reachable-but-unhappy service is `degraded`,
+// an unreachable one `unavailable` — never a transport error, so the UI
+// renders the verdict as data. `detail` is a stable failure token
+// (connection-refused, timeout, http-503, invalid-json, index:…), not
+// prose. `checked_at` is the real probe time.
+export type AtlasProbeState = 'available' | 'degraded' | 'unavailable';
+
+export interface AtlasRepoIndex {
+  repository_id: number | null;
+  root_handle: string | null;
+  ready_snapshots: number | null;
+  latest_ready: number | null;
+  counts: Record<string, number>;
+}
+
+export interface AtlasIndexStatus {
+  items: AtlasRepoIndex[];
+  repositories: number;
+  ready_snapshots: number;
+}
+
+export interface AtlasStatus {
+  schema: 'forge/PortalAtlasStatus/1';
+  state: AtlasProbeState;
+  url: string | null;
+  service: string | null;
+  api_version: number | null;
+  detail: string | null;
+  health: Record<string, unknown> | null;
+  index: AtlasIndexStatus | null;
+  checked_at: string | null;
 }
 
 /**

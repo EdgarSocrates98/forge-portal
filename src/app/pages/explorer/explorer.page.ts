@@ -12,6 +12,8 @@ import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
 import { Source, buildForgeRows, stamp } from './forges.data';
 import { RegistryOpsPanel } from './registry-ops-panel';
+import { AtlasStatusPanel } from './atlas-panel';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 /**
  * Forja explorer — every Forja the workspace can verify: the Forja
@@ -33,6 +35,7 @@ import { RegistryOpsPanel } from './registry-ops-panel';
     UiIcon,
     UiSkeleton,
     RegistryOpsPanel,
+    AtlasStatusPanel,
   ],
   template: `
     <ui-page-header
@@ -88,6 +91,7 @@ import { RegistryOpsPanel } from './registry-ops-panel';
                 <th scope="col">{{ 'settings.version' | t }}</th>
                 <th scope="col">{{ 'explorer.checkout' | t }}</th>
                 <th scope="col">{{ 'mcp.title' | t }}</th>
+                <th scope="col">{{ 'explorer.context' | t }}</th>
                 <th scope="col">
                   <span class="sr-only">{{ 'state.viewDetails' | t }}</span>
                 </th>
@@ -133,6 +137,41 @@ import { RegistryOpsPanel } from './registry-ops-panel';
                       }}</span>
                     }
                   </td>
+                  <!-- forge/context-registry/v1 granular facets — only what
+                       the manifest/registry really recorded; absent facets
+                       stay UNVERIFIED, never interpolated. -->
+                  <td>
+                    @if (row.context === undefined) {
+                      <ui-state-badge state="UNVERIFIED" />
+                    } @else {
+                      <div class="ctx">
+                        @if (row.context.state) {
+                          <ui-state-badge
+                            [state]="row.context.state"
+                            [attr.title]="'context.state' | t"
+                          />
+                        } @else {
+                          <ui-state-badge state="UNVERIFIED" />
+                        }
+                        @if (row.context.health) {
+                          <ui-state-badge
+                            [state]="row.context.health"
+                            [attr.title]="'context.health' | t"
+                          />
+                        }
+                        @if (row.context.kind) {
+                          <span class="chip chip--mut" [attr.title]="'context.kind' | t">{{
+                            kindLabel(row.context.kind)
+                          }}</span>
+                        }
+                        @for (d of row.context.discovery; track d) {
+                          <span class="chip chip--disc" [attr.title]="'context.discovery' | t">{{
+                            discLabel(d)
+                          }}</span>
+                        }
+                      </div>
+                    }
+                  </td>
                   <td>
                     <a
                       class="icon-btn"
@@ -151,6 +190,8 @@ import { RegistryOpsPanel } from './registry-ops-panel';
         <ui-empty icon="network" [title]="'explorer.empty' | t" />
       }
     </section>
+
+    <atlas-status-panel />
 
     <registry-ops-panel />
   `,
@@ -224,6 +265,17 @@ import { RegistryOpsPanel } from './registry-ops-panel';
       color: var(--fg-muted);
       background: var(--bg-hover);
     }
+    .ctx {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      min-width: 200px;
+    }
+    .chip--disc {
+      color: var(--info);
+      background: var(--info-bg);
+    }
     .muted {
       color: var(--fg-muted);
     }
@@ -239,6 +291,7 @@ import { RegistryOpsPanel } from './registry-ops-panel';
 })
 export class ExplorerPage {
   private readonly api = inject(PortalApi);
+  private readonly i18n = inject(I18nService);
   readonly store = inject(PortalStore);
   readonly fed = new Source<FederationSnapshot>();
   readonly rows = computed(() =>
@@ -248,6 +301,24 @@ export class ExplorerPage {
 
   constructor() {
     void this.load();
+  }
+
+  /** forge/context kind → localized label; unknown kinds render raw
+   *  (forward-compatible — a newer registry vocabulary is still real
+   *  data, not a missing translation). */
+  kindLabel(kind: string): string {
+    return this.labeled('forgeKind', kind);
+  }
+
+  /** Discovery mechanism → localized label; unknown mechanisms raw. */
+  discLabel(mechanism: string): string {
+    return this.labeled('discKind', mechanism);
+  }
+
+  private labeled(prefix: string, value: string): string {
+    const key = `${prefix}.${value}`;
+    const out = this.i18n.t(key);
+    return out === `⟪${key}⟫` ? value : out;
   }
 
   async load(): Promise<void> {

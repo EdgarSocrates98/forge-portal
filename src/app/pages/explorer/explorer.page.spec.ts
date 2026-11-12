@@ -46,6 +46,18 @@ const SNAPSHOT: FederationSnapshot = {
   summary: { catalog: 2, installed: 3, with_mcp: 1, with_checkout: 1 },
 };
 
+const ATLAS_DOWN = {
+  schema: 'forge/PortalAtlasStatus/1' as const,
+  state: 'unavailable' as const,
+  url: 'http://127.0.0.1:8741',
+  service: null,
+  api_version: null,
+  detail: 'connection-refused',
+  health: null,
+  index: null,
+  checked_at: '2026-01-01T10:00:00Z',
+};
+
 function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
   return {
     bootstrap: () => of({ descriptor: DESCRIPTOR, health: HEALTH }),
@@ -59,6 +71,8 @@ function fakeApi(overrides: Partial<PortalApi> = {}): PortalApi {
         present: false,
         forges: {},
       }),
+    // the atlas panel probes on mount — a down service is data, not an error
+    atlasStatus: () => of(ATLAS_DOWN),
     ...overrides,
   } as unknown as PortalApi;
 }
@@ -132,5 +146,41 @@ describe('ExplorerPage', () => {
     // every detail row links to /forges/:id
     const link = reg?.querySelector('a[href="/forges/platform-forge"]');
     expect(link).toBeTruthy();
+  });
+
+  it('projects forge/context granular facets into rows', async () => {
+    const snap: FederationSnapshot = {
+      ...SNAPSHOT,
+      context: {
+        state: 'registered',
+        count: 1,
+        forges: {
+          'spark-forge-aws': {
+            state: 'degraded',
+            kind: 'specialist',
+            health: 'healthy',
+            health_checks: 2,
+            degraded_reasons: ['partial index'],
+            discovery: ['workspace-file', 'cli'],
+            discovery_manifest: 'forge.agentic.json',
+            scope: 'project',
+            profile: 'recommended',
+            updated_at: '2026-01-01T10:00:00Z',
+          },
+        },
+      },
+    };
+    const el = (await setup({ federation: () => of(snap) })).nativeElement as HTMLElement;
+
+    const aws = row(el, 'spark-forge-aws');
+    expect(text(aws)).toContain('Degraded'); // manifest state badge
+    expect(text(aws)).toContain('Specialist'); // kind chip (forgeKind.specialist)
+    expect(text(aws)).toContain('Healthy'); // health badge (contextHealth.healthy)
+    expect(text(aws)).toContain('workspace file'); // discovery chip
+    expect(text(aws)).toContain('CLI');
+
+    // a forge with no context-registry entry stays UNVERIFIED
+    const fda = row(el, 'forge-doctor-api');
+    expect(text(fda)).toContain('UNVERIFIED');
   });
 });

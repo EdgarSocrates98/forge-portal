@@ -2,7 +2,13 @@ import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PortalApi } from '../../core/api/api.client';
-import { FederationSnapshot, FederationSpecialist } from '../../core/api/api.models';
+import {
+  ContextRegistryProjection,
+  FederationSnapshot,
+  FederationSpecialist,
+  ForgeContextProjection,
+} from '../../core/api/api.models';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -363,6 +369,109 @@ type DetailView =
       <ui-empty icon="search" [title]="'explorer.notFound' | t" />
     }
 
+    @if (view().kind === 'serving' || view().kind === 'specialist' || view().kind === 'registry') {
+      <!-- forge/context-registry/v1 projection — every facet renders only
+           what the manifest/registry recorded; null stays UNVERIFIED. -->
+      <section class="card" data-section="context">
+        <div class="sec__head">
+          <div>
+            <h2>{{ 'context.title' | t }}</h2>
+            <p class="src"><code>GET /api/v1/federation · forge/context-registry/v1</code></p>
+          </div>
+        </div>
+        @if (ctxSection() === undefined) {
+          <div class="unv" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'context.noSection' | t }}</span>
+          </div>
+        } @else if (ctxSection()!.state !== 'registered') {
+          <div class="unv" role="note">
+            <ui-state-badge [state]="ctxBadge(ctxSection()!)" />
+            <span>{{ ('context.section.' + ctxSection()!.state) | t }}</span>
+            @if (ctxSection()!.path) {
+              <code class="muted">{{ ctxSection()!.path }}</code>
+            }
+          </div>
+        } @else if (ctx() === undefined) {
+          <div class="unv" role="note">
+            <ui-state-badge state="UNVERIFIED" />
+            <span>{{ 'context.noEntry' | t }}</span>
+          </div>
+        } @else {
+          <dl class="kv">
+            <div>
+              <dt>{{ 'context.state' | t }}</dt>
+              <dd>
+                @if (ctx()!.state) {
+                  <ui-state-badge [state]="ctx()!.state!" />
+                } @else {
+                  <ui-state-badge state="UNVERIFIED" />
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'context.health' | t }}</dt>
+              <dd>
+                @if (ctx()!.health) {
+                  <ui-state-badge [state]="ctx()!.health!" />
+                  @if (ctx()!.health_checks !== null) {
+                    <small class="muted"
+                      >{{ 'context.checks' | t: { count: ctx()!.health_checks ?? 0 } }}</small
+                    >
+                  }
+                } @else {
+                  <ui-state-badge state="UNVERIFIED" />
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'context.kind' | t }}</dt>
+              <dd>
+                @if (ctx()!.kind) {
+                  <span class="cap cap--kind">{{ kindLabel(ctx()!.kind!) }}</span>
+                } @else {
+                  <ui-state-badge state="UNVERIFIED" />
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'context.discovery' | t }}</dt>
+              <dd class="ctx__disc">
+                @if (ctx()!.discovery.length) {
+                  @for (d of ctx()!.discovery; track d) {
+                    <span class="cap cap--disc">{{ discLabel(d) }}</span>
+                  }
+                } @else {
+                  <ui-state-badge state="UNVERIFIED" />
+                }
+                @if (ctx()!.discovery_manifest) {
+                  <code class="muted">{{ ctx()!.discovery_manifest }}</code>
+                }
+              </dd>
+            </div>
+            @if (ctx()!.degraded_reasons.length) {
+              <div>
+                <dt>{{ 'context.degradedReasons' | t }}</dt>
+                <dd>
+                  @for (r of ctx()!.degraded_reasons; track r) {
+                    <span class="cap cap--disc">{{ r }}</span>
+                  }
+                </dd>
+              </div>
+            }
+            <div>
+              <dt>{{ 'context.scope' | t }}</dt>
+              <dd>{{ ctx()!.scope ?? ('state.none' | t) }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'context.updatedAt' | t }}</dt>
+              <dd>{{ ctx()!.updated_at ?? ('state.none' | t) }}</dd>
+            </div>
+          </dl>
+        }
+      </section>
+    }
+
     @if (view().kind === 'pending') {
       @if (fed.unavailable()) {
         <section class="card">
@@ -494,6 +603,21 @@ type DetailView =
       gap: 4px;
       margin-left: 6px;
     }
+    .cap--kind {
+      color: var(--accent-ink);
+      background: var(--accent-bg);
+    }
+    .cap--disc {
+      color: var(--info);
+      background: var(--info-bg);
+      margin-right: 4px;
+    }
+    .ctx__disc {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+    }
     .muted {
       color: var(--fg-muted);
     }
@@ -511,6 +635,7 @@ type DetailView =
 export class ForgeDetailPage {
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(PortalApi);
+  private readonly i18n = inject(I18nService);
   readonly store = inject(PortalStore);
 
   readonly id = signal('self');
@@ -537,6 +662,51 @@ export class ForgeDetailPage {
   readonly title = computed(() =>
     this.view().kind === 'serving' ? (this.descriptor()?.forge_name ?? this.id()) : this.id(),
   );
+
+  /** forge/context-registry/v1 section + this forge's entry inside it.
+   *  `undefined` = no projection in the snapshot → UNVERIFIED. */
+  readonly ctxSection = computed<ContextRegistryProjection | undefined>(
+    () => this.fed.data()?.context,
+  );
+  readonly ctx = computed<ForgeContextProjection | undefined>(() => {
+    const forges = this.ctxSection()?.forges;
+    if (!forges) return undefined;
+    if (this.view().kind === 'serving') {
+      const fid = this.descriptor()?.forge_id;
+      return fid ? forges[fid] : undefined;
+    }
+    return forges[this.id()];
+  });
+
+  /** Section-level states → badge tone: absent/corrupt are named
+   *  findings, unverified the honest fallback. */
+  ctxBadge(section: ContextRegistryProjection): string {
+    switch (section.state) {
+      case 'absent':
+        return 'EMPTY';
+      case 'corrupt':
+        return 'FAILED';
+      default:
+        return 'UNVERIFIED';
+    }
+  }
+
+  /** forge/context kind → localized label; unknown kinds render raw
+   *  (forward-compatible — a newer vocabulary is still real data). */
+  kindLabel(kind: string): string {
+    return this.labeled('forgeKind', kind);
+  }
+
+  /** Discovery mechanism → localized label; unknown mechanisms raw. */
+  discLabel(mechanism: string): string {
+    return this.labeled('discKind', mechanism);
+  }
+
+  private labeled(prefix: string, value: string): string {
+    const key = `${prefix}.${value}`;
+    const out = this.i18n.t(key);
+    return out === `⟪${key}⟫` ? value : out;
+  }
 
   readonly specialistVersion = specialistVersion;
   readonly stamp = stamp;

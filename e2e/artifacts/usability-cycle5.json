@@ -671,7 +671,7 @@
       "step": "6-graph-relationships",
       "goal": "node inspector via list fallback",
       "url": "graph",
-      "keystrokes": 23,
+      "keystrokes": 22,
       "goal_reached": true,
       "friction": [],
       "trail": [
@@ -872,21 +872,97 @@
       "step": "8-inspect-execution",
       "goal": "execution row activates detail",
       "url": "execution",
-      "keystrokes": 58,
+      "keystrokes": 14,
       "goal_reached": true,
-      "friction": [
-        "deep tab order: 58 keystrokes"
-      ],
+      "friction": [],
       "trail": [
         {
-          "key": "Tab",
+          "key": "Control+k",
           "focus": {
-            "tag": "button",
-            "cls": "tl__row",
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "type:execution",
+          "focus": {
+            "tag": "input",
+            "cls": "cp__input",
+            "role": "combobox",
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": false
+          }
+        },
+        {
+          "key": "Enter",
+          "focus": {
+            "tag": "main",
+            "cls": "content",
             "role": null,
             "href": null,
             "name": null,
-            "text": "ui-mvdqw…21 ms",
+            "text": "ExecuçãoEventos de execução registrados — timestamps reais, intervalos",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "btn",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "Atualizar",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "hint__more",
+            "role": null,
+            "href": "/guide#evidence",
+            "name": null,
+            "text": "Saiba mais",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "button",
+            "cls": "hint__x",
+            "role": null,
+            "href": null,
+            "name": null,
+            "text": "",
+            "visible": true,
+            "inMain": true
+          }
+        },
+        {
+          "key": "Tab",
+          "focus": {
+            "tag": "a",
+            "cls": "kb-skip sr-only",
+            "role": null,
+            "href": "#ex-ev",
+            "name": null,
+            "text": "Pular para a lista de eventos",
             "visible": true,
             "inMain": true
           }
@@ -899,98 +975,20 @@
             "role": null,
             "href": null,
             "name": null,
-            "text": "ui-mvdqw…23 ms",
+            "text": "ui-mw7mx…21 ms",
             "visible": true,
             "inMain": true
           }
         },
         {
-          "key": "Tab",
+          "key": "Enter",
           "focus": {
             "tag": "button",
             "cls": "tl__row",
             "role": null,
             "href": null,
             "name": null,
-            "text": "ui-mvdqw…21 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqw…21 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqw…22 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqw…20 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqw…21 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqx…20 ms",
-            "visible": true,
-            "inMain": true
-          }
-        },
-        {
-          "key": "Tab",
-          "focus": {
-            "tag": "button",
-            "cls": "tl__row",
-            "role": null,
-            "href": null,
-            "name": null,
-            "text": "ui-mvdqx…10 ms",
+            "text": "ui-mw7mx…21 ms",
             "visible": true,
             "inMain": true
           }
@@ -1042,7 +1040,7 @@
             "role": null,
             "href": null,
             "name": null,
-            "text": "—operation.start18/10/2026, 08:31:49startedportal_core → GET /bootstra",
+            "text": "—operation.start08/11/2026, 06:33:23startedportal_core → GET /bootstra",
             "visible": true,
             "inMain": true
           }
@@ -1055,7 +1053,7 @@
             "role": null,
             "href": null,
             "name": null,
-            "text": "—operation.start18/10/2026, 08:31:49startedportal_core → GET /bootstra",
+            "text": "—operation.start08/11/2026, 06:33:23startedportal_core → GET /bootstra",
             "visible": true,
             "inMain": true
           }
@@ -1193,7 +1191,7 @@
   "summary": {
     "steps_ok": 9,
     "total": 9,
-    "total_keystrokes": 138,
-    "frictions": 1
+    "total_keystrokes": 93,
+    "frictions": 0
   }
 }
