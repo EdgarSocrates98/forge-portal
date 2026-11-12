@@ -11,6 +11,7 @@ export const PT_BR: Record<string, string> = {
   'nav.hosts': 'Hosts de IA',
   'nav.mcp': 'MCP',
   'nav.skills': 'Skills',
+  'nav.resources': 'Recursos',
   'nav.agents': 'Agents',
   'nav.tasks': 'Tarefas',
   'nav.apiOperations': 'Operações de API',
@@ -302,6 +303,25 @@ export const PT_BR: Record<string, string> = {
 
   // skills
   'skills.title': 'Skills',
+
+  // resources
+  'resources.title': 'Recursos',
+  'resources.subtitle': 'Catálogo federado de recursos — metadados e localizações do workspace.',
+  'resources.search': 'Buscar recursos…',
+  'resources.forge': 'Forja',
+  'resources.kind': 'Tipo',
+  'resources.class': 'Classe',
+  'resources.state': 'Estado',
+  'resources.location': 'Localização',
+  'resources.packaged': 'Localização empacotada',
+  'resources.tags': 'Tags',
+  'resources.description': 'Descrição',
+  'resources.count': 'recursos',
+  'resources.unavailable': 'indisponíveis',
+  'resources.allKinds': 'Todos os tipos',
+  'resources.empty': 'Nenhum recurso corresponde aos filtros.',
+  'resources.none': 'Nenhum catálogo de recursos servido para este workspace.',
+  'resources.manifestErrors': 'Manifests ilegíveis',
   'skills.subtitle': 'Catálogo real de skills desta Forja.',
   'skills.search': 'Buscar skills…',
   'skills.domain': 'Domínio',

@@ -255,6 +255,55 @@ def portal_version() -> str:
     return PORTAL_VERSION
 
 
+def workspace_resources(root: str | None) -> dict[str, Any]:
+    """Resource Catalog surface for the Portal (Onda 10/§17.3).
+
+    Scans ``<root>/*/forge.agentic.json`` and returns *metadata only* —
+    id, kind, class, availability, declared location. Resource bodies are
+    never read here (access policy: list + locate, not stream contents).
+    Unavailable/conditional entries keep their explicit reasons.
+    """
+    import json
+
+    out: dict[str, Any] = {"workspace": root, "forges": [], "resources": [], "errors": []}
+    if not root:
+        return out
+    base = Path(root)
+    if not base.is_dir():
+        out["errors"].append(f"workspace root not found: {root}")
+        return out
+    for repo in sorted(base.iterdir()):
+        mp = repo / "forge.agentic.json"
+        if not repo.is_dir() or not mp.is_file():
+            continue
+        try:
+            doc = json.loads(mp.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            out["errors"].append(f"{repo.name}: unreadable manifest: {exc}")
+            continue
+        fid = doc.get("forge_id") or doc.get("id") or repo.name
+        out["forges"].append(fid)
+        for e in doc.get("resources") or []:
+            if not isinstance(e, dict) or not e.get("id"):
+                continue
+            out["resources"].append(
+                {
+                    "forge_id": fid,
+                    "id": e["id"],
+                    "kind": e.get("kind"),
+                    "resource_class": e.get("resource_class"),
+                    "availability": e.get("availability", "available"),
+                    "unavailable_reason": e.get("unavailable_reason"),
+                    "location": e.get("location"),
+                    "packaged_location": e.get("packaged_location"),
+                    "tags": e.get("tags") or [],
+                    "description": e.get("description"),
+                    "format": e.get("format"),
+                }
+            )
+    return out
+
+
 def workspace_name(root: str | None) -> str | None:
     if not root:
         return None
@@ -1284,6 +1333,12 @@ def default_operations(adapter: PortalAdapter) -> list[Operation]:
             "/capabilities",
             lambda ctx: adapter.capabilities(),
             cache_ttl=60.0,
+        ),
+        Operation(
+            "GET",
+            "/resources",
+            lambda ctx: workspace_resources(adapter.workspace),
+            cache_ttl=15.0,
         ),
         Operation(
             "GET",

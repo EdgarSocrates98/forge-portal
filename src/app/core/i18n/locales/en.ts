@@ -13,6 +13,7 @@ export const EN: Record<string, string> = {
   'nav.hosts': 'AI hosts',
   'nav.mcp': 'MCP',
   'nav.skills': 'Skills',
+  'nav.resources': 'Resources',
   'nav.agents': 'Agents',
   'nav.tasks': 'Tasks',
   'nav.apiOperations': 'API Operations',
@@ -302,6 +303,25 @@ export const EN: Record<string, string> = {
 
   // skills
   'skills.title': 'Skills',
+
+  // resources
+  'resources.title': 'Resources',
+  'resources.subtitle': 'Federated Resource Catalog — metadata and locations across the workspace.',
+  'resources.search': 'Search resources…',
+  'resources.forge': 'Forge',
+  'resources.kind': 'Kind',
+  'resources.class': 'Class',
+  'resources.state': 'State',
+  'resources.location': 'Location',
+  'resources.packaged': 'Packaged location',
+  'resources.tags': 'Tags',
+  'resources.description': 'Description',
+  'resources.count': 'resources',
+  'resources.unavailable': 'unavailable',
+  'resources.allKinds': 'All kinds',
+  'resources.empty': 'No resource matches the filters.',
+  'resources.none': 'No resource catalog served for this workspace.',
+  'resources.manifestErrors': 'Unreadable manifests',
   'skills.subtitle': "This Forge's real skill catalog.",
   'skills.search': 'Search skills…',
   'skills.domain': 'Domain',

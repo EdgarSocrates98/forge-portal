@@ -81,6 +81,7 @@ describe('App shell', () => {
       '/forges',
       '/agents',
       '/skills',
+      '/resources',
       '/mcp',
       '/knowledge',
       '/pf',

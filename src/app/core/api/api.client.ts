@@ -40,6 +40,7 @@ import {
   TaskExecution,
   VersionInfo,
   LabData,
+  WorkspaceResources,
 } from './api.models';
 import { ApiError } from './api.error';
 
@@ -151,6 +152,17 @@ export class PortalApi {
   }
   capabilities() {
     return this.memoGet<PortalCapability[]>('/capabilities', 60_000);
+  }
+  /** Resource Catalog surface (Onda 10/§17.3) — metadata only, memoized. */
+  workspaceResources() {
+    return this.memoGet<WorkspaceResources>('/resources', 15_000).pipe(
+      this.unavailable<WorkspaceResources>({
+        workspace: null,
+        forges: [],
+        resources: [],
+        errors: [],
+      }),
+    );
   }
   installationStatus() {
     return this.memoGet<PortalHealth>('/installation/status', 5_000).pipe(
