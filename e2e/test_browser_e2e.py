@@ -527,9 +527,9 @@ def test_cycle5_guide_and_hints(page, portal):
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(300)
     sections = page.locator(".gsec")
-    assert sections.count() == 9, f"expected 9 guide sections, got {sections.count()}"
+    assert sections.count() == 10, f"expected 10 guide sections, got {sections.count()}"
     for anchor in ("start", "forge", "agent", "skill", "mcp",
-                   "graph", "install", "diagnose", "evidence"):
+                   "graph", "install", "diagnose", "evidence", "resources"):
         assert page.locator(f".gsec#{anchor}").count() == 1
     _shot(page, "24-guide")
 
