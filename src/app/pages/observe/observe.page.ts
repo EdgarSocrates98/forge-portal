@@ -96,7 +96,14 @@ interface ObserveRow {
             @for (c of counters(); track c.key) {
               <div class="counter" [attr.data-counter]="c.key">
                 <span class="counter__value">{{ c.value }}</span>
-                <span class="counter__key">{{ c.key }}</span>
+                <span class="counter__key">
+                  @for (seg of c.segments; track seg; let last = $last) {
+                    <span class="counter__seg">{{ seg }}</span>
+                    @if (!last) {
+                      <span class="counter__sep">.<wbr /></span>
+                    }
+                  }
+                </span>
               </div>
             }
           </div>
@@ -304,7 +311,8 @@ interface ObserveRow {
     .counter__key {
       font-size: var(--font-xs);
       color: var(--fg-muted);
-      overflow-wrap: anywhere;
+      /* segments carry <wbr> at dots — mid-word break only as last resort */
+      overflow-wrap: break-word;
     }
     .truncated {
       display: flex;
@@ -381,7 +389,7 @@ export class ObservePage implements OnInit {
   /** Counter entries sorted by key — the map order is never trusted. */
   readonly counters = computed(() =>
     Object.entries(this.report()?.counters ?? {})
-      .map(([key, value]) => ({ key, value }))
+      .map(([key, value]) => ({ key, value, segments: key.split('.') }))
       .sort((a, b) => a.key.localeCompare(b.key)),
   );
 

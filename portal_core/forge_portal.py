@@ -767,7 +767,10 @@ class PortalHandler(BaseHTTPRequestHandler):
         op = self._find_op(method, rel)
         if op is None:
             self._refused(cid, "PORTAL-NOT-FOUND", rel)
-            self._send_json(404, self._envelope(cid, error=_err("PORTAL-NOT-FOUND", f"no such operation: {rel}")))
+            # _reject (not _send_json): an unknown POST op carries a body the
+            # next keep-alive request would otherwise inherit — the socket
+            # must be drained before responding.
+            self._reject(404, self._envelope(cid, error=_err("PORTAL-NOT-FOUND", f"no such operation: {rel}")))
             return
         params = op[1]
         operation = op[0]

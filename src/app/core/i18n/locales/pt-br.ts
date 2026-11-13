@@ -463,6 +463,8 @@ export const PT_BR: Record<string, string> = {
   'graph.buildHint': 'A visualização federada abaixo continua disponível com as fontes carregadas.',
   'graph.own.title': 'Grafo fornecido pela Forja',
   'graph.own.available': 'Disponível',
+  'graph.own.computing': 'Computando',
+  'graph.own.computingInfo': 'O grafo federado está sendo computado em segundo plano.',
   'graph.own.noGraph': 'Esta Forja ainda não forneceu uma visualização própria.',
   'graph.own.noGraphHint': 'Execute a coleta de grafo pela Forja e recarregue esta página.',
   'graph.own.unavailable': 'Este adaptador não expõe o endpoint de grafo.',
@@ -584,6 +586,7 @@ export const PT_BR: Record<string, string> = {
   'knowledge.title': 'Conhecimento',
   'knowledge.subtitle': 'Documentação, receitas e guias desta Forja — PT-BR primeiro.',
   'knowledge.search': 'O que você quer resolver?',
+  'knowledge.search.action': 'Buscar',
   'knowledge.placeholder': 'Ex.: como analisar um Glue Job',
   'knowledge.results': '{count, plural, one{# resultado} other{# resultados}}',
   'knowledge.empty': 'Nada encontrado — tente outro termo.',
@@ -1218,6 +1221,9 @@ export const PT_BR: Record<string, string> = {
   'guide.evidence.title': 'Interpretar evidências',
   'guide.evidence.body':
     'Evidência é o que separa fato de suposição: receipts, correlation ids, timestamps e estados declarados vêm do produtor. Execução reproduz os eventos registrados — lacunas aparecem como lacunas, nunca como dados simulados.',
+  'guide.resources.title': 'O que são recursos',
+  'guide.resources.body':
+    'Recursos são os artefatos que as Forjas expõem — skills, contratos, regras, exemplos e conhecimento — com metadados e localização reais no workspace. A página Recursos lista o catálogo federado; Match responde “quem cobre a capacidade X”.',
 
   // dicas contextuais (§8.1) — uma linha por página, dispensável
   'hint.more': 'Saiba mais',
@@ -1240,6 +1246,8 @@ export const PT_BR: Record<string, string> = {
     'Tarefas registradas mostram estágio, saída e recusas — selecione uma para ver timeline e evidências.',
   'hint.evidence':
     'Telemetria real: cada evento traz timestamp e correlation id do produtor — lacunas aparecem como lacunas.',
+  'hint.resources':
+    'O catálogo federado lista os recursos reais declarados por cada Forja — indisponíveis aparecem como indisponíveis.',
 
   // preferências (§8.2)
   'settings.density': 'Densidade visual',

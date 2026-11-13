@@ -4,17 +4,19 @@ import { PfApi } from '../pf-api.service';
 import { PfBoard, PfProduct } from '../pf.models';
 import { PageHeader } from '../../shared/page-header';
 import { ToastService } from '../../shared/toast';
+import { ErrorState } from '../../shared/error-state';
+import { ApiError } from '../../core/api/api.error';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 
 @Component({
   selector: 'page-pf-boards',
   standalone: true,
-  imports: [FormsModule, PageHeader, TPipe],
+  imports: [FormsModule, PageHeader, TPipe, ErrorState],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ui-page-header [title]="'pf.boards.title' | t" [subtitle]="'pf.boards.subtitle' | t" />
-    @if (error()) {
-      <p class="bad" role="alert">{{ error() }}</p>
+    @if (error(); as e) {
+      <ui-error [error]="e" (retry)="loadProducts()" />
     }
     <section class="toolbar card">
       <label
@@ -65,8 +67,8 @@ import { TPipe } from '../../core/i18n/i18n.pipe';
           </section>
         }
       </div>
-    } @else {
-      <p class="muted">{{ error() || ('pf.boards.noProduct' | t) }}</p>
+    } @else if (!error()) {
+      <p class="muted">{{ 'pf.boards.noProduct' | t }}</p>
     }
   `,
   styles: [
@@ -161,11 +163,16 @@ export class PfBoardsPage implements OnInit {
   readonly products = signal<PfProduct[]>([]);
   readonly productId = signal('');
   readonly board = signal<PfBoard | null>(null);
-  readonly error = signal('');
+  readonly error = signal<ApiError | null>(null);
   readonly dragging = signal<string | null>(null);
   newTitle = '';
 
   ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.error.set(null);
     this.api.products().subscribe({
       next: (r) => {
         this.products.set(r.items);
@@ -219,6 +226,6 @@ export class PfBoardsPage implements OnInit {
     });
   }
   private fail(e: unknown): void {
-    this.error.set(e instanceof Error ? e.message : 'Não foi possível carregar o board.');
+    this.error.set(e instanceof ApiError ? e : new ApiError(0));
   }
 }

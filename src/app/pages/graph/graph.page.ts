@@ -2297,17 +2297,21 @@ export class GraphPage {
   graphAvailabilityLabel(state: GraphBundle['availability']['state']): string {
     return state === 'available'
       ? 'graph.own.available'
-      : state === 'unavailable'
-        ? 'graph.source.unavailable'
-        : 'state.unverified';
+      : state === 'computing'
+        ? 'graph.own.computing'
+        : state === 'unavailable'
+          ? 'graph.source.unavailable'
+          : 'state.unverified';
   }
 
   graphAvailabilityTitle(state: GraphBundle['availability']['state']): string {
     return state === 'no_graph'
       ? 'graph.own.noGraph'
-      : state === 'unavailable'
-        ? 'graph.own.unavailable'
-        : 'graph.own.unverified';
+      : state === 'computing'
+        ? 'graph.own.computingInfo'
+        : state === 'unavailable'
+          ? 'graph.own.unavailable'
+          : 'graph.own.unverified';
   }
 
   graphAvailabilityHint(state: GraphBundle['availability']['state']): string {
