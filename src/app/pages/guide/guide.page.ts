@@ -108,6 +108,16 @@ const SECTIONS: GuideSection[] = [
       { route: '/tasks', labelKey: 'nav.tasks' },
     ],
   },
+  {
+    id: 'resources',
+    icon: 'folder',
+    titleKey: 'guide.resources.title',
+    bodyKey: 'guide.resources.body',
+    links: [
+      { route: '/resources', labelKey: 'nav.resources' },
+      { route: '/match', labelKey: 'nav.match' },
+    ],
+  },
 ];
 
 @Component({

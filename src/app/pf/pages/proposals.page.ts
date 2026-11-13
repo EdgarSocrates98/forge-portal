@@ -6,11 +6,13 @@ import { PfApi } from '../pf-api.service';
 import { PfProduct, PfTaskProposal } from '../pf.models';
 import { PageHeader } from '../../shared/page-header';
 import { ToastService } from '../../shared/toast';
+import { ErrorState } from '../../shared/error-state';
+import { ApiError } from '../../core/api/api.error';
 
 @Component({
   selector: 'page-pf-proposals',
   standalone: true,
-  imports: [FormsModule, PageHeader, TPipe],
+  imports: [FormsModule, PageHeader, TPipe, ErrorState],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ui-page-header [title]="'pf.proposals.title' | t" [subtitle]="'pf.proposals.subtitle' | t" />
@@ -25,8 +27,8 @@ import { ToastService } from '../../shared/toast';
       </label>
       <button class="btn btn--mini" (click)="load()">{{ 'pf.proposals.refresh' | t }}</button>
     </section>
-    @if (error()) {
-      <p class="bad" role="alert">{{ error() }}</p>
+    @if (error(); as e) {
+      <ui-error [error]="e" (retry)="loadProducts()" />
     }
     <div class="list">
       @for (proposal of pending(); track proposal.id) {
@@ -97,10 +99,14 @@ import { ToastService } from '../../shared/toast';
           </div>
         </article>
       } @empty {
-        <section class="card empty">
-          <h2>{{ 'pf.proposals.empty' | t }}</h2>
-          <p class="muted">{{ 'pf.proposals.emptyHint' | t }}</p>
-        </section>
+        <!-- a load failure is not "no pending proposals" — only the
+             verified-empty list earns the empty state -->
+        @if (!error()) {
+          <section class="card empty">
+            <h2>{{ 'pf.proposals.empty' | t }}</h2>
+            <p class="muted">{{ 'pf.proposals.emptyHint' | t }}</p>
+          </section>
+        }
       }
     </div>
   `,
@@ -234,9 +240,13 @@ export class PfProposalsPage implements OnInit {
   readonly products = signal<PfProduct[]>([]);
   readonly productId = signal('');
   readonly proposals = signal<PfTaskProposal[]>([]);
-  readonly error = signal('');
+  readonly error = signal<ApiError | null>(null);
   readonly pending = () => this.proposals().filter((p) => p.state === 'proposed');
   ngOnInit(): void {
+    this.loadProducts();
+  }
+  loadProducts(): void {
+    this.error.set(null);
     this.api.products().subscribe({
       next: (r) => {
         this.products.set(r.items);
@@ -253,7 +263,7 @@ export class PfProposalsPage implements OnInit {
     if (!this.productId()) return;
     try {
       this.proposals.set((await firstValueFrom(this.api.taskProposals(this.productId()))).items);
-      this.error.set('');
+      this.error.set(null);
     } catch (e) {
       this.fail(e);
     }
@@ -297,6 +307,6 @@ export class PfProposalsPage implements OnInit {
     );
   }
   private fail(e: unknown): void {
-    this.error.set(e instanceof Error ? e.message : 'Unable to load proposals.');
+    this.error.set(e instanceof ApiError ? e : new ApiError(0));
   }
 }

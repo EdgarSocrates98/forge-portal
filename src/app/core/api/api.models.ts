@@ -357,7 +357,7 @@ export interface TaskEventReport {
 }
 
 export interface GraphAvailability {
-  state: 'available' | 'no_graph' | 'disabled' | 'unverified' | 'unavailable';
+  state: 'available' | 'no_graph' | 'disabled' | 'unverified' | 'unavailable' | 'computing';
   detail?: string;
   refusal?: string;
   unlock?: string;

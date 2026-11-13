@@ -87,7 +87,7 @@ const norm = (s: string): string =>
         }
       </ui-filter-bar>
 
-      <ui-filter-bar [(query)]="query" placeholder="resources.search">
+      <div class="chip-row" role="group" [attr.aria-label]="'resources.kind' | t">
         <button
           class="fg-pill"
           type="button"
@@ -108,7 +108,7 @@ const norm = (s: string): string =>
             {{ k }}
           </button>
         }
-      </ui-filter-bar>
+      </div>
 
       <p class="muted count">
         {{ filtered().length }} / {{ d.resources.length }} {{ 'resources.count' | t }} ·
@@ -267,6 +267,12 @@ const norm = (s: string): string =>
       border-left: 3px solid var(--warn);
       margin-bottom: var(--space-3);
       font-size: var(--font-sm);
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
     }
     .card--table {
       padding: var(--space-3);

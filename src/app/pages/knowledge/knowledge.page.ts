@@ -137,7 +137,7 @@ const KIND_ICON: Record<FedNodeKind, string> = {
           (click)="searchDocs()"
         >
           <ui-icon name="search" [size]="14" />
-          {{ 'knowledge.search' | t }}
+          {{ 'knowledge.search.action' | t }}
         </button>
       </div>
     </section>

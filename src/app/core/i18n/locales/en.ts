@@ -463,6 +463,8 @@ export const EN: Record<string, string> = {
   'graph.buildHint': 'The federated view below remains available from the sources that answered.',
   'graph.own.title': 'Forge-provided graph',
   'graph.own.available': 'Available',
+  'graph.own.computing': 'Computing',
+  'graph.own.computingInfo': 'The federated graph is being computed in the background.',
   'graph.own.noGraph': 'This Forge has not provided its own graph view yet.',
   'graph.own.noGraphHint': 'Run the Forge graph collection, then reload this page.',
   'graph.own.unavailable': 'This adapter does not expose the graph endpoint.',
@@ -584,6 +586,7 @@ export const EN: Record<string, string> = {
   'knowledge.title': 'Knowledge',
   'knowledge.subtitle': 'Docs, recipes and guides for this Forge — PT-BR first.',
   'knowledge.search': 'What do you want to solve?',
+  'knowledge.search.action': 'Search',
   'knowledge.placeholder': 'E.g.: how to analyze a Glue Job',
   'knowledge.results': '{count, plural, one{# result} other{# results}}',
   'knowledge.empty': 'Nothing found — try another term.',
@@ -1207,6 +1210,9 @@ export const EN: Record<string, string> = {
   'guide.evidence.title': 'Reading evidence',
   'guide.evidence.body':
     'Evidence is what separates fact from assumption: receipts, correlation ids, timestamps and declared states come from the producer. Execution replays the recorded events — gaps render as gaps, never as simulated data.',
+  'guide.resources.title': 'What resources are',
+  'guide.resources.body':
+    'Resources are the artifacts Forges expose — skills, contracts, rules, examples and knowledge — with real metadata and workspace locations. The Resources page lists the federated catalog; Match answers “who covers capability X”.',
 
   // contextual hints (§8.1) — one line per page, dismissible
   'hint.more': 'Learn more',
@@ -1229,6 +1235,8 @@ export const EN: Record<string, string> = {
     'Recorded tasks show stage, exit code and refusals — select one to see its timeline and evidence.',
   'hint.evidence':
     'Real telemetry: every event carries the producer’s timestamp and correlation id — gaps render as gaps.',
+  'hint.resources':
+    'The federated catalog lists the real resources declared by each Forge — unavailable ones render as unavailable.',
 
   // preferences (§8.2)
   'settings.density': 'Visual density',
