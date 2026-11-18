@@ -71,9 +71,11 @@ responsabilidade do orquestrador/host que sobe o portal.
 
 - **Context accounting por recurso** (tokens/bytes por recurso
   carregado, Context Observatory §20.4): `UNSUPPORTED` em todos os
-  adapters vendored — o portal exibe o que o adapter observa e marca o
-  restante como `unverified`/`unavailable`. É uma delegação registrada
-  (gap de homologação #1), não uma lacuna silenciosa.
+  adapters — o portal exibe o que o adapter observa e marca o restante
+  como `unverified`/`unavailable`. É uma delegação registrada (gap de
+  homologação #1), não uma lacuna silenciosa.
 - **`/events` (forge/PortalEvent/1)**: opt-in por adapter via
-  `self.event_sink`; nenhum adapter vendored o monta hoje — ver
-  `docs/homologation/README.md`.
+  `self.event_sink` + `telemetry.operations`; os adapters **instalados**
+  já o montam (homologação VERIFIED ×7 em 2026-11-18) — adapters de
+  checkouts mais antigos podem não expor o endpoint, que então responde
+  `PORTAL-UNSUPPORTED` honestamente.
