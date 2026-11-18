@@ -13,6 +13,7 @@ import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { existsSync } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { createInterface } from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -21,7 +22,10 @@ import path from 'node:path';
 const PORTAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATIC_ROOT = path.join(PORTAL_ROOT, 'dist', 'forge-portal-app', 'browser');
 const TTY = Boolean(process.stdin.isTTY && process.stdout.isTTY);
-const VERSION = '1.1.1';
+// Single version track: package.json is the only source — the literal
+// used to drift a release behind (1.1.1 vs 1.1.3). Read it, never
+// duplicate it.
+const VERSION = createRequire(import.meta.url)('../package.json').version;
 
 const status = () => ({
   schema: 'forge-portal/cli/v1',
@@ -50,10 +54,6 @@ function usage() {
   output.write('  forge-portal start           start Angular dev server\n');
   output.write('  forge-portal status          inspect the local CLI contract\n');
   output.write('  forge-portal --json status   machine-readable output\n');
-}
-
-function npmCommand() {
-  return process.platform === 'win32' ? 'npm.cmd' : 'npm';
 }
 
 function contentType(file) {
@@ -129,10 +129,12 @@ function startServer({ host = '127.0.0.1', port = '4200' } = {}) {
     void startStaticServer({ host, port });
     return;
   }
-  const child = spawn(npmCommand(), ['run', 'start', '--', '--host', host, '--port', port], {
+  // Spawn ng.js through the running Node directly — no `npm run`, no
+  // shell. `shell: true`/`npm.cmd` is an injection-prone indirection on
+  // Windows and is not needed to reach the dev server.
+  const child = spawn(process.execPath, [angularCli, 'serve', '--host', host, '--port', port], {
     cwd: PORTAL_ROOT,
     stdio: 'inherit',
-    shell: process.platform === 'win32',
   });
   child.on('error', (error) => {
     output.write(`Unable to start Portal: ${error.message}\n`);
