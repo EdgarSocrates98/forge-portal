@@ -57,18 +57,20 @@ function usage() {
 }
 
 function contentType(file) {
-  return {
-    '.css': 'text/css; charset=utf-8',
-    '.html': 'text/html; charset=utf-8',
-    '.ico': 'image/x-icon',
-    '.js': 'text/javascript; charset=utf-8',
-    '.json': 'application/json; charset=utf-8',
-    '.map': 'application/json; charset=utf-8',
-    '.svg': 'image/svg+xml',
-    '.txt': 'text/plain; charset=utf-8',
-    '.woff': 'font/woff',
-    '.woff2': 'font/woff2',
-  }[path.extname(file).toLowerCase()] || 'application/octet-stream';
+  return (
+    {
+      '.css': 'text/css; charset=utf-8',
+      '.html': 'text/html; charset=utf-8',
+      '.ico': 'image/x-icon',
+      '.js': 'text/javascript; charset=utf-8',
+      '.json': 'application/json; charset=utf-8',
+      '.map': 'application/json; charset=utf-8',
+      '.svg': 'image/svg+xml',
+      '.txt': 'text/plain; charset=utf-8',
+      '.woff': 'font/woff',
+      '.woff2': 'font/woff2',
+    }[path.extname(file).toLowerCase()] || 'application/octet-stream'
+  );
 }
 
 async function startStaticServer({ host = '127.0.0.1', port = '4200' } = {}) {
@@ -91,7 +93,8 @@ async function startStaticServer({ host = '127.0.0.1', port = '4200' } = {}) {
     }
     const relative = requestPath === '/' ? 'index.html' : requestPath.replace(/^\/+/, '');
     const candidate = path.resolve(STATIC_ROOT, relative);
-    const insideRoot = candidate === STATIC_ROOT || candidate.startsWith(`${STATIC_ROOT}${path.sep}`);
+    const insideRoot =
+      candidate === STATIC_ROOT || candidate.startsWith(`${STATIC_ROOT}${path.sep}`);
     let file = insideRoot ? candidate : index;
     try {
       const info = await stat(file);
@@ -156,7 +159,9 @@ async function run_wizard() {
   try {
     const host = (await rl.question('Host [127.0.0.1]: ')).trim() || '127.0.0.1';
     const port = (await rl.question('Port [4200]: ')).trim() || '4200';
-    const confirm = (await rl.question(`Start Portal on ${host}:${port}? [Y/n] `)).trim().toLowerCase();
+    const confirm = (await rl.question(`Start Portal on ${host}:${port}? [Y/n] `))
+      .trim()
+      .toLowerCase();
     if (confirm && confirm !== 'y' && confirm !== 'yes') {
       output.write('Safe cancellation — nothing was changed.\n');
       return;
@@ -199,8 +204,7 @@ const command = args.find((arg) => !arg.startsWith('-')) || 'home';
 if (args.includes('--version')) {
   if (args.includes('--json')) json(status());
   else output.write(`forge-portal ${VERSION}\n`);
-}
-else if (args.includes('--help') || args.includes('-h')) usage();
+} else if (args.includes('--help') || args.includes('-h')) usage();
 else if (command === 'status') machine ? json(status()) : json(status());
 else if (command === 'start') startServer();
 else if (command === 'wizard') await run_wizard();
