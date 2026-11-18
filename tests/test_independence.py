@@ -38,15 +38,24 @@ SIBLING_PACKAGES = {
     "sparkforge_azure", "forge_doctor_data", "forge_doctor_api",
 }
 
-# Vendored copies are allowed exactly one generation of lag: when
-# portal_core/forge_portal.py changes, sibling checkouts still carry the
-# previous committed generation until each forge re-vendors on its own
-# flow (scripts/vendor.py). A copy matching neither the current nor the
-# immediately-previous generation is real drift and still fails.
-# (Cycle 6: send_error hardening + X-Frame-Options/Permissions-Policy —
-# copies at a968ad06… are the documented lag, not a defect.)
+# Vendored copies lag the canonical file until each forge re-vendors on
+# its own flow (scripts/vendor.py). A copy matching neither the current
+# generation nor one of the documented committed generations below is
+# real drift and still fails. Entries are sha256 of whole committed
+# generations of portal_core/forge_portal.py — add the outgoing hash
+# whenever the canonical file changes, remove nothing while a checkout
+# may still legitimately carry it.
+# Documented lag (wave 15): siblings never received the keep-alive drain
+# fix (6c05f58) — the-forge carries 2ddd3ffe…, the other checkouts carry
+# 1bdbd209… — and this wave's member-detection change is also pending
+# re-vendor, so up to three real generations may legitimately appear.
 KNOWN_PREV_GENERATIONS = {
+    # cycle-6 send_error/X-Frame-Options hardening generation
     "a968ad06ee4c6d683599657b09ee776482bc992e551755e9c27a7c3767809584",
+    # 6c05f58 keep-alive drain fix — canonical until wave-15 edits
+    "2ddd3ffe1ec748c414cca248a6cfdfbfada912cf74588bde9d2f95c08a60b72e",
+    # pre-6c05f58 generation still carried by six sibling checkouts
+    "1bdbd209f0c64cb8af85846fcea401e1c8722227e82fcc2564654012fecadab8",
 }
 
 
@@ -186,14 +195,14 @@ _VENDOR_SKIP = {".venv", "venv", "node_modules", ".git", "dist", "build",
                 "__pycache__", ".tox", ".mypy_cache", ".pytest_cache"}
 
 
-def _vendor_copies(root: Path):
-    """Walk for vendored _forge_portal.py copies, pruning heavy dirs
+def _vendor_copies(root: Path, name: str = "_forge_portal.py"):
+    """Walk for vendored module copies, pruning heavy dirs
     (.venv/node_modules/.git) — a plain rglob scans hundreds of
     thousands of vendored-package files."""
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in _VENDOR_SKIP]
-        if "_forge_portal.py" in filenames:
-            yield Path(dirpath) / "_forge_portal.py"
+        if name in filenames:
+            yield Path(dirpath) / name
 
 
 def test_vendored_checkout_copies_match_or_are_known_drift(discovered) -> None:
@@ -215,6 +224,76 @@ def test_vendored_checkout_copies_match_or_are_known_drift(discovered) -> None:
         pytest.skip("no vendored _forge_portal.py found in any checkout")
     assert not drift, (
         f"vendored copies out of sync with portal_core/forge_portal.py: {drift}"
+    )
+
+
+def _expected_module_bytes(canonical: Path, checkout_name: str) -> bytes:
+    """What a vendored satellite module must contain in a given checkout:
+    canonical source rewritten by ``scripts/vendor.py:_module_source``
+    for that destination's FORGES entry (flat ``import _forge_portal``
+    vs ``from <pkg> import _forge_portal``)."""
+    sys.path.insert(0, str(REPO / "scripts"))
+    import vendor  # noqa: PLC0415 — lazy, mirrors production pipeline
+
+    target = vendor.FORGES.get(checkout_name)
+    if target is None:
+        pytest.skip(f"{checkout_name} is not a vendor destination")
+    if isinstance(target, str):
+        target = {"pkg": target}
+    return vendor._module_source(canonical, target)
+
+
+# Documented byte-drift in satellite modules — formatting-only copies
+# verified AST-identical to canonical (wave 15 audit), pending each
+# forge's own re-vendor run. Format: (checkout dir name, vendored file)
+# → reason. An entry here is a named exception, never silent tolerance:
+# content drift (AST-different) still fails everywhere.
+KNOWN_MODULE_DRIFT = {
+    ("forge-doctor-api", "_portal_telemetry.py"):
+        "reformatted at destination (line-length), AST-identical — re-vendor pending",
+}
+
+
+@pytest.mark.parametrize(
+    "canonical,vendored_name",
+    [
+        (PORTAL_CORE / "telemetry.py", "_portal_telemetry.py"),
+        (PORTAL_CORE / "atlas_ops.py", "_portal_atlas.py"),
+    ],
+    ids=["telemetry", "atlas"],
+)
+def test_vendored_satellite_modules_match_canonical(
+    discovered, canonical: Path, vendored_name: str
+) -> None:
+    """`_portal_telemetry.py`/`_portal_atlas.py` are opt-in satellites:
+    wherever a checkout carries one, its bytes must equal the canonical
+    module with the import rewrite — a stale or hand-edited copy is
+    drift, never tolerated. Absence is allowed (the vendor manifest
+    encodes per-destination opt-in; adapters mount the ops explicitly)."""
+    if not canonical.is_file():
+        pytest.skip(f"{canonical.name} not present in portal_core")
+    drift: dict[str, str] = {}
+    checked = 0
+    for fid, local in discovered.items():
+        if not local.checkout or not local.checkout.is_dir():
+            continue
+        copies = [
+            c for c in _vendor_copies(local.checkout, vendored_name)
+            if "tests" not in c.parts
+        ]
+        if not copies:
+            continue
+        checked += 1
+        expected = _expected_module_bytes(canonical, local.checkout.name)
+        for copy in copies:
+            if copy.read_bytes() != expected and (
+                local.checkout.name, vendored_name
+            ) not in KNOWN_MODULE_DRIFT:
+                drift[fid] = str(copy)
+    if not checked:
+        pytest.skip(f"no vendored {vendored_name} found in any checkout")
+    assert not drift, (
+        f"vendored copies out of sync with {canonical}: {drift}"
     )
 
 
