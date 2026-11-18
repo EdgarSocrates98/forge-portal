@@ -9,9 +9,12 @@
 #     the portal version — the forge's `<cli> portal` verifies assets
 #     against this manifest before serving (tamper/drift detection)
 #
-# Usage:  python scripts/vendor.py [--repo NAME] [--check]
-#   --repo NAME   vendor a single forge (default: all known siblings)
-#   --check       verify byte-parity without writing (drift gate)
+# Usage:  python scripts/vendor.py [--repo NAME] [--check] [--require-all]
+#   --repo NAME     vendor a single forge (default: all known siblings)
+#   --check         verify byte-parity without writing (drift gate)
+#   --require-all   with --check: exit 3 when a destination checkout is
+#                   absent (default --check reports SKIP/NOT_APPLICABLE in
+#                   the summary and still exits 0 when nothing drifted)
 #   Requires: `npm run build` first (assets must exist).
 
 from __future__ import annotations
@@ -36,8 +39,21 @@ sys.path.insert(0, str(ROOT / "portal_core"))
 from forge_portal import PORTAL_VERSION
 
 # sibling repo → package dir that receives _forge_portal.py
+#
+# Per-destination keys (dict form):
+#   pkg       package dir receiving _forge_portal.py
+#   modules   comma-separated opt-in satellite modules, default
+#             "telemetry". "atlas" is vendored ONLY where listed —
+#             atlas_ops is an adapter opt-in (`self.ops +=
+#             atlas_operations()`), so vendoring it where the adapter
+#             never mounts the ops would ship dead code and flag false
+#             DRIFT. To onboard a sibling: its adapter mounts
+#             atlas_operations(), add "atlas" here, re-vendor.
+#   flat      "1" → package dir is a flat scripts/ dir (bare imports)
+#   assets_only / assets / manifest — see product-forge below
 FORGES: dict[str, str | dict[str, str]] = {
-    "the-forge": "src/theforge",
+    # the-forge's adapter mounts atlas_operations() — atlas opted in.
+    "the-forge": {"pkg": "src/theforge", "modules": "telemetry,atlas"},
     "spark-forge-aws": "sparkforge_aws",
     "spark-forge-azure": "sparkforge_azure",
     "api-forge": "src/apiforge",
@@ -210,15 +226,30 @@ def vendor_one(name: str, target: str | dict[str, str], *, check: bool) -> list[
         )
         return notes
 
+    # Opt-in satellite modules for this destination (see FORGES doc).
+    modules = {
+        m.strip()
+        for m in str(target.get("modules", "telemetry")).split(",")
+        if m.strip()
+    }
+
     server_dst = repo / target["pkg"] / "_forge_portal.py"
     telemetry_dst = repo / target["pkg"] / "_portal_telemetry.py"
     atlas_dst = repo / target["pkg"] / "_portal_atlas.py"
 
-    telemetry_bytes = telemetry_source(target) if TELEMETRY_SRC.is_file() else None
+    telemetry_bytes = (
+        telemetry_source(target)
+        if TELEMETRY_SRC.is_file() and "telemetry" in modules
+        else None
+    )
     telemetry_hash = (
         hashlib.sha256(telemetry_bytes).hexdigest() if telemetry_bytes else None
     )
-    atlas_bytes = atlas_source(target) if ATLAS_SRC.is_file() else None
+    atlas_bytes = (
+        atlas_source(target)
+        if ATLAS_SRC.is_file() and "atlas" in modules
+        else None
+    )
     atlas_hash = hashlib.sha256(atlas_bytes).hexdigest() if atlas_bytes else None
     extra_hashes = {"atlas": atlas_hash} if atlas_hash else None
 
@@ -301,6 +332,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Vendor forge_portal + assets to sibling forges")
     ap.add_argument("--repo", choices=sorted(FORGES), help="vendor a single forge")
     ap.add_argument("--check", action="store_true", help="verify parity without writing")
+    ap.add_argument(
+        "--require-all",
+        action="store_true",
+        help="with --check: fail (exit 3) when any destination checkout is absent",
+    )
     args = ap.parse_args()
 
     if not SERVER_SRC.is_file():
@@ -311,13 +347,34 @@ def main() -> int:
 
     targets = {args.repo: FORGES[args.repo]} if args.repo else FORGES
     drift = False
+    checked = 0
+    skipped = 0
     for name, pkg in targets.items():
         print(f"{name}:")
-        for line in vendor_one(name, pkg, check=args.check):
+        lines = vendor_one(name, pkg, check=args.check)
+        if lines and lines[0].startswith("SKIP"):
+            skipped += 1
+        else:
+            checked += 1
+        for line in lines:
             print(line)
             if line.startswith("DRIFT"):
                 drift = True
-    return 1 if (args.check and drift) else 0
+    # Honest gate output: N-of-M destinations were actually compared —
+    # a silent 0 with zero checkouts present is NOT a parity pass.
+    print(
+        f"vendor: checked {checked} of {len(targets)} destination(s)"
+        + (
+            f"; {skipped} NOT_APPLICABLE (checkout absent)"
+            if skipped
+            else "; all destinations present"
+        )
+    )
+    if args.check and drift:
+        return 1
+    if skipped and args.require_all:
+        return 3
+    return 0
 
 
 if __name__ == "__main__":
