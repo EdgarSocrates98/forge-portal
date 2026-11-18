@@ -102,32 +102,38 @@ installed packages importing without portal code, CLIs answering
 `--version`, stdlib-only `portal_core`, no sibling-package imports, and
 sha256-checked vendored `_forge_portal.py` copies.
 
-## Open gaps (honest, as of the last run)
+## Open gaps (honest — refreshed 2026-11-18, wave 15)
 
-1. **`telemetry` = `UNSUPPORTED` on all 7 sibling adapters** — no
-   vendored adapter registers `/events` ops yet. The forge-portal side
-   is ready (`portal_core/telemetry.py`); the vendor layer is not.
+1. **Context accounting per-resource** — `UNSUPPORTED` on all
+   adapters. `/events` telemetry ops are now mounted and `VERIFIED`
+   in every installed adapter (43–53 recorded events each, this run);
+   what remains unsupported is per-resource accounting (tokens/bytes
+   attributed to each loaded resource, Context Observatory §20.4) —
+   a declared delegation, documented in
+   `docs/installation/README.md`, not a silent gap. (Historical note:
+   pre-2026-11-18 this item was "telemetry UNSUPPORTED on all 7
+   adapters" — resolved when adapters mounted `telemetry.operations`.)
 2. **`mutations` = `NOT_TESTED` everywhere** — by policy; real
    apply/repair/uninstall are never executed by homologation. Refusal
    boundaries are verified under `error_paths`.
-3. **the-forge vendors an older `_forge_portal`** (sha
-   `899741fe…`, 979 lines vs 1111) — predates cycle-3 telemetry and
-   `RequestContext.emit`; its adapter never emits `forge/PortalEvent/1`.
-   Re-vendor via the-forge's own `scripts/vendor.py` flow when that
-   repo takes a portal bump.
-4. **Installed copies lag the checkouts** — the five installed
-   site-packages copies share one older generation (`701cfe13…`);
-   checkouts now carry `a968ad06…`. `tests/test_independence.py`
+3. **Vendored `_forge_portal` generations lag the canonical file** —
+   wave-15 canonical edits (member detection + provenance fields) and
+   the 6c05f58 keep-alive drain fix are pending re-vendor in all
+   checkouts; `tests/test_independence.py` tolerates the three
+   documented generations. `scripts/vendor.py --check` reports the
+   drift honestly (`checked 8 of 8`).
+4. **Installed copies lag the checkouts** — installed site-packages
+   copies share an older generation; `tests/test_independence.py`
    asserts installed generations stay *consistent*; currency follows
    the next real install of each forge.
-5. **mcp_verify receipts are real mixed outcomes** — the-forge
-   `FAIL` (4/7 specialist handshakes passed), api-forge and
-   platform-forge `BLOCKED` (`*-mcp` entrypoints not resolvable on
-   PATH — install incomplete), spark-forge-aws `PASS` (146 tools),
-   spark-forge-azure `PASS` (18), forge-doctor-data `PASS` (14),
-   forge-doctor-api `PASS` (17). Every receipt is `VERIFIED` as an
-   honest surface — the underlying BLOCKED installs remain an
-   ecosystem gap, not a portal defect.
+5. **mcp_verify receipts are real mixed outcomes** (this run): the-forge
+   `FAIL`, api-forge `BLOCKED`, platform-forge `BLOCKED`,
+   forge-doctor-data `FAIL`, forge-doctor-api `PASS`,
+   spark-forge-aws `PASS`, spark-forge-azure `PASS`. Every receipt is
+   `VERIFIED` as an honest surface — the underlying BLOCKED installs
+   remain an ecosystem gap, not a portal defect.
 6. **`forge-cli` has no local checkout** — listed by the cycle-4
    prompt; only its `~/.forge-cli` registry state is observable.
    Registry ops are exercised through it, not a repo adapter.
+7. **the-forge `graphs` = `PARTIAL` (`availability='computing'`)** —
+   observed this run; a real transient/honest state, not an error.

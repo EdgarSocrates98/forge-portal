@@ -636,10 +636,33 @@ export interface ResourceEntry {
   tags: string[];
   description: string | null;
   format: string | null;
+  /** Manifest-declared version (entry override wins); absent → null. */
+  version?: string | null;
+  /** Manifest-declared domain — not yet declared by any manifest → null. */
+  domain?: string | null;
+  /** Entry `hosts` override, else the manifest's `host_adapters`. */
+  hosts?: string[];
+  /** Declared content hash — never computed here (list+locate policy). */
+  hash?: string | null;
+  /** Declared integrity state; absent → null, never "ok" by default. */
+  integrity?: string | null;
+}
+/** A detected workspace member repository (§20.1). Marker-driven:
+ *  `.git` or a project manifest — gitless members surface too. */
+export interface WorkspaceMember {
+  name: string;
+  /** Workspace-relative path ('.' for the root itself). */
+  path: string;
+  /** Sorted marker basenames found (e.g. ['.git', 'pyproject.toml']). */
+  markers: string[];
+  git: boolean;
+  manifest: boolean;
 }
 export interface WorkspaceResources {
   workspace: string | null;
   forges: string[];
+  /** Present since the member-detection wave; older servers omit it. */
+  members?: WorkspaceMember[];
   resources: ResourceEntry[];
   errors: string[];
 }

@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
@@ -59,7 +60,7 @@ interface HostChoice {
 @Component({
   selector: 'page-install',
   standalone: true,
-  imports: [TPipe, PageHeader, StateBadge, ErrorState, EmptyState, UiIcon, UiSkeleton],
+  imports: [TPipe, PageHeader, StateBadge, ErrorState, EmptyState, UiIcon, UiSkeleton, RouterLink],
   template: `
     <ui-page-header
       [title]="'install.title' | t"
@@ -135,6 +136,13 @@ interface HostChoice {
             <dd>{{ h.updated_at ?? ('state.unknown' | t) }}</dd>
           </div>
         </dl>
+        <p class="muted delegation-note">
+          {{ 'install.workspaceDelegation.pre' | t }}
+          <a class="linklike" routerLink="/federation">{{
+            'install.workspaceDelegation.link' | t
+          }}</a>
+          {{ 'install.workspaceDelegation.post' | t }}
+        </p>
         @if (h.checks.length) {
           <ul class="checks">
             @for (c of h.checks; track c.id) {

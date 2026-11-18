@@ -57,3 +57,6 @@ graphify-out/
 .venv
 .venv/
 scripts/.graph-bench.cjs
+
+# Generated agent/tooling state — never committed
+.codebase-memory/

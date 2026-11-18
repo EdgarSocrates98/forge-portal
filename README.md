@@ -17,6 +17,12 @@ motores existentes.
   módulo `_forge_portal.py` para cada repositório irmão; cada Forja
   serve o portal via `<cli> portal` — Node.js só é dependência de
   desenvolvimento aqui.
+- **Classificação**: o portal é um **host de UI vendored**, não uma
+  Forja — não é provider do Forge Protocol e nunca implementa
+  comportamento de especialista: retransmite recibos das Forjas
+  verbatim. Convenções de repo para agentes: `AGENTS.md`;
+  documentação: `docs/README.md`; problemas comuns:
+  `docs/troubleshooting.md`.
 - **Contratos**: `forge/PortalApi/1` — ver `docs/fase0/contracts.md`.
 - **Onboarding federado**: a página `/federation` reúne catálogo, escopo,
   hosts, perfis, componentes e o fluxo `plan → review → confirm` da família.
@@ -73,16 +79,17 @@ delegando para `ng serve`.
 
 Gates de qualidade deste repo:
 
-| Comando                           | Para quê / quando usar                                                             |
-| --------------------------------- | ---------------------------------------------------------------------------------- |
-| `npm run build`                   | Antes de commitar — prova que compila e gera o bundle a ser vendored.              |
-| `npm test`                        | Sempre — unidade de stores, i18n, api client e páginas.                            |
-| `npx prettier --check "src/**/*"` | Antes de commitar — estilo canônico (`.prettierrc`).                               |
-| `python -m pytest tests/`         | Testes do backend stdlib (`portal_core/`).                                         |
-| `python -m pytest e2e/`           | E2E em Chromium real contra o bundle (`playwright` em `requirements-dev.txt`).     |
-| `python3 scripts/check_i18n.py`   | Paridade de chaves pt-BR/en — trava drift de i18n.                                 |
+| Comando                            | Para quê / quando usar                                                             |
+| ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run build`                    | Antes de commitar — prova que compila e gera o bundle a ser vendored.              |
+| `npm test`                         | Sempre — unidade de stores, i18n, api client e páginas.                            |
+| `python -m pytest -q`              | Sempre — backend stdlib (`portal_core/`), segurança, vendoring, independência.     |
+| `python -m pytest e2e/`            | E2E em Chromium real contra o bundle (`playwright` em `requirements-dev.txt`).     |
+| `python scripts/check_i18n.py`     | Após mexer em strings — paridade pt-BR/en gateada.                                 |
+| `python scripts/vendor.py --check` | Paridade do vendoring (`checked N of M`; `--require-all` exige todos).             |
+| `python scripts/vendor.py`         | Após um build de release — propaga o bundle + `_forge_portal.py` para as 7 Forjas. |
 | `ruff check portal_core tests scripts e2e` | Lint Python.                                                              |
-| `python scripts/vendor.py`        | Após um build de release — propaga o bundle + `_forge_portal.py` para as 7 Forjas. |
+| `npx prettier --check "src/**/*"`  | Antes de commitar — estilo canônico (`.prettierrc`).                               |
 
 ## Princípios
 

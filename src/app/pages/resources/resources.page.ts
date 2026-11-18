@@ -2,7 +2,7 @@ import { Component, OnInit, computed, effect, inject, input, signal } from '@ang
 import { firstValueFrom } from 'rxjs';
 import { PortalApi } from '../../core/api/api.client';
 import { ApiError } from '../../core/api/api.error';
-import { ResourceEntry } from '../../core/api/api.models';
+import { ResourceEntry, WorkspaceMember, WorkspaceResources } from '../../core/api/api.models';
 import { PrefsStore } from '../../core/prefs/prefs.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { PageHeader } from '../../shared/page-header';
@@ -61,6 +61,28 @@ const norm = (s: string): string =>
         <section class="card warn-note" data-section="catalog-errors">
           <ui-icon name="warn" [size]="15" />
           <span>{{ 'resources.manifestErrors' | t }}: {{ d.errors.join('; ') }}</span>
+        </section>
+      }
+
+      @if (d.members && d.members.length) {
+        <section
+          class="card members"
+          data-section="workspace-members"
+          [attr.aria-label]="'resources.members' | t"
+        >
+          <p class="muted members__head">
+            {{ d.members.length }} {{ 'resources.members' | t }} · {{ gitlessCount(d.members) }}
+            {{ 'resources.membersGitless' | t }}
+          </p>
+          <div class="member-row" role="list">
+            @for (m of d.members; track m.path) {
+              <span class="member" role="listitem" [attr.data-git]="m.git || null">
+                <ui-icon name="folder" [size]="13" />
+                <code>{{ m.path === '.' ? m.name : m.path }}</code>
+                <small class="muted">{{ m.markers.join(' + ') }}</small>
+              </span>
+            }
+          </div>
         </section>
       }
 
@@ -176,6 +198,30 @@ const norm = (s: string): string =>
               <dt>{{ 'resources.description' | t }}</dt>
               <dd>{{ sel.description || ('state.absent' | t) }}</dd>
             </div>
+            <div>
+              <dt>{{ 'resources.version' | t }}</dt>
+              <dd>{{ sel.version ?? ('state.absent' | t) }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'resources.domain' | t }}</dt>
+              <dd>{{ sel.domain ?? ('state.absent' | t) }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'resources.hosts' | t }}</dt>
+              <dd>
+                {{ sel.hosts && sel.hosts.length ? sel.hosts.join(', ') : ('state.absent' | t) }}
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'resources.hash' | t }}</dt>
+              <dd>
+                <code>{{ sel.hash ?? ('state.absent' | t) }}</code>
+              </dd>
+            </div>
+            <div>
+              <dt>{{ 'resources.integrity' | t }}</dt>
+              <dd>{{ sel.integrity ?? ('state.absent' | t) }}</dd>
+            </div>
           </dl>
         </section>
       }
@@ -268,6 +314,35 @@ const norm = (s: string): string =>
       margin-bottom: var(--space-3);
       font-size: var(--font-sm);
     }
+    .members {
+      margin-bottom: var(--space-3);
+    }
+    .members__head {
+      margin: 0 0 var(--space-2);
+    }
+    .member-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .member {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border: 1px solid var(--fg-border);
+      border-radius: var(--fg-radius-pill);
+      padding: 0.125rem 0.625rem;
+      font-size: 0.75rem;
+      background: var(--fg-surface-2);
+      color: var(--fg-text-2);
+      white-space: nowrap;
+    }
+    .member[data-git] {
+      border-color: var(--accent);
+    }
+    .member .muted {
+      margin: 0;
+    }
     .chip-row {
       display: flex;
       flex-wrap: wrap;
@@ -336,9 +411,7 @@ export class ResourcesPage implements OnInit {
 
   readonly q = input('');
 
-  readonly data = signal<{ forges: string[]; resources: ResourceEntry[]; errors: string[] } | null>(
-    null,
-  );
+  readonly data = signal<WorkspaceResources | null>(null);
   readonly error = signal<ApiError | null>(null);
   readonly query = signal('');
   readonly forge = signal<string | null>(null);
@@ -380,6 +453,10 @@ export class ResourcesPage implements OnInit {
   readonly unavailableCount = computed(
     () => this.filtered().filter((r) => r.availability !== 'available').length,
   );
+
+  gitlessCount(members: WorkspaceMember[]): number {
+    return members.filter((m) => !m.git).length;
+  }
 
   constructor() {
     effect(() => {
