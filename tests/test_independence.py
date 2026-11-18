@@ -233,7 +233,7 @@ def _expected_module_bytes(canonical: Path, checkout_name: str) -> bytes:
     for that destination's FORGES entry (flat ``import _forge_portal``
     vs ``from <pkg> import _forge_portal``)."""
     sys.path.insert(0, str(REPO / "scripts"))
-    import vendor  # noqa: PLC0415 — lazy, mirrors production pipeline
+    import vendor
 
     target = vendor.FORGES.get(checkout_name)
     if target is None:
