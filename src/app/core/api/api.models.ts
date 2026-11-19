@@ -207,6 +207,94 @@ export interface PortalHealth {
   receipts?: string[];
 }
 
+/**
+ * §4.4 named selection state — emitted verbatim by `install_auto` on
+ * blocked receipts and on uniform post-apply outcomes. `state` is the
+ * closed engine vocabulary: `no_registered_forges`,
+ * `empty_manual_selection`, `no_relevant_recommendation`,
+ * `recommendation_ambiguous`, `no_installed_runtimes`,
+ * `no_supported_component`, `all_already_active`. `next_action` is the
+ * operator-facing guidance the engine computed — rendered, never
+ * rephrased. Absent on adapters that predate the contract.
+ */
+export interface SelectionState {
+  state?: string;
+  requested?: string[] | null;
+  detail?: string;
+  next_action?: string;
+}
+
+/** One delegated per-forge row inside an install-auto receipt. */
+export interface ForgeResultRow {
+  forge_id?: string;
+  via?: string;
+  status?: string;
+  detail?: string;
+  cmd?: string[];
+  receipt_id?: string;
+  verification?: { status?: string } & Record<string, unknown>;
+}
+
+/** forge/SpecialistRecommendation/v1 row — advisory, never self-acting. */
+export interface RecommendationRow {
+  forge_id?: string;
+  role?: string;
+  confidence?: string;
+  reason?: string;
+  evidence?: string[];
+  installed?: boolean;
+}
+
+/** forge/SpecialistRecommendation/v1 — the engine's advisory block. */
+export interface SpecialistRecommendation {
+  suggested?: RecommendationRow[];
+  alternatives?: RecommendationRow[];
+  limitations?: string[];
+  note?: string;
+}
+
+/** forge/WorkspaceDetection/v1 — evidence-based tech scan (§6.1). */
+export interface WorkspaceDetection {
+  root?: string;
+  members?: {
+    path?: string;
+    techs?: string[];
+    confidence?: string;
+    evidence?: { tech?: string; kind?: string; confidence?: string; detail?: string }[];
+  }[];
+  workspace_techs?: string[];
+  limitations?: string[];
+}
+
+/**
+ * forge/HostOnboarding/v1 — honest per-host states. `state` is the
+ * closed vocabulary `not_found|installed|in_path|configurable|
+ * integration_written|restart_needed|mcp_verified|validated` — the
+ * portal renders it verbatim so `configured` is never promoted to
+ * `verified` and `mcp_verified` means a real handshake ran.
+ */
+export interface HostOnboarding {
+  hosts?: {
+    host?: string;
+    state?: string;
+    detail?: string;
+    evidence?: { kind?: string; detail?: string }[];
+  }[];
+  next_steps?: string[];
+  limitations?: string[];
+  mcp?: Record<string, unknown>;
+}
+
+/** forge/WorkspaceInstall/v1 conflict entry (path claimed by ≥2 forges). */
+export interface InstallPathConflict {
+  path?: string;
+  claimants?: string[];
+  winner?: string;
+  loser?: string;
+  resolution?: string | null;
+  detail?: string;
+}
+
 export interface InstallationReceipt {
   status: string;
   stage?: string;
@@ -223,6 +311,32 @@ export interface InstallationReceipt {
   lifecycle?: InstallLifecycle | null;
   /** Plan-phase adapters may nest the raw plan receipt under `receipt`. */
   receipt?: { lifecycle?: InstallLifecycle | null; status?: string } & Record<string, unknown>;
+  // ---- install-auto pass-through blocks (cycle 16.1) — all optional;
+  // the portal renders them verbatim and never fabricates an absent one.
+  /** §4.4 named selection state on blocked/uniform receipts. */
+  selection?: SelectionState | null;
+  /** Aggregate verification verdict — PASS|FAIL|UNVERIFIED. */
+  verification?: { status?: string } & Record<string, unknown>;
+  /** Per-forge delegated results. */
+  forges?: ForgeResultRow[];
+  /** forge/WorkspaceDetection/v1 — workspace tech evidence. */
+  workspace_detection?: WorkspaceDetection | null;
+  /** forge/SpecialistRecommendation/v1 — advisory specialist suggestion. */
+  recommendation?: SpecialistRecommendation | null;
+  /** forge/HostOnboarding/v1 — per-host honest states + next steps. */
+  onboarding?: HostOnboarding | null;
+  /** Setup resolution provenance doc (flag|preset|config|default). */
+  setup?: Record<string, unknown> | null;
+  /** forge/WorkspaceInstall/v1 doc (order, conflicts, members). */
+  installation?: {
+    conflicts?: InstallPathConflict[];
+    members?: unknown[];
+    verification?: string;
+  } & Record<string, unknown>;
+  /** Workspace-scope member report (forge/WorkspaceInstall/v1 §11). */
+  workspace?: {
+    members?: { path?: string; state?: string; detail?: string }[];
+  } & Record<string, unknown>;
 }
 
 export interface InstallSelection {
@@ -651,14 +765,24 @@ export interface FederationSelection {
   profile: 'minimal' | 'recommended' | 'full';
   gateway_profile?: ExecutionProfile;
   components: Partial<Record<ComponentId, boolean>>;
-  forge?: string | null;
+  /**
+   * Explicit specialist filter forwarded verbatim to `install_auto`
+   * (`forge: str | Sequence[str] | None`). A list is the operator's
+   * reviewed selection — `[]` is an *explicit empty* the engine blocks
+   * with the named `empty_manual_selection` state, never widened to
+   * "all registered". `null`/absent keeps the engine default.
+   */
+  forge?: string | string[] | null;
 }
 
 export interface FederationPlanResponse {
   status: string;
   plan: Record<string, unknown>;
   plan_token: string;
-  receipt: InstallationReceipt;
+  /** Engine receipt nested by adapters that implement install-auto —
+   *  absent on minimal adapters → every block below renders only what
+   *  was actually sent. */
+  receipt?: InstallationReceipt;
   actions: { kind: string; path: string; status: string }[];
 }
 

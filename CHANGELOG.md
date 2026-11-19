@@ -66,6 +66,29 @@ formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ### Fixed
 
+- **Cycle 16.1.1 Wave 09 — paridade `theforge setup` no onboarding
+  federado**:
+  - `/federation` agora expõe a seleção explícita de Forjas (todas
+    marcadas por padrão, revisáveis individualmente); a lista viaja em
+    `forge` e fica vinculada ao `plan_token` — o conjunto aplicado é
+    exatamente o aprovado.
+  - Seleção explicitamente vazia produz o estado nomeado do motor
+    (`empty_manual_selection`) com `detail`/`next_action` — nunca é
+    ampliada silenciosamente para todas as Forjas registradas.
+  - O review do plano exibe a evidência do `install_auto` verbatim:
+    estado de seleção, checks, resultado por Forja, detecção de
+    workspace, recomendação e onboarding por host; tons honestos —
+    só `integration_written`/`mcp_verified` pintam verde, `installed`/
+    `in_path` são informacionais, desconhecidos ficam neutros.
+  - Planos `blocked`/`failed`/`refused`/`error` não oferecem caminho de
+    aplicação — botão desabilitado + guarda no `apply()`.
+  - `/install`: o passo de confirmação exibe o plano assinado verbatim —
+    o objeto aprovado é o objeto executado.
+  - `FederationSelection.forge` aceita `string[]` (aditivo ao contrato);
+    `receipt` federado passa a ser opcional (adapters mínimos).
+  - Cobertura: spec do componente (8 testes) + verificação em Chromium
+    real contra o bundle de produção (seleção, estado bloqueado nomeado,
+    aplicação barrada, evidência do recibo).
 - Estados de erro honestos, gaps de i18n e drain de keep-alive (#101).
 - `.codebase-memory/` deixou de ser rastreado — artefato gerado por
   tooling, nunca deveria ter entrado no histórico.

@@ -12,6 +12,7 @@ import {
 } from '../../core/api/api.models';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { PageHeader } from '../../shared/page-header';
 import { StateBadge } from '../../shared/state-badge';
 import { ErrorState } from '../../shared/error-state';
@@ -108,6 +109,33 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
               </label>
             }
           </div>
+
+          <h3>{{ 'federation.forges' | t }}</h3>
+          <p class="muted">{{ 'federation.forgesHint' | t }}</p>
+          @if (data.installed_forges.length) {
+            <div class="component-grid" role="group" [attr.aria-label]="'federation.forges' | t">
+              @for (fid of data.installed_forges; track fid) {
+                <label class="component" [attr.data-active]="forgeSelected().has(fid) || null">
+                  <input
+                    type="checkbox"
+                    name="federation-forge"
+                    [value]="fid"
+                    [checked]="forgeSelected().has(fid)"
+                    (change)="toggleForge(fid)"
+                  />
+                  <span
+                    ><strong>{{ fid }}</strong
+                    ><small>{{ 'federation.forge.registered' | t }}</small></span
+                  >
+                </label>
+              }
+            </div>
+            @if (!forgeSelected().size) {
+              <p class="muted" role="note">{{ 'federation.forgesEmpty' | t }}</p>
+            }
+          } @else {
+            <p class="muted" role="note">{{ 'federation.forgesNone' | t }}</p>
+          }
 
           <h3>{{ 'federation.profile' | t }}</h3>
           <div class="choices" role="radiogroup" [attr.aria-label]="'federation.profile' | t">
@@ -235,6 +263,10 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
             <dd>{{ planned.plan['host'] }}</dd>
           </div>
           <div>
+            <dt>{{ 'federation.forges' | t }}</dt>
+            <dd>{{ forgeEcho(planned.plan['forge']) }}</dd>
+          </div>
+          <div>
             <dt>{{ 'federation.profile' | t }}</dt>
             <dd>{{ planned.plan['profile'] }}</dd>
           </div>
@@ -247,6 +279,61 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
             <dd>{{ planned.actions.length }}</dd>
           </div>
         </dl>
+        <!-- §4.4 — the engine's named selection state, verbatim. -->
+        @if (planned.receipt?.selection; as sel) {
+          <div class="selection-note" role="note">
+            <ui-state-badge
+              [state]="sel.state ?? 'unverified'"
+              [labelOverride]="sel.state ?? null"
+              [kindOverride]="selectionKind(sel.state)"
+            />
+            <div>
+              @if (sel.detail) {
+                <p>{{ sel.detail }}</p>
+              }
+              @if (sel.next_action) {
+                <p class="muted">{{ sel.next_action }}</p>
+              }
+            </div>
+          </div>
+        }
+        @if (planned.receipt?.forges?.length) {
+          <h3>{{ 'federation.forgeResults' | t }}</h3>
+          <ul class="checks">
+            @for (f of planned.receipt!.forges!; track f.forge_id) {
+              <li>
+                <ui-state-badge
+                  [state]="f.status ?? 'unverified'"
+                  [labelOverride]="f.status ?? null"
+                />
+                <code>{{ f.forge_id }}</code>
+                @if (f.detail) {
+                  <small class="muted">{{ f.detail }}</small>
+                }
+                @if (f.cmd?.length) {
+                  <small class="muted mono">{{ f.cmd!.join(' ') }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+        @if (planned.receipt?.checks?.length) {
+          <h3>{{ 'federation.planChecks' | t }}</h3>
+          <ul class="checks">
+            @for (c of planned.receipt!.checks!; track $index) {
+              <li>
+                <ui-state-badge
+                  [state]="c.status ?? 'UNVERIFIED'"
+                  [labelOverride]="c.status ?? null"
+                />
+                <code>{{ c.id ?? '—' }}</code>
+                @if (c.detail) {
+                  <small class="muted">{{ c.detail }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
         @if (planned.actions.length) {
           <ul class="actions">
             @for (item of planned.actions; track $index) {
@@ -257,13 +344,89 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
             }
           </ul>
         }
+        @if (planned.receipt?.workspace_detection; as det) {
+          <details class="evidence">
+            <summary>{{ 'federation.detection' | t }}</summary>
+            @if (det.workspace_techs?.length) {
+              <p>
+                <strong>{{ 'federation.detection.techs' | t }}</strong>
+                {{ det.workspace_techs!.join(', ') }}
+              </p>
+            }
+            @if (det.members?.length) {
+              <p class="muted">
+                {{ 'federation.detection.members' | t: { count: det.members!.length } }}
+              </p>
+            }
+            @for (lim of det.limitations ?? []; track lim) {
+              <p class="muted">
+                <small>{{ lim }}</small>
+              </p>
+            }
+          </details>
+        }
+        @if (planned.receipt?.recommendation; as rec) {
+          <details class="evidence">
+            <summary>{{ 'federation.recommendation' | t }}</summary>
+            @if (rec.note) {
+              <p class="muted">
+                <small>{{ rec.note }}</small>
+              </p>
+            }
+            @for (s of rec.suggested ?? []; track s.forge_id) {
+              <p>
+                <code>{{ s.forge_id }}</code>
+                <span class="muted"
+                  >{{ s.role ?? 'candidate' }} · {{ s.confidence ?? '—' }} ·
+                  {{
+                    (s.installed ? 'federation.rec.installed' : 'federation.rec.notInstalled') | t
+                  }}</span
+                >
+                @if (s.reason) {
+                  <small class="muted">{{ s.reason }}</small>
+                }
+              </p>
+            }
+            @for (a of rec.alternatives ?? []; track a.forge_id) {
+              <p>
+                <code>{{ a.forge_id }}</code>
+                <span class="muted"
+                  >{{ 'federation.rec.alternative' | t }} · {{ a.confidence ?? '—' }}</span
+                >
+                @if (a.reason) {
+                  <small class="muted">{{ a.reason }}</small>
+                }
+              </p>
+            }
+            @for (lim of rec.limitations ?? []; track lim) {
+              <p class="muted">
+                <small>{{ lim }}</small>
+              </p>
+            }
+          </details>
+        }
+        @if (planned.receipt?.refusal) {
+          <p class="refusal" role="alert">
+            <code>{{ planned.receipt!.refusal }}</code>
+            @if (planned.receipt!.unlock) {
+              — {{ planned.receipt!.unlock }}
+            }
+          </p>
+        }
         <div class="actions-row">
-          <button class="btn btn--primary" [disabled]="busy()" (click)="apply(planned)">
+          <button
+            class="btn btn--primary"
+            [disabled]="busy() || !planExecutable(planned)"
+            (click)="apply(planned)"
+          >
             <ui-icon name="check" [size]="15" />{{ 'federation.apply' | t }}
           </button>
           <button class="btn" [disabled]="busy()" (click)="reset()">
             {{ 'state.cancel' | t }}
           </button>
+          @if (!planExecutable(planned)) {
+            <span class="muted">{{ 'federation.applyBlocked' | t }}</span>
+          }
         </div>
       </section>
     }
@@ -276,11 +439,190 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
     }
     @if (phase() === 'done' && result(); as receipt) {
       <section class="card receipt" data-lift>
-        <h2>{{ 'federation.receipt' | t }}</h2>
-        <p>
+        <div class="card__heading">
+          <h2>{{ 'federation.receipt' | t }}</h2>
           <ui-state-badge [state]="receipt.status" />
+          @if (receipt.lifecycle; as lc) {
+            <ui-state-badge [state]="lc.state" [attr.title]="lc.detail ?? null" />
+          }
+        </div>
+        <p>
           <span>{{ receipt.detail || ('federation.receiptHint' | t) }}</span>
         </p>
+        @if (receipt.verification?.status) {
+          <p class="receipt__verify">
+            {{ 'install.verify' | t }}:
+            <ui-state-badge [state]="receipt.verification!.status!" />
+          </p>
+        }
+        <!-- §4.4 — named post-apply selection state, verbatim. -->
+        @if (receipt.selection; as sel) {
+          <div class="selection-note" role="note">
+            <ui-state-badge
+              [state]="sel.state ?? 'unverified'"
+              [labelOverride]="sel.state ?? null"
+              [kindOverride]="selectionKind(sel.state)"
+            />
+            <div>
+              @if (sel.detail) {
+                <p>{{ sel.detail }}</p>
+              }
+              @if (sel.next_action) {
+                <p class="muted">{{ sel.next_action }}</p>
+              }
+            </div>
+          </div>
+        }
+        @if (receipt.forges?.length) {
+          <h3>{{ 'federation.forgeResults' | t }}</h3>
+          <ul class="checks">
+            @for (f of receipt.forges!; track f.forge_id) {
+              <li>
+                <ui-state-badge
+                  [state]="f.status ?? 'unverified'"
+                  [labelOverride]="f.status ?? null"
+                />
+                <code>{{ f.forge_id }}</code>
+                @if (f.via) {
+                  <small class="muted">{{ f.via }}</small>
+                }
+                @if (f.verification?.status) {
+                  <ui-state-badge [state]="f.verification!.status!" />
+                }
+                @if (f.detail) {
+                  <small class="muted">{{ f.detail }}</small>
+                }
+                @if (f.receipt_id) {
+                  <small class="muted mono">{{ f.receipt_id }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+        @if (receipt.checks?.length) {
+          <h3>{{ 'federation.planChecks' | t }}</h3>
+          <ul class="checks">
+            @for (c of receipt.checks!; track $index) {
+              <li>
+                <ui-state-badge
+                  [state]="c.status ?? 'UNVERIFIED'"
+                  [labelOverride]="c.status ?? null"
+                />
+                <code>{{ c.id ?? '—' }}</code>
+                @if (c.detail) {
+                  <small class="muted">{{ c.detail }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+        @if (receipt.installation?.conflicts?.length) {
+          <h3>{{ 'federation.conflicts' | t }}</h3>
+          <ul class="checks">
+            @for (c of receipt.installation!.conflicts!; track c.path) {
+              <li>
+                <code>{{ c.path }}</code>
+                <small class="muted">
+                  {{ c.winner }} ✓ / {{ c.loser }}
+                  @if (c.resolution) {
+                    — {{ c.resolution }}
+                  }
+                  @if (c.detail) {
+                    · {{ c.detail }}
+                  }
+                </small>
+              </li>
+            }
+          </ul>
+        }
+        @if (receipt.onboarding?.hosts?.length) {
+          <h3>{{ 'federation.onboarding' | t }}</h3>
+          <ul class="checks">
+            @for (h of receipt.onboarding!.hosts!; track h.host) {
+              <li>
+                <ui-state-badge
+                  [state]="h.state ?? 'unverified'"
+                  [labelOverride]="h.state ?? null"
+                  [kindOverride]="onboardKind(h.state)"
+                />
+                <code>{{ h.host }}</code>
+                @if (h.detail) {
+                  <small class="muted">{{ h.detail }}</small>
+                }
+              </li>
+            }
+          </ul>
+          @for (lim of receipt.onboarding!.limitations ?? []; track lim) {
+            <p class="muted">
+              <small>{{ lim }}</small>
+            </p>
+          }
+        }
+        @if (receipt.workspace?.members?.length) {
+          <h3>{{ 'install.members' | t }}</h3>
+          <ul class="checks">
+            @for (m of receipt.workspace!.members!; track m.path) {
+              <li>
+                <code>{{ m.path }}</code>
+                @if (m.state) {
+                  <ui-state-badge [state]="m.state!" [labelOverride]="m.state" />
+                }
+                @if (m.detail) {
+                  <small class="muted">{{ m.detail }}</small>
+                }
+              </li>
+            }
+          </ul>
+        }
+        @if (receipt.recommendation || receipt.workspace_detection || receipt.setup) {
+          <details class="evidence">
+            <summary>{{ 'federation.evidence' | t }}</summary>
+            @if (receipt.workspace_detection; as det) {
+              @if (det.workspace_techs?.length) {
+                <p>
+                  <strong>{{ 'federation.detection.techs' | t }}</strong>
+                  {{ det.workspace_techs!.join(', ') }}
+                </p>
+              }
+              @for (lim of det.limitations ?? []; track lim) {
+                <p class="muted">
+                  <small>{{ lim }}</small>
+                </p>
+              }
+            }
+            @if (receipt.recommendation; as rec) {
+              @for (s of rec.suggested ?? []; track s.forge_id) {
+                <p>
+                  <code>{{ s.forge_id }}</code>
+                  <span class="muted">{{ s.role ?? 'candidate' }} · {{ s.confidence ?? '—' }}</span>
+                  @if (s.reason) {
+                    <small class="muted">{{ s.reason }}</small>
+                  }
+                </p>
+              }
+              @for (a of rec.alternatives ?? []; track a.forge_id) {
+                <p>
+                  <code>{{ a.forge_id }}</code>
+                  <span class="muted">{{ 'federation.rec.alternative' | t }}</span>
+                  @if (a.reason) {
+                    <small class="muted">{{ a.reason }}</small>
+                  }
+                </p>
+              }
+            }
+            @if (receipt.setup) {
+              <pre>{{ planJson(receipt.setup) }}</pre>
+            }
+          </details>
+        }
+        @if (receipt.refusal) {
+          <p class="refusal" role="alert">
+            <code>{{ receipt.refusal }}</code>
+            @if (receipt.unlock) {
+              — {{ receipt.unlock }}
+            }
+          </p>
+        }
       </section>
     }
     @if (phase() === 'error') {
@@ -511,6 +853,74 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
       color: var(--fg-muted);
       padding: var(--space-5) 0;
     }
+    .checks {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-2) 0 var(--space-3);
+      display: grid;
+      gap: 6px;
+    }
+    .checks li {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .selection-note {
+      display: flex;
+      gap: var(--space-3);
+      align-items: flex-start;
+      padding: var(--space-3);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-md);
+      background: var(--warn-bg);
+      margin: var(--space-3) 0;
+    }
+    .selection-note p {
+      margin: 0 0 4px;
+    }
+    .evidence {
+      margin: var(--space-3) 0;
+    }
+    .evidence summary {
+      cursor: pointer;
+      font-weight: 650;
+      color: var(--fg-muted);
+    }
+    .evidence pre {
+      overflow: auto;
+      font-size: var(--font-xs);
+      background: var(--bg-sunken);
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+    }
+    .mono {
+      font-family: var(--font-mono);
+      font-size: var(--font-xs);
+      overflow-wrap: anywhere;
+    }
+    .receipt__verify {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .receipt h3 {
+      margin: var(--space-4) 0 var(--space-2);
+      font-size: var(--font-sm);
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .plan h3 {
+      margin: var(--space-4) 0 var(--space-2);
+      font-size: var(--font-sm);
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .refusal {
+      color: var(--error);
+    }
     @media (max-width: 820px) {
       .layout {
         grid-template-columns: 1fr;
@@ -540,6 +950,7 @@ type GatewayProfile = NonNullable<FederationSelection['gateway_profile']>;
 })
 export class FederationPage {
   private readonly api = inject(PortalApi);
+  private readonly i18n = inject(I18nService);
   readonly store = inject(PortalStore);
   readonly snapshot = signal<FederationSnapshot | null>(null);
   readonly planResult = signal<FederationPlanResponse | null>(null);
@@ -554,6 +965,11 @@ export class FederationPage {
   readonly selected = signal<Set<ComponentId>>(
     new Set(['skills', 'agents', 'mcp', 'tui', 'graph-studio']),
   );
+  /** Explicit specialist selection — populated from the real registry
+   *  snapshot. An emptied set is sent as `forge: []` so the engine
+   *  answers with the named `empty_manual_selection` blocked state;
+   *  it is never silently widened to "every registered forge". */
+  readonly forgeSelected = signal<Set<string>>(new Set());
 
   readonly scopes = [
     { id: 'project' as const, label: 'install.scope.project', hint: 'install.scope.project.hint' },
@@ -619,7 +1035,14 @@ export class FederationPage {
     this.busy.set(true);
     this.error.set(null);
     try {
-      this.snapshot.set(await firstValueFrom(this.api.federation()));
+      const snap = await firstValueFrom(this.api.federation());
+      this.snapshot.set(snap);
+      // Default = every registered forge checked — the same delegation
+      // scope `install_auto` runs with no filter, but explicit so the
+      // reviewed set is what the plan token signs.
+      if (!this.forgeSelected().size) {
+        this.forgeSelected.set(new Set(snap.installed_forges ?? []));
+      }
       this.phase.set('idle');
     } catch (e) {
       this.fail(e);
@@ -635,6 +1058,58 @@ export class FederationPage {
     this.selected.set(next);
   }
 
+  toggleForge(id: string): void {
+    const next = new Set(this.forgeSelected());
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    this.forgeSelected.set(next);
+  }
+
+  /** What the signed plan echoes for the forge filter — a list is the
+   *  reviewed selection; null/absent means "no filter" (all registered). */
+  forgeEcho(value: unknown): string {
+    if (value === null || value === undefined) return '—';
+    if (Array.isArray(value))
+      return value.length ? (value as unknown[]).join(', ') : this.i18n.t('federation.forge.none');
+    return String(value);
+  }
+
+  /** §4.4 selection states — `all_already_active` is a benign outcome;
+   *  every other named state accompanies a blocked/failed receipt. */
+  selectionKind(state: string | undefined): 'ok' | 'warn' | 'info' | 'muted' {
+    if (state === 'all_already_active') return 'info';
+    return state ? 'warn' : 'muted';
+  }
+
+  /** forge/HostOnboarding/v1 — honest tones: only `integration_written`,
+   *  `mcp_verified` and `validated` are green; `configurable` stays
+   *  muted (presence is not readiness). */
+  onboardKind(state: string | undefined): 'ok' | 'warn' | 'info' | 'muted' {
+    switch (state) {
+      case 'integration_written':
+      case 'mcp_verified':
+        return 'ok';
+      case 'restart_needed':
+        return 'warn';
+      case 'installed':
+      case 'in_path':
+        return 'info';
+      default:
+        return 'muted';
+    }
+  }
+
+  /** Only a plan the engine marked executable may be applied — a
+   *  blocked/failed/refused plan has nothing to approve. */
+  planExecutable(planned: FederationPlanResponse): boolean {
+    const s = (planned.status ?? '').toLowerCase();
+    return !['failed', 'blocked', 'refused', 'error'].includes(s);
+  }
+
+  planJson(value: unknown): string {
+    return JSON.stringify(value, null, 2);
+  }
+
   async plan(): Promise<void> {
     this.phase.set('planning');
     this.busy.set(true);
@@ -646,6 +1121,9 @@ export class FederationPage {
         profile: this.profile(),
         gateway_profile: this.gatewayProfile(),
         components: Object.fromEntries([...this.selected()].map((id) => [id, true])),
+        // Explicit reviewed list — `[]` is the operator's explicit empty
+        // selection; the engine names it `empty_manual_selection`.
+        forge: [...this.forgeSelected()].sort(),
       };
       this.planResult.set(await firstValueFrom(this.api.federationPlan(input)));
       this.phase.set('review');
@@ -657,6 +1135,9 @@ export class FederationPage {
   }
 
   async apply(planned: FederationPlanResponse): Promise<void> {
+    // Defense in depth — a blocked/failed plan is never executable, even
+    // if this method is reached without the (disabled) button's gate.
+    if (!this.planExecutable(planned)) return;
     this.phase.set('running');
     this.busy.set(true);
     this.error.set(null);

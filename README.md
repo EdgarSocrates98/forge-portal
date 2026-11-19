@@ -24,8 +24,10 @@ motores existentes.
   documentação: `docs/README.md`; problemas comuns:
   `docs/troubleshooting.md`.
 - **Contratos**: `forge/PortalApi/1` — ver `docs/fase0/contracts.md`.
-- **Onboarding federado**: a página `/federation` reúne catálogo, escopo,
-  hosts, perfis, componentes e o fluxo `plan → review → confirm` da família.
+- **Onboarding federado**: a página `/federation` reúne catálogo, seleção
+  explícita de Forjas, escopo, hosts, perfis, componentes e o fluxo
+  `plan → review → confirm` da família — estados de seleção bloqueados
+  nunca oferecem aplicação.
 - **Arquitetura e decisões**: `docs/fase0/architecture.md`,
   `docs/fase0/security-matrix.md`, `docs/fase0/capability-map.md`,
   `docs/fase0/distribution-plan.md`.
