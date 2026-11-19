@@ -472,6 +472,15 @@ interface HostChoice {
             <dd>{{ r.actions?.length ?? 0 }}</dd>
           </div>
         </dl>
+        <!-- The signed plan is the approval object — what plan_token
+             binds and what apply will execute, verbatim. Fields the
+             adapter did not honor are visibly absent here. -->
+        @if (r.plan) {
+          <details class="raw">
+            <summary>{{ 'install.confirm.signedPlan' | t }}</summary>
+            <pre>{{ planText(r.plan) }}</pre>
+          </details>
+        }
         <div class="row">
           <button class="btn btn--primary" (click)="confirmExecute()">
             <ui-icon name="shield-check" [size]="15" />

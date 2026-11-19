@@ -23,6 +23,12 @@ O plano recebido pelo servidor mantém quatro decisões independentes:
 
 `components` registra a seleção explícita de `skills`, `agents`, `mcp`, `tui` e `graph-studio`. O portal não executa uma alteração antes de exibir o plano e receber confirmação explícita. O recibo deve carregar estado, ações, token de plano e verificações disponíveis.
 
+Em `/federation/plan` o plano recebe uma decisão adicional: `forge` — a
+lista explícita de Forjas revisada pelo usuário. Uma lista vazia é uma
+seleção vazia explícita (estado nomeado `empty_manual_selection`,
+nunca ampliada para todas); `null`/ausente é o filtro "todas as
+registradas" do motor. O `plan_token` vincula a lista exata aprovada.
+
 ## Modos suportados
 
 | Modo                | Evidência esperada                                             | Estado atual                                   |

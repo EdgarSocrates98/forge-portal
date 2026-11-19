@@ -242,6 +242,28 @@ export const EN: Record<string, string> = {
   'federation.running': 'Applying installers and collecting receipts…',
   'federation.receipt': 'Family receipt',
   'federation.receiptHint': 'Refresh the states to confirm the outcome.',
+  'federation.forges': 'Registered forges',
+  'federation.forgesHint':
+    'The checked set is sent verbatim to the engine — an explicit empty selection is a named blocked state, never widened to everything.',
+  'federation.forge.registered': 'Registered in the local installations registry.',
+  'federation.forgesEmpty':
+    'Empty selection — the engine will answer with the named empty_manual_selection state; nothing is delegated.',
+  'federation.forgesNone':
+    'No forge is registered in ~/.forge/installations — the plan will report the named no_registered_forges state.',
+  'federation.forge.none': 'none (explicit empty)',
+  'federation.forgeResults': 'Per-forge results',
+  'federation.planChecks': 'Plan checks',
+  'federation.detection': 'Workspace detection (evidence)',
+  'federation.detection.techs': 'Detected technologies:',
+  'federation.detection.members': '{count, plural, one{# member scanned} other{# members scanned}}',
+  'federation.recommendation': 'Specialist recommendation (advisory)',
+  'federation.rec.installed': 'registered',
+  'federation.rec.notInstalled': 'not registered',
+  'federation.rec.alternative': 'alternative',
+  'federation.applyBlocked': 'The plan ended in a blocked state — there is nothing to approve.',
+  'federation.conflicts': 'Cross-forge path conflicts',
+  'federation.onboarding': 'Host onboarding (per-host honest states)',
+  'federation.evidence': 'Engine evidence',
 
   // profiles
   'profiles.title': 'Profiles',
@@ -789,6 +811,7 @@ export const EN: Record<string, string> = {
   'install.confirm.hint':
     'Review the plan above. Execution only happens after explicit confirmation.',
   'install.confirm.execute': 'Confirm and execute',
+  'install.confirm.signedPlan': 'Signed plan — exactly what will execute',
   'install.confirm.back': 'Back',
   'install.confirm.next': 'Continue',
   'install.executing': 'Executing the approved plan…',

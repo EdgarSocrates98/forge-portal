@@ -242,6 +242,29 @@ export const PT_BR: Record<string, string> = {
   'federation.running': 'Aplicando instaladores e coletando recibos…',
   'federation.receipt': 'Recibo da família',
   'federation.receiptHint': 'Consulte os estados novamente para confirmar o resultado.',
+  'federation.forges': 'Forjas registradas',
+  'federation.forgesHint':
+    'O conjunto marcado é enviado verbatim ao motor — uma seleção explicitamente vazia é um estado bloqueado nomeado, nunca alargado para todas.',
+  'federation.forge.registered': 'Registrada no registry local de instalações.',
+  'federation.forgesEmpty':
+    'Seleção vazia — o motor responderá com o estado nomeado empty_manual_selection; nada é delegado.',
+  'federation.forgesNone':
+    'Nenhuma forja registrada em ~/.forge/installations — o plano relatará o estado nomeado no_registered_forges.',
+  'federation.forge.none': 'nenhuma (vazio explícito)',
+  'federation.forgeResults': 'Resultados por forja',
+  'federation.planChecks': 'Verificações do plano',
+  'federation.detection': 'Detecção do workspace (evidência)',
+  'federation.detection.techs': 'Tecnologias detectadas:',
+  'federation.detection.members':
+    '{count, plural, one{# membro inspecionado} other{# membros inspecionados}}',
+  'federation.recommendation': 'Recomendação de especialistas (consultiva)',
+  'federation.rec.installed': 'registrada',
+  'federation.rec.notInstalled': 'não registrada',
+  'federation.rec.alternative': 'alternativa',
+  'federation.applyBlocked': 'O plano terminou em estado bloqueado — não há nada a aprovar.',
+  'federation.conflicts': 'Conflitos de caminho entre forjas',
+  'federation.onboarding': 'Onboarding de hosts (estados honestos por host)',
+  'federation.evidence': 'Evidência do motor',
 
   // perfis
   'profiles.title': 'Perfis',
@@ -793,6 +816,7 @@ export const PT_BR: Record<string, string> = {
   'install.confirm.hint':
     'Revise o plano acima. A execução só acontece após confirmação explícita.',
   'install.confirm.execute': 'Confirmar e executar',
+  'install.confirm.signedPlan': 'Plano assinado — exatamente o que será executado',
   'install.confirm.back': 'Voltar',
   'install.confirm.next': 'Continuar',
   'install.executing': 'Executando o plano aprovado…',

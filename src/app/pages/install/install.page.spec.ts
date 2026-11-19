@@ -199,6 +199,21 @@ describe('InstallPage — Installation Center', () => {
     expect(c.stepState(4)).toBe('todo');
   });
 
+  it('confirm shows the verbatim signed plan — the approval object', async () => {
+    setup();
+    const fixture = await make();
+    const c = fixture.componentInstance;
+    await c.plan();
+    c.proceedToConfirm();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const signed = el.querySelector('.confirm .raw pre');
+    expect(signed).toBeTruthy();
+    // the echoed plan is what plan_token binds — verbatim JSON
+    expect(signed!.textContent).toContain('"scope"');
+    expect(signed!.textContent).toContain('project');
+  });
+
   it('marks verification UNVERIFIED when the receipt carries no checks', async () => {
     setup({ installationApply: () => of(APPLY_NO_CHECKS) });
     const fixture = await make();

@@ -265,10 +265,12 @@ class E2EAdapter(fp.PortalAdapter):
             "specialists": [
                 {"provider": "e2e-forge", "state": "ACTIVE", "cli": self.cli,
                  "checkout": str(REPO), "mcp": {"state": "CONFIGURED"}},
+                {"provider": "e2e-beta", "state": "ACTIVE", "cli": "e2e-beta",
+                 "checkout": None, "mcp": None},
             ],
-            "installed_forges": ["e2e-forge"],
-            "registry": {"count": 1, "path": "E:/e2e/.forge/installations"},
-            "summary": {"catalog": 1, "installed": 1, "with_mcp": 1, "with_checkout": 1},
+            "installed_forges": ["e2e-beta", "e2e-forge"],
+            "registry": {"count": 2, "path": "E:/e2e/.forge/installations"},
+            "summary": {"catalog": 2, "installed": 2, "with_mcp": 1, "with_checkout": 1},
         }
 
 
@@ -322,12 +324,69 @@ class E2EAdapter(fp.PortalAdapter):
             "gateway_profile": body.get("gateway_profile", "balanced"),
             "components": body.get("components"),
         }
+        # Contract-faithful §4.4 semantics: an explicit empty selection is
+        # a named blocked state, never widened to "all".
+        if plan["forge"] == []:
+            receipt = {
+                "schema": "forge/InstallReceipt/v1",
+                "status": "failed",
+                "checks": [{"id": "selection", "status": "BLOCKED",
+                            "detail": "empty explicit selection"}],
+                "selection": {
+                    "state": "empty_manual_selection",
+                    "requested": [],
+                    "detail": "selecao de forges vazia — nunca alargada para todas",
+                    "next_action": "marque ao menos uma forja registrada",
+                },
+                "verification": {"status": "FAIL"},
+            }
+            return {
+                "status": "failed",
+                "plan": plan,
+                "plan_token": ctx.handler.server.sign_plan(plan),
+                "receipt": receipt,
+                "actions": [],
+            }
+        selected = plan["forge"] if isinstance(plan["forge"], list) else ["e2e-forge"]
         return {
             "status": "planned",
             "plan": plan,
             "plan_token": ctx.handler.server.sign_plan(plan),
-            "receipt": {"status": "planned"},
-            "actions": [{"kind": "forge", "path": "e2e-forge", "status": "planned"}],
+            "receipt": {
+                "schema": "forge/InstallReceipt/v1",
+                "status": "planned",
+                "checks": [
+                    {"id": f"forge:{fid}", "status": "UNVERIFIED",
+                     "detail": f"{fid} install --dry-run"}
+                    for fid in selected
+                ],
+                "forges": [
+                    {"forge_id": fid, "status": "planned",
+                     "cmd": [fid, "install", "--dry-run"]}
+                    for fid in selected
+                ],
+                "workspace_detection": {
+                    "schema": "forge/WorkspaceDetection/v1",
+                    "workspace_techs": ["python", "typescript"],
+                    "members": [{"path": ".", "techs": ["python"]}],
+                    "limitations": [],
+                },
+                "recommendation": {
+                    "schema": "forge/SpecialistRecommendation/v1",
+                    "suggested": [
+                        {"forge_id": "e2e-forge", "role": "primary",
+                         "confidence": "high", "installed": True,
+                         "reason": "declared technologies matched"}
+                    ],
+                    "alternatives": [],
+                    "limitations": [],
+                    "note": "advisory only — never installs by itself",
+                },
+                "verification": {"status": "UNVERIFIED"},
+            },
+            "actions": [
+                {"kind": "forge", "path": fid, "status": "planned"} for fid in selected
+            ],
         }
 
     def _federation_apply(self, ctx: fp.RequestContext) -> dict:
@@ -342,6 +401,7 @@ class E2EAdapter(fp.PortalAdapter):
             status="completed",
             metadata={"operation": "install-auto", "forge": plan.get("forge")},
         )
+        selected = plan["forge"] if isinstance(plan.get("forge"), list) else ["e2e-forge"]
         return {
             "schema": "forge/InstallReceipt/v1",
             "forge_id": self.forge_id,
@@ -350,8 +410,28 @@ class E2EAdapter(fp.PortalAdapter):
             "host": plan.get("host"),
             "profile": plan.get("profile"),
             "execution_profile": plan.get("gateway_profile"),
-            "forges": [{"forge_id": "e2e-forge", "status": "completed", "via": "self"}],
+            "forges": [
+                {"forge_id": fid, "status": "completed", "via": "delegated",
+                 "verification": {"status": "PASS"},
+                 "receipt_id": "sha256:e2e"}
+                for fid in selected
+            ],
+            "checks": [
+                {"id": f"forge:{fid}", "status": "PASS"} for fid in selected
+            ],
             "verification": {"status": "PASS"},
+            "lifecycle": {"schema": "forge/InstallLifecycle/v1", "state": "verified"},
+            "onboarding": {
+                "schema": "forge/HostOnboarding/v1",
+                "hosts": [
+                    {"host": "devin", "state": "integration_written",
+                     "detail": "host assets written: .agents/"},
+                    {"host": "claude", "state": "not_found",
+                     "detail": "no evidence"},
+                ],
+                "next_steps": ["restart the host"],
+                "limitations": ["configured != active"],
+            },
         }
 
     def _task_plan(self, ctx: fp.RequestContext) -> dict:
@@ -601,6 +681,51 @@ def test_install_flow_plan_apply(page, portal):
             _shot(page, "04-install-applied")
             # verify + receipt steps: checks and final status rendered
             assert page.locator("text=/completed|concluí|PASS|verified|Verific/i").count() > 0
+
+
+def test_federation_selection_and_receipt(page, portal):
+    """Real Chromium: the forge selection, the §4.4 named empty state and
+    the verbatim receipt evidence — the contract the CLI's install_auto
+    emits, driven against the real bundle."""
+    _open(page, portal)
+    page.goto(f"http://127.0.0.1:{portal.port}/federation"
+              f"?forge_session={portal.session_token}")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
+
+    # every registered forge checked by default — the explicit reviewed set
+    boxes = page.locator("input[name='federation-forge']")
+    assert boxes.count() == 2, f"expected 2 forge checkboxes, got {boxes.count()}"
+
+    # explicit empty selection → the engine's named blocked state, Apply gated
+    for i in range(boxes.count()):
+        boxes.nth(i).uncheck()
+    page.locator("button:has-text('Gerar plano'),"
+                 " button:has-text('Generate family plan')").first.click()
+    page.wait_for_timeout(800)
+    _shot(page, "30-federation-empty-selection")
+    assert page.locator("text=/empty_manual_selection/").count() > 0
+    assert page.locator("text=/informe|marque|next/").count() > 0
+    apply_btn = page.locator(".plan .actions-row .btn--primary").first
+    assert not apply_btn.is_enabled(), "a blocked plan must never be applyable"
+    page.locator(".plan .actions-row .btn:not(.btn--primary)").first.click()  # cancel
+
+    # recheck one forge → executable plan → verbatim receipt evidence
+    page.wait_for_timeout(300)
+    boxes.nth(0).check()
+    page.locator("button:has-text('Gerar plano'),"
+                 " button:has-text('Generate family plan')").first.click()
+    page.wait_for_timeout(800)
+    _shot(page, "31-federation-plan")
+    assert page.locator("text=/forge:e2e|e2e-forge/").count() > 0
+    apply_btn = page.locator(".plan .actions-row .btn--primary").first
+    assert apply_btn.is_enabled()
+    apply_btn.click()
+    page.wait_for_timeout(1000)
+    _shot(page, "32-federation-receipt")
+    # honest per-host states + per-forge rows rendered verbatim
+    assert page.locator("text=/integration_written|not_found/").count() > 0
+    assert page.locator("text=/PASS|completed|verific/i").count() > 0
 
 
 def test_config_center_env_vars(page, portal):
