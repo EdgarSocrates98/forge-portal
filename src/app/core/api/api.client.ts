@@ -15,6 +15,8 @@ import {
   ApiEnvelope,
   AtlasStatus,
   BootstrapPayload,
+  DelegationGraph,
+  DelegationsReport,
   DocHit,
   FederationPlanResponse,
   FederationSelection,
@@ -36,6 +38,7 @@ import {
   RegistryPlanResponse,
   RegistryState,
   SkillDescriptor,
+  SpecialistsReport,
   TaskEventReport,
   TaskExecution,
   VersionInfo,
@@ -369,6 +372,32 @@ export class PortalApi {
   }
   graphs() {
     return this.memoGet<GraphBundle>('/graphs', 15_000);
+  }
+  /** theforge/PortalSpecialists/v1 — the discovery report verbatim.
+   *  404 → adapter does not expose it → honest empty availability. */
+  specialists() {
+    return this.get<SpecialistsReport>('/specialists').pipe(
+      this.unavailable<SpecialistsReport>({
+        availability: { state: 'unavailable', detail: 'op not exposed by this Forja' },
+        specialists: [],
+      }),
+    );
+  }
+  delegations() {
+    return this.get<DelegationsReport>('/delegations').pipe(
+      this.unavailable<DelegationsReport>({
+        availability: { state: 'unavailable', detail: 'op not exposed by this Forja' },
+        runs: [],
+      }),
+    );
+  }
+  delegationsGraph() {
+    return this.get<DelegationGraph>('/delegations/graph').pipe(
+      this.unavailable<DelegationGraph>({
+        availability: { state: 'unavailable', detail: 'op not exposed by this Forja' },
+        views: [],
+      }),
+    );
   }
   docsSearch(query: string, limit = 20) {
     return this.get<DocHit[]>(`/docs/search?q=${encodeURIComponent(query)}&limit=${limit}`);

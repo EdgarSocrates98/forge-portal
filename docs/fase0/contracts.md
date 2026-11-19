@@ -72,8 +72,35 @@ GET  /api/v1/tasks            execuções recentes (session store)
 POST /api/v1/tasks/plan       {intent|verb,args} → plano sem execução
 POST /api/v1/tasks/execute    {plan_token, confirm} → SSE events + receipt
 GET  /api/v1/graphs           {views:[ForgeGraphView], availability}
+GET  /api/v1/resources        WorkspaceResources — catálogo federado + members[] (marcadores)
+GET  /api/v1/events           forge/PortalEventReport/1 — janela limitada de eventos gravados
+GET  /api/v1/metrics          projeção compacta dos mesmos eventos (contadores + janela)
+GET  /api/v1/specialists      theforge/PortalSpecialists/v1 — relatório real de descoberta
+GET  /api/v1/delegations      theforge/PortalDelegations/v1 — relatórios de orquestração persistidos
+GET  /api/v1/delegations/graph theforge/PortalDelegationGraph/v1 — arestas declaradas + observadas
+GET  /api/v1/versions         VersionInfo — trilha de versão + histórico de receipts
+GET  /api/v1/registry/state   forge-cli/RegistryState/v1 — state.json real do forge-cli
+POST /api/v1/registry/plan    plano via forge-cli (pin/unpin: preview offline declarado)
+POST /api/v1/registry/execute {plan, plan_token} — token one-time vinculado ao plano exato
 GET  /api/v1/docs/search?q=   DocHit[] busca local no inventário
 GET  /api/v1/i18n/<locale>    dicionário (opcional — também embarca no bundle)
+```
+
+Rotas UI ↔ superfícies (ciclo 16.1 onda 15):
+
+```text
+/dashboard     control center — status, workspace §11.1, stats, alertas,
+               forjas, capabilities, versões, tasks, diagnóstico
+               (PROBLEMA/CAUSA/AÇÃO/ESTADO dos checks reais)
+/install       wizard 9 passos — descoberta inclui membros do workspace;
+               badges forge/InstallLifecycle/v1 no plan/receipt
+/context       Context Observatory — recursos descobertos + evidência de
+               eventos (cache/falhas); selected/retrieved/bytes/tokens
+               permanecem UNVERIFIED (nenhuma superfície os grava)
+/specialists   theforge/PortalSpecialists/v1 verbatim
+/delegations   PortalDelegations/v1 + grafo de delegações com proveniência
+/observe       /metrics local-only
+/resources     Resource Explorer — members, kinds, proveniência declarada
 ```
 
 Regras:

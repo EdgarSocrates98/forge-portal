@@ -73,6 +73,20 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/observe/observe.page').then((m) => m.ObservePage),
   },
   {
+    path: 'context',
+    loadComponent: () => import('./pages/context/context.page').then((m) => m.ContextPage),
+  },
+  {
+    path: 'specialists',
+    loadComponent: () =>
+      import('./pages/specialists/specialists.page').then((m) => m.SpecialistsPage),
+  },
+  {
+    path: 'delegations',
+    loadComponent: () =>
+      import('./pages/delegations/delegations.page').then((m) => m.DelegationsPage),
+  },
+  {
     path: 'execution',
     loadComponent: () => import('./pages/execution/execution.page').then((m) => m.ExecutionPage),
   },

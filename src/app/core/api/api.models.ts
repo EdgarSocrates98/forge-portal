@@ -128,14 +128,83 @@ export interface AccountEnvironment {
   windows_aliases: boolean;
 }
 
+/**
+ * forge/InstallLifecycle/v1 (cycle 16.1 §5.3) — the finer-grained honest
+ * position of an installation, derived from receipt/health evidence by
+ * the writer. Closed vocabulary; `completed` is a legacy receipt-status
+ * alias, never a lifecycle state:
+ *
+ *   planned | blocked | failed | applied | partially_applied |
+ *   verified | unverified | ready | certified
+ */
+export type InstallLifecycleState =
+  | 'planned'
+  | 'blocked'
+  | 'failed'
+  | 'applied'
+  | 'partially_applied'
+  | 'verified'
+  | 'unverified'
+  | 'ready'
+  | 'certified';
+
+export interface InstallLifecycle {
+  schema?: 'forge/InstallLifecycle/v1' | string;
+  state: InstallLifecycleState | string;
+  detail?: string;
+}
+
+/** Ledger drift projection some adapters forward verbatim from the
+ *  install status doc (others omit it → render UNVERIFIED). */
+export interface InstallDrift {
+  ok?: number;
+  modified?: { path?: string; status?: string }[] | string[];
+  missing?: { path?: string; status?: string }[] | string[];
+  unsafe?: { path?: string; status?: string }[] | string[];
+}
+
+/** One doctor/health check row. `guidance` is the optional structured
+ *  PROBLEMA/CAUSA/AÇÃO/ESTADO block adapters may emit (theforge
+ *  environment doctor); absent → the UI renders the row without
+ *  inventing a cause. */
+export interface HealthCheck {
+  id: string;
+  state: string;
+  status?: string;
+  detail?: string;
+  repairable?: boolean;
+  guidance?: {
+    problema?: string;
+    causa_provavel?: string;
+    acao?: string;
+    estado?: string;
+  };
+}
+
 export interface PortalHealth {
   state: InstallState;
-  checks: { id: string; state: string; detail?: string }[];
+  checks: HealthCheck[];
   workspace: string | null;
   profile: string | null;
   updated_at: string | null;
   forge_portal?: ForgePortalPresence;
   account_environment?: AccountEnvironment;
+  /** forge/InstallLifecycle/v1 — present only when the adapter forwards
+   *  the status/receipt lifecycle block; absent → UNVERIFIED. */
+  lifecycle?: InstallLifecycle | null;
+  /** Ledger drift projection — optional pass-through. */
+  drift?: InstallDrift;
+  /** Doctor context block — optional pass-through (profile/managed/tools). */
+  context?: {
+    profile?: string | null;
+    managed_entries?: number | null;
+    tools_exposed?: number | null;
+  };
+  /** Optional install-status fields some adapters forward verbatim. */
+  scope?: string | null;
+  target_root?: string | null;
+  ledger_entries?: number | null;
+  receipts?: string[];
 }
 
 export interface InstallationReceipt {
@@ -149,6 +218,11 @@ export interface InstallationReceipt {
   unlock?: string;
   task?: TaskExecution;
   checks?: { id?: string; status?: string; detail?: string; repairable?: boolean }[];
+  /** forge/InstallLifecycle/v1 block the install writer attaches —
+   *  absent on adapters that predate the contract. */
+  lifecycle?: InstallLifecycle | null;
+  /** Plan-phase adapters may nest the raw plan receipt under `receipt`. */
+  receipt?: { lifecycle?: InstallLifecycle | null; status?: string } & Record<string, unknown>;
 }
 
 export interface InstallSelection {
@@ -665,4 +739,128 @@ export interface WorkspaceResources {
   members?: WorkspaceMember[];
   resources: ResourceEntry[];
   errors: string[];
+}
+
+// ---- theforge/PortalSpecialists/v1 — GET /api/v1/specialists ---------
+// Real discovery pass (metadata/files only — probe=false, so a state can
+// never reach VERIFIED from this endpoint). `generated_at` is the
+// persisted last-check stamp; `probed` tells whether CLI probes ran.
+export interface SpecialistCapability {
+  id: string;
+  description?: string | null;
+  version?: string | null;
+  finding_class?: string | null;
+  execution_mode?: string | null;
+  risk?: string | null;
+  requires?: string[];
+  external_cost?: boolean | null;
+  limitations?: string[];
+}
+
+export interface SpecialistRow {
+  provider: string;
+  state?: string | null;
+  version?: string | null;
+  checks?: Record<string, unknown>;
+  notes?: string[];
+  limitations?: string[];
+  capabilities?: SpecialistCapability[];
+  capability_count?: number;
+  workflows?: FederationWorkflow[];
+  workflow_count?: number;
+  agent_roster?: Record<string, unknown> | null;
+  compatibility?: { state?: string; detail?: string };
+  relations?: {
+    declared?: {
+      family?: string | null;
+      composes_with?: string[];
+      preferred_verifiers?: string[];
+      fallback?: string[];
+    };
+  };
+  last_check?: string | null;
+}
+
+export interface SpecialistsReport {
+  schema?: string;
+  availability: { state: string; detail?: string | null; probed?: boolean };
+  generated_at?: string | null;
+  probed?: boolean;
+  truncated?: boolean;
+  limitations?: string[];
+  specialists: SpecialistRow[];
+}
+
+// ---- theforge/PortalDelegations/v1 — GET /api/v1/delegations ---------
+export interface DelegationEntry {
+  coordinator?: string;
+  specialist?: string | null;
+  capability?: string | null;
+  status?: string | null;
+  finding_class?: string | null;
+  risks?: string[];
+  cost_bearing?: boolean;
+  justification?: string[];
+  command?: string[];
+  delegation_stage?: string;
+  handoff_status?: string;
+  notes?: string[];
+}
+
+export interface DelegationRun {
+  file?: string | null;
+  correlation_id?: string | null;
+  kind?: string | null;
+  intent?: string | null;
+  generated_at?: string | null;
+  plan_status?: string | null;
+  duration_ms?: number | null;
+  entries?: DelegationEntry[];
+  findings?: Record<string, unknown>[];
+  unresolved?: Record<string, unknown>[];
+  recommended?: string[];
+  provenance?: Record<string, unknown>;
+  limitations?: string[];
+  unknowns?: string[];
+  prior_runs_same_intent?: number;
+}
+
+export interface DelegationsReport {
+  schema?: string;
+  availability: { state: string; detail?: string | null };
+  notes?: string[];
+  runs: DelegationRun[];
+}
+
+// ---- theforge/PortalDelegationGraph/v1 — /delegations/graph ----------
+export interface DelegationGraphNode {
+  id: string;
+  kind: string;
+  label?: string;
+  [key: string]: unknown;
+}
+
+export interface DelegationGraphEdge {
+  source: string;
+  target: string;
+  kind: string;
+  provenance: string;
+  detail?: string;
+}
+
+export interface DelegationGraph {
+  schema?: string;
+  availability: {
+    state: string;
+    detail?: string | null;
+    declared?: string;
+    observed_reports?: number;
+  };
+  notes?: string[];
+  views: {
+    nodes: DelegationGraphNode[];
+    edges: DelegationGraphEdge[];
+    edge_kinds?: string[];
+    provenances?: string[];
+  }[];
 }

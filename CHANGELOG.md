@@ -30,6 +30,40 @@ formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 - **AGENTS.md**: contrato de repo para agentes (classificação de host
   vendored, trilha de versão, modelo de segurança, gates).
 
+- **Cycle 16.1 Wave 15 — Control-center UX**:
+  - `forge/InstallLifecycle/v1` agora é vocabulário de primeira classe no
+    frontend: tipos `InstallLifecycle`/`InstallLifecycleState` +
+    `HealthCheck` (com `guidance` PROBLEMA/CAUSA/AÇÃO/ESTADO opcional),
+    badges distintos para `planned|applied|partially_applied|verified|
+    unverified|blocked|failed|ready|certified`; `completed` permanece
+    como alias legado de receipt (muted, nunca confundível com verified).
+  - `/dashboard`: novo painel **Workspace** (§11.1) — nome/raiz,
+    repositórios (members[]), marcadores declarados, hosts, especialistas,
+    capabilities, perfil, gateway (UNVERIFIED — nenhuma superfície o
+    reporta), estado + lifecycle, drift e conflitos dos checks reais,
+    última instalação (registry/versions/forge_portal — fonte rotulada) e
+    última verificação.
+  - `/dashboard`: bloco de diagnóstico renderiza os checks reais na
+    estrutura PROBLEMA/CAUSA PROVÁVEL/AÇÃO/ESTADO do doctor — causa/ação
+    só aparecem quando o adapter emite `guidance`; check repairável sem
+    guidance linka para o fluxo real de reparo, nunca inventa ação.
+  - Nova rota `/context` (Context Observatory §11.4): recursos
+    descobertos e indisponíveis via `/resources`; cache hit/miss/bypass e
+    falhas derivados somente de eventos gravados em `/events`;
+    selected/retrieved/bytes/tokens permanecem **UNVERIFIED** (nenhuma
+    superfície os registra — nada estimado).
+  - Novas rotas `/specialists` e `/delegations` consomem os ops que o
+    adapter do The Forge já expõe (`theforge/PortalSpecialists/v1`,
+    `theforge/PortalDelegations/v1`, `theforge/PortalDelegationGraph/v1`)
+    — verbatim, com `probed`, `generated_at`, `prior_runs_same_intent` e
+    `provenance` das arestas; `duration_ms` nulo permanece `—`.
+  - `/install` (§11.2): passo Discover inclui descoberta de membros do
+    workspace por marcadores; badges de lifecycle no review do plano e no
+    receipt; passo final oferece links reais para `/resources`, `/hosts`,
+    `/mcp` e `/context`.
+  - Cliente: `specialists()`, `delegations()`, `delegationsGraph()` —
+    404/`PORTAL-NOT-FOUND` viram indisponibilidade honesta, nunca erro.
+
 ### Fixed
 
 - Estados de erro honestos, gaps de i18n e drain de keep-alive (#101).
