@@ -21,6 +21,8 @@ import { UiIcon } from '../../shared/icon';
 import { UiSkeleton } from '../../shared/skeleton';
 import { Source, buildForgeRows, stamp } from '../explorer/forges.data';
 import { InventoryPanel } from '../explorer/inventory-panel';
+import { WorkspacePanel } from './workspace-panel';
+import { DiagnosticsBlock } from './diagnostics-block';
 import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } from './ops.data';
 
 /**
@@ -45,6 +47,8 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
     UiIcon,
     UiSkeleton,
     InventoryPanel,
+    WorkspacePanel,
+    DiagnosticsBlock,
   ],
   template: `
     <ui-page-header
@@ -123,6 +127,14 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
           }
         </p>
       </section>
+
+      <workspace-panel
+        [health]="health()"
+        [federation]="fed.data()"
+        [hosts]="hostsSrc.data()"
+        [registry]="registrySrc.data()"
+        [versions]="versionsSrc.data()"
+      />
 
       <section data-section="stats">
         <div class="stats stagger">
@@ -545,8 +557,10 @@ import { buildAlerts, buildVersionRows, isFailedTask, registryInstallCount } fro
         <div class="sec__head">
           <div>
             <h2>{{ 'ops.diagnostics.title' | t }}</h2>
+            <p class="src"><code>GET /api/v1/installation/status → checks</code></p>
           </div>
         </div>
+        <diag-block [checks]="health()?.checks ?? null" [healthLoaded]="!!health()" />
         <p class="muted sec__hint">{{ 'ops.diagnostics.hint' | t }}</p>
         <div class="shortcuts">
           @for (s of shortcuts; track s.route) {

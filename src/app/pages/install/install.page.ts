@@ -8,9 +8,12 @@ import {
   ExecutionProfile,
   HostDetection,
   HostId,
+  InstallLifecycle,
   InstallationReceipt,
   TaskExecution,
+  WorkspaceResources,
 } from '../../core/api/api.models';
+import { Source } from '../explorer/forges.data';
 import { PortalStore } from '../../core/portal/portal.store';
 import { TPipe } from '../../core/i18n/i18n.pipe';
 import { I18nService } from '../../core/i18n/i18n.service';
@@ -118,6 +121,9 @@ interface HostChoice {
         </h2>
         @if (store.health(); as h) {
           <ui-state-badge [state]="h.state" />
+          @if (h.lifecycle; as lc) {
+            <ui-state-badge [state]="lc.state" [attr.title]="lc.detail ?? null" />
+          }
         }
       </div>
 
@@ -189,6 +195,31 @@ interface HostChoice {
         }
       } @else {
         <ui-skeleton kind="row" [lines]="2" />
+      }
+
+      <!-- Member discovery — marker-driven, real detection only. -->
+      <h3 class="subhead">{{ 'install.members' | t }}</h3>
+      <p class="muted subhead-note">{{ 'install.members.hint' | t }}</p>
+      @if (membersSrc.data(); as ws) {
+        @if (ws.members?.length) {
+          <ul class="hostlist">
+            @for (m of ws.members; track m.path) {
+              <li>
+                <strong>{{ m.name }}</strong>
+                <span class="muted mono">{{ m.markers.join(', ') }}</span>
+                @if (!m.git) {
+                  <span class="muted"> · {{ 'install.members.noGit' | t }}</span>
+                }
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="muted">{{ 'install.members.empty' | t }}</p>
+        }
+      } @else if (membersSrc.loading()) {
+        <ui-skeleton kind="row" [lines]="1" />
+      } @else {
+        <p class="muted"><ui-state-badge state="UNVERIFIED" /> {{ 'install.members.unv' | t }}</p>
       }
     </section>
 
@@ -358,6 +389,9 @@ interface HostChoice {
             <span class="stepnum" aria-hidden="true">5</span>{{ 'install.step.reviewDiff' | t }}
           </h2>
           <ui-state-badge [state]="r.status" />
+          @if (lifecycleOf(r); as lc) {
+            <ui-state-badge [state]="lc.state" [attr.title]="lc.detail ?? null" />
+          }
         </div>
         <p class="muted">
           {{ 'install.plan.changes' | t: { count: r.actions?.length ?? 0 } }}
@@ -506,6 +540,9 @@ interface HostChoice {
         <div class="card__heading">
           <h2><span class="stepnum" aria-hidden="true">9</span>{{ 'install.step.receipt' | t }}</h2>
           <ui-state-badge [state]="r.status" />
+          @if (lifecycleOf(r); as lc) {
+            <ui-state-badge [state]="lc.state" [attr.title]="lc.detail ?? null" />
+          }
         </div>
         @if (r.stage) {
           <p class="muted">
@@ -543,6 +580,17 @@ interface HostChoice {
             {{ 'install.newPlan' | t }}
           </button>
         </div>
+        @if (!r.refusal) {
+          <!-- §11.2 — after apply/verify, open the surfaces that now
+               hold the installed content. Real routes, never claims. -->
+          <h3 class="subhead">{{ 'install.openResources' | t }}</h3>
+          <div class="row">
+            <a class="btn" routerLink="/resources">{{ 'nav.resources' | t }}</a>
+            <a class="btn" routerLink="/hosts">{{ 'nav.hosts' | t }}</a>
+            <a class="btn" routerLink="/mcp">{{ 'nav.mcp' | t }}</a>
+            <a class="btn" routerLink="/context">{{ 'nav.context' | t }}</a>
+          </div>
+        }
       </section>
     }
 
@@ -766,6 +814,9 @@ export class InstallPage {
   readonly executionProfile = signal<ExecutionProfile>('balanced');
   /** `null` = still loading; `[]` = backend answered with no detections. */
   readonly hostDetections = signal<HostDetection[] | null>(null);
+  /** Workspace members (§11.2 member discovery) — real marker-driven
+   *  detection; the source tri-state is rendered honestly. */
+  readonly membersSrc = new Source<WorkspaceResources>();
   readonly selected = signal<Set<string>>(new Set(['skills', 'agents', 'mcp']));
   readonly planReceipt = signal<InstallationReceipt | null>(null);
   readonly result = signal<InstallationReceipt | null>(null);
@@ -918,9 +969,18 @@ export class InstallPage {
       firstValueFrom(this.api.hosts())
         .then((hs) => this.hostDetections.set(hs))
         .catch(() => this.hostDetections.set([])),
+      this.membersSrc.load(() => this.api.workspaceResources()),
       this.loadHistory(),
       this.store.refreshHealth(),
     ]);
+  }
+
+  /** forge/InstallLifecycle/v1 — top-level on apply receipts, nested
+   *  under `receipt` on plan documents; absent → no badge, never a
+   *  lifecycle guessed from `status`. */
+  lifecycleOf(r: InstallationReceipt | null): InstallLifecycle | null {
+    if (!r) return null;
+    return r.lifecycle ?? r.receipt?.lifecycle ?? null;
   }
 
   async loadHistory(): Promise<void> {

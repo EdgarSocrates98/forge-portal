@@ -52,6 +52,18 @@ const STATE_KIND: Record<string, BadgeKind> = {
   unavailable: 'error',
   healthy: 'ok',
   broken: 'error',
+  // forge/InstallLifecycle/v1 — lowercase receipt lifecycle states.
+  // `completed` is the legacy receipt-status alias, never a lifecycle
+  // state; it renders muted so it can never masquerade as `verified`.
+  planned: 'info',
+  blocked: 'warn',
+  failed: 'error',
+  applied: 'info',
+  partially_applied: 'warn',
+  verified: 'ok',
+  ready: 'ok',
+  certified: 'ok',
+  completed: 'muted',
   // generic
   ok: 'ok',
   warn: 'warn',
@@ -94,6 +106,16 @@ const I18N_PREFIX: Record<string, string> = {
   unavailable: 'contextState.',
   healthy: 'contextHealth.',
   broken: 'contextHealth.',
+  // forge/InstallLifecycle/v1 labels
+  planned: 'lifecycle.',
+  blocked: 'lifecycle.blocked',
+  failed: 'lifecycle.failed',
+  applied: 'lifecycle.',
+  partially_applied: 'lifecycle.',
+  verified: 'lifecycle.',
+  ready: 'lifecycle.',
+  certified: 'lifecycle.',
+  completed: 'lifecycle.completed',
 };
 
 /** Badge semântico — mapeia qualquer estado do contrato para tom+label i18n. */
